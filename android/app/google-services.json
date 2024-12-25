@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "996086520169",
+    "project_id": "finesse-772de",
+    "storage_bucket": "finesse-772de.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:996086520169:android:8cf54066a6f01dd44b85f8",
+        "android_client_info": {
+          "package_name": "com.example.finesse_frontend"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDV1_0G8VkEjbG_78jUwl8fyavzPk8sIpY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
