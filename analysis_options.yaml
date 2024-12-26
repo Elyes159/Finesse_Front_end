@@ -10,6 +10,7 @@
 analyzer:
   errors:
     unused_field: ignore
+    must_be_immutable: ignore
 include: package:flutter_lints/flutter.yaml
 
 linter:
