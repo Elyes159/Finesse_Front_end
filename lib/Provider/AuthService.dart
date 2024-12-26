@@ -42,7 +42,6 @@ class AuthService with ChangeNotifier{
       throw Exception('erreur lors de la création');
     }
   }
-
   Future<void> signIn({
     required String username,
     required String password,
