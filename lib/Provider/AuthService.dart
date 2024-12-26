@@ -74,4 +74,24 @@ class AuthService with ChangeNotifier{
     _currentUser = null;
     notifyListeners();
   }
+
+  Future<void> confirmEmailVerification({
+    required String userId,
+    required String verificationCode,
+  })async{
+    final url = Uri.parse("${AppConfig.baseUrl}/api/auth/verify-code/");
+    final response = await http.post(
+      url,
+      headers: {'Content-Type':'application/json'},
+      body : json.encode({
+        'user_id':userId,
+        'verification_code':verificationCode,
+      }),
+    );
+    if (response.statusCode == 200){
+      print("Email succesfully verfied");
+    }else{
+      throw Exception('${json.decode(response.body)}');
+    }
+  }
 }

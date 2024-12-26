@@ -1,4 +1,5 @@
 
+import 'package:finesse_frontend/Screens/AuthScreens/VerificationMail.dart';
 import 'package:flutter/material.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/SignIn.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
@@ -110,7 +111,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ),
                       CustomButton(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>VerificationMail()));
+                        },
                         label: 'Continue',
                       ),
                     ],
