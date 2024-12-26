@@ -11,6 +11,7 @@ analyzer:
   errors:
     unused_field: ignore
     must_be_immutable: ignore
+    unused_local_variable: ignore
 include: package:flutter_lints/flutter.yaml
 
 linter:
