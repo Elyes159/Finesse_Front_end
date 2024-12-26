@@ -6,7 +6,7 @@ class CustomTextFormField extends StatefulWidget {
   final String label;
   final bool isPassword;
   final TextInputType keyboardType;
-  FormFieldValidator<String>? validator;
+  final FormFieldValidator<String>? validator;
   final FormFieldSetter<String>? onSaved;
 
   CustomTextFormField({
@@ -25,9 +25,8 @@ class CustomTextFormField extends StatefulWidget {
 
 class _CustomTextFormFieldState extends State<CustomTextFormField> {
   bool _obscureText = true;
-  bool _isTextEmpty = true;  // Pour vérifier si le texte est vide
-  String? _errorMessage;  // Pour stocker l'erreur
-  bool _isTouched = false; // Vérifie si le champ a été touché
+  String? _errorMessage; // Message d'erreur
+  bool _isTouched = false; // Indique si le champ a été touché
 
   void _togglePasswordVisibility() {
     setState(() {
@@ -39,11 +38,9 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   void initState() {
     super.initState();
 
-    // Écoute des changements dans le texte saisi
     widget.controller.addListener(() {
       setState(() {
-        _isTextEmpty = widget.controller.text.isEmpty;
-        _errorMessage = widget.validator?.call(widget.controller.text); // Vérifie si le texte est valide
+        _errorMessage = widget.validator?.call(widget.controller.text); // Validation
       });
     });
   }
@@ -51,77 +48,66 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 8.0, right: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,  // Aligne le texte et l'erreur à gauche
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             width: MediaQuery.of(context).size.width,
             height: 60,
-            padding: const EdgeInsets.only(top: 8, left: 16, bottom: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: ShapeDecoration(
               shape: RoundedRectangleBorder(
                 side: BorderSide(width: 1, color: Color(0xFF5C7CA4)),
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
-            child: Center(
-              child: TextFormField(
-                onSaved: widget.onSaved,
-                validator: widget.validator,
-                cursorColor: Colors.grey,
-                style: TextStyle(
+            child: TextFormField(
+              onSaved: widget.onSaved,
+              controller: widget.controller,
+              obscureText: widget.isPassword ? _obscureText : false,
+              keyboardType: widget.keyboardType,
+              cursorColor: Colors.grey,
+              style: const TextStyle(fontFamily: 'Raleway'),
+              onTap: () {
+                setState(() {
+                  _isTouched = true; // Champ touché
+                });
+              },
+              decoration: InputDecoration(
+                suffixIcon: widget.isPassword
+                    ? GestureDetector(
+                        onTap: _togglePasswordVisibility,
+                        child: SvgPicture.asset(
+                          "assets/Icons/eye.svg",
+                          height: 24,
+                          width: 24,
+                        ),
+                      )
+                    : null,
+                labelText: widget.label,
+                labelStyle: const TextStyle(
+                  color: Color(0xFF3E536E),
+                  fontSize: 16,
                   fontFamily: 'Raleway',
+                  fontWeight: FontWeight.w400,
+                  height: 1.5,
+                  letterSpacing: 0.5,
                 ),
-                cursorHeight: 20,
-                controller: widget.controller,
-                obscureText: widget.isPassword ? _obscureText : false,
-                keyboardType: widget.keyboardType,
-                onTap: () {
-                  setState(() {
-                    _isTouched = true; // L'utilisateur a touché le champ
-                  });
-                },
-                decoration: InputDecoration(
-                  suffixIcon: widget.isPassword
-                      ? GestureDetector(
-                          onTap: _togglePasswordVisibility,
-                          child: SvgPicture.asset(
-                            "assets/Icons/eye.svg",
-                            height: 24,
-                            width: 24,
-                          ),
-                        )
-                      : _isTouched && (_errorMessage != null && _errorMessage!.isNotEmpty)
-                          ? Icon(
-                              Icons.error_outline,
-                              color: Colors.red, // Point d'exclamation rouge
-                            )
-                          : null,
-                  labelText: widget.label,
-                  labelStyle: TextStyle(
-                    color: Color(0xFF3E536E),
-                    fontSize: 16,
-                    fontFamily: 'Raleway',
-                    fontWeight: FontWeight.w400,
-                    height: 1.50,
-                    letterSpacing: 0.50,
-                  ),
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(left: 10),
-                ),
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.only(left: 10),
               ),
             ),
           ),
-          // Affichage du message d'erreur sous le champ de texte si nécessaire
-          if (_errorMessage != null && _errorMessage!.isNotEmpty && _isTouched)
+          // Affichage conditionnel du message d'erreur
+          if (_isTouched && _errorMessage != null && _errorMessage!.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(top: 4.0),
               child: Text(
                 _errorMessage!,
-                style: TextStyle(
-                  color: Colors.red,  // Couleur du texte d'erreur
-                  fontSize: 12,  // Taille du texte d'erreur
+                style: const TextStyle(
+                  color: Colors.red,
+                  fontSize: 12,
                 ),
               ),
             ),
