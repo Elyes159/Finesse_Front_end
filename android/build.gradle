@@ -1,3 +1,14 @@
+buildscript {
+    repositories {
+        google() // Requis pour Firebase
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.1.0' // Assurez-vous que la version correspond à votre Flutter
+        classpath 'com.google.gms:google-services:4.3.15' // Requis pour Firebase
+    }
+}
+
 allprojects {
     repositories {
         google()
