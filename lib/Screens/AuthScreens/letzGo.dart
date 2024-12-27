@@ -8,7 +8,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 class LetzGo extends StatefulWidget {
-  const LetzGo({super.key});
+  final String parameter;
+  const LetzGo({Key? key , required this.parameter}) : super(key: key);
 
   @override
   State<LetzGo> createState() => _LetzGoState();
@@ -20,7 +21,6 @@ class _LetzGoState extends State<LetzGo> {
   bool _isCheckedPrivacy = false;
   bool _isCheckedSend = false;
   String? _usernameError;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,7 +75,6 @@ class _LetzGoState extends State<LetzGo> {
                   setState(() {
                     _usernameError = 'Username is required';
                   });
-                  
                   return null;
                 }
                 if (value.length < 3) {
@@ -180,10 +179,10 @@ class _LetzGoState extends State<LetzGo> {
                     });
                   },
                 ),
-                Expanded(
+                const Expanded(
                   child: Text(
                     '(Optional) send me emails with updates, tips and special offers from Finesse',
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Color(0xFF111928),
                       fontSize: 14,
                       fontFamily: 'Raleway',
@@ -201,17 +200,32 @@ class _LetzGoState extends State<LetzGo> {
               onTap: _usernameError !=null ? (){}: () async {
                 if (_formKey.currentState!.validate()) {
                   try {
-                    await Provider.of<AuthService>(context, listen: false).createUsername(
+                    if(widget.parameter=="normal") {
+                      await Provider.of<AuthService>(context, listen: false).createUsername(
                       username: _usernameController.text,
                       isPolicy: _isCheckedPrivacy,
                       isMail: _isCheckedSend,
                       userId: Provider.of<AuthService>(context, listen: false).userId,
                     );
-                      Navigator.pushAndRemoveUntil(
+                    Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(builder: (context) => SignInScreen()),
                         (Route<dynamic> route) => false, // This ensures that all previous routes are removed
                       );
+                    }else{
+                      await Provider.of<AuthService>(context, listen: false).createUsernameGoogle(
+                      username: _usernameController.text,
+                      isPolicy: _isCheckedPrivacy,
+                      isMail: _isCheckedSend,
+                      userId: Provider.of<AuthService>(context, listen: false).userId,
+                    );
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => SignInScreen()),
+                        (Route<dynamic> route) => false, // This ensures that all previous routes are removed
+                      );
+                    }
+                      
                     // Réinitialiser l'erreur en cas de succès
                     setState(() {
                       _usernameError = null;

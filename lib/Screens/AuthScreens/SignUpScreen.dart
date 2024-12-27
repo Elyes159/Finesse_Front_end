@@ -1,5 +1,6 @@
 
 import 'package:finesse_frontend/Provider/AuthService.dart';
+import 'package:finesse_frontend/Screens/AuthScreens/CompleteInfo.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/VerificationMail.dart';
 import 'package:flutter/material.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/SignIn.dart';
@@ -161,7 +162,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CustomContainer(
-                      onTap: () {},
+                      onTap: () async{
+                        try{
+                          await Provider.of<AuthService>(context,listen:false).signUpGoogle();
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>CompleteInfo(parameter: "google",)));
+                        }catch(e){
+                          print("Erreur lors de la connexion Google: ${e.toString()}");
+                        }
+                      },
                       imagePath: "assets/Icons/google.svg",
                     ),
                     const SizedBox(width: 8.86),

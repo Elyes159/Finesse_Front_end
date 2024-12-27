@@ -14,7 +14,8 @@ import 'package:image_picker/image_picker.dart';
 
 
 class CompleteInfo extends StatefulWidget {
-  const CompleteInfo({super.key});
+  final String parameter;
+  const CompleteInfo({Key? key , required this.parameter}) : super(key: key);
 
   @override
   State<CompleteInfo> createState() => _CompleteInfoState();
@@ -87,39 +88,51 @@ class _CompleteInfoState extends State<CompleteInfo> {
               children: [
                 Center(
               child: GestureDetector(
-                onTap: () {
-                  // Action lors du clic
-                  _pickImage();
-                },
-                child: Container(
-                      width: 100,
-                      height: 100,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFD9D9D9),
-                        shape: BoxShape.circle,
-                      ),
-                      child: _imageFile == null
-                          ? const Icon(
-                              Icons.camera_alt,
-                              color: Colors.white,
-                              size: 40,
-                            )
-                          : ClipOval(
-                              child: ColorFiltered(
-                                colorFilter: ColorFilter.mode(
-                                  Colors.grey.withOpacity(0.5),
-                                  BlendMode.saturation,
-                                ),
-                                child: Image.file(
-                                  File(_imageFile!.path),
+                  onTap: widget.parameter == "normal"
+                      ? () {
+                          // Action lors du clic
+                          _pickImage();
+                        }
+                      : null, // Pas d'action si le paramètre n'est pas "normal"
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFD9D9D9),
+                      shape: BoxShape.circle,
+                    ),
+                    child: _imageFile == null
+                        ? (widget.parameter == "normal"
+                            ? const Icon(
+                                Icons.camera_alt,
+                                color: Colors.white,
+                                size: 40,
+                              )
+                            : ClipOval(
+                                child: Image.network(
+                                  Provider.of<AuthService>(context,listen:false).googleAvatar, // Remplacez par votre URL
                                   width: 100,
                                   height: 100,
                                   fit: BoxFit.cover,
                                 ),
+                              ))
+                        : ClipOval(
+                            child: ColorFiltered(
+                              colorFilter: ColorFilter.mode(
+                                Colors.grey.withOpacity(0.5),
+                                BlendMode.saturation,
+                              ),
+                              child: Image.file(
+                                File(_imageFile!.path),
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
                               ),
                             ),
-                    ),
-              ),
+                          ),
+                  ),
+                ),
+
             ),
             const SizedBox(height: 16),
             // Champ de texte pour le nom complet
@@ -127,13 +140,13 @@ class _CompleteInfoState extends State<CompleteInfo> {
               controller: _fullnameController,
               label: "Your full name",
               isPassword: false,
+              defaultValue: widget.parameter=="normal"? "":Provider.of<AuthService>(context,listen:false).fullnameGoogle,
             ),
             const SizedBox(height: 16),
             Padding(
               padding: const EdgeInsets.only(left:0,right: 0),
               child: Row(
                 children: [
-                  // Champ pour le code du pays
                   Padding(
                     padding: const EdgeInsets.only(left: 8.0),
                     child: Container(
@@ -199,7 +212,6 @@ class _CompleteInfoState extends State<CompleteInfo> {
                   ),
             
                   const SizedBox(width: 10),
-                  // Champ principal pour le numéro de téléphone
                   Expanded(child: CustomTextFormField(controller: _phoneController, label: "Phone number", isPassword: false,keyboardType: TextInputType.numberWithOptions(),))
                 ],
               ),
@@ -210,9 +222,14 @@ class _CompleteInfoState extends State<CompleteInfo> {
             DescTextField(controller: _descriptionController, label: "Description", isPassword: false),
             const SizedBox(height: 16,),
             CustomButton(label: "Create account", onTap: (){
+              if(widget.parameter=="normal") {
                 Provider.of<AuthService>(context,listen: false).registerProfile(full_name: _fullnameController.text, phone_number: _phoneController.text, address: _addressController.text, description: _descriptionController.text, userId: Provider.of<AuthService>(context,listen: false).userId,image: _imageFile);
-
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LetzGo()));
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LetzGo(parameter: "normal",)));
+              }else {
+                Provider.of<AuthService>(context,listen: false).registerProfileGoogle(full_name: _fullnameController.text, phone_number: _phoneController.text, address: _addressController.text, description: _descriptionController.text, userId: Provider.of<AuthService>(context,listen: false).userId);
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const LetzGo(parameter: "google",)));
+              }
+            
             }
             )
             ],),

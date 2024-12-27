@@ -8,6 +8,7 @@ class CustomTextFormField extends StatefulWidget {
   final TextInputType keyboardType;
   final FormFieldValidator<String>? validator;
   final FormFieldSetter<String>? onSaved;
+  final String? defaultValue; // Texte par défaut
 
   CustomTextFormField({
     super.key,
@@ -17,6 +18,7 @@ class CustomTextFormField extends StatefulWidget {
     this.keyboardType = TextInputType.text,
     this.validator,
     this.onSaved,
+    this.defaultValue, // Valeur par défaut optionnelle
   });
 
   @override
@@ -45,6 +47,10 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   @override
   void initState() {
     super.initState();
+    // Initialiser le texte par défaut si défini
+    if (widget.defaultValue != null && widget.defaultValue!.isNotEmpty) {
+      widget.controller.text = widget.defaultValue!;
+    }
     widget.controller.addListener(_onTextChanged);
   }
 
@@ -67,7 +73,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: ShapeDecoration(
               shape: RoundedRectangleBorder(
-                side: BorderSide(width: 1, color: Color(0xFF5C7CA4)),
+                side: const BorderSide(width: 1, color: Color(0xFF5C7CA4)),
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
@@ -124,3 +130,4 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
     );
   }
 }
+

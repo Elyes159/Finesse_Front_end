@@ -119,7 +119,7 @@ class _VerificationMailState extends State<VerificationMail> {
                   userId: Provider.of<AuthService>(context, listen: false).userId,
                   verificationCode: _controllers.map((controller) => controller.text).join(''),
                 ); 
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>CompleteInfo()));           
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>CompleteInfo(parameter: "normal",)));           
               }catch(e){
                 if (kDebugMode) {
                   print("ereir ${e.toString()}");
