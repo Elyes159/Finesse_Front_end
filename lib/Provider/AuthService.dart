@@ -134,7 +134,35 @@ class AuthService with ChangeNotifier{
   if (response.statusCode == 200) {
     print("User créé avec succès");
   } else {
-    print("Erreur lors de la création de l'utilisateur: ${response}");
+    throw Exception("error ${e.toString()}");
   }
 }
+
+Future<void> createUsername({
+  required String username,
+  required bool isPolicy,
+  required bool isMail,
+  required int userId,
+}) async {
+  final url = Uri.parse("${AppConfig.baseUrl}/api/auth/$userId/createUsername/");
+  final response = await http.post(
+    url,
+    headers: {"Content-Type": "application/json"},
+    body: json.encode({
+      "username": username,
+      "policy": isPolicy,
+      "mail": isMail,
+    }),
+  );
+
+  if (response.statusCode == 200) {
+    print("User créé avec succès");
+  } else {
+    // Lever une exception avec le message d'erreur renvoyé par le serveur
+    final errorMessage = json.decode(response.body)['message'] ?? 'Une erreur est survenue';
+    throw Exception(errorMessage);
+  }
+}
+
+
 }
