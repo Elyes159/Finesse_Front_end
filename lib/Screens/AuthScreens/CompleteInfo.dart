@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:finesse_frontend/Provider/AuthService.dart';
+import 'package:finesse_frontend/Screens/AuthScreens/letzGo.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
 import 'package:finesse_frontend/Widgets/CustomTextField/DescTextField.dart';
 import 'package:finesse_frontend/Widgets/CustomTextField/LoginTextField.dart';
@@ -89,18 +92,33 @@ class _CompleteInfoState extends State<CompleteInfo> {
                   _pickImage();
                 },
                 child: Container(
-                  width: 100,
-                  height: 100,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFD9D9D9), // Couleur du cercle
-                    shape: BoxShape.circle, // Forme circulaire
-                  ),
-                  child: const Icon(
-                    Icons.camera_alt, // Icône pour l'ajout de photo
-                    color: Colors.white,
-                    size: 40,
-                  ),
-                ),
+                      width: 100,
+                      height: 100,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFD9D9D9),
+                        shape: BoxShape.circle,
+                      ),
+                      child: _imageFile == null
+                          ? const Icon(
+                              Icons.camera_alt,
+                              color: Colors.white,
+                              size: 40,
+                            )
+                          : ClipOval(
+                              child: ColorFiltered(
+                                colorFilter: ColorFilter.mode(
+                                  Colors.grey.withOpacity(0.5),
+                                  BlendMode.saturation,
+                                ),
+                                child: Image.file(
+                                  File(_imageFile!.path),
+                                  width: 100,
+                                  height: 100,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                    ),
               ),
             ),
             const SizedBox(height: 16),
@@ -111,7 +129,6 @@ class _CompleteInfoState extends State<CompleteInfo> {
               isPassword: false,
             ),
             const SizedBox(height: 16),
-            // Champ de numéro de téléphone avec code pays
             Padding(
               padding: const EdgeInsets.only(left:0,right: 0),
               child: Row(
@@ -194,7 +211,10 @@ class _CompleteInfoState extends State<CompleteInfo> {
             const SizedBox(height: 16,),
             CustomButton(label: "Create account", onTap: (){
                 Provider.of<AuthService>(context,listen: false).regiterProfile(full_name: _fullnameController.text, phone_number: _phoneController.text, address: _addressController.text, description: _descriptionController.text, userId: Provider.of<AuthService>(context,listen: false).userId);
-            })
+
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LetzGo()));
+            }
+            )
             ],),
           ),
           
