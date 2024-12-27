@@ -105,32 +105,36 @@ class AuthService with ChangeNotifier{
     }
   }
 
-  Future<void>regiterProfile({
-    required String full_name,
-    required String phone_number,
-    required String address,
-    required String description,
-    XFile? image,
-    required int userId
+  Future<void> registerProfile({
+  required String full_name,
+  required String phone_number,
+  required String address,
+  required String description,
+  XFile? image,
+  required int userId
+}) async {
+  final url = Uri.parse("${AppConfig.baseUrl}/api/auth/$userId/register_profile/");
 
-  }) async{
-      final url = Uri.parse("${AppConfig.baseUrl}/api/auth/$userId/register_profile/");
-      final response = await http.post(
-        url,
-        headers: {"Content-Type":"application/json"},
-        body: json.encode({
-          "full_name":full_name,
-          "phone_number" :phone_number,
-          "address":address,
-          "description":description,
-          "avatar":image,
-        }),
-      );
-      if (response.statusCode==200){
-        print("user cree avec succees");
-      }else {
-        throw Exception('${json.decode(response.body)}');
-      }
+  var request = http.MultipartRequest('POST', url)
+    ..fields['full_name'] = full_name
+    ..fields['phone_number'] = phone_number
+    ..fields['address'] = address
+    ..fields['description'] = description;
 
+  // Si l'image est non nulle, ajoutez-la à la requête
+  if (image != null) {
+    // Assurez-vous de récupérer le chemin de l'image
+    var file = await http.MultipartFile.fromPath('avatar', image.path);
+    request.files.add(file);
   }
+
+  // Envoyer la requête
+  var response = await request.send();
+
+  if (response.statusCode == 200) {
+    print("User créé avec succès");
+  } else {
+    print("Erreur lors de la création de l'utilisateur: ${response}");
+  }
+}
 }

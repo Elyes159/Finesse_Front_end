@@ -210,7 +210,7 @@ class _CompleteInfoState extends State<CompleteInfo> {
             DescTextField(controller: _descriptionController, label: "Description", isPassword: false),
             const SizedBox(height: 16,),
             CustomButton(label: "Create account", onTap: (){
-                Provider.of<AuthService>(context,listen: false).regiterProfile(full_name: _fullnameController.text, phone_number: _phoneController.text, address: _addressController.text, description: _descriptionController.text, userId: Provider.of<AuthService>(context,listen: false).userId);
+                Provider.of<AuthService>(context,listen: false).registerProfile(full_name: _fullnameController.text, phone_number: _phoneController.text, address: _addressController.text, description: _descriptionController.text, userId: Provider.of<AuthService>(context,listen: false).userId,image: _imageFile);
 
             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LetzGo()));
             }
