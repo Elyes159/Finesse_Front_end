@@ -12,7 +12,20 @@
           "package_name": "com.example.finesse_frontend"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "996086520169-bqqv5g8gm3t9c1upmp9ukthc9m1jg1hl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.finesse_frontend",
+            "certificate_hash": "e981eeddb01a6993b46701d4b73b392e54ef3847"
+          }
+        },
+        {
+          "client_id": "996086520169-u8ailvmhiuv7o8hhbrs5kinua3pp485n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDV1_0G8VkEjbG_78jUwl8fyavzPk8sIpY"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "996086520169-u8ailvmhiuv7o8hhbrs5kinua3pp485n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "996086520169-kk9449feupn8qk31k4mtu3kfq19l75mp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.finesseFrontend"
+              }
+            }
+          ]
         }
       }
     }
