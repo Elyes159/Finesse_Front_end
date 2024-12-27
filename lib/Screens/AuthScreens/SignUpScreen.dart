@@ -1,10 +1,13 @@
 
+import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/VerificationMail.dart';
 import 'package:flutter/material.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/SignIn.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/SocialMediaSignIn.dart';
 import 'package:finesse_frontend/Widgets/CustomTextField/LoginTextField.dart';
+import 'package:provider/provider.dart';
+
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -14,6 +17,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPassController = TextEditingController();
@@ -111,8 +115,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ),
                       CustomButton(
-                        onTap: (){
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>VerificationMail()));
+                        onTap: () async{
+                          if (_formKey.currentState?.validate() ?? false) {
+                            try {
+                              // Appel à la fonction signUp du provider
+                              await Provider.of<AuthService>(context, listen: false).signUp(
+                                username: _emailController.text.split('@')[0], // Vous pouvez ajouter ces champs dans votre formulaire
+                                email: _emailController.text,
+                                password: _passwordController.text,
+                                phoneNumber: "",
+                                firstName: "",
+                                lastName: "",
+                              );
+                              // Naviguer vers la page de vérification après la création de l'utilisateur
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => VerificationMail()),
+                              );
+                            } catch (error) {
+                              setState(() {
+                                _errorMessage = error.toString();
+                              });
+                            }
+                          }
+
                         },
                         label: 'Continue',
                       ),

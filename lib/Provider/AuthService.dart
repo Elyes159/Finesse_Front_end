@@ -1,18 +1,22 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:finesse_frontend/ApiServices/backend_url.dart';
 import 'package:finesse_frontend/Models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 
 
 class AuthService with ChangeNotifier{
   String _accessToken = '';
   bool _isAuthenticated = false;
-  User? _currentUser;
+  Users? _currentUser;
+  int _userId = 0;
 
   bool get isAuthenticated => _isAuthenticated;
-  User? get currentUser => _currentUser;
+  Users? get currentUser => _currentUser;
+  int get userId => _userId;
 
   Future<void> signUp({
     required String username,
@@ -23,7 +27,6 @@ class AuthService with ChangeNotifier{
     required String lastName,
   })async{
     final url = Uri.parse("${AppConfig.baseUrl}/api/auth/signup/");
-
     final response = await http.post(
       url,
       headers: {'Content-Type':'application/json'},
@@ -37,9 +40,16 @@ class AuthService with ChangeNotifier{
       }),
     );
     if(response.statusCode == 201){
+      print("heeeeeeeeeeey");
+      print(json.decode(response.body)["id"]);
+
+      final data = json.decode(response.body);
+      print(data);
+      _userId = data["id"];
+      notifyListeners();
       print('utilisateur creer');
     }else{
-      throw Exception('erreur lors de la création');
+      throw Exception('erreur lors de la création ${response.body}');
     }
   }
   Future<void> signIn({
@@ -61,10 +71,10 @@ class AuthService with ChangeNotifier{
       _accessToken = data['access_token'];
       _isAuthenticated = true;
 
-      _currentUser = User.fromJson(data['user']);
+      _currentUser = Users.fromJson(data['user']);
       notifyListeners();
     }else{
-      throw Exception('Erreur lors de la connexion');
+      throw Exception('Erreur lors de la connexion ${e.toString()}');
     }
   }
 
@@ -76,8 +86,8 @@ class AuthService with ChangeNotifier{
   }
 
   Future<void> confirmEmailVerification({
-    required String userId,
-    required String verificationCode,
+    required int userId,
+    required String? verificationCode,
   })async{
     final url = Uri.parse("${AppConfig.baseUrl}/api/auth/verify-code/");
     final response = await http.post(
@@ -93,5 +103,34 @@ class AuthService with ChangeNotifier{
     }else{
       throw Exception('${json.decode(response.body)}');
     }
+  }
+
+  Future<void>regiterProfile({
+    required String full_name,
+    required String phone_number,
+    required String address,
+    required String description,
+    XFile? image,
+    required int userId
+
+  }) async{
+      final url = Uri.parse("${AppConfig.baseUrl}/api/auth/$userId/register_profile/");
+      final response = await http.post(
+        url,
+        headers: {"Content-Type":"application/json"},
+        body: json.encode({
+          "full_name":full_name,
+          "phone_number" :phone_number,
+          "address":address,
+          "description":description,
+          "avatar":image,
+        }),
+      );
+      if (response.statusCode==200){
+        print("user cree avec succees");
+      }else {
+        throw Exception('${json.decode(response.body)}');
+      }
+
   }
 }

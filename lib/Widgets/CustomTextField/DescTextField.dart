@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class CustomTextFormField extends StatefulWidget {
+class DescTextField extends StatefulWidget {
   final TextEditingController controller;
   final String label;
   final bool isPassword;
@@ -9,7 +9,7 @@ class CustomTextFormField extends StatefulWidget {
   final FormFieldValidator<String>? validator;
   final FormFieldSetter<String>? onSaved;
 
-  CustomTextFormField({
+  DescTextField({
     super.key,
     required this.controller,
     required this.label,
@@ -20,10 +20,10 @@ class CustomTextFormField extends StatefulWidget {
   });
 
   @override
-  State<CustomTextFormField> createState() => _CustomTextFormFieldState();
+  State<DescTextField> createState() => _DescTextFieldState();
 }
 
-class _CustomTextFormFieldState extends State<CustomTextFormField> {
+class _DescTextFieldState extends State<DescTextField> {
   bool _obscureText = true;
   String? _errorMessage; // Message d'erreur
   bool _isTouched = false; // Indique si le champ a été touché
@@ -34,24 +34,15 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
     });
   }
 
-  void _onTextChanged() {
-    if (mounted) {
-      setState(() {
-        _errorMessage = widget.validator?.call(widget.controller.text); // Validation
-      });
-    }
-  }
-
   @override
   void initState() {
     super.initState();
-    widget.controller.addListener(_onTextChanged);
-  }
 
-  @override
-  void dispose() {
-    widget.controller.removeListener(_onTextChanged);
-    super.dispose();
+    widget.controller.addListener(() {
+      setState(() {
+        _errorMessage = widget.validator?.call(widget.controller.text); // Validation
+      });
+    });
   }
 
   @override
@@ -63,7 +54,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         children: [
           Container(
             width: MediaQuery.of(context).size.width,
-            height: 60,
+            height: 119,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: ShapeDecoration(
               shape: RoundedRectangleBorder(
@@ -108,6 +99,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
               ),
             ),
           ),
+          // Affichage conditionnel du message d'erreur
           if (_isTouched && _errorMessage != null && _errorMessage!.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(top: 4.0),

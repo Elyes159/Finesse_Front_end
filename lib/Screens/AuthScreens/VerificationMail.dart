@@ -1,6 +1,11 @@
+import 'package:finesse_frontend/Models/user.dart';
+import 'package:finesse_frontend/Provider/AuthService.dart';
+import 'package:finesse_frontend/Screens/AuthScreens/CompleteInfo.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';  // Importer le package flutter_svg
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';  // Importer le package flutter_svg
 
 class VerificationMail extends StatefulWidget {
   const VerificationMail({super.key});
@@ -13,6 +18,7 @@ class _VerificationMailState extends State<VerificationMail> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   final List<TextEditingController> _controllers = List.generate(6, (index) => TextEditingController());
+    Users? user;
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +113,19 @@ class _VerificationMailState extends State<VerificationMail> {
           const SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: CustomButton(label: "Next", onTap: (){})
+            child: CustomButton(label: "Next", onTap: ()async{
+              try{
+                await Provider.of<AuthService>(context, listen: false).confirmEmailVerification(
+                  userId: Provider.of<AuthService>(context, listen: false).userId,
+                  verificationCode: _controllers.map((controller) => controller.text).join(''),
+                ); 
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>CompleteInfo()));           
+              }catch(e){
+                if (kDebugMode) {
+                  print("ereir ${e.toString()}");
+                }
+              }
+            })
           ),
         ],
       ),
