@@ -3,8 +3,6 @@ class Users {
   final String username;
   final String email;
   final String phoneNumber;
-  final String firstName;
-  final String lastName;
   final String? avatar;
   final String fullName;
   final String address;
@@ -17,8 +15,6 @@ class Users {
     required this.username,
     required this.email,
     required this.phoneNumber,
-    required this.firstName,
-    required this.lastName,
     this.avatar,
     required this.fullName,
     required this.address,
@@ -33,8 +29,6 @@ class Users {
       username: json['user_profile']['username'],
       email: json['user_profile']['email'],
       phoneNumber: json['user_profile']['phone_number'],
-      firstName: json['user_profile']['first_name'],
-      lastName: json['user_profile']['last_name'],
       avatar: json['user_profile']['avatar'],
       fullName: json['user_profile']['full_name'],
       address: json['user_profile']['address'],

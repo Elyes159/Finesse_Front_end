@@ -19,6 +19,7 @@ class _SignInScreenState extends State<SignInScreen> {
   final Map<String, String> _formData = {};
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  String _errorMessage = ''; // Variable pour stocker l'erreur
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +57,6 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
             ),
             const SizedBox(height: 24,),
-            // Formulaire avec validation
             Form(
               key: _formKey,
               child: Column(
@@ -87,32 +87,45 @@ class _SignInScreenState extends State<SignInScreen> {
                     onSaved: (value) => _formData['password'] = value!,
                   ),
                   const SizedBox(height: 16,),
-                 CustomButton(
-                  label: "Login",
-                  onTap: () async {
-                    // Sauvegarder les valeurs si la validation est réussie
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save(); // Ne s'exécute que si la validation réussit
-                      try {
-                        await authService.signIn(
-                          username: _formData['username']!,
-                          password: _formData['password']!,
-                        );
-                        final user = authService.currentUser;
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(builder: (context) => HomeScreen()),
-                          (Route<dynamic> route) => false,  // Supprimer toutes les routes précédentes
-                        );
-                      } catch (e) {
-                        // Gérer l'erreur ici si nécessaire
+                  CustomButton(
+                    label: "Login",
+                    onTap: () async {
+                      // Sauvegarder les valeurs si la validation est réussie
+                      if (_formKey.currentState!.validate()) {
+                        _formKey.currentState!.save(); // Ne s'exécute que si la validation réussit
+                        try {
+                          await authService.signIn(
+                            username: _formData['username']!,
+                            password: _formData['password']!,
+                          );
+                          final user = authService.currentUser;
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (context) => HomeScreen()),
+                            (Route<dynamic> route) => false,  // Supprimer toutes les routes précédentes
+                          );
+                        } catch (e) {
+                          setState(() {
+                            _errorMessage = 'verify your password or username';
+                          });
+                        }
                       }
-                    } else {
-                      // Ajoutez éventuellement un message d'erreur si la validation échoue
-                    }
-                  },
-                ),
-
+                    },
+                  ),
+                  // Affichage du texte d'erreur ici
+                  if (_errorMessage.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        _errorMessage,
+                        style: TextStyle(
+                          fontFamily: "Raleway",
+                          color: Colors.red,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -131,7 +144,32 @@ class _SignInScreenState extends State<SignInScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CustomContainer(onTap: (){}, imagePath: "assets/Icons/google.svg",),
+CustomContainer(onTap: () async {
+  try {
+    // Attendre la fin de la connexion Google
+    bool isLoggedIn = await Provider.of<AuthService>(context, listen: false).googleLogin();
+
+    // Si la connexion réussit et l'email existe, naviguer vers le HomeScreen
+    if (isLoggedIn) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+        (Route<dynamic> route) => false,  // Supprimer toutes les routes précédentes
+      );
+    } else {
+      // Afficher un message d'erreur ou rediriger vers une page d'inscription si l'email n'existe pas
+      setState(() {
+        _errorMessage = 'L\'email n\'existe pas dans la base de données. Vous pouvez vous inscrire.';
+      });
+    }
+  } catch (e) {
+    setState(() {
+      _errorMessage = 'Erreur lors de la connexion avec Google: $e';
+    });
+  }
+}, imagePath: "assets/Icons/google.svg")
+
+                ,
                 SizedBox(width: 8.86,),
                 CustomContainer(onTap: (){}, imagePath: "assets/Icons/facebook.svg"),
                 SizedBox(width: 8.86,),
@@ -175,3 +213,4 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 }
+
