@@ -6,8 +6,8 @@ class Users {
   final String? avatar;
   final String fullName;
   final String address;
-  final bool isEmailVerified;
-  final String verificationCode;
+  final bool? isEmailVerified;
+  final String? verificationCode;
   final String description;
 
   Users({
@@ -18,8 +18,8 @@ class Users {
     this.avatar,
     required this.fullName,
     required this.address,
-    required this.isEmailVerified,
-    required this.verificationCode,
+     this.isEmailVerified,
+     this.verificationCode,
     required this.description,
   });
 

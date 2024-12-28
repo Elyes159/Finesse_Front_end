@@ -103,7 +103,7 @@ class AuthService with ChangeNotifier{
       await storage.write(key: 'user_verification_code', value: _currentUser!.verificationCode);
       await storage.write(key: 'user_description', value: _currentUser!.description);
       await storage.write(key: 'user_full_name', value: _currentUser!.fullName);
-
+      await storage.write(key: 'parametre', value: "normal");
     notifyListeners();
   } else {
     throw Exception('Erreur lors de la connexion : ${response.statusCode}');
@@ -389,22 +389,23 @@ Future<bool> googleLogin() async {
         }
 
         // Extraire le token d'accès et autres informations utilisateur
-        _accessToken = data["user"]['access_token'];
+        _accessToken = data['access_token'];
         _isAuthenticated = true;
 
         // Créer une instance de UsersGoogle à partir des données retournées
-        _currentUserGoogle = UsersGoogle.fromJson(data['user']);
-
-        // Stocker les données utilisateur et le token dans FlutterSecureStorage
-        await storage.write(key: 'access_token', value: _accessToken);
-        await storage.write(key: 'user_id', value: _currentUserGoogle?.id.toString());
-        await storage.write(key: 'user_email', value: _currentUserGoogle?.email);
-        await storage.write(key: 'user_username', value: _currentUserGoogle?.username);
-        await storage.write(key: 'user_first_name', value: _currentUserGoogle?.firstName);
-        await storage.write(key: 'user_last_name', value: _currentUserGoogle?.lastName);
-        await storage.write(key: 'user_full_name', value: _currentUserGoogle?.fullName);
-        await storage.write(key: 'user_avatar', value: _currentUserGoogle?.avatar);
-
+        _currentUser = Users.fromJson(data);
+      await storage.write(key: 'access_token', value: _accessToken);
+      await storage.write(key: 'user_id', value: _currentUser!.id.toString());
+      await storage.write(key: 'user_email', value: _currentUser!.email);
+      await storage.write(key: 'user_phone_number', value: _currentUser!.phoneNumber);
+      await storage.write(key: 'user_username', value: _currentUser!.username);
+      await storage.write(key: 'user_avatar', value: _currentUser!.avatar ?? ''); // Si avatar est null, on peut le mettre comme une chaîne vide
+      await storage.write(key: 'user_address', value: _currentUser!.address);
+      await storage.write(key: 'user_is_email_verified', value: _currentUser!.isEmailVerified.toString());
+      await storage.write(key: 'user_verification_code', value: _currentUser!.verificationCode);
+      await storage.write(key: 'user_description', value: _currentUser!.description);
+      await storage.write(key: 'user_full_name', value: _currentUser!.fullName);
+      await storage.write(key: 'parametre', value: "google");
         notifyListeners();  // Mettre à jour les listeners pour la gestion de l'état
         return true;  // Retourner true si la connexion est réussie
       } else {
@@ -433,24 +434,26 @@ Future<bool> googleLogin() async {
 
   Future<void> loadUserGoogleData() async {
     String? storedToken = await storage.read(key: 'access_token');
+    String? storedUsername = await storage.read(key: 'user_username');
     String? storedUserId = await storage.read(key: 'user_id');
     String? storedUserEmail = await storage.read(key: 'user_email');
-    String? storedUserUsername = await storage.read(key: 'user_username');
-    String? storedUserFirstName = await storage.read(key: 'user_first_name');
-    String? storedUserLastName = await storage.read(key: 'user_last_name');
-    String? storedUserFullName = await storage.read(key: 'user_full_name');
+    String? storedUserPhoneNumber = await storage.read(key: 'user_phone_number');
     String? storedUserAvatar = await storage.read(key: 'user_avatar');
+    String? storedUserFullName = await storage.read(key: 'user_full_name');
+    String? storedUserAddress = await storage.read(key: 'user_address');
+    String? storedUserDescription = await storage.read(key: 'user_description');
 
     if (storedToken != null && storedUserId != null) {
       _accessToken = storedToken;
-      _currentUserGoogle = UsersGoogle(
+      _currentUser = Users(
         id: int.parse(storedUserId),
         email: storedUserEmail!,
-        username: storedUserUsername!,
-        firstName: storedUserFirstName!,
-        lastName: storedUserLastName!,
+        username: storedUsername!,
         fullName: storedUserFullName!,
         avatar: storedUserAvatar!,
+         phoneNumber: storedUserPhoneNumber!,
+          address: storedUserAddress!,
+           description: storedUserDescription!,
       );
       _isAuthenticated = true;
       notifyListeners();

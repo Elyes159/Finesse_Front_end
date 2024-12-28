@@ -18,25 +18,28 @@ class _SplashScreenState extends State<SplashScreen> {
   final FlutterSecureStorage storage = FlutterSecureStorage();
   double progress = 0.0;
   final int durationInSeconds = 10;
+  Timer? _progressTimer;
+  Timer? _navigationTimer;
 
   @override
   void initState() {
     super.initState();
-    _checkAccessToken();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<AuthService>(context, listen: false).loadUserData();
-    });
     _startProgress();
+    _initializeApp();
   }
 
-  /// Vérifie la présence d'un access_token dans le stockage sécurisé
-  Future<void> _checkAccessToken() async {
+  /// Fonction pour initialiser l'application et vérifier le token et les paramètres
+  Future<void> _initializeApp() async {
     String? accessToken = await storage.read(key: 'access_token');
-    Timer(Duration(seconds: durationInSeconds), () {
+    String? parametre = await storage.read(key: 'parametre');
+
+    // Vérification du token pour la navigation
+    _navigationTimer = Timer(Duration(seconds: durationInSeconds), () {
+      if (!mounted) return;
       if (accessToken != null && accessToken.isNotEmpty) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
+          MaterialPageRoute(builder: (context) => HomeScreen(parameter: parametre!)),
         );
       } else {
         Navigator.pushReplacement(
@@ -45,10 +48,29 @@ class _SplashScreenState extends State<SplashScreen> {
         );
       }
     });
+
+    // Appel de la fonction pour charger les données de l'utilisateur
+    _loadUserDataBasedOnParam(parametre);
   }
 
+  /// Fonction qui charge les données de l'utilisateur en fonction de la valeur de "parametre"
+  void _loadUserDataBasedOnParam(String? parametre) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (parametre == "normal") {
+        Provider.of<AuthService>(context, listen: false).loadUserData();
+      } else {
+        Provider.of<AuthService>(context, listen: false).loadUserGoogleData();
+      }
+    });
+  }
+
+  /// Démarre la barre de progression
   void _startProgress() {
-    Timer.periodic(const Duration(milliseconds: 100), (timer) {
+    _progressTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
       setState(() {
         progress += 0.1 / durationInSeconds; // Mise à jour toutes les 100ms
         if (progress >= 1.0) {
@@ -56,6 +78,14 @@ class _SplashScreenState extends State<SplashScreen> {
         }
       });
     });
+  }
+
+  @override
+  void dispose() {
+    // Annuler les timers pour éviter les appels après suppression
+    _progressTimer?.cancel();
+    _navigationTimer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -71,24 +101,15 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-             Container(
-                height: 52,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 46,
-                      height: 17,
-                      child: const Stack(
-                        children: [
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+            Container(
+              height: 52,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+              child: const Stack(
+                children: [
+                  // Possible élément à ajouter plus tard
+                ],
               ),
-            // Logo et titre
+            ),
             SvgPicture.asset(
               "assets/images/logo.svg",
               width: 89.7,

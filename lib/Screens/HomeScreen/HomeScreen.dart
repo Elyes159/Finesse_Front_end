@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final String? parameter;
+  const HomeScreen({Key? key , required this.parameter}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -14,32 +15,38 @@ class _HomeScreenState extends State<HomeScreen> {
  @override
 void initState() {
   super.initState();
-  
-  // Assurez-vous que loadUserData est exécuté après le cycle de vie de la construction
-  WidgetsBinding.instance.addPostFrameCallback((_) {
+  if(widget.parameter=="normal") {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
     Provider.of<AuthService>(context, listen: false).loadUserData();
   });
+  }else {
+     WidgetsBinding.instance.addPostFrameCallback((_) {
+    Provider.of<AuthService>(context, listen: false).loadUserGoogleData();
+  });
+  }
 }
 
   @override
   Widget build(BuildContext context) {
+    
     final user = Provider.of<AuthService>(context, listen: false).currentUser!;
+      
     return Scaffold(
       body: Column(
         children: [
 
-          CircleAvatar(
+         CircleAvatar(
             radius: 50.0,
             backgroundImage: user.avatar != null
-                ? NetworkImage("${AppConfig.TestClientUrl}${user.avatar}")
+                ? NetworkImage(widget.parameter == "normal"
+                    ? "${AppConfig.TestClientUrl}${user.avatar}"
+                    : user.avatar!)
                 : null,
             backgroundColor: Colors.transparent,
             child: user.avatar == null
                 ? const CircularProgressIndicator()
                 : null,
-          )
-
-          ,
+          ),
           const SizedBox(height: 20), // Espacement entre l'avatar et le texte
           // Ajouter du texte pour afficher le nom de l'utilisateur
           Text(

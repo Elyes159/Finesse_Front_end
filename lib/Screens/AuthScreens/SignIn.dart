@@ -101,7 +101,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           final user = authService.currentUser;
                           Navigator.pushAndRemoveUntil(
                             context,
-                            MaterialPageRoute(builder: (context) => HomeScreen()),
+                            MaterialPageRoute(builder: (context) => HomeScreen(parameter: "normal",)),
                             (Route<dynamic> route) => false,  // Supprimer toutes les routes précédentes
                           );
                         } catch (e) {
@@ -153,8 +153,8 @@ CustomContainer(onTap: () async {
     if (isLoggedIn) {
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-        (Route<dynamic> route) => false,  // Supprimer toutes les routes précédentes
+        MaterialPageRoute(builder: (context) => HomeScreen(parameter: "google",)),
+        (Route<dynamic> route) => false,  
       );
     } else {
       // Afficher un message d'erreur ou rediriger vers une page d'inscription si l'email n'existe pas
