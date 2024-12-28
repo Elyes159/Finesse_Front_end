@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/letzGo.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
@@ -11,11 +10,13 @@ import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:flutter/services.dart' show rootBundle;
+import 'dart:typed_data';
 
 class CompleteInfo extends StatefulWidget {
   final String parameter;
-  const CompleteInfo({Key? key , required this.parameter}) : super(key: key);
+
+  const CompleteInfo({Key? key, required this.parameter}) : super(key: key);
 
   @override
   State<CompleteInfo> createState() => _CompleteInfoState();
@@ -29,16 +30,21 @@ class _CompleteInfoState extends State<CompleteInfo> {
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
-   Future<void> _pickImage() async {
+  Future<void> _pickImage() async {
     final ImagePicker _picker = ImagePicker();
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       setState(() {
-        _imageFile = image; 
+        _imageFile = image;
       });
     }
   }
-  
+
+  Future<Uint8List> _loadImageFromAssets(String assetPath) async {
+    final byteData = await rootBundle.load(assetPath);
+    return byteData.buffer.asUint8List();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,7 +63,6 @@ class _CompleteInfoState extends State<CompleteInfo> {
       body: ListView(
         children: [
           const SizedBox(height: 12),
-          // Titre principal
           const Text(
             'Complete info',
             textAlign: TextAlign.center,
@@ -69,7 +74,6 @@ class _CompleteInfoState extends State<CompleteInfo> {
             ),
           ),
           const SizedBox(height: 10),
-          // Sous-titre
           const Text(
             'Set up your profile',
             textAlign: TextAlign.center,
@@ -87,154 +91,186 @@ class _CompleteInfoState extends State<CompleteInfo> {
             child: Column(
               children: [
                 Center(
-              child: GestureDetector(
-                  onTap: widget.parameter == "normal"
-                      ? () {
-                          // Action lors du clic
-                          _pickImage();
-                        }
-                      : null, // Pas d'action si le paramètre n'est pas "normal"
-                  child: Container(
-                    width: 100,
-                    height: 100,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFD9D9D9),
-                      shape: BoxShape.circle,
-                    ),
-                    child: _imageFile == null
-                        ? (widget.parameter == "normal"
-                            ? const Icon(
-                                Icons.camera_alt,
-                                color: Colors.white,
-                                size: 40,
-                              )
-                            : ClipOval(
-                                child: Image.network(
-                                  Provider.of<AuthService>(context,listen:false).googleAvatar, // Remplacez par votre URL
+                  child: GestureDetector(
+                    onTap: widget.parameter == "normal"
+                        ? () {
+                            _pickImage();
+                          }
+                        : null, // Pas d'action si le paramètre n'est pas "normal"
+                    child: Container(
+                      width: 100,
+                      height: 100,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFD9D9D9),
+                        shape: BoxShape.circle,
+                      ),
+                      child: _imageFile == null
+                          ? (widget.parameter == "normal"
+                              ? const Icon(
+                                  Icons.camera_alt,
+                                  color: Colors.white,
+                                  size: 40,
+                                )
+                              : ClipOval(
+                                  child: Image.network(
+                                    Provider.of<AuthService>(context, listen: false)
+                                        .googleAvatar,
+                                    width: 100,
+                                    height: 100,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ))
+                          : ClipOval(
+                              child: ColorFiltered(
+                                colorFilter: ColorFilter.mode(
+                                  Colors.grey.withOpacity(0.5),
+                                  BlendMode.saturation,
+                                ),
+                                child: Image.file(
+                                  File(_imageFile!.path),
                                   width: 100,
                                   height: 100,
                                   fit: BoxFit.cover,
                                 ),
-                              ))
-                        : ClipOval(
-                            child: ColorFiltered(
-                              colorFilter: ColorFilter.mode(
-                                Colors.grey.withOpacity(0.5),
-                                BlendMode.saturation,
-                              ),
-                              child: Image.file(
-                                File(_imageFile!.path),
-                                width: 100,
-                                height: 100,
-                                fit: BoxFit.cover,
                               ),
                             ),
-                          ),
-                  ),
-                ),
-
-            ),
-            const SizedBox(height: 16),
-            // Champ de texte pour le nom complet
-            CustomTextFormField(
-              controller: _fullnameController,
-              label: "Your full name",
-              isPassword: false,
-              defaultValue: widget.parameter=="normal"? "":Provider.of<AuthService>(context,listen:false).fullnameGoogle,
-            ),
-            const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.only(left:0,right: 0),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Container(
-                      width: 120,
-                      height: 60,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      decoration: ShapeDecoration(
-                        shape: RoundedRectangleBorder(
-                          side: BorderSide(width: 1, color: Color(0xFF5C7CA4)),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: IntlPhoneField(
-                        showDropdownIcon: false,
-                        style: TextStyle(fontFamily: "Raleway"), // Style du champ principal
-                        decoration: const InputDecoration(
-                          labelStyle: TextStyle(
-                            color: Color(0xFF3E536E),
-                            fontSize: 16,
-                            fontFamily: 'Raleway',
-                            fontWeight: FontWeight.w400,
-                            height: 1.5,
-                            letterSpacing: 0.5,
-                          ),
-                          border: InputBorder.none,
-                          counterText: '',
-                          contentPadding: EdgeInsets.only(left: 10),
-                        ),
-                        initialCountryCode: 'TN', // Code par défaut
-                        pickerDialogStyle: PickerDialogStyle(
-                          countryNameStyle: const TextStyle(
-                            fontFamily: 'Raleway', // Appliquer la police Raleway
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black, // Couleur du texte des pays
-                          ),
-                          countryCodeStyle: const TextStyle(
-                            fontFamily: 'Raleway', // Appliquer la police Raleway pour les codes
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.grey, // Couleur des codes
-                          ),
-                          searchFieldInputDecoration: InputDecoration(
-                            hintText: 'Search country',
-                            hintStyle: const TextStyle(
-                              fontFamily: 'Raleway',
-                              fontSize: 14,
-                              color: Colors.grey,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                        ),
-                        dropdownTextStyle: TextStyle(fontFamily: "Raleway"),
-                        flagsButtonPadding: const EdgeInsets.only(right: 8.0),
-                        onCountryChanged: (country) {
-                          print('Code pays sélectionné : ${country.dialCode}');
-                        },
-                        onChanged: (_) {},
-                      ),
                     ),
                   ),
-            
-                  const SizedBox(width: 10),
-                  Expanded(child: CustomTextFormField(controller: _phoneController, label: "Phone number", isPassword: false,keyboardType: TextInputType.numberWithOptions(),))
-                ],
-              ),
+                ),
+                const SizedBox(height: 16),
+                CustomTextFormField(
+                  controller: _fullnameController,
+                  label: "Your full name",
+                  isPassword: false,
+                  defaultValue: widget.parameter == "normal"
+                      ? ""
+                      : Provider.of<AuthService>(context, listen: false)
+                          .fullnameGoogle,
+                ),
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 120,
+                        height: 60,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        decoration: ShapeDecoration(
+                          shape: RoundedRectangleBorder(
+                            side: const BorderSide(width: 1, color: Color(0xFF5C7CA4)),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: IntlPhoneField(
+                          showDropdownIcon: false,
+                          style: const TextStyle(fontFamily: "Raleway"),
+                          decoration: const InputDecoration(
+                            labelStyle: TextStyle(
+                              color: Color(0xFF3E536E),
+                              fontSize: 16,
+                              fontFamily: 'Raleway',
+                              fontWeight: FontWeight.w400,
+                              height: 1.5,
+                              letterSpacing: 0.5,
+                            ),
+                            border: InputBorder.none,
+                            counterText: '',
+                            contentPadding: EdgeInsets.only(left: 10),
+                          ),
+                          initialCountryCode: 'TN',
+                          pickerDialogStyle:  PickerDialogStyle(
+                            countryNameStyle: TextStyle(
+                              fontFamily: 'Raleway',
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black,
+                            ),
+                            countryCodeStyle: TextStyle(
+                              fontFamily: 'Raleway',
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          onChanged: (_) {},
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: CustomTextFormField(
+                          controller: _phoneController,
+                          label: "Phone number",
+                          isPassword: false,
+                          keyboardType: TextInputType.numberWithOptions(),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                CustomTextFormField(
+                  controller: _addressController,
+                  label: "Address",
+                  isPassword: false,
+                ),
+                const SizedBox(height: 16),
+                DescTextField(
+                  controller: _descriptionController,
+                  label: "Description",
+                  isPassword: false,
+                ),
+                const SizedBox(height: 16),
+                CustomButton(
+                  label: "Create account",
+                  onTap: () async {
+                    Uint8List imageToSend;
+
+                    // Si l'utilisateur n'a pas choisi d'image, envoyer l'image par défaut
+                    if (_imageFile == null) {
+                      imageToSend = await _loadImageFromAssets('assets/images/user.png');
+                    } else {
+                      imageToSend = await _imageFile!.readAsBytes();
+                    }
+
+                    if (widget.parameter == "normal") {
+                      Provider.of<AuthService>(context, listen: false)
+                          .registerProfile(
+                        full_name: _fullnameController.text,
+                        phone_number: _phoneController.text,
+                        address: _addressController.text,
+                        description: _descriptionController.text,
+                        userId: Provider.of<AuthService>(context, listen: false).userId,
+                        image: _imageFile,
+                      );
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => LetzGo(parameter: "normal"),
+                        ),
+                      );
+                    } else {
+                      Provider.of<AuthService>(context, listen: false)
+                          .registerProfileGoogle(
+                        full_name: _fullnameController.text,
+                        phone_number: _phoneController.text,
+                        address: _addressController.text,
+                        description: _descriptionController.text,
+                        userId: Provider.of<AuthService>(context, listen: false).userId,
+                      );
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LetzGo(parameter: "google"),
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
-            CustomTextFormField(controller: _addressController, label: "Address", isPassword: false),
-            const SizedBox(height: 16,),
-            DescTextField(controller: _descriptionController, label: "Description", isPassword: false),
-            const SizedBox(height: 16,),
-            CustomButton(label: "Create account", onTap: (){
-              if(widget.parameter=="normal") {
-                Provider.of<AuthService>(context,listen: false).registerProfile(full_name: _fullnameController.text, phone_number: _phoneController.text, address: _addressController.text, description: _descriptionController.text, userId: Provider.of<AuthService>(context,listen: false).userId,image: _imageFile);
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LetzGo(parameter: "normal",)));
-              }else {
-                Provider.of<AuthService>(context,listen: false).registerProfileGoogle(full_name: _fullnameController.text, phone_number: _phoneController.text, address: _addressController.text, description: _descriptionController.text, userId: Provider.of<AuthService>(context,listen: false).userId);
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const LetzGo(parameter: "google",)));
-              }
-            
-            }
-            )
-            ],),
           ),
-          
         ],
       ),
     );

@@ -12,36 +12,34 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
- @override
-void initState() {
-  super.initState();
-  if(widget.parameter=="normal") {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-    Provider.of<AuthService>(context, listen: false).loadUserData();
-  });
-  }else {
-     WidgetsBinding.instance.addPostFrameCallback((_) {
-    Provider.of<AuthService>(context, listen: false).loadUserGoogleData();
-  });
+  @override
+  void initState() {
+    super.initState();
+    if(widget.parameter == "normal") {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Provider.of<AuthService>(context, listen: false).loadUserData();
+      });
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Provider.of<AuthService>(context, listen: false).loadUserGoogleData();
+      });
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
-    
     final user = Provider.of<AuthService>(context, listen: false).currentUser!;
       
     return Scaffold(
       body: Column(
         children: [
-
-         CircleAvatar(
+          CircleAvatar(
             radius: 50.0,
-            backgroundImage: user.avatar != null
+            backgroundImage: user.avatar != ""
                 ? NetworkImage(widget.parameter == "normal"
                     ? "${AppConfig.TestClientUrl}${user.avatar}"
                     : user.avatar!)
-                : null,
+                : AssetImage('assets/images/user.png') as ImageProvider, // Image locale si avatar est null
             backgroundColor: Colors.transparent,
             child: user.avatar == null
                 ? const CircularProgressIndicator()

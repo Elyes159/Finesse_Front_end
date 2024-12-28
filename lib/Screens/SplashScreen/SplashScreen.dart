@@ -64,7 +64,6 @@ class _SplashScreenState extends State<SplashScreen> {
     });
   }
 
-  /// Démarre la barre de progression
   void _startProgress() {
     _progressTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
       if (!mounted) {
