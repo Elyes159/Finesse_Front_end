@@ -23,7 +23,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPassController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  bool _isLoading = false;
   String? _errorMessage;
  
 
@@ -116,7 +116,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ),
                       CustomButton(
-                        onTap: () async{
+                        onTap: _isLoading ? (){}:() async{
                           if (_formKey.currentState?.validate() ?? false) {
                             try {
                               // Appel à la fonction signUp du provider
@@ -128,6 +128,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 firstName: "",
                                 lastName: "",
                               );
+                              setState(() {
+                                _isLoading = true;
+                              });
                               // Naviguer vers la page de vérification après la création de l'utilisateur
                               Navigator.push(
                                 context,
@@ -139,9 +142,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               });
                             }
                           }
-
                         },
-                        label: 'Continue',
+                        label:_isLoading?'Loading...': 'Continue',
                       ),
                     ],
                   ),

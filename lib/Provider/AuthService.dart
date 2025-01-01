@@ -42,7 +42,7 @@ class AuthService with ChangeNotifier{
     required String firstName,
     required String lastName,
   })async{
-    final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/signup/");
+    final url = Uri.parse("${AppConfig.baseUrl}/api/auth/signup/");
     final response = await http.post(
       url,
       headers: {'Content-Type':'application/json'},
@@ -72,7 +72,7 @@ class AuthService with ChangeNotifier{
   required String username,
   required String password,
 }) async {
-  final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/signin/");
+  final url = Uri.parse("${AppConfig.baseUrl}/api/auth/signin/");
   final response = await http.post(
     url,
     headers: {'Content-Type': 'application/json'},
@@ -177,7 +177,7 @@ Future<void> loadUserData() async {
     required int userId,
     required String? verificationCode,
   })async{
-    final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/verify-code/");
+    final url = Uri.parse("${AppConfig.baseUrl}/api/auth/verify-code/");
     final response = await http.post(
       url,
       headers: {'Content-Type':'application/json'},
@@ -201,7 +201,7 @@ Future<void> loadUserData() async {
   XFile? image,
   required int userId
 }) async {
-  final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/$userId/register_profile/");
+  final url = Uri.parse("${AppConfig.baseUrl}/api/auth/$userId/register_profile/");
   var request = http.MultipartRequest('POST', url)
     ..fields['full_name'] = full_name
     ..fields['phone_number'] = phone_number
@@ -231,7 +231,7 @@ Future<void> registerProfileGoogle({
   required String description,
   required int userId,
 }) async {
-  final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/$userId/register_profile_google/");
+  final url = Uri.parse("${AppConfig.baseUrl}/api/auth/$userId/register_profile_google/");
 
   // Création du corps de la requête JSON
   final Map<String, dynamic> body = {
@@ -269,7 +269,7 @@ Future<void> createUsername({
   required bool isMail,
   required int userId,
 }) async {
-  final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/$userId/createUsername/");
+  final url = Uri.parse("${AppConfig.baseUrl}/api/auth/$userId/createUsername/");
   final response = await http.post(
     url,
     headers: {"Content-Type": "application/json"},
@@ -294,7 +294,7 @@ Future<void> createUsernameGoogle({
   required bool isMail,
   required int userId,
 }) async {
-  final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/$userId/createUsernamegoogle/");
+  final url = Uri.parse("${AppConfig.baseUrl}/api/auth/$userId/createUsernamegoogle/");
   final response = await http.post(
     url,
     headers: {"Content-Type": "application/json"},
@@ -340,7 +340,7 @@ Future<void> signUpGoogle() async {
         };
 
         final response = await http.post(
-          Uri.parse('${AppConfig.TestClientUrl}/api/auth/googleSign/'),
+          Uri.parse('${AppConfig.baseUrl}/api/auth/googleSign/'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode(bodyData), // Sérialiser les données en JSON
         );
@@ -370,7 +370,7 @@ Future<bool> googleLogin() async {
       final String? idToken = googleAuth.idToken;
       final String? accessToken = googleAuth.accessToken;
 
-      final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/googlelogin/");
+      final url = Uri.parse("${AppConfig.baseUrl}/api/auth/googlelogin/");
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},

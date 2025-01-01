@@ -20,6 +20,38 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String _errorMessage = ''; // Variable pour stocker l'erreur
+  bool _isLoading = false; // Variable pour gérer l'état du chargement
+  Future<void> _handleLogin() async {
+  if (_formKey.currentState!.validate()) {
+    _formKey.currentState!.save();
+    setState(() {
+      _isLoading = true; // Commencer le chargement
+      _errorMessage = ''; // Effacer les erreurs précédentes
+    });
+    try {
+      final authService = Provider.of<AuthService>(context, listen: false);
+      await authService.signIn(
+        username: _formData['username']!,
+        password: _formData['password']!,
+      );
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomeScreen(parameter: "normal"),
+        ),
+        (Route<dynamic> route) => false,
+      );
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Verify your password or username';
+      });
+    } finally {
+      setState(() {
+        _isLoading = false; // Arrêter le chargement
+      });
+    }
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +60,7 @@ class _SignInScreenState extends State<SignInScreen> {
       body: Center(
         child: ListView(
           children: [
-            SizedBox(height: 96,),
+            const SizedBox(height: 96),
             const Text(
               'Welcome',
               style: TextStyle(
@@ -40,7 +72,7 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 10,),
+            const SizedBox(height: 10),
             const SizedBox(
               width: 251,
               height: 48,
@@ -56,7 +88,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 24,),
+            const SizedBox(height: 24),
             Form(
               key: _formKey,
               child: Column(
@@ -73,7 +105,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     },
                     onSaved: (value) => _formData['username'] = value!,
                   ),
-                  const SizedBox(height: 16,),
+                  const SizedBox(height: 16),
                   CustomTextFormField(
                     controller: _passwordController,
                     label: "Your password",
@@ -86,39 +118,48 @@ class _SignInScreenState extends State<SignInScreen> {
                     },
                     onSaved: (value) => _formData['password'] = value!,
                   ),
-                  const SizedBox(height: 16,),
+                  const SizedBox(height: 16),
                   CustomButton(
-                    label: "Login",
-                    onTap: () async {
-                      // Sauvegarder les valeurs si la validation est réussie
-                      if (_formKey.currentState!.validate()) {
-                        _formKey.currentState!.save(); // Ne s'exécute que si la validation réussit
-                        try {
-                          await authService.signIn(
-                            username: _formData['username']!,
-                            password: _formData['password']!,
-                          );
-                          final user = authService.currentUser;
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(builder: (context) => HomeScreen(parameter: "normal",)),
-                            (Route<dynamic> route) => false,  // Supprimer toutes les routes précédentes
-                          );
-                        } catch (e) {
-                          setState(() {
-                            _errorMessage = 'verify your password or username';
-                          });
-                        }
-                      }
-                    },
+                    label: _isLoading ? "Loading..." : "Login", // Change the label dynamically
+                    onTap: _isLoading
+                        ? (){}
+                        : () async {
+                            if (_formKey.currentState!.validate()) {
+                              _formKey.currentState!.save();
+                              setState(() {
+                                _isLoading = true; // Start loading
+                                _errorMessage = ''; // Clear previous errors
+                              });
+                              try {
+                                await authService.signIn(
+                                  username: _formData['username']!,
+                                  password: _formData['password']!,
+                                );
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const HomeScreen(parameter: "normal"),
+                                  ),
+                                  (Route<dynamic> route) => false,
+                                );
+                              } catch (e) {
+                                setState(() {
+                                  _errorMessage = 'Verify your password or username';
+                                });
+                              } finally {
+                                setState(() {
+                                  _isLoading = false; // Stop loading
+                                });
+                              }
+                            }
+                          },
                   ),
-                  // Affichage du texte d'erreur ici
                   if (_errorMessage.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         _errorMessage,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontFamily: "Raleway",
                           color: Colors.red,
                           fontSize: 16,
@@ -129,8 +170,8 @@ class _SignInScreenState extends State<SignInScreen> {
                 ],
               ),
             ),
-            SizedBox(height: 32,),
-            Text(
+            const SizedBox(height: 32),
+            const Text(
               'Or use',
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -140,47 +181,50 @@ class _SignInScreenState extends State<SignInScreen> {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            SizedBox(height: 14,),
+            const SizedBox(height: 14),
+            // Social Media Buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-CustomContainer(onTap: () async {
-  try {
-    // Attendre la fin de la connexion Google
-    bool isLoggedIn = await Provider.of<AuthService>(context, listen: false).googleLogin();
-
-    // Si la connexion réussit et l'email existe, naviguer vers le HomeScreen
-    if (isLoggedIn) {
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen(parameter: "google",)),
-        (Route<dynamic> route) => false,  
-      );
-    } else {
-      // Afficher un message d'erreur ou rediriger vers une page d'inscription si l'email n'existe pas
-      setState(() {
-        _errorMessage = 'L\'email n\'existe pas dans la base de données. Vous pouvez vous inscrire.';
-      });
-    }
-  } catch (e) {
-    setState(() {
-      _errorMessage = 'Erreur lors de la connexion avec Google: $e';
-    });
-  }
-}, imagePath: "assets/Icons/google.svg")
-
-                ,
-                SizedBox(width: 8.86,),
-                CustomContainer(onTap: (){}, imagePath: "assets/Icons/facebook.svg"),
-                SizedBox(width: 8.86,),
-                CustomContainer(onTap: (){}, imagePath: "assets/Icons/apple.svg"),
+                CustomContainer(
+                  onTap: () async {
+                    try {
+                      bool isLoggedIn =
+                          await Provider.of<AuthService>(context, listen: false)
+                              .googleLogin();
+                      if (isLoggedIn) {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomeScreen(parameter: "google")),
+                          (Route<dynamic> route) => false,
+                        );
+                      } else {
+                        setState(() {
+                          _errorMessage =
+                              'L\'email n\'existe pas dans la base de données. Vous pouvez vous inscrire.';
+                        });
+                      }
+                    } catch (e) {
+                      setState(() {
+                        _errorMessage =
+                            'Erreur lors de la connexion avec Google: $e';
+                      });
+                    }
+                  },
+                  imagePath: "assets/Icons/google.svg",
+                ),
+                const SizedBox(width: 8.86),
+                CustomContainer(onTap: () {}, imagePath: "assets/Icons/facebook.svg"),
+                const SizedBox(width: 8.86),
+                CustomContainer(onTap: () {}, imagePath: "assets/Icons/apple.svg"),
               ],
             ),
-            SizedBox(height: 24,),
+            const SizedBox(height: 24),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
+                const Text(
                   'No account yet?',
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -192,9 +236,12 @@ CustomContainer(onTap: () async {
                 ),
                 InkWell(
                   onTap: () {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SignUpScreen()));
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SignUpScreen()));
                   },
-                  child: Text(
+                  child: const Text(
                     ' Sign up now',
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -206,11 +253,12 @@ CustomContainer(onTap: () async {
                   ),
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),
     );
   }
 }
+
 
