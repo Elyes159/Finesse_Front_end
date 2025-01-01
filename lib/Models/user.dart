@@ -9,6 +9,7 @@ class Users {
   final bool? isEmailVerified;
   final String? verificationCode;
   final String description;
+  late final bool hasStory;
 
   Users({
     required this.id,
@@ -21,6 +22,7 @@ class Users {
      this.isEmailVerified,
      this.verificationCode,
     required this.description,
+    required this.hasStory,
   });
 
   factory Users.fromJson(Map<String, dynamic> json) {
@@ -35,38 +37,39 @@ class Users {
       isEmailVerified: json['user_profile']['is_email_verified'],
       verificationCode: json['user_profile']['verification_code'],
       description: json['user_profile']['description'],
+      hasStory: json['user_profile']['hasStory'],
     );
   }
 }
 
-class UsersGoogle {
-  final int id;
-  final String email;
-  final String username;
-  final String firstName;
-  final String lastName;
-  final String fullName;
-  final String avatar;
+// class UsersGoogle {
+//   final int id;
+//   final String email;
+//   final String username;
+//   final String firstName;
+//   final String lastName;
+//   final String fullName;
+//   final String avatar;
 
-  UsersGoogle({
-    required this.id,
-    required this.email,
-    required this.username,
-    required this.firstName,
-    required this.lastName,
-    required this.fullName,
-    required this.avatar,
-  });
+//   UsersGoogle({
+//     required this.id,
+//     required this.email,
+//     required this.username,
+//     required this.firstName,
+//     required this.lastName,
+//     required this.fullName,
+//     required this.avatar,
+//   });
 
-  factory UsersGoogle.fromJson(Map<String, dynamic> json) {
-    return UsersGoogle(
-      id: json['id'],
-      email: json['email'],
-      username: json['username'],
-      firstName: json['first_name'],
-      lastName: json['last_name'],
-      fullName: json['full_name'],
-      avatar: json['avatar'],
-    );
-  }
-}
+//   factory UsersGoogle.fromJson(Map<String, dynamic> json) {
+//     return UsersGoogle(
+//       id: json['id'],
+//       email: json['email'],
+//       username: json['username'],
+//       firstName: json['first_name'],
+//       lastName: json['last_name'],
+//       fullName: json['full_name'],
+//       avatar: json['avatar'],
+//     );
+//   }
+// }

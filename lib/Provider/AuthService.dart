@@ -17,7 +17,6 @@ class AuthService with ChangeNotifier{
   bool _isAuthenticated = false;
   Users? _currentUser;
   int _userId = 0;
-  UsersGoogle? _currentUserGoogle;
   GoogleSignIn _googleSignIn = GoogleSignIn();
 
   String _googleAvatar = "";
@@ -29,7 +28,6 @@ class AuthService with ChangeNotifier{
 
   bool get isAuthenticated => _isAuthenticated;
   Users? get currentUser => _currentUser;
-  UsersGoogle? get currentUserGoogle => _currentUserGoogle;
   int get userId => _userId;
   String get googleAvatar => _googleAvatar;
   String get fullnameGoogle => _fullnameGoogle;
@@ -42,7 +40,7 @@ class AuthService with ChangeNotifier{
     required String firstName,
     required String lastName,
   })async{
-    final url = Uri.parse("${AppConfig.baseUrl}/api/auth/signup/");
+    final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/signup/");
     final response = await http.post(
       url,
       headers: {'Content-Type':'application/json'},
@@ -72,7 +70,7 @@ class AuthService with ChangeNotifier{
   required String username,
   required String password,
 }) async {
-  final url = Uri.parse("${AppConfig.baseUrl}/api/auth/signin/");
+  final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/signin/");
   final response = await http.post(
     url,
     headers: {'Content-Type': 'application/json'},
@@ -104,6 +102,7 @@ class AuthService with ChangeNotifier{
       await storage.write(key: 'user_description', value: _currentUser!.description);
       await storage.write(key: 'user_full_name', value: _currentUser!.fullName);
       await storage.write(key: 'parametre', value: "normal");
+      await storage.write(key: 'hasStory',value:_currentUser!.hasStory.toString());
     notifyListeners();
   } else {
     throw Exception('Erreur lors de la connexion : ${response.statusCode}');
@@ -122,6 +121,7 @@ Future<void> loadUserData() async {
   String? storedUserIsEmailVerified = await storage.read(key: 'user_is_email_verified');
   String? storedUserVerificationCode = await storage.read(key: 'user_verification_code');
   String? storedUserDescription = await storage.read(key: 'user_description');
+  String? storedHasStory = await storage.read(key: 'hasStory');
 
   if (storedToken != null && storedUserId != null) {
     // Récupérer et assigner les données utilisateur
@@ -138,6 +138,7 @@ Future<void> loadUserData() async {
       isEmailVerified: storedUserIsEmailVerified == 'true', // Conversion en booléen
       verificationCode: storedUserVerificationCode!,
       description: storedUserDescription!,
+      hasStory: storedHasStory == "true",
     );
 
     _isAuthenticated = true;
@@ -177,7 +178,7 @@ Future<void> loadUserData() async {
     required int userId,
     required String? verificationCode,
   })async{
-    final url = Uri.parse("${AppConfig.baseUrl}/api/auth/verify-code/");
+    final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/verify-code/");
     final response = await http.post(
       url,
       headers: {'Content-Type':'application/json'},
@@ -201,7 +202,7 @@ Future<void> loadUserData() async {
   XFile? image,
   required int userId
 }) async {
-  final url = Uri.parse("${AppConfig.baseUrl}/api/auth/$userId/register_profile/");
+  final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/$userId/register_profile/");
   var request = http.MultipartRequest('POST', url)
     ..fields['full_name'] = full_name
     ..fields['phone_number'] = phone_number
@@ -231,7 +232,7 @@ Future<void> registerProfileGoogle({
   required String description,
   required int userId,
 }) async {
-  final url = Uri.parse("${AppConfig.baseUrl}/api/auth/$userId/register_profile_google/");
+  final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/$userId/register_profile_google/");
 
   // Création du corps de la requête JSON
   final Map<String, dynamic> body = {
@@ -269,7 +270,7 @@ Future<void> createUsername({
   required bool isMail,
   required int userId,
 }) async {
-  final url = Uri.parse("${AppConfig.baseUrl}/api/auth/$userId/createUsername/");
+  final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/$userId/createUsername/");
   final response = await http.post(
     url,
     headers: {"Content-Type": "application/json"},
@@ -294,7 +295,7 @@ Future<void> createUsernameGoogle({
   required bool isMail,
   required int userId,
 }) async {
-  final url = Uri.parse("${AppConfig.baseUrl}/api/auth/$userId/createUsernamegoogle/");
+  final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/$userId/createUsernamegoogle/");
   final response = await http.post(
     url,
     headers: {"Content-Type": "application/json"},
@@ -340,7 +341,7 @@ Future<void> signUpGoogle() async {
         };
 
         final response = await http.post(
-          Uri.parse('${AppConfig.baseUrl}/api/auth/googleSign/'),
+          Uri.parse('${AppConfig.TestClientUrl}/api/auth/googleSign/'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode(bodyData), // Sérialiser les données en JSON
         );
@@ -370,7 +371,7 @@ Future<bool> googleLogin() async {
       final String? idToken = googleAuth.idToken;
       final String? accessToken = googleAuth.accessToken;
 
-      final url = Uri.parse("${AppConfig.baseUrl}/api/auth/googlelogin/");
+      final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/googlelogin/");
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
@@ -442,6 +443,7 @@ Future<bool> googleLogin() async {
     String? storedUserFullName = await storage.read(key: 'user_full_name');
     String? storedUserAddress = await storage.read(key: 'user_address');
     String? storedUserDescription = await storage.read(key: 'user_description');
+  String? storedHasStory = await storage.read(key: 'hasStory');
 
     if (storedToken != null && storedUserId != null) {
       _accessToken = storedToken;
@@ -454,6 +456,8 @@ Future<bool> googleLogin() async {
          phoneNumber: storedUserPhoneNumber!,
           address: storedUserAddress!,
            description: storedUserDescription!,
+           hasStory: storedHasStory == "true",
+
       );
       _isAuthenticated = true;
       notifyListeners();
@@ -473,7 +477,7 @@ Future<bool> googleLogin() async {
 
     _accessToken = '';
     _isAuthenticated = false;
-    _currentUserGoogle = null;
+    _currentUser = null;
 
     notifyListeners();
   }
