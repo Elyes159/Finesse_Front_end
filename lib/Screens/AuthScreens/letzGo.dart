@@ -210,9 +210,9 @@ class _LetzGoState extends State<LetzGo> {
                     Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(builder: (context) => SignInScreen()),
-                        (Route<dynamic> route) => false, // This ensures that all previous routes are removed
+                        (Route<dynamic> route) => false, 
                       );
-                    }else{
+                    }else if(widget.parameter=="google"){
                       await Provider.of<AuthService>(context, listen: false).createUsernameGoogle(
                       username: _usernameController.text,
                       isPolicy: _isCheckedPrivacy,
@@ -222,11 +222,22 @@ class _LetzGoState extends State<LetzGo> {
                     Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(builder: (context) => SignInScreen()),
-                        (Route<dynamic> route) => false, // This ensures that all previous routes are removed
+                        (Route<dynamic> route) => false, 
+                      );
+                    }else if(widget.parameter=="facebook"){
+                         await Provider.of<AuthService>(context, listen: false).createUsernameFacebook(
+                      username: _usernameController.text,
+                      isPolicy: _isCheckedPrivacy,
+                      isMail: _isCheckedSend,
+                      userId: Provider.of<AuthService>(context, listen: false).userId,
+                    );
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => SignInScreen()),
+                        (Route<dynamic> route) => false, 
                       );
                     }
                       
-                    // Réinitialiser l'erreur en cas de succès
                     setState(() {
                       _usernameError = null;
                     });

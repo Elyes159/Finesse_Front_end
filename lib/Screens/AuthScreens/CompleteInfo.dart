@@ -250,7 +250,7 @@ class _CompleteInfoState extends State<CompleteInfo> {
                           builder: (context) => LetzGo(parameter: "normal"),
                         ),
                       );
-                    } else {
+                    } else if (widget.parameter=="google"){
                       Provider.of<AuthService>(context, listen: false)
                           .registerProfileGoogle(
                         full_name: _fullnameController.text,
@@ -263,6 +263,21 @@ class _CompleteInfoState extends State<CompleteInfo> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => const LetzGo(parameter: "google"),
+                        ),
+                      );
+                    } else if(widget.parameter=="facebook"){
+                       Provider.of<AuthService>(context, listen: false)
+                          .registerProfilefacebook(
+                        full_name: _fullnameController.text,
+                        phone_number: _phoneController.text,
+                        address: _addressController.text,
+                        description: _descriptionController.text,
+                        userId: Provider.of<AuthService>(context, listen: false).userId,
+                      );
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LetzGo(parameter: "facebook"),
                         ),
                       );
                     }

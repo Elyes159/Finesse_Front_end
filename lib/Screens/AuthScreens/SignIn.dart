@@ -215,7 +215,32 @@ class _SignInScreenState extends State<SignInScreen> {
                   imagePath: "assets/Icons/google.svg",
                 ),
                 const SizedBox(width: 8.86),
-                CustomContainer(onTap: () {}, imagePath: "assets/Icons/facebook.svg"),
+                CustomContainer(
+                   onTap: () async {
+                    try {
+                      bool isLoggedIn =
+                          await Provider.of<AuthService>(context, listen: false)
+                              .facebookLogin();
+                      if (isLoggedIn) {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomeScreen(parameter: "facebook")),
+                          (Route<dynamic> route) => false,
+                        );
+                      } else {
+                        setState(() {
+                          _errorMessage =
+                              'Ce compte n\'existe pas dans la base de données. Vous pouvez vous inscrire.';
+                        });
+                      }
+                    } catch (e) {
+                      setState(() {
+                        _errorMessage =
+                            'Erreur lors de la connexion avec facebook: $e';
+                      });
+                    }
+                  }, imagePath: "assets/Icons/facebook.svg"),
                 const SizedBox(width: 8.86),
                 // CustomContainer(onTap: () {}, imagePath: "assets/Icons/apple.svg"),
               ],

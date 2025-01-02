@@ -260,6 +260,45 @@ Future<void> registerProfileGoogle({
     throw Exception("Erreur lors de l'envoi des données : ${e.toString()}");
   }
 }
+Future<void> registerProfilefacebook({
+  required String full_name,
+  required String phone_number,
+  required String address,
+  required String description,
+  required int userId,
+}) async {
+  final url = Uri.parse("${AppConfig.baseUrl}/api/auth/$userId/register_profile_facebook/");
+
+  // Création du corps de la requête JSON
+  final Map<String, dynamic> body = {
+    'full_name': full_name,
+    'phone_number': phone_number,
+    'address': address,
+    'description': description,
+  };
+
+  try {
+    // Envoi de la requête POST avec le corps JSON
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json', 
+      },
+      body: jsonEncode(body), 
+    );
+
+    if (response.statusCode == 200) {
+      print("Profil enregistré avec succès");
+    } else {
+      print("Erreur lors de l'enregistrement : ${response.body}");
+      throw Exception("Erreur ${response.statusCode}: ${response.body}");
+    }
+  } catch (e) {
+    print("Exception : ${e.toString()}");
+    throw Exception("Erreur lors de l'envoi des données : ${e.toString()}");
+  }
+}
+
 
 Future<void> createUsername({
   required String username,
@@ -311,24 +350,44 @@ Future<void> createUsernameGoogle({
     throw Exception(errorMessage);
   }
 }
-Future<void> signUpGoogle() async {
-  print("i'm used");
+Future<void> createUsernameFacebook({
+  required String username,
+  required bool isPolicy,
+  required bool isMail,
+  required int userId,
+}) async {
+  final url = Uri.parse("${AppConfig.baseUrl}/api/auth/$userId/createUsernamefacebook/");
+  final response = await http.post(
+    url,
+    headers: {"Content-Type": "application/json"},
+    body: json.encode({
+      "username": username,
+      "policy": isPolicy,
+      "mail": isMail,
+    }),
+  );
+
+  if (response.statusCode == 200) {
+    print("User créé avec succès");
+  } else {
+    // Lever une exception avec le message d'erreur renvoyé par le serveur
+    final errorMessage = json.decode(response.body)['message'] ?? 'Une erreur est survenue';
+    throw Exception(errorMessage);
+  }
+}
+Future<http.Response> signUpGoogle() async {
   try {
     GoogleSignInAccount? account = await _googleSignIn.signIn();
     if (account != null) {
       final GoogleSignInAuthentication googleAuth = await account.authentication;
       final String? idToken = googleAuth.idToken;
-      print(idToken);
-      final String? accessToken = googleAuth.accessToken;
 
       if (idToken != null) {
-        // Récupérer les informations supplémentaires de l'utilisateur
         final String userEmail = account.email;
         final String userFirstName = account.displayName?.split(' ').first ?? '';
         final String userLastName = account.displayName?.split(' ').last ?? '';
         final String userAvatar = account.photoUrl ?? '';
 
-        // Construire le payload JSON
         final Map<String, dynamic> bodyData = {
           'id_token': idToken,
           'email': userEmail,
@@ -340,30 +399,25 @@ Future<void> signUpGoogle() async {
         final response = await http.post(
           Uri.parse('${AppConfig.baseUrl}/api/auth/googleSign/'),
           headers: {'Content-Type': 'application/json'},
-          body: jsonEncode(bodyData), // Sérialiser les données en JSON
+          body: jsonEncode(bodyData),
         );
 
-        if (response.statusCode == 200) {
-          final data = json.decode(response.body); // Décoder la réponse JSON
-          _userId = data["user"]["id"];
-          _fullnameGoogle = "${data["user"]["last_name"]} ${data["user"]["first_name"]}";
-          _googleAvatar = "${data["user"]["avatar"]}";
-           // Utiliser les données reçues
-          notifyListeners();
-        } else {
-          print("Erreur d'authentification : ${response.statusCode}");
-          print("Message : ${response.body}");
-        }
+        return response;
+      } else {
+        throw Exception("Google sign-in failed: ID token is null.");
       }
+    } else {
+      throw Exception("Google sign-in was canceled by the user.");
     }
   } catch (error) {
-    print("Erreur lors de la connexion avec Google: $error");
+    throw Exception("Error during Google sign-in: $error");
   }
 }
-Future<void> signUpFacebook() async {
+
+Future<http.Response> signUpFacebook() async {
   print("i'm used for Facebook");
   try {
-    // Commencez le processus de connexion Facebook
+    // Commencer le processus de connexion Facebook
     final LoginResult result = await FacebookAuth.instance.login();
     
     if (result.status == LoginStatus.success) {
@@ -371,16 +425,21 @@ Future<void> signUpFacebook() async {
       final String accessToken = result.accessToken!.tokenString;
       print(accessToken);
 
-      // Utilisez le token d'accès pour récupérer les informations de l'utilisateur
+      // Utiliser le token d'accès pour récupérer les informations de l'utilisateur
       final userData = await FacebookAuth.instance.getUserData(
         fields: "email,first_name,last_name,picture",
       );
 
-      // Récupérer les informations de l'utilisateur
-      final String userEmail = userData['email'];
-      final String userFirstName = userData['first_name'];
-      final String userLastName = userData['last_name'];
-      final String userAvatar = userData['picture']['data']['url'];
+      // Vérifier que les données sont présentes
+      final String? userEmail = userData['email'];
+      final String? userFirstName = userData['first_name'];
+      final String? userLastName = userData['last_name'];
+      final String? userAvatar = userData['picture']?['data']?['url'];
+
+      if (userEmail == null || userFirstName == null || userLastName == null || userAvatar == null) {
+        print("Erreur: Données utilisateur manquantes.");
+        return http.Response('Données utilisateur manquantes', 400);
+      }
 
       // Construire le payload JSON
       final Map<String, dynamic> bodyData = {
@@ -390,29 +449,36 @@ Future<void> signUpFacebook() async {
         'last_name': userLastName,
         'avatar': userAvatar,
       };
+
+      // Effectuer la requête HTTP
       final response = await http.post(
         Uri.parse('${AppConfig.baseUrl}/api/auth/facebookSign/'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(bodyData), 
+        body: jsonEncode(bodyData),
       );
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body); 
         _userId = data["user"]["id"];
         _googleAvatar = data["user"]["avatar"];
-
+        
         notifyListeners();
+        return response;
       } else {
         print("Erreur d'authentification : ${response.statusCode}");
         print("Message : ${response.body}");
+        return response;
       }
     } else {
       print("Erreur de connexion avec Facebook : ${result.status}");
+      return http.Response('Erreur de connexion Facebook', 400);
     }
   } catch (error) {
     print("Erreur lors de la connexion avec Facebook: $error");
+    return http.Response('Erreur lors de la connexion avec Facebook: $error', 500);
   }
 }
+
 Future<bool> googleLogin() async {
   try {
     GoogleSignInAccount? account = await _googleSignIn.signIn();
@@ -460,13 +526,75 @@ Future<bool> googleLogin() async {
         notifyListeners();  // Mettre à jour les listeners pour la gestion de l'état
         return true;  // Retourner true si la connexion est réussie
       } else {
-        // Si le code de statut n'est pas 200, on capture l'erreur ici
         print('Erreur lors de la connexion avec Google: ${response.body}');
         return false; // Retourner false en cas d'échec de la connexion
       }
     } else {
-      // Gestion de l'annulation de la connexion Google
       print('L\'utilisateur a annulé la connexion Google.');
+      return false;
+    }
+  } catch (e) {
+    if (e is Exception && e.toString() == 'Email does not exist in the database') {
+      print('L\'email n\'existe pas dans la base de données. Vous pouvez vous inscrire.');
+      return false;
+    } else {
+      print('Erreur lors de la connexion avec Google: $e');
+      return false; 
+    }
+  }
+}
+Future<bool> facebookLogin() async {
+  try {
+    final LoginResult result = await FacebookAuth.instance.login();
+
+    if (result.status == LoginStatus.success) {
+      final AccessToken accessToken = result.accessToken!;
+
+      final userData = await FacebookAuth.instance.getUserData();
+
+      final String? idToken = accessToken.tokenString;
+
+      final url = Uri.parse("${AppConfig.baseUrl}/api/auth/facebooklogin/");
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'id_token': idToken, 
+        }),
+      );
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+
+        if (response.body.contains("Email does not exist in the database")) {
+          throw Exception('Email does not exist in the database');
+        }
+
+        _accessToken = data['access_token'];
+        _isAuthenticated = true;
+
+        _currentUser = Users.fromJson(data);
+        await storage.write(key: 'access_token', value: _accessToken);
+        await storage.write(key: 'user_id', value: _currentUser!.id.toString());
+        await storage.write(key: 'user_email', value: _currentUser!.email);
+        await storage.write(key: 'user_phone_number', value: _currentUser!.phoneNumber);
+        await storage.write(key: 'user_username', value: _currentUser!.username);
+        await storage.write(key: 'user_avatar', value: _currentUser!.avatar ?? ''); // Si avatar est null, on peut le mettre comme une chaîne vide
+        await storage.write(key: 'user_address', value: _currentUser!.address);
+        await storage.write(key: 'user_is_email_verified', value: _currentUser!.isEmailVerified.toString());
+        await storage.write(key: 'user_verification_code', value: _currentUser!.verificationCode);
+        await storage.write(key: 'user_description', value: _currentUser!.description);
+        await storage.write(key: 'user_full_name', value: _currentUser!.fullName);
+        await storage.write(key: 'parametre', value: "facebook");
+        notifyListeners(); // Mettre à jour les listeners pour la gestion de l'état
+        return true; // Retourner true si la connexion est réussie
+      } else {
+        // Si le code de statut n'est pas 200, on capture l'erreur ici
+        print('Erreur lors de la connexion avec Facebook: ${response.body}');
+        return false; // Retourner false en cas d'échec de la connexion
+      }
+    } else {
+      // Gestion de l'annulation de la connexion Facebook
+      print('L\'utilisateur a annulé la connexion Facebook.');
       return false;
     }
   } catch (e) {
@@ -475,7 +603,7 @@ Future<bool> googleLogin() async {
       print('L\'email n\'existe pas dans la base de données. Vous pouvez vous inscrire.');
       return false; // Retourner false si l'email n'existe pas
     } else {
-      print('Erreur lors de la connexion avec Google: $e');
+      print('Erreur lors de la connexion avec Facebook: $e');
       return false; // Retourner false en cas d'erreur
     }
   }
@@ -483,7 +611,40 @@ Future<bool> googleLogin() async {
 
 
 
+
   Future<void> loadUserGoogleData() async {
+    String? storedToken = await storage.read(key: 'access_token');
+    String? storedUsername = await storage.read(key: 'user_username');
+    String? storedUserId = await storage.read(key: 'user_id');
+    String? storedUserEmail = await storage.read(key: 'user_email');
+    String? storedUserPhoneNumber = await storage.read(key: 'user_phone_number');
+    String? storedUserAvatar = await storage.read(key: 'user_avatar');
+    String? storedUserFullName = await storage.read(key: 'user_full_name');
+    String? storedUserAddress = await storage.read(key: 'user_address');
+    String? storedUserDescription = await storage.read(key: 'user_description');
+  String? storedHasStory = await storage.read(key: 'hasStory');
+
+    if (storedToken != null && storedUserId != null) {
+      _accessToken = storedToken;
+      _currentUser = Users(
+        id: int.parse(storedUserId),
+        email: storedUserEmail!,
+        username: storedUsername!,
+        fullName: storedUserFullName!,
+        avatar: storedUserAvatar!,
+         phoneNumber: storedUserPhoneNumber!,
+          address: storedUserAddress!,
+           description: storedUserDescription!,
+           hasStory: storedHasStory == "true",
+
+      );
+      _isAuthenticated = true;
+      notifyListeners();
+    } else {
+      _isAuthenticated = false;
+    }
+  }
+   Future<void> loadUserFacbookData() async {
     String? storedToken = await storage.read(key: 'access_token');
     String? storedUsername = await storage.read(key: 'user_username');
     String? storedUserId = await storage.read(key: 'user_id');

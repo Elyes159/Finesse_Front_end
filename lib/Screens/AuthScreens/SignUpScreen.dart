@@ -1,3 +1,4 @@
+import 'dart:convert';
 
 import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/CompleteInfo.dart';
@@ -9,7 +10,6 @@ import 'package:finesse_frontend/Widgets/AuthButtons/SocialMediaSignIn.dart';
 import 'package:finesse_frontend/Widgets/CustomTextField/LoginTextField.dart';
 import 'package:provider/provider.dart';
 
-
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
 
@@ -18,14 +18,12 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPassController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   String? _errorMessage;
- 
 
   @override
   Widget build(BuildContext context) {
@@ -106,45 +104,53 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         },
                       ),
                       const SizedBox(height: 16),
+                      CustomButton(
+                        onTap: _isLoading
+                            ? () {}
+                            : () async {
+                                setState(() {
+                                  _errorMessage = null; // Reset error message
+                                });
+                                if (_formKey.currentState?.validate() ?? false) {
+                                  setState(() {
+                                    _isLoading = true;
+                                  });
+
+                                  try {
+                                    await Provider.of<AuthService>(context, listen: false).signUp(
+                                      username: _emailController.text.split('@')[0],
+                                      email: _emailController.text,
+                                      password: _passwordController.text,
+                                      phoneNumber: "",
+                                      firstName: "",
+                                      lastName: "",
+                                    );
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => const VerificationMail()),
+                                    );
+                                  } catch (error) {
+                                    setState(() {
+                                      _errorMessage = error.toString();
+                                    });
+                                  } finally {
+                                    setState(() {
+                                      _isLoading = false;
+                                    });
+                                  }
+                                }
+                              },
+                        label: _isLoading ? 'Loading...' : 'Continue',
+                      ),
                       if (_errorMessage != null)
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          padding: const EdgeInsets.only(top: 8.0),
                           child: Text(
                             _errorMessage!,
-                            style: const TextStyle(color: Colors.red, fontSize: 14),
+                            style: const TextStyle(color: Colors.red, fontSize: 14,fontFamily: "Raleway"),
                             textAlign: TextAlign.center,
                           ),
                         ),
-                      CustomButton(
-                        onTap: _isLoading ? (){}:() async{
-                          if (_formKey.currentState?.validate() ?? false) {
-                            try {
-                              // Appel à la fonction signUp du provider
-                              await Provider.of<AuthService>(context, listen: false).signUp(
-                                username: _emailController.text.split('@')[0], // Vous pouvez ajouter ces champs dans votre formulaire
-                                email: _emailController.text,
-                                password: _passwordController.text,
-                                phoneNumber: "",
-                                firstName: "",
-                                lastName: "",
-                              );
-                              setState(() {
-                                _isLoading = true;
-                              });
-                              // Naviguer vers la page de vérification après la création de l'utilisateur
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => VerificationMail()),
-                              );
-                            } catch (error) {
-                              setState(() {
-                                _errorMessage = error.toString();
-                              });
-                            }
-                          }
-                        },
-                        label:_isLoading?'Loading...': 'Continue',
-                      ),
                     ],
                   ),
                 ),
@@ -163,34 +169,62 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CustomContainer(
-                      onTap: () async{
-                        try{
-                          await Provider.of<AuthService>(context,listen:false).signUpGoogle();
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>CompleteInfo(parameter: "google",)));
-                        }catch(e){
-                          print("Erreur lors de la connexion Google: ${e.toString()}");
+                   CustomContainer(
+                      onTap: () async {
+                        setState(() {
+                          _errorMessage = null; // Réinitialise le message d'erreur
+                        });
+                        try {
+                          final result = await Provider.of<AuthService>(context, listen: false).signUpGoogle();
+
+                          if (result.statusCode == 200) {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => CompleteInfo(parameter: "google")),
+                            );
+                          } else {
+                            setState(() {
+                              _errorMessage = "${jsonDecode(result.body)["message"]}";
+                            });
+                          }
+                        } catch (e) {
+                          setState(() {
+                            _errorMessage = "Error signing in with Google: ${e.toString()}";
+                          });
                         }
                       },
                       imagePath: "assets/Icons/google.svg",
                     ),
+
                     const SizedBox(width: 8.86),
                     CustomContainer(
-                      onTap: () async{
-                         try{
-                          await Provider.of<AuthService>(context,listen:false).signUpFacebook();
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>CompleteInfo(parameter: "facebook",)));
-                        }catch(e){
-                          print("Erreur lors de la connexion Google: ${e.toString()}");
+                      onTap: () async {
+                        setState(() {
+                          _errorMessage = null; // Réinitialise le message d'erreur
+                        });
+                        try {
+                          final result = await Provider.of<AuthService>(context, listen: false).signUpFacebook();
+
+                          if (result.statusCode == 200) {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => CompleteInfo(parameter: "facebook")),
+                            );
+                          } else {
+                            final responseData = jsonDecode(result.body); // Décodage du JSON
+                            setState(() {
+                              _errorMessage = responseData["message"] ?? "An unknown error occurred.";
+                            });
+                          }
+                        } catch (e) {
+                          setState(() {
+                            _errorMessage = "Error signing in with Facebook: ${e.toString()}";
+                          });
                         }
                       },
                       imagePath: "assets/Icons/facebook.svg",
                     ),
-                    const SizedBox(width: 8.86),
-                    // CustomContainer(
-                    //   onTap: () {},
-                    //   imagePath: "assets/Icons/apple.svg",
-                    // ),
+
                   ],
                 ),
                 const SizedBox(height: 24),
@@ -230,7 +264,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ],
             ),
           ),
-         
         ],
       ),
     );
