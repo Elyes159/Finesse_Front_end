@@ -3,7 +3,7 @@ class Users {
   final String username;
   final String email;
   final String phoneNumber;
-  final String? avatar;
+  late final String? avatar;
   final String fullName;
   final String address;
   final bool? isEmailVerified;

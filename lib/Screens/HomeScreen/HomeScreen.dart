@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         radius: 50.0,
                         backgroundImage: user.avatar != ""
                             ? NetworkImage(widget.parameter == "normal"
-                                ? "${AppConfig.TestClientUrl}${user.avatar}"
+                                ? "${AppConfig.baseUrl}${user.avatar}"
                                 : user.avatar!
                                 )
                             : AssetImage('assets/images/user.png') as ImageProvider, // Image locale si avatar est null
@@ -116,27 +116,33 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Stack(
                       children: [
-                        Container(
-                          height: 56, // Augmenté pour inclure la bordure
-                          width: 56, // Augmenté pour inclure la bordure
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: user.hasStory 
-                                ? Border.all(color: Colors.blue, width: 2) // Bordure bleue si user.hasStory est true
-                                : null, // Pas de bordure sinon
-                          ),
-                          child: CircleAvatar(
-                            radius: 50.0,
-                            backgroundImage: user.avatar != ""
-                                ? NetworkImage(widget.parameter == "normal"
-                                    ? "${AppConfig.TestClientUrl}${user.avatar}"
-                                    : user.avatar!)
-                                : AssetImage('assets/images/user.png') as ImageProvider,
-                            backgroundColor: Colors.transparent,
-                            child: user.avatar == null
-                                ? const CircularProgressIndicator()
-                                : null,
-                          ),
+                        Consumer<Stories>(
+                          builder: (context, stories, child) {
+                            bool hasStory = stories.currentUser?.hasStory ?? false;
+
+                            return Container(
+                              height: 56, // Augmenté pour inclure la bordure
+                              width: 56, // Augmenté pour inclure la bordure
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: hasStory
+                                    ? Border.all(color: Colors.blue, width: 2) // Bordure bleue si hasStory est true
+                                    : null, // Pas de bordure sinon
+                              ),
+                              child: CircleAvatar(
+                                radius: 50.0,
+                                backgroundImage: user.avatar != ""
+                                    ? NetworkImage(widget.parameter == "normal"
+                                        ? "${AppConfig.baseUrl}${user.avatar}"
+                                        : user.avatar!)
+                                    : AssetImage('assets/images/user.png') as ImageProvider,
+                                backgroundColor: Colors.transparent,
+                                child: user.avatar == null
+                                    ? const CircularProgressIndicator()
+                                    : null,
+                              ),
+                            );
+                          },
                         ),
                         Positioned(
                           bottom: 0,

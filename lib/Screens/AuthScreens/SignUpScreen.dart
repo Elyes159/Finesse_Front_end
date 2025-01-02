@@ -176,14 +176,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     const SizedBox(width: 8.86),
                     CustomContainer(
-                      onTap: () {},
+                      onTap: () async{
+                         try{
+                          await Provider.of<AuthService>(context,listen:false).signUpFacebook();
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>CompleteInfo(parameter: "facebook",)));
+                        }catch(e){
+                          print("Erreur lors de la connexion Google: ${e.toString()}");
+                        }
+                      },
                       imagePath: "assets/Icons/facebook.svg",
                     ),
                     const SizedBox(width: 8.86),
-                    CustomContainer(
-                      onTap: () {},
-                      imagePath: "assets/Icons/apple.svg",
-                    ),
+                    // CustomContainer(
+                    //   onTap: () {},
+                    //   imagePath: "assets/Icons/apple.svg",
+                    // ),
                   ],
                 ),
                 const SizedBox(height: 24),

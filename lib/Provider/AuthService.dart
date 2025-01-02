@@ -8,9 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
-
-
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 class AuthService with ChangeNotifier{
   String _accessToken = '';
@@ -40,7 +38,7 @@ class AuthService with ChangeNotifier{
     required String firstName,
     required String lastName,
   })async{
-    final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/signup/");
+    final url = Uri.parse("${AppConfig.baseUrl}/api/auth/signup/");
     final response = await http.post(
       url,
       headers: {'Content-Type':'application/json'},
@@ -54,7 +52,6 @@ class AuthService with ChangeNotifier{
       }),
     );
     if(response.statusCode == 201){
-      print("heeeeeeeeeeey");
       print(json.decode(response.body)["id"]);
 
       final data = json.decode(response.body);
@@ -70,7 +67,7 @@ class AuthService with ChangeNotifier{
   required String username,
   required String password,
 }) async {
-  final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/signin/");
+  final url = Uri.parse("${AppConfig.baseUrl}/api/auth/signin/");
   final response = await http.post(
     url,
     headers: {'Content-Type': 'application/json'},
@@ -178,7 +175,7 @@ Future<void> loadUserData() async {
     required int userId,
     required String? verificationCode,
   })async{
-    final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/verify-code/");
+    final url = Uri.parse("${AppConfig.baseUrl}/api/auth/verify-code/");
     final response = await http.post(
       url,
       headers: {'Content-Type':'application/json'},
@@ -202,7 +199,7 @@ Future<void> loadUserData() async {
   XFile? image,
   required int userId
 }) async {
-  final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/$userId/register_profile/");
+  final url = Uri.parse("${AppConfig.baseUrl}/api/auth/$userId/register_profile/");
   var request = http.MultipartRequest('POST', url)
     ..fields['full_name'] = full_name
     ..fields['phone_number'] = phone_number
@@ -232,7 +229,7 @@ Future<void> registerProfileGoogle({
   required String description,
   required int userId,
 }) async {
-  final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/$userId/register_profile_google/");
+  final url = Uri.parse("${AppConfig.baseUrl}/api/auth/$userId/register_profile_google/");
 
   // Création du corps de la requête JSON
   final Map<String, dynamic> body = {
@@ -270,7 +267,7 @@ Future<void> createUsername({
   required bool isMail,
   required int userId,
 }) async {
-  final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/$userId/createUsername/");
+  final url = Uri.parse("${AppConfig.baseUrl}/api/auth/$userId/createUsername/");
   final response = await http.post(
     url,
     headers: {"Content-Type": "application/json"},
@@ -295,7 +292,7 @@ Future<void> createUsernameGoogle({
   required bool isMail,
   required int userId,
 }) async {
-  final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/$userId/createUsernamegoogle/");
+  final url = Uri.parse("${AppConfig.baseUrl}/api/auth/$userId/createUsernamegoogle/");
   final response = await http.post(
     url,
     headers: {"Content-Type": "application/json"},
@@ -341,7 +338,7 @@ Future<void> signUpGoogle() async {
         };
 
         final response = await http.post(
-          Uri.parse('${AppConfig.TestClientUrl}/api/auth/googleSign/'),
+          Uri.parse('${AppConfig.baseUrl}/api/auth/googleSign/'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode(bodyData), // Sérialiser les données en JSON
         );
@@ -363,6 +360,59 @@ Future<void> signUpGoogle() async {
     print("Erreur lors de la connexion avec Google: $error");
   }
 }
+Future<void> signUpFacebook() async {
+  print("i'm used for Facebook");
+  try {
+    // Commencez le processus de connexion Facebook
+    final LoginResult result = await FacebookAuth.instance.login();
+    
+    if (result.status == LoginStatus.success) {
+      // Obtenez le token d'accès Facebook
+      final String accessToken = result.accessToken!.tokenString;
+      print(accessToken);
+
+      // Utilisez le token d'accès pour récupérer les informations de l'utilisateur
+      final userData = await FacebookAuth.instance.getUserData(
+        fields: "email,first_name,last_name,picture",
+      );
+
+      // Récupérer les informations de l'utilisateur
+      final String userEmail = userData['email'];
+      final String userFirstName = userData['first_name'];
+      final String userLastName = userData['last_name'];
+      final String userAvatar = userData['picture']['data']['url'];
+
+      // Construire le payload JSON
+      final Map<String, dynamic> bodyData = {
+        'access_token': accessToken,
+        'email': userEmail,
+        'first_name': userFirstName,
+        'last_name': userLastName,
+        'avatar': userAvatar,
+      };
+      final response = await http.post(
+        Uri.parse('${AppConfig.baseUrl}/api/auth/facebookSign/'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(bodyData), 
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body); 
+        _userId = data["user"]["id"];
+        _googleAvatar = data["user"]["avatar"];
+
+        notifyListeners();
+      } else {
+        print("Erreur d'authentification : ${response.statusCode}");
+        print("Message : ${response.body}");
+      }
+    } else {
+      print("Erreur de connexion avec Facebook : ${result.status}");
+    }
+  } catch (error) {
+    print("Erreur lors de la connexion avec Facebook: $error");
+  }
+}
 Future<bool> googleLogin() async {
   try {
     GoogleSignInAccount? account = await _googleSignIn.signIn();
@@ -371,7 +421,7 @@ Future<bool> googleLogin() async {
       final String? idToken = googleAuth.idToken;
       final String? accessToken = googleAuth.accessToken;
 
-      final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/googlelogin/");
+      final url = Uri.parse("${AppConfig.baseUrl}/api/auth/googlelogin/");
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},

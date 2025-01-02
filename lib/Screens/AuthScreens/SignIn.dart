@@ -217,7 +217,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 const SizedBox(width: 8.86),
                 CustomContainer(onTap: () {}, imagePath: "assets/Icons/facebook.svg"),
                 const SizedBox(width: 8.86),
-                CustomContainer(onTap: () {}, imagePath: "assets/Icons/apple.svg"),
+                // CustomContainer(onTap: () {}, imagePath: "assets/Icons/apple.svg"),
               ],
             ),
             const SizedBox(height: 24),

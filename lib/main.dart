@@ -14,7 +14,7 @@ void main() async{
         ChangeNotifierProvider(create: (_) => AuthService()),
         ChangeNotifierProvider(create: (_) => Stories()),
       ],
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }
