@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:finesse_frontend/ApiServices/backend_url.dart';
 import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Provider/Stories.dart';
+import 'package:finesse_frontend/Widgets/BottomNavigatorBar/BottomNavigatorBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -31,6 +32,11 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     }
   }
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index; // Mettre à jour l'index sélectionné
+    });
+  }
    XFile? _image;
    Future<void> _pickImage() async {
     final ImagePicker _picker = ImagePicker();
@@ -43,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
     final storage = FlutterSecureStorage();
-
+int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -118,16 +124,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Consumer<Stories>(
                           builder: (context, stories, child) {
-                            bool hasStory = stories.currentUser?.hasStory ?? false;
+                            bool hasStory = stories.hasStory;
 
                             return Container(
-                              height: 56, // Augmenté pour inclure la bordure
-                              width: 56, // Augmenté pour inclure la bordure
+                              height: 56,
+                              width: 56,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 border: hasStory
                                     ? Border.all(color: Colors.blue, width: 2) // Bordure bleue si hasStory est true
-                                    : null, // Pas de bordure sinon
+                                    : null, 
                               ),
                               child: CircleAvatar(
                                 radius: 50.0,
@@ -138,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     : AssetImage('assets/images/user.png') as ImageProvider,
                                 backgroundColor: Colors.transparent,
                                 child: user.avatar == null
-                                    ? const CircularProgressIndicator()
+                                    ?  Container()
                                     : null,
                               ),
                             );
@@ -196,6 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
         ],
       ),
+      bottomNavigationBar: CustomBottomNavigationBar(onItemSelected: _onItemTapped,currentIndex: _selectedIndex,),
     );
   }
 }

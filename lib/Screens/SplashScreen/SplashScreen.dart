@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:finesse_frontend/Provider/AuthService.dart';
+import 'package:finesse_frontend/Provider/Stories.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/SignIn.dart';
-import 'package:finesse_frontend/Screens/HomeScreen/HomeScreen.dart';
+import 'package:finesse_frontend/Screens/HomeScreens/HomeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -17,7 +18,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   final FlutterSecureStorage storage = FlutterSecureStorage();
   double progress = 0.0;
-  final int durationInSeconds = 10;
+  final int durationInSeconds = 2;
   Timer? _progressTimer;
   Timer? _navigationTimer;
 
@@ -26,6 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     _startProgress();
     _initializeApp();
+    Provider.of<Stories>(context,listen:false).loadUserStoriesData();
   }
 
   /// Fonction pour initialiser l'application et vérifier le token et les paramètres

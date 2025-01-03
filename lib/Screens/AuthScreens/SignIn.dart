@@ -1,7 +1,7 @@
 import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/PasswordReset.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/SignUpScreen.dart';
-import 'package:finesse_frontend/Screens/HomeScreen/HomeScreen.dart';
+import 'package:finesse_frontend/Screens/HomeScreens/HomeScreen.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/SocialMediaSignIn.dart';
 import 'package:finesse_frontend/Widgets/CustomTextField/LoginTextField.dart';

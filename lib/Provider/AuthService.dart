@@ -122,18 +122,16 @@ Future<void> loadUserData() async {
   String? storedHasStory = await storage.read(key: 'hasStory');
 
   if (storedToken != null && storedUserId != null) {
-    // Récupérer et assigner les données utilisateur
     _accessToken = storedToken;
-
    _currentUser = Users(
-      id: int.parse(storedUserId),  // Vérifiez les valeurs par défaut si null
+      id: int.parse(storedUserId),
       username: storedUsername!,
       email: storedUserEmail!,
       phoneNumber: storedUserPhoneNumber!,
       avatar: storedUserAvatar,
       fullName: storedUserFullName!,
       address: storedUserAddress!,
-      isEmailVerified: storedUserIsEmailVerified == 'true', // Conversion en booléen
+      isEmailVerified: storedUserIsEmailVerified == 'true',
       verificationCode: storedUserVerificationCode!,
       description: storedUserDescription!,
       hasStory: storedHasStory == "true",
@@ -148,7 +146,6 @@ Future<void> loadUserData() async {
 
 
  void signOut() async {
-  // Supprimer les données stockées dans FlutterSecureStorage
   await storage.delete(key: 'access_token');
   await storage.delete(key: 'user_id');
   await storage.delete(key: 'user_email');
@@ -161,13 +158,12 @@ Future<void> loadUserData() async {
   await storage.delete(key: 'user_is_email_verified');
   await storage.delete(key: 'user_verification_code');
   await storage.delete(key: 'user_description');
+  await storage.delete(key: 'hasStory');
 
-  // Réinitialiser les variables locales
   _accessToken = '';
   _isAuthenticated = false;
   _currentUser = null;
 
-  // Notifier les listeners que l'utilisateur s'est déconnecté
   notifyListeners();
 }
 
@@ -225,7 +221,7 @@ Future<void> loadUserData() async {
     }),
   );
 
-  return response; // Retourner la réponse HTTP brute
+  return response; 
 }
 
 
@@ -252,15 +248,13 @@ Future<http.Response> registerProfile({
   }
 
   try {
-    // Envoyer la requête
     var responseStream = await request.send();
     
-    // Convertir le flux en réponse http.Response
     var response = await http.Response.fromStream(responseStream);
 
     if (response.statusCode == 200) {
       print("User créé avec succès");
-      return response;  // Retourne la réponse si tout est réussi
+      return response;  
     } else {
       print("Erreur lors de l'enregistrement : ${response.body}");
       throw Exception("Erreur ${response.statusCode}: ${response.body}");
@@ -588,7 +582,6 @@ Future<bool> googleLogin() async {
         _accessToken = data['access_token'];
         _isAuthenticated = true;
 
-        // Créer une instance de UsersGoogle à partir des données retournées
         _currentUser = Users.fromJson(data);
       await storage.write(key: 'access_token', value: _accessToken);
       await storage.write(key: 'user_id', value: _currentUser!.id.toString());
@@ -664,33 +657,26 @@ Future<bool> facebookLogin() async {
         await storage.write(key: 'user_description', value: _currentUser!.description);
         await storage.write(key: 'user_full_name', value: _currentUser!.fullName);
         await storage.write(key: 'parametre', value: "facebook");
-        notifyListeners(); // Mettre à jour les listeners pour la gestion de l'état
-        return true; // Retourner true si la connexion est réussie
+        notifyListeners(); 
+        return true; 
       } else {
-        // Si le code de statut n'est pas 200, on capture l'erreur ici
         print('Erreur lors de la connexion avec Facebook: ${response.body}');
-        return false; // Retourner false en cas d'échec de la connexion
+        return false; 
       }
     } else {
-      // Gestion de l'annulation de la connexion Facebook
       print('L\'utilisateur a annulé la connexion Facebook.');
       return false;
     }
   } catch (e) {
-    // Attraper l'exception générée par l'email existant ou d'autres erreurs
     if (e is Exception && e.toString() == 'Email does not exist in the database') {
       print('L\'email n\'existe pas dans la base de données. Vous pouvez vous inscrire.');
-      return false; // Retourner false si l'email n'existe pas
+      return false; 
     } else {
       print('Erreur lors de la connexion avec Facebook: $e');
-      return false; // Retourner false en cas d'erreur
+      return false; 
     }
   }
 }
-
-
-
-
   Future<void> loadUserGoogleData() async {
     String? storedToken = await storage.read(key: 'access_token');
     String? storedUsername = await storage.read(key: 'user_username');
@@ -701,8 +687,7 @@ Future<bool> facebookLogin() async {
     String? storedUserFullName = await storage.read(key: 'user_full_name');
     String? storedUserAddress = await storage.read(key: 'user_address');
     String? storedUserDescription = await storage.read(key: 'user_description');
-  String? storedHasStory = await storage.read(key: 'hasStory');
-
+    String? storedHasStory = await storage.read(key: 'hasStory');
     if (storedToken != null && storedUserId != null) {
       _accessToken = storedToken;
       _currentUser = Users(
