@@ -102,6 +102,7 @@ class AuthService with ChangeNotifier{
       await storage.write(key: 'hasStory',value:_currentUser!.hasStory.toString());
     notifyListeners();
   } else {
+    print("${response.body}");
     throw Exception('Erreur lors de la connexion : ${response.statusCode}');
   }
 }
@@ -211,6 +212,22 @@ Future<void> loadUserData() async {
       throw Exception('${json.decode(response.body)}');
     }
   }
+  Future<http.Response> changePassword({
+  required String resetToken,
+  required String password,
+}) async {
+  final url = Uri.parse("${AppConfig.baseUrl}/api/auth/change_password/$resetToken/");
+  final response = await http.post(
+    url,
+    headers: {'Content-Type': 'application/json'},
+    body: json.encode({
+      'new_password': password,
+    }),
+  );
+
+  return response; // Retourner la réponse HTTP brute
+}
+
 
 Future<http.Response> registerProfile({
   required String full_name,

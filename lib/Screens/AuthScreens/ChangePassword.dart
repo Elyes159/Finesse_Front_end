@@ -1,7 +1,12 @@
+import 'package:finesse_frontend/Provider/AuthService.dart';
+import 'package:finesse_frontend/Screens/AuthScreens/SignIn.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
 import 'package:finesse_frontend/Widgets/CustomTextField/LoginTextField.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class ChangePassword extends StatefulWidget {
   const ChangePassword({super.key});
@@ -13,6 +18,35 @@ class ChangePassword extends StatefulWidget {
 class _ChangePasswordState extends State<ChangePassword> {
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
+
+  bool _arePasswordsMatching = false;
+  bool _success = false;
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _passwordController.addListener(_validatePasswords);
+    _confirmPasswordController.addListener(_validatePasswords);
+  }
+
+  @override
+  void dispose() {
+    _passwordController.removeListener(_validatePasswords);
+    _confirmPasswordController.removeListener(_validatePasswords);
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  void _validatePasswords() {
+    setState(() {
+      _arePasswordsMatching = _passwordController.text.isNotEmpty &&
+          _confirmPasswordController.text.isNotEmpty &&
+          _passwordController.text == _confirmPasswordController.text;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,9 +65,7 @@ class _ChangePasswordState extends State<ChangePassword> {
       body: Center(
         child: ListView(
           children: [
-            const SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
             const Text(
               textAlign: TextAlign.center,
               'Change Password',
@@ -45,9 +77,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                 height: 1.38,
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 10),
             const SizedBox(
               width: 257,
               height: 48,
@@ -63,24 +93,68 @@ class _ChangePasswordState extends State<ChangePassword> {
                 ),
               ),
             ),
-            const SizedBox(
-              height: 24,
-            ),
+            const SizedBox(height: 24),
             CustomTextFormField(
-                controller: _passwordController,
-                label: "New Password",
-                isPassword: true),
-            SizedBox(
-              height: 16,
+              controller: _passwordController,
+              label: "New Password",
+              isPassword: true,
             ),
+            const SizedBox(height: 16),
             CustomTextFormField(
-                controller: _confirmPasswordController,
-                label: "Confirm password",
-                isPassword: true),
-            SizedBox(
-              height: 16,
+              controller: _confirmPasswordController,
+              label: "Confirm Password",
+              isPassword: true,
             ),
-            CustomButton(label: "Continue", onTap: (){})
+            const SizedBox(height: 24),
+            CustomButton(
+              label: _success
+                  ? "Done ✅"
+                  : isLoading
+                      ? "Loading..."
+                      : "Continue",
+              onTap: _arePasswordsMatching
+                  ? () async {
+                      setState(() {
+                        isLoading = true;
+                      });
+                      String? storedResetToken =
+                          await FlutterSecureStorage().read(key: 'reset_token');
+                      final result =
+                          await Provider.of<AuthService>(context, listen: false)
+                              .changePassword(
+                        resetToken: storedResetToken!,
+                        password: _passwordController.text,
+                      );
+                      if (result.statusCode == 200) {
+                        setState(() {
+                          _success = true;
+                        });
+                        Future.delayed(Duration(seconds: 2), () {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SignInScreen()),
+                            (Route<dynamic> route) => false,
+                          );
+                        });
+                      } else {
+                        print(result.body);
+                        setState(() {
+                          _success = false;
+                        });
+                      }
+                      setState(() {
+                        isLoading = false;
+                      });
+                    }
+                  : () {}, // Disable button if passwords don't match
+              buttonColor: (_arePasswordsMatching)
+                  ? const Color(0xFFFB98B7)
+                  : const Color(0xFFE5E7EB),
+              textColor: _arePasswordsMatching
+                  ? Colors.white
+                  : const Color(0xFF111928),
+            ),
           ],
         ),
       ),

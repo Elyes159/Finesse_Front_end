@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: 40,
                       child: CircleAvatar(
                         radius: 50.0,
-                        backgroundImage: user.avatar != ""
+                        backgroundImage: (user.avatar != "" && user.avatar != null)
                             ? NetworkImage(widget.parameter == "normal"
                                 ? "${AppConfig.baseUrl}${user.avatar}"
                                 : user.avatar!
@@ -131,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               child: CircleAvatar(
                                 radius: 50.0,
-                                backgroundImage: user.avatar != ""
+                                backgroundImage: (user.avatar != "" && user.avatar != null)
                                     ? NetworkImage(widget.parameter == "normal"
                                         ? "${AppConfig.baseUrl}${user.avatar}"
                                         : user.avatar!)
