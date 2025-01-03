@@ -157,7 +157,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 100),
                     width: 247 * progress,
-                    height: 6,
+                    height: 10,
                     decoration: ShapeDecoration(
                       color: const Color(0xFFFB98B7),
                       shape: RoundedRectangleBorder(

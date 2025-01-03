@@ -21,6 +21,7 @@ class _LetzGoState extends State<LetzGo> {
   bool _isCheckedPrivacy = false;
   bool _isCheckedSend = false;
   String? _usernameError;
+   bool _isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -196,8 +197,13 @@ class _LetzGoState extends State<LetzGo> {
             ),
             const SizedBox(height: 28),
             CustomButton(
-              label: "Let’s go! ⚡️",
-              onTap: _usernameError !=null ? (){}: () async {
+               textColor: _isLoading ? Color(0xFF111928) : Colors.white,
+                  buttonColor: _isLoading? Color(0xFFE5E7EB) : Color(0xFFFB98B7),
+              label: _isLoading? "Loading...": "Let’s go! ⚡️",
+              onTap: _isLoading?(){}: _usernameError !=null ? (){}: () async {
+                setState(() {
+                  _isLoading = true;
+                });
                 if (_formKey.currentState!.validate()) {
                   try {
                     if(widget.parameter=="normal") {
@@ -247,6 +253,9 @@ class _LetzGoState extends State<LetzGo> {
                     });
                   }
                 }
+                 setState(() {
+                  _isLoading = false;
+                });
               },
             ),
 

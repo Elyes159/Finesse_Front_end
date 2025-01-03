@@ -1,4 +1,5 @@
 import 'package:finesse_frontend/Provider/AuthService.dart';
+import 'package:finesse_frontend/Screens/AuthScreens/PasswordReset.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/SignUpScreen.dart';
 import 'package:finesse_frontend/Screens/HomeScreen/HomeScreen.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
@@ -22,36 +23,36 @@ class _SignInScreenState extends State<SignInScreen> {
   String _errorMessage = ''; // Variable pour stocker l'erreur
   bool _isLoading = false; // Variable pour gérer l'état du chargement
   Future<void> _handleLogin() async {
-  if (_formKey.currentState!.validate()) {
-    _formKey.currentState!.save();
-    setState(() {
-      _isLoading = true; // Commencer le chargement
-      _errorMessage = ''; // Effacer les erreurs précédentes
-    });
-    try {
-      final authService = Provider.of<AuthService>(context, listen: false);
-      await authService.signIn(
-        username: _formData['username']!,
-        password: _formData['password']!,
-      );
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomeScreen(parameter: "normal"),
-        ),
-        (Route<dynamic> route) => false,
-      );
-    } catch (e) {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
       setState(() {
-        _errorMessage = 'Verify your password or username';
+        _isLoading = true; // Commencer le chargement
+        _errorMessage = ''; // Effacer les erreurs précédentes
       });
-    } finally {
-      setState(() {
-        _isLoading = false; // Arrêter le chargement
-      });
+      try {
+        final authService = Provider.of<AuthService>(context, listen: false);
+        await authService.signIn(
+          username: _formData['username']!,
+          password: _formData['password']!,
+        );
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(parameter: "normal"),
+          ),
+          (Route<dynamic> route) => false,
+        );
+      } catch (e) {
+        setState(() {
+          _errorMessage = 'Verify your password or username';
+        });
+      } finally {
+        setState(() {
+          _isLoading = false; // Arrêter le chargement
+        });
+      }
     }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -95,11 +96,11 @@ class _SignInScreenState extends State<SignInScreen> {
                 children: [
                   CustomTextFormField(
                     controller: _usernameController,
-                    label: "Username or Email",
+                    label: "Username",
                     isPassword: false,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter a username or email';
+                        return 'Please enter a username';
                       }
                       return null;
                     },
@@ -118,11 +119,45 @@ class _SignInScreenState extends State<SignInScreen> {
                     },
                     onSaved: (value) => _formData['password'] = value!,
                   ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PasswordReset()));
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.only(right: 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            'Forgot password?',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              color: Color(0xFF111928),
+                              fontSize: 14,
+                              fontFamily: 'Raleway',
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 16),
                   CustomButton(
-                    label: _isLoading ? "Loading..." : "Login", // Change the label dynamically
+                    textColor: _isLoading ? Color(0xFF111928) : Colors.white,
+                    buttonColor:
+                        _isLoading ? Color(0xFFE5E7EB) : Color(0xFFFB98B7),
+                    label: _isLoading
+                        ? "Loading..."
+                        : "Login", // Change the label dynamically
                     onTap: _isLoading
-                        ? (){}
+                        ? () {}
                         : () async {
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState!.save();
@@ -138,13 +173,15 @@ class _SignInScreenState extends State<SignInScreen> {
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const HomeScreen(parameter: "normal"),
+                                    builder: (context) =>
+                                        const HomeScreen(parameter: "normal"),
                                   ),
                                   (Route<dynamic> route) => false,
                                 );
                               } catch (e) {
                                 setState(() {
-                                  _errorMessage = 'Verify your password or username';
+                                  _errorMessage =
+                                      'Verify your password or username';
                                 });
                               } finally {
                                 setState(() {
@@ -155,15 +192,17 @@ class _SignInScreenState extends State<SignInScreen> {
                           },
                   ),
                   if (_errorMessage.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        _errorMessage,
-                        style: const TextStyle(
-                          fontFamily: "Raleway",
-                          color: Colors.red,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          _errorMessage,
+                          style: const TextStyle(
+                              color: Colors.red,
+                              fontSize: 14,
+                              fontFamily: "Raleway",
+                              fontWeight: FontWeight.w700),
+                          textAlign: TextAlign.center,
                         ),
                       ),
                     ),
@@ -196,7 +235,8 @@ class _SignInScreenState extends State<SignInScreen> {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => HomeScreen(parameter: "google")),
+                              builder: (context) =>
+                                  HomeScreen(parameter: "google")),
                           (Route<dynamic> route) => false,
                         );
                       } else {
@@ -216,31 +256,34 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
                 const SizedBox(width: 8.86),
                 CustomContainer(
-                   onTap: () async {
-                    try {
-                      bool isLoggedIn =
-                          await Provider.of<AuthService>(context, listen: false)
-                              .facebookLogin();
-                      if (isLoggedIn) {
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => HomeScreen(parameter: "facebook")),
-                          (Route<dynamic> route) => false,
-                        );
-                      } else {
+                    onTap: () async {
+                      try {
+                        bool isLoggedIn = await Provider.of<AuthService>(
+                                context,
+                                listen: false)
+                            .facebookLogin();
+                        if (isLoggedIn) {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    HomeScreen(parameter: "facebook")),
+                            (Route<dynamic> route) => false,
+                          );
+                        } else {
+                          setState(() {
+                            _errorMessage =
+                                'Ce compte n\'existe pas dans la base de données. Vous pouvez vous inscrire.';
+                          });
+                        }
+                      } catch (e) {
                         setState(() {
                           _errorMessage =
-                              'Ce compte n\'existe pas dans la base de données. Vous pouvez vous inscrire.';
+                              'Erreur lors de la connexion avec facebook: $e';
                         });
                       }
-                    } catch (e) {
-                      setState(() {
-                        _errorMessage =
-                            'Erreur lors de la connexion avec facebook: $e';
-                      });
-                    }
-                  }, imagePath: "assets/Icons/facebook.svg"),
+                    },
+                    imagePath: "assets/Icons/facebook.svg"),
                 const SizedBox(width: 8.86),
                 // CustomContainer(onTap: () {}, imagePath: "assets/Icons/apple.svg"),
               ],
@@ -285,5 +328,3 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 }
-
-

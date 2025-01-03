@@ -29,6 +29,8 @@ class _CompleteInfoState extends State<CompleteInfo> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  String _errorMessage = '';
+   bool isLoading = false; 
 
   Future<void> _pickImage() async {
     final ImagePicker _picker = ImagePicker();
@@ -51,7 +53,7 @@ class _CompleteInfoState extends State<CompleteInfo> {
       appBar: AppBar(
         leading: IconButton(
           icon: SvgPicture.asset(
-            'assets/Icons/ArrowLeft.svg', // Chemin de l'icône SVG
+            'assets/Icons/ArrowLeft.svg',
             width: 24,
             height: 24,
           ),
@@ -96,7 +98,7 @@ class _CompleteInfoState extends State<CompleteInfo> {
                         ? () {
                             _pickImage();
                           }
-                        : null, // Pas d'action si le paramètre n'est pas "normal"
+                        : null,
                     child: Container(
                       width: 100,
                       height: 100,
@@ -222,12 +224,29 @@ class _CompleteInfoState extends State<CompleteInfo> {
                   isPassword: false,
                 ),
                 const SizedBox(height: 16),
+                _errorMessage.isNotEmpty
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Text(
+                          _errorMessage,
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 16,
+                          ),
+                        ),
+                      )
+                    : Container(),
+                const SizedBox(height: 16),
                 CustomButton(
-                  label: "Create account",
-                  onTap: () async {
+                  label: isLoading ? "Loading..." : "Create account",
+                  textColor: isLoading ? Color(0xFF111928) : Colors.white,
+                  buttonColor: isLoading? Color(0xFFE5E7EB) : Color(0xFFFB98B7),
+                  onTap: isLoading? (){}: () async {
+                    setState(() {
+                      isLoading = true; // Set loading state to true
+                    });
                     Uint8List imageToSend;
 
-                    // Si l'utilisateur n'a pas choisi d'image, envoyer l'image par défaut
                     if (_imageFile == null) {
                       imageToSend = await _loadImageFromAssets('assets/images/user.png');
                     } else {
@@ -235,52 +254,94 @@ class _CompleteInfoState extends State<CompleteInfo> {
                     }
 
                     if (widget.parameter == "normal") {
-                      Provider.of<AuthService>(context, listen: false)
-                          .registerProfile(
-                        full_name: _fullnameController.text,
-                        phone_number: _phoneController.text,
-                        address: _addressController.text,
-                        description: _descriptionController.text,
-                        userId: Provider.of<AuthService>(context, listen: false).userId,
-                        image: _imageFile,
-                      );
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => LetzGo(parameter: "normal"),
-                        ),
-                      );
-                    } else if (widget.parameter=="google"){
-                      Provider.of<AuthService>(context, listen: false)
-                          .registerProfileGoogle(
-                        full_name: _fullnameController.text,
-                        phone_number: _phoneController.text,
-                        address: _addressController.text,
-                        description: _descriptionController.text,
-                        userId: Provider.of<AuthService>(context, listen: false).userId,
-                      );
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LetzGo(parameter: "google"),
-                        ),
-                      );
-                    } else if(widget.parameter=="facebook"){
-                       Provider.of<AuthService>(context, listen: false)
-                          .registerProfilefacebook(
-                        full_name: _fullnameController.text,
-                        phone_number: _phoneController.text,
-                        address: _addressController.text,
-                        description: _descriptionController.text,
-                        userId: Provider.of<AuthService>(context, listen: false).userId,
-                      );
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LetzGo(parameter: "facebook"),
-                        ),
-                      );
+                      try {
+                        final response = await Provider.of<AuthService>(context, listen: false)
+                            .registerProfile(
+                          full_name: _fullnameController.text,
+                          phone_number: _phoneController.text,
+                          address: _addressController.text,
+                          description: _descriptionController.text,
+                          userId: Provider.of<AuthService>(context, listen: false).userId,
+                          image: _imageFile,
+                        );
+
+                        if (response.statusCode == 200) {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => LetzGo(parameter: "normal"),
+                            ),
+                          );
+                        } else {
+                          setState(() {
+                            _errorMessage = "Error: ${response.body}"; // Affichage du message d'erreur
+                          });
+                        }
+                      } catch (e) {
+                        setState(() {
+                          _errorMessage = "Exception: ${e.toString()}"; // Affichage du message d'erreur
+                        });
+                      }
+                    } else if (widget.parameter == "google") {
+                      try {
+                        final response = await Provider.of<AuthService>(context, listen: false)
+                            .registerProfileGoogle(
+                          full_name: _fullnameController.text,
+                          phone_number: _phoneController.text,
+                          address: _addressController.text,
+                          description: _descriptionController.text,
+                          userId: Provider.of<AuthService>(context, listen: false).userId,
+                        );
+
+                        if (response.statusCode == 200) {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const LetzGo(parameter: "google"),
+                            ),
+                          );
+                        } else {
+                          setState(() {
+                            _errorMessage = "Error: ${response.body}";
+                          });
+                        }
+                      } catch (e) {
+                        setState(() {
+                          _errorMessage = "Exception: ${e.toString()}";
+                        });
+                      }
+                    } else if (widget.parameter == "facebook") {
+                      try {
+                        final response = await Provider.of<AuthService>(context, listen: false)
+                            .registerProfilefacebook(
+                          full_name: _fullnameController.text,
+                          phone_number: _phoneController.text,
+                          address: _addressController.text,
+                          description: _descriptionController.text,
+                          userId: Provider.of<AuthService>(context, listen: false).userId,
+                        );
+
+                        if (response.statusCode == 200) {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const LetzGo(parameter: "facebook"),
+                            ),
+                          );
+                        } else {
+                          setState(() {
+                            _errorMessage = "Error: ${response.body}";
+                          });
+                        }
+                      } catch (e) {
+                        setState(() {
+                          _errorMessage = "Exception: ${e.toString()}";
+                        });
+                      }
                     }
+                     setState(() {
+                      isLoading = false; // Reset loading state once the process is finished
+                    });
                   },
                 ),
               ],
@@ -291,3 +352,4 @@ class _CompleteInfoState extends State<CompleteInfo> {
     );
   }
 }
+

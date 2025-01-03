@@ -190,14 +190,35 @@ Future<void> loadUserData() async {
       throw Exception('${json.decode(response.body)}');
     }
   }
+  Future<void> confirmEmailVerificationForReset({
+    required String email,
+    required String? verificationCode,
+  })async{
+    final url = Uri.parse("${AppConfig.baseUrl}/api/auth/verify-code-for-reset/");
+    final response = await http.post(
+      url,
+      headers: {'Content-Type':'application/json'},
+      body : json.encode({
+        'email':email,
+        'verification_code':verificationCode,
+      }),
+    );
+    if (response.statusCode == 200){
+      
+      await storage.write(key: 'reset_token', value:json.decode(response.body)["token"]);
+      print("token in flutter secure storage");
+    }else{
+      throw Exception('${json.decode(response.body)}');
+    }
+  }
 
-  Future<void> registerProfile({
+Future<http.Response> registerProfile({
   required String full_name,
   required String phone_number,
   required String address,
   required String description,
   XFile? image,
-  required int userId
+  required int userId,
 }) async {
   final url = Uri.parse("${AppConfig.baseUrl}/api/auth/$userId/register_profile/");
   var request = http.MultipartRequest('POST', url)
@@ -213,16 +234,27 @@ Future<void> loadUserData() async {
     request.files.add(file);
   }
 
-  // Envoyer la requête
-  var response = await request.send();
+  try {
+    // Envoyer la requête
+    var responseStream = await request.send();
+    
+    // Convertir le flux en réponse http.Response
+    var response = await http.Response.fromStream(responseStream);
 
-  if (response.statusCode == 200) {
-    print("User créé avec succès");
-  } else {
-    throw Exception("error ${e.toString()}");
+    if (response.statusCode == 200) {
+      print("User créé avec succès");
+      return response;  // Retourne la réponse si tout est réussi
+    } else {
+      print("Erreur lors de l'enregistrement : ${response.body}");
+      throw Exception("Erreur ${response.statusCode}: ${response.body}");
+    }
+  } catch (e) {
+    print("Exception : ${e.toString()}");
+    throw Exception("Erreur lors de l'envoi des données : ${e.toString()}");
   }
 }
-Future<void> registerProfileGoogle({
+
+Future<http.Response> registerProfileGoogle({
   required String full_name,
   required String phone_number,
   required String address,
@@ -251,6 +283,7 @@ Future<void> registerProfileGoogle({
 
     if (response.statusCode == 200) {
       print("Profil enregistré avec succès");
+      return response; // Retourne la réponse avec un code 200
     } else {
       print("Erreur lors de l'enregistrement : ${response.body}");
       throw Exception("Erreur ${response.statusCode}: ${response.body}");
@@ -260,7 +293,8 @@ Future<void> registerProfileGoogle({
     throw Exception("Erreur lors de l'envoi des données : ${e.toString()}");
   }
 }
-Future<void> registerProfilefacebook({
+
+Future<http.Response> registerProfilefacebook({
   required String full_name,
   required String phone_number,
   required String address,
@@ -289,6 +323,7 @@ Future<void> registerProfilefacebook({
 
     if (response.statusCode == 200) {
       print("Profil enregistré avec succès");
+      return response; // Retourne la réponse avec un code 200
     } else {
       print("Erreur lors de l'enregistrement : ${response.body}");
       throw Exception("Erreur ${response.statusCode}: ${response.body}");
@@ -296,6 +331,33 @@ Future<void> registerProfilefacebook({
   } catch (e) {
     print("Exception : ${e.toString()}");
     throw Exception("Erreur lors de l'envoi des données : ${e.toString()}");
+  }
+}
+
+// ignore: non_constant_identifier_names
+Future<http.Response> send_email_to_reset_password({
+  required String email,
+})async{
+  final url = Uri.parse("${AppConfig.baseUrl}/api/auth/send_email_to_reset_pass/$email/");
+  try{
+     final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json', 
+      },
+    );
+     if (response.statusCode == 200) {
+      print("Mail envoyé avec succees");
+      await storage.write(key: 'email_reset',value:email);
+      return response; 
+    } else {
+      print("${response.body}");
+      return response; 
+    }
+  }catch (e) {
+    print("${e.toString()}");
+    
+    throw Exception("${e.toString()}");
   }
 }
 
@@ -692,5 +754,6 @@ Future<bool> facebookLogin() async {
 
     notifyListeners();
   }
+  
 
 }

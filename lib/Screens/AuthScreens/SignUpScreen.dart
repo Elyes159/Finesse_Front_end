@@ -105,6 +105,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       const SizedBox(height: 16),
                       CustomButton(
+                         textColor: _isLoading ? Color(0xFF111928) : Colors.white,
+                  buttonColor: _isLoading? Color(0xFFE5E7EB) : Color(0xFFFB98B7),
                         onTap: _isLoading
                             ? () {}
                             : () async {
@@ -127,7 +129,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     );
                                     Navigator.pushReplacement(
                                       context,
-                                      MaterialPageRoute(builder: (context) => const VerificationMail()),
+                                      MaterialPageRoute(builder: (context) => const VerificationMail(parametre: "signup",)),
                                     );
                                   } catch (error) {
                                     setState(() {
@@ -147,7 +149,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Text(
                             _errorMessage!,
-                            style: const TextStyle(color: Colors.red, fontSize: 14,fontFamily: "Raleway"),
+                            style: const TextStyle(color: Colors.red, fontSize: 14,fontFamily: "Raleway",fontWeight:FontWeight.w700),
                             textAlign: TextAlign.center,
                           ),
                         ),

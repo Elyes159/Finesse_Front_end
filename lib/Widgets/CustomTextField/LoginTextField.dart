@@ -94,7 +94,9 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
                     ? GestureDetector(
                         onTap: _togglePasswordVisibility,
                         child: SvgPicture.asset(
-                          "assets/Icons/eye.svg",
+                          _obscureText
+                              ? "assets/Icons/eye-slash.svg" // Default "eye-slash" icon
+                              : "assets/Icons/eye.svg", // When clicked, "eye" icon
                           height: 24,
                           width: 24,
                         ),
@@ -130,4 +132,3 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
     );
   }
 }
-

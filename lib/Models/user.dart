@@ -1,7 +1,7 @@
 class Users {
   final int id;
   final String username;
-  final String email;
+  late final String email;
   final String phoneNumber;
   late final String? avatar;
   final String fullName;

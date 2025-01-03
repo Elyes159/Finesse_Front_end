@@ -1,14 +1,17 @@
 import 'package:finesse_frontend/Models/user.dart';
 import 'package:finesse_frontend/Provider/AuthService.dart';
+import 'package:finesse_frontend/Screens/AuthScreens/ChangePassword.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/CompleteInfo.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';  // Importer le package flutter_svg
 
 class VerificationMail extends StatefulWidget {
-  const VerificationMail({super.key});
+  final String parametre;
+  const VerificationMail({super.key, required this.parametre});
 
   @override
   State<VerificationMail> createState() => _VerificationMailState();
@@ -19,6 +22,7 @@ class _VerificationMailState extends State<VerificationMail> {
   final FocusNode _focusNode = FocusNode();
   final List<TextEditingController> _controllers = List.generate(6, (index) => TextEditingController());
     Users? user;
+    final storage = FlutterSecureStorage();
 
   @override
   Widget build(BuildContext context) {
@@ -115,11 +119,22 @@ class _VerificationMailState extends State<VerificationMail> {
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: CustomButton(label: "Next", onTap: ()async{
               try{
-                await Provider.of<AuthService>(context, listen: false).confirmEmailVerification(
+                 if(widget.parametre=="signup") {
+                   await Provider.of<AuthService>(context, listen: false).confirmEmailVerification(
                   userId: Provider.of<AuthService>(context, listen: false).userId,
                   verificationCode: _controllers.map((controller) => controller.text).join(''),
-                ); 
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>CompleteInfo(parameter: "normal",)));           
+                );
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>CompleteInfo(parameter: "normal",)));
+
+                 } else {
+                  String? storedemailReset = await storage.read(key: 'email_reset');
+                  await Provider.of<AuthService>(context, listen: false).confirmEmailVerificationForReset(
+                  email:storedemailReset!,
+                  verificationCode: _controllers.map((controller) => controller.text).join(''),
+                );
+                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ChangePassword()));
+                 }
+                        
               }catch(e){
                 if (kDebugMode) {
                   print("ereir ${e.toString()}");
