@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:finesse_frontend/ApiServices/backend_url.dart';
 import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Provider/Stories.dart';
-import 'package:finesse_frontend/Widgets/BottomNavigatorBar/BottomNavigatorBar.dart';
+import 'package:finesse_frontend/Widgets/Navigation/Navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -202,7 +202,6 @@ int _selectedIndex = 0;
 
         ],
       ),
-      bottomNavigationBar: CustomBottomNavigationBar(onItemSelected: _onItemTapped,currentIndex: _selectedIndex,),
     );
   }
 }
