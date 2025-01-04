@@ -23,22 +23,17 @@ class Navigation extends StatefulWidget {
   @override
   State<Navigation> createState() => _NavigationState();
 }
-
 class _NavigationState extends State<Navigation> {
   String? parametre = "";
   int _selectedIndex = 0;
-
   List<Widget> _pages = [];
-
   @override
   void initState() {
     super.initState();
     _loadParameter();
   }
-
   Future<void> _loadParameter() async {
     parametre = await const FlutterSecureStorage().read(key: 'parametre');
-
     setState(() {
       _pages = [
         HomeScreen(parameter: parametre!),
@@ -50,7 +45,7 @@ class _NavigationState extends State<Navigation> {
     });
   }
 
-  void _onItemTapped(int index) {
+  void _onItemTapped(int index){
     setState(() {
       _selectedIndex = index;
     });
@@ -60,7 +55,6 @@ class _NavigationState extends State<Navigation> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<AuthService>(context, listen: false).currentUser!;
-
     return Scaffold(
       body: _pages.isNotEmpty ? _pages[_selectedIndex] : Container(),
       bottomNavigationBar: BottomNavigationBar(
