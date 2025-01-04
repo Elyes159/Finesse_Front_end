@@ -11,8 +11,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class Navigation extends StatefulWidget {
-  final ValueChanged<int> onItemSelected; // Callback pour notifier le parent du changement d'index
-  final int currentIndex; // L'index sélectionné actuellement
+  final ValueChanged<int> onItemSelected;
+  final int currentIndex;
 
   const Navigation({
     Key? key,
@@ -21,27 +21,24 @@ class Navigation extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<Navigation> createState() =>
-      _NavigationState();
+  State<Navigation> createState() => _NavigationState();
 }
 
 class _NavigationState extends State<Navigation> {
   String? parametre = "";
-  int _selectedIndex = 0; // Indice sélectionné par défaut (0 pour Home)
+  int _selectedIndex = 0;
 
-  // Liste des pages à afficher en fonction de l'index sélectionné
   List<Widget> _pages = [];
 
   @override
   void initState() {
     super.initState();
-    _loadParameter(); // Charger le paramètre avant de définir les pages
+    _loadParameter();
   }
 
   Future<void> _loadParameter() async {
     parametre = await const FlutterSecureStorage().read(key: 'parametre');
-    
-    // Initialiser la liste des pages après avoir chargé 'parametre'
+
     setState(() {
       _pages = [
         HomeScreen(parameter: parametre!),
@@ -55,9 +52,9 @@ class _NavigationState extends State<Navigation> {
 
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index; // Changer l'index sélectionné
+      _selectedIndex = index;
     });
-    widget.onItemSelected(index); // Notifier le parent du changement d'index
+    widget.onItemSelected(index);
   }
 
   @override
@@ -65,29 +62,33 @@ class _NavigationState extends State<Navigation> {
     final user = Provider.of<AuthService>(context, listen: false).currentUser!;
 
     return Scaffold(
-      body: _pages.isNotEmpty ? _pages[_selectedIndex] : Container(), // Affiche la page correspondante
+      body: _pages.isNotEmpty ? _pages[_selectedIndex] : Container(),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex, // Utilisation de l'index sélectionné localement
-        onTap: _onItemTapped, // Gère les changements d'index
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
         items: [
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
               "assets/Icons/home.svg",
-              color: _selectedIndex == 0 ? Color(0xFFFB98B7) : Colors.black, // Couleur rose si sélectionnée
+              color: _selectedIndex == 0 ? Color(0xFFFB98B7) : Colors.black,
+              height: 24,
+              width: 24,
             ),
             label: 'Home',
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
+              height: 24,
+              width: 24,
               "assets/Icons/explore.svg",
-              color: _selectedIndex == 1 ? Color(0xFFFB98B7) : Colors.black, // Couleur rose si sélectionnée
+              color: _selectedIndex == 1 ? Color(0xFFFB98B7) : Colors.black,
             ),
             label: 'Explore',
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.add,
-              color: _selectedIndex == 2 ? Color(0xFFFB98B7) : Colors.black, // Couleur rose si sélectionnée
+              color: _selectedIndex == 2 ? Color(0xFFFB98B7) : Colors.black,
               size: 24,
             ),
             label: 'Sell',
@@ -95,7 +96,8 @@ class _NavigationState extends State<Navigation> {
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
               "assets/Icons/notification.svg",
-              color: _selectedIndex == 3 ? const Color(0xFFFB98B7) : Colors.black, // Couleur rose si sélectionnée
+              color:
+                  _selectedIndex == 3 ? const Color(0xFFFB98B7) : Colors.black,
             ),
             label: 'Notifications',
           ),
@@ -106,7 +108,7 @@ class _NavigationState extends State<Navigation> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: _selectedIndex == 4
-                    ? Border.all(color: Color(0xFFFB98B7), width: 2) // Bordure rose si sélectionné
+                    ? Border.all(color: Color(0xFFFB98B7), width: 2)
                     : null,
               ),
               child: CircleAvatar(
@@ -115,8 +117,7 @@ class _NavigationState extends State<Navigation> {
                     ? NetworkImage(parametre == "normal"
                         ? "${AppConfig.baseUrl}${user.avatar}"
                         : user.avatar!)
-                    : AssetImage('assets/images/user.png')
-                        as ImageProvider, // Image locale si avatar est null
+                    : AssetImage('assets/images/user.png') as ImageProvider,
                 backgroundColor: Colors.transparent,
                 child: user.avatar == null
                     ? const CircularProgressIndicator()
@@ -128,19 +129,18 @@ class _NavigationState extends State<Navigation> {
         ],
         selectedLabelStyle: const TextStyle(
           fontFamily: "Raleway",
-          fontSize: 12, 
-          color: Color(0xFFFB98B7), // Couleur du label sélectionné
+          fontSize: 12,
+          color: Color(0xFFFB98B7),
         ),
         unselectedLabelStyle: const TextStyle(
           fontFamily: "Raleway",
           fontSize: 12,
-          color: Colors.black, // Couleur du label non sélectionné
+          color: Colors.black,
         ),
-        selectedItemColor: Color(0xFFFB98B7), // Couleur de l'élément sélectionné
-        unselectedItemColor: Colors.black, // Couleur des éléments non sélectionnés
-        type: BottomNavigationBarType.fixed, // Assurez-vous que le type est "fixed"
+        selectedItemColor: Color(0xFFFB98B7),
+        unselectedItemColor: Colors.black,
+        type: BottomNavigationBarType.fixed,
       ),
     );
   }
 }
-
