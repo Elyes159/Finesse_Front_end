@@ -49,8 +49,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<AuthService>(context, listen: false).currentUser!;
-
-    // Liste combinée des produits
     final products = [
       ...List.generate(
         10,
@@ -71,7 +69,6 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
     ];
-
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -177,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       style: TextStyle(
                                           color: Color(0xFF0E1C36),
                                           fontSize: 12,
-                                          fontFamily: 'Poppins',
+                                          fontFamily: 'Raleway',
                                           fontWeight: FontWeight.w500,
                                       ),
                                   )
@@ -284,7 +281,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           crossAxisSpacing: 16.0,
-                          mainAxisSpacing: 16.0,
+                          mainAxisSpacing: 0.0,
                           childAspectRatio: 3 / 4,
                         ),
                         itemCount: categoryProducts.length,
