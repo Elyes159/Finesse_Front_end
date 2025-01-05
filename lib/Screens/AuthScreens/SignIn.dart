@@ -5,6 +5,7 @@ import 'package:finesse_frontend/Screens/HomeScreens/HomeScreen.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/SocialMediaSignIn.dart';
 import 'package:finesse_frontend/Widgets/CustomTextField/LoginTextField.dart';
+import 'package:finesse_frontend/Widgets/Navigation/Navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -174,7 +175,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        const HomeScreen(parameter: "normal"),
+                                        Navigation(onItemSelected: (int value) {  },),
                                   ),
                                   (Route<dynamic> route) => false,
                                 );

@@ -86,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         backgroundImage:
                             (user.avatar != "" && user.avatar != null)
                                 ? NetworkImage(widget.parameter == "normal"
-                                    ? "${AppConfig.TestClientUrl}${user.avatar}"
+                                    ? "${AppConfig.baseUrl}${user.avatar}"
                                     : user.avatar!)
                                 : const AssetImage('assets/images/user.png')
                                     as ImageProvider,
@@ -159,7 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               user.avatar != null)
                                           ? NetworkImage(widget.parameter ==
                                                   "normal"
-                                              ? "${AppConfig.TestClientUrl}${user.avatar}"
+                                              ? "${AppConfig.baseUrl}${user.avatar}"
                                               : user.avatar!)
                                           : AssetImage('assets/images/user.png')
                                               as ImageProvider,
