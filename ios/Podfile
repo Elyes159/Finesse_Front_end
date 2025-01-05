@@ -1,15 +1,17 @@
-# Uncomment the next line to define a global platform for your project
+# Définit la version minimale de la plateforme iOS
 platform :ios, '13.0'
 
 target 'Runner' do
-  # Comment the next line if you don't want to use dynamic frameworks
+  # Utiliser des frameworks dynamiques (requis pour de nombreux plugins)
   use_frameworks!
+  use_modular_headers!
 
-  # Pods for Runner
+  # Ajoute tous les Pods nécessaires pour les plugins Flutter
+  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 
+  # Configuration pour les tests
   target 'RunnerTests' do
     inherit! :search_paths
-    # Pods for testing
+    # Pods pour les tests (ajoutez ici si nécessaire)
   end
-
 end
