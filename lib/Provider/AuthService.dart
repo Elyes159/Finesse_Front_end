@@ -38,7 +38,7 @@ class AuthService with ChangeNotifier{
     required String firstName,
     required String lastName,
   })async{
-    final url = Uri.parse("${AppConfig.baseUrl}/api/auth/signup/");
+    final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/signup/");
     final response = await http.post(
       url,
       headers: {'Content-Type':'application/json'},
@@ -67,7 +67,7 @@ class AuthService with ChangeNotifier{
   required String username,
   required String password,
 }) async {
-  final url = Uri.parse("${AppConfig.baseUrl}/api/auth/signin/");
+  final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/signin/");
   final response = await http.post(
     url,
     headers: {'Content-Type': 'application/json'},
@@ -172,7 +172,7 @@ Future<void> loadUserData() async {
     required int userId,
     required String? verificationCode,
   })async{
-    final url = Uri.parse("${AppConfig.baseUrl}/api/auth/verify-code/");
+    final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/verify-code/");
     final response = await http.post(
       url,
       headers: {'Content-Type':'application/json'},
@@ -191,7 +191,7 @@ Future<void> loadUserData() async {
     required String email,
     required String? verificationCode,
   })async{
-    final url = Uri.parse("${AppConfig.baseUrl}/api/auth/verify-code-for-reset/");
+    final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/verify-code-for-reset/");
     final response = await http.post(
       url,
       headers: {'Content-Type':'application/json'},
@@ -212,7 +212,7 @@ Future<void> loadUserData() async {
   required String resetToken,
   required String password,
 }) async {
-  final url = Uri.parse("${AppConfig.baseUrl}/api/auth/change_password/$resetToken/");
+  final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/change_password/$resetToken/");
   final response = await http.post(
     url,
     headers: {'Content-Type': 'application/json'},
@@ -233,7 +233,7 @@ Future<http.Response> registerProfile({
   XFile? image,
   required int userId,
 }) async {
-  final url = Uri.parse("${AppConfig.baseUrl}/api/auth/$userId/register_profile/");
+  final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/$userId/register_profile/");
   var request = http.MultipartRequest('POST', url)
     ..fields['full_name'] = full_name
     ..fields['phone_number'] = phone_number
@@ -272,7 +272,7 @@ Future<http.Response> registerProfileGoogle({
   required String description,
   required int userId,
 }) async {
-  final url = Uri.parse("${AppConfig.baseUrl}/api/auth/$userId/register_profile_google/");
+  final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/$userId/register_profile_google/");
 
   // Création du corps de la requête JSON
   final Map<String, dynamic> body = {
@@ -312,7 +312,7 @@ Future<http.Response> registerProfilefacebook({
   required String description,
   required int userId,
 }) async {
-  final url = Uri.parse("${AppConfig.baseUrl}/api/auth/$userId/register_profile_facebook/");
+  final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/$userId/register_profile_facebook/");
 
   // Création du corps de la requête JSON
   final Map<String, dynamic> body = {
@@ -349,7 +349,7 @@ Future<http.Response> registerProfilefacebook({
 Future<http.Response> send_email_to_reset_password({
   required String email,
 })async{
-  final url = Uri.parse("${AppConfig.baseUrl}/api/auth/send_email_to_reset_pass/$email/");
+  final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/send_email_to_reset_pass/$email/");
   try{
      final response = await http.post(
       url,
@@ -379,7 +379,7 @@ Future<void> createUsername({
   required bool isMail,
   required int userId,
 }) async {
-  final url = Uri.parse("${AppConfig.baseUrl}/api/auth/$userId/createUsername/");
+  final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/$userId/createUsername/");
   final response = await http.post(
     url,
     headers: {"Content-Type": "application/json"},
@@ -404,7 +404,7 @@ Future<void> createUsernameGoogle({
   required bool isMail,
   required int userId,
 }) async {
-  final url = Uri.parse("${AppConfig.baseUrl}/api/auth/$userId/createUsernamegoogle/");
+  final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/$userId/createUsernamegoogle/");
   final response = await http.post(
     url,
     headers: {"Content-Type": "application/json"},
@@ -429,7 +429,7 @@ Future<void> createUsernameFacebook({
   required bool isMail,
   required int userId,
 }) async {
-  final url = Uri.parse("${AppConfig.baseUrl}/api/auth/$userId/createUsernamefacebook/");
+  final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/$userId/createUsernamefacebook/");
   final response = await http.post(
     url,
     headers: {"Content-Type": "application/json"},
@@ -470,7 +470,7 @@ Future<http.Response> signUpGoogle() async {
         };
 
         final response = await http.post(
-          Uri.parse('${AppConfig.baseUrl}/api/auth/googleSign/'),
+          Uri.parse('${AppConfig.TestClientUrl}/api/auth/googleSign/'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode(bodyData),
         );
@@ -525,7 +525,7 @@ Future<http.Response> signUpFacebook() async {
 
       // Effectuer la requête HTTP
       final response = await http.post(
-        Uri.parse('${AppConfig.baseUrl}/api/auth/facebookSign/'),
+        Uri.parse('${AppConfig.TestClientUrl}/api/auth/facebookSign/'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(bodyData),
       );
@@ -560,7 +560,7 @@ Future<bool> googleLogin() async {
       final String? idToken = googleAuth.idToken;
       final String? accessToken = googleAuth.accessToken;
 
-      final url = Uri.parse("${AppConfig.baseUrl}/api/auth/googlelogin/");
+      final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/googlelogin/");
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
@@ -626,7 +626,7 @@ Future<bool> facebookLogin() async {
 
       final String? idToken = accessToken.tokenString;
 
-      final url = Uri.parse("${AppConfig.baseUrl}/api/auth/facebooklogin/");
+      final url = Uri.parse("${AppConfig.TestClientUrl}/api/auth/facebooklogin/");
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},

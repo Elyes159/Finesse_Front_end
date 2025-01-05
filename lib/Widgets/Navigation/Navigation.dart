@@ -109,7 +109,7 @@ class _NavigationState extends State<Navigation> {
                 radius: 50.0,
                 backgroundImage: (user.avatar != "" && user.avatar != null)
                     ? NetworkImage(parametre == "normal"
-                        ? "${AppConfig.baseUrl}${user.avatar}"
+                        ? "${AppConfig.TestClientUrl}${user.avatar}"
                         : user.avatar!)
                     : AssetImage('assets/images/user.png') as ImageProvider,
                 backgroundColor: Colors.transparent,
