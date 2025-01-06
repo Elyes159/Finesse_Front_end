@@ -114,7 +114,7 @@ class _NavigationState extends State<Navigation> {
                     : AssetImage('assets/images/user.png') as ImageProvider,
                 backgroundColor: Colors.transparent,
                 child: user.avatar == null
-                    ? const CircularProgressIndicator()
+                    ?  Container()
                     : null,
               ),
             ),
