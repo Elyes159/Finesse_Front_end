@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:finesse_frontend/Widgets/CustomTextField/DescTextField.dart';
+import 'package:finesse_frontend/Widgets/CustomTextField/LoginTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
@@ -12,14 +14,18 @@ class SellProductScreen extends StatefulWidget {
 }
 
 class _SellProductScreenState extends State<SellProductScreen> {
-  final List<File?> _images = List.generate(5, (index) => null); // Liste pour stocker les images
+  final List<File?> _images = List.generate(5, (index) => null); 
+  TextEditingController _titleController = TextEditingController();
+  TextEditingController _descriptionController = TextEditingController();
+  TextEditingController _priceController = TextEditingController();
+  TextEditingController _possibleDeffectsController = TextEditingController();
+
 
   Future<void> _pickImage(int index) async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(
-      source: ImageSource.gallery, // Ou `ImageSource.camera` pour utiliser la caméra
+      source: ImageSource.gallery,
     );
-
     if (pickedFile != null) {
       setState(() {
         _images[index] = File(pickedFile.path); // Met à jour l'image sélectionnée
@@ -71,8 +77,8 @@ class _SellProductScreenState extends State<SellProductScreen> {
                     return GestureDetector(
                       onTap: () => _pickImage(index), // Ouvre le sélecteur d'images
                       child: Container(
-                        width: 160,
-                        height: 160,
+                        width: 150,
+                        height: 150,
                         margin: const EdgeInsets.only(right: 8),
                         decoration: ShapeDecoration(
                           color: const Color(0xFFE5E7EB),
@@ -115,6 +121,10 @@ class _SellProductScreenState extends State<SellProductScreen> {
                 ),
               ),
             ),
+            SizedBox(height: 16,),
+            CustomTextFormField(controller: _titleController, label: "Title", isPassword: false),
+            SizedBox(height: 16,),
+            DescTextField(controller: _descriptionController, label: "Description", isPassword: false)
           ],
         ),
       ),
