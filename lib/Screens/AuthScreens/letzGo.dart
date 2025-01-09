@@ -1,7 +1,7 @@
 import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/SignIn.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
-import 'package:finesse_frontend/Widgets/CustomTextField/LoginTextField.dart';
+import 'package:finesse_frontend/Widgets/CustomTextField/customTextField.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';

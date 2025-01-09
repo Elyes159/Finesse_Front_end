@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/VerificationMail.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
-import 'package:finesse_frontend/Widgets/CustomTextField/LoginTextField.dart';
+import 'package:finesse_frontend/Widgets/CustomTextField/customTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';

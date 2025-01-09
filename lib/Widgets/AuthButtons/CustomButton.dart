@@ -12,13 +12,12 @@ class CustomButton extends StatelessWidget {
     this.buttonColor = const Color(0xFFFB98B7), // Default button color
     this.textColor = Colors.white, // Default text color
   });
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.only(right: 8.0, left: 8),
+        padding: const EdgeInsets.only(right: 0, left: 0),
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 48,

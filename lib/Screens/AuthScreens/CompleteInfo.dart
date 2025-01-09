@@ -3,7 +3,7 @@ import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/letzGo.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
 import 'package:finesse_frontend/Widgets/CustomTextField/DescTextField.dart';
-import 'package:finesse_frontend/Widgets/CustomTextField/LoginTextField.dart';
+import 'package:finesse_frontend/Widgets/CustomTextField/customTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';

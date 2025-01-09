@@ -4,7 +4,7 @@ import 'package:finesse_frontend/Screens/AuthScreens/SignUpScreen.dart';
 import 'package:finesse_frontend/Screens/HomeScreens/HomeScreen.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/SocialMediaSignIn.dart';
-import 'package:finesse_frontend/Widgets/CustomTextField/LoginTextField.dart';
+import 'package:finesse_frontend/Widgets/CustomTextField/customTextField.dart';
 import 'package:finesse_frontend/Widgets/Navigation/Navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

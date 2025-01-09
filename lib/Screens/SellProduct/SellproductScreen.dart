@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:finesse_frontend/Screens/SellProduct/categories.dart';
+import 'package:finesse_frontend/Widgets/CustomOptionsFields/optionsField.dart';
 import 'package:finesse_frontend/Widgets/CustomTextField/DescTextField.dart';
-import 'package:finesse_frontend/Widgets/CustomTextField/LoginTextField.dart';
+import 'package:finesse_frontend/Widgets/CustomTextField/customTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
@@ -14,12 +16,13 @@ class SellProductScreen extends StatefulWidget {
 }
 
 class _SellProductScreenState extends State<SellProductScreen> {
-  final List<File?> _images = List.generate(5, (index) => null); 
-  TextEditingController _titleController = TextEditingController();
-  TextEditingController _descriptionController = TextEditingController();
-  TextEditingController _priceController = TextEditingController();
-  TextEditingController _possibleDeffectsController = TextEditingController();
-
+  final List<File?> _images = List.generate(5, (index) => null);
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _possibleDeffectsController =
+      TextEditingController();
+  final TextEditingController _categoryController = TextEditingController();
 
   Future<void> _pickImage(int index) async {
     final picker = ImagePicker();
@@ -28,7 +31,8 @@ class _SellProductScreenState extends State<SellProductScreen> {
     );
     if (pickedFile != null) {
       setState(() {
-        _images[index] = File(pickedFile.path); // Met à jour l'image sélectionnée
+        _images[index] =
+            File(pickedFile.path); // Met à jour l'image sélectionnée
       });
     }
   }
@@ -75,7 +79,8 @@ class _SellProductScreenState extends State<SellProductScreen> {
                 child: Row(
                   children: List.generate(5, (index) {
                     return GestureDetector(
-                      onTap: () => _pickImage(index), // Ouvre le sélecteur d'images
+                      onTap: () =>
+                          _pickImage(index), // Ouvre le sélecteur d'images
                       child: Container(
                         width: 150,
                         height: 150,
@@ -100,7 +105,6 @@ class _SellProductScreenState extends State<SellProductScreen> {
                                   children: [
                                     SvgPicture.asset(
                                       "assets/Icons/gallery.svg",
-                                      
                                     ),
                                     const SizedBox(height: 12),
                                     const Text(
@@ -121,10 +125,57 @@ class _SellProductScreenState extends State<SellProductScreen> {
                 ),
               ),
             ),
-            SizedBox(height: 16,),
-            CustomTextFormField(controller: _titleController, label: "Title", isPassword: false),
-            SizedBox(height: 16,),
-            DescTextField(controller: _descriptionController, label: "Description", isPassword: false)
+            const SizedBox(
+              height: 16,
+            ),
+            CustomTextFormField(
+                controller: _titleController,
+                label: "Title",
+                isPassword: false),
+            const SizedBox(
+              height: 16,
+            ),
+            DescTextField(
+                controller: _descriptionController,
+                label: "Description",
+                isPassword: false),
+            const SizedBox(
+              height: 16,
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ChooseCategory()),
+                );
+              },
+              child: AbsorbPointer(
+                // Empêche l'interaction avec le TextField
+                child: CustomTextFormField(
+                  controller: _categoryController,
+                  label: "Category",
+                  isPassword: false,
+                  keyboardType: TextInputType.numberWithOptions(),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            CustomTextFormField(
+              controller: _priceController,
+              label: "Price",
+              isPassword: false,
+              keyboardType: TextInputType.numberWithOptions(),
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            CustomTextFormField(
+              controller: _possibleDeffectsController,
+              label: "Possible deffects",
+              isPassword: false,
+            )
           ],
         ),
       ),
