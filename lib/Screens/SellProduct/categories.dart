@@ -21,14 +21,13 @@ class _ChooseCategoryState extends State<ChooseCategory> {
     "Women": false,
     "Boys": false,
     "Girls": false,
-  }; 
+  };
   String? errorMessage;
 
   void selectCategory(String category) {
     setState(() {
       selectedCategory = category;
-      selectedSubCategory =
-          null; 
+      selectedSubCategory = null;
       errorMessage = null;
     });
   }
@@ -169,8 +168,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             selectedKey:
                 selectedSubCategory, // Utiliser la sous-catégorie sélectionnée comme valeur
           ),
-          
-           if (selectedSubCategory == "J") ...[
+          if (selectedSubCategory == "J") ...[
             const SizedBox(height: 12),
             CustomDropdownFormField<String, String>(
               label: "Sub-category of Jouets",
@@ -206,8 +204,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                   selectedSubSubCategory, // Utiliser la sous-catégorie sélectionnée comme valeur
             ),
           ],
-          
-           if (selectedSubCategory == "P") ...[
+          if (selectedSubCategory == "P") ...[
             const SizedBox(height: 12),
             CustomDropdownFormField<String, String>(
               label: "Sub-category of Produit de beauté",
@@ -243,8 +240,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                   selectedSubSubCategory, // Utiliser la sous-catégorie sélectionnée comme valeur
             ),
           ],
-          
-           if (selectedSubCategory == "S") ...[
+          if (selectedSubCategory == "S") ...[
             const SizedBox(height: 12),
             CustomDropdownFormField<String, String>(
               label: "Sub-category of Sacs",
@@ -280,9 +276,8 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                   selectedSubSubCategory, // Utiliser la sous-catégorie sélectionnée comme valeur
             ),
           ],
-         
-           if (selectedSubCategory == "A") ...[
-             const SizedBox(height: 12),
+          if (selectedSubCategory == "A") ...[
+            const SizedBox(height: 12),
             CustomDropdownFormField<String, String>(
               label: "Sub-category of Accessoires",
               options: const [
@@ -317,8 +312,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                   selectedSubSubCategory, // Utiliser la sous-catégorie sélectionnée comme valeur
             ),
           ],
-           
-           if (selectedSubCategory == "B") ...[
+          if (selectedSubCategory == "B") ...[
             const SizedBox(height: 12),
             CustomDropdownFormField<String, String>(
               label: "Sub-category of Bijoux",
@@ -359,26 +353,20 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             CustomDropdownFormField<String, String>(
               label: "Sub-category of Chaussures",
               options: const [
-                {"robe": "Robe"},
-                {"caftan": "Caftan"},
-                {"t-shirt": "T-Shirt"},
-                {"pull chemise": "Pull Chemise"},
-                {"gilet": "Gilet"},
-                {"veste": "Veste"},
-                {"manteau": "Manteau"},
-                {"trench": "Trench"},
-                {"pantalon": "Pantalon"},
-                {"pantacourt": "Pantacourt"},
-                {"short": "Short"},
-                {"salopette": "Salopette"},
-                {"jupe": "Jupe"},
-                {"maillot": "Maillot"},
-                {"lingerie": "Lingerie"},
-                {"pyjamas": "Pyjamas"},
-                {"kimono": "Kimono"},
-                {"combinaison": "Combinaison"},
-                {"sari": "Sari"},
-                {"ensemble": "Ensemble"},
+                {"bottes": "Bottes"},
+                {"bottines": "Bottines"},
+                {"escarpins": "Escarpins"},
+                {"compenses": "Compensés"},
+                {"sandales": "Sandales"},
+                {"baskets": "Baskets"},
+                {"espadrilles": "Espadrilles"},
+                {"slip-on": "Slip-on"},
+                {"ballerines": "Ballerines"},
+                {"mules": "Mules"},
+                {"derbies": "Derbies"},
+                {"bebe": "Bébé"},
+                {"chaussons": "Chaussons"},
+                {"mocassins": "Mocassins"},
               ],
               onChanged: (selectedKey) {
                 setState(() {
@@ -390,7 +378,6 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                   selectedSubSubCategory, // Utiliser la sous-catégorie sélectionnée comme valeur
             ),
           ],
-          
           if (selectedSubCategory == "V") ...[
             const SizedBox(height: 12),
             CustomDropdownFormField<String, String>(
@@ -419,7 +406,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                 {"COM": "Combinaison"},
                 {"SARI": "Sari"},
                 {"ENS": "Ensemble"},
-                {"S-V": "sous vêtements"}, 
+                {"S-V": "sous vêtements"},
                 {"COS": "Costumes"},
               ],
               onChanged: (selectedKey) {
