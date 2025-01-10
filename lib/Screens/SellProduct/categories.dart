@@ -12,10 +12,9 @@ class ChooseCategory extends StatefulWidget {
 }
 
 class _ChooseCategoryState extends State<ChooseCategory> {
-  String? selectedCategory; // Catégorie sélectionnée
+  String? selectedCategory;
   String? selectedSubCategory;
-  String?
-      selectedSubSubCategory; // Sous-catégorie sélectionnée dans "Vêtements"
+  String? selectedSubSubCategory;
   Map<String, bool> selectedCheckboxes = {
     "Men": false,
     "Women": false,
@@ -25,12 +24,17 @@ class _ChooseCategoryState extends State<ChooseCategory> {
   String? errorMessage;
 
   void selectCategory(String category) {
-    setState(() {
-      selectedCategory = category;
-      selectedSubCategory = null;
-      errorMessage = null;
-    });
-  }
+  setState(() {
+    selectedCategory = category;
+    selectedSubCategory = null;  // Reset selected sub-category when a new category is selected
+    errorMessage = null;
+    
+    // Si "Mode et Vintage" est sélectionné, choisir une sous-catégorie par défaut
+    if (category == "MV" && selectedSubCategory == null) {
+      selectedSubCategory = "V";  // Exemple de sous-catégorie par défaut ("Vêtements")
+    }
+  });
+}
 
   void toggleCheckbox(String key, bool value) {
     setState(() {
@@ -42,7 +46,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
   bool validateCheckboxSelection() {
     int checkedCount =
         selectedCheckboxes.values.where((isChecked) => isChecked).length;
-    return checkedCount == 1;
+    return checkedCount == 1; // Exactement une case cochée
   }
 
   void handleSubmit() {
@@ -53,21 +57,32 @@ class _ChooseCategoryState extends State<ChooseCategory> {
       return;
     }
 
-    if (selectedCategory == "Mode and vintage") {
+    if (selectedCategory == "MV") {
+      if (selectedSubCategory == null) {
+        setState(() {
+          errorMessage = "Please select a sub-category.";
+        });
+        return;
+      }
+
       if (!validateCheckboxSelection()) {
         setState(() {
           errorMessage =
-              "Please select exactly one option from Men, Women, Boys, or Girls.";
+              "Please select exactly one gender (Men, Women, Boys, or Girls).";
         });
         return;
       }
     }
 
+    // Si toutes les validations passent
     setState(() {
       errorMessage = null;
     });
 
+    // Logic for handling category selection
     print("Category chosen: $selectedCategory");
+    print("Sub-category chosen: $selectedSubCategory");
+    print("Sub-sub-category chosen: $selectedSubSubCategory");
     print("Checkbox states: $selectedCheckboxes");
   }
 
@@ -173,26 +188,15 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             CustomDropdownFormField<String, String>(
               label: "Sub-category of Jouets",
               options: const [
-                {"robe": "Robe"},
-                {"caftan": "Caftan"},
-                {"t-shirt": "T-Shirt"},
-                {"pull chemise": "Pull Chemise"},
-                {"gilet": "Gilet"},
-                {"veste": "Veste"},
-                {"manteau": "Manteau"},
-                {"trench": "Trench"},
-                {"pantalon": "Pantalon"},
-                {"pantacourt": "Pantacourt"},
-                {"short": "Short"},
-                {"salopette": "Salopette"},
-                {"jupe": "Jupe"},
-                {"maillot": "Maillot"},
-                {"lingerie": "Lingerie"},
-                {"pyjamas": "Pyjamas"},
-                {"kimono": "Kimono"},
-                {"combinaison": "Combinaison"},
-                {"sari": "Sari"},
-                {"ensemble": "Ensemble"},
+                {"BA": "Ballons"},
+                {"DO": "Dominos"},
+                {"JE": "Jeux éducatifs"},
+                {"PA": "Patins"},
+                {"PE": "Peluches"},
+                {"PU": "Puzzles"},
+                {"TRO": "Trottinettes"},
+                {"VHE": "Véhicules"},
+                {"POU": "Poupées"},
               ],
               onChanged: (selectedKey) {
                 setState(() {
@@ -209,26 +213,14 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             CustomDropdownFormField<String, String>(
               label: "Sub-category of Produit de beauté",
               options: const [
-                {"robe": "Robe"},
-                {"caftan": "Caftan"},
-                {"t-shirt": "T-Shirt"},
-                {"pull chemise": "Pull Chemise"},
-                {"gilet": "Gilet"},
-                {"veste": "Veste"},
-                {"manteau": "Manteau"},
-                {"trench": "Trench"},
-                {"pantalon": "Pantalon"},
-                {"pantacourt": "Pantacourt"},
-                {"short": "Short"},
-                {"salopette": "Salopette"},
-                {"jupe": "Jupe"},
-                {"maillot": "Maillot"},
-                {"lingerie": "Lingerie"},
-                {"pyjamas": "Pyjamas"},
-                {"kimono": "Kimono"},
-                {"combinaison": "Combinaison"},
-                {"sari": "Sari"},
-                {"ensemble": "Ensemble"},
+                {"PF": "Parfum"},
+                {"SV": "Soins visage"},
+                {"SC": "Soins corps"},
+                {"SCH": "Soins cheveux"},
+                {"SM": "Soins mains"},
+                {"DOU": "Douche"},
+                {"MAQUI": "Maquillage"},
+                {"VER": "Vernis"},
               ],
               onChanged: (selectedKey) {
                 setState(() {
@@ -245,26 +237,17 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             CustomDropdownFormField<String, String>(
               label: "Sub-category of Sacs",
               options: const [
-                {"robe": "Robe"},
-                {"caftan": "Caftan"},
-                {"t-shirt": "T-Shirt"},
-                {"pull chemise": "Pull Chemise"},
-                {"gilet": "Gilet"},
-                {"veste": "Veste"},
-                {"manteau": "Manteau"},
-                {"trench": "Trench"},
-                {"pantalon": "Pantalon"},
-                {"pantacourt": "Pantacourt"},
-                {"short": "Short"},
-                {"salopette": "Salopette"},
-                {"jupe": "Jupe"},
-                {"maillot": "Maillot"},
-                {"lingerie": "Lingerie"},
-                {"pyjamas": "Pyjamas"},
-                {"kimono": "Kimono"},
-                {"combinaison": "Combinaison"},
-                {"sari": "Sari"},
-                {"ensemble": "Ensemble"},
+                {"SM": "Sac à main"},
+                {"BAND": "Sac à bandoulière"},
+                {"P": "Pochette"},
+                {"SD": "Sac à dos"},
+                {"COU": "Couffin"},
+                {"PORT": "Portefeuille"},
+                {"PORTM": "Porte-monnaie"},
+                {"CA": "Cartable"},
+                {"BB": "Sac bébé"},
+                {"EC": "Étui à crayon"},
+                {"SS": "Sac de sport"},
               ],
               onChanged: (selectedKey) {
                 setState(() {
@@ -281,26 +264,18 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             CustomDropdownFormField<String, String>(
               label: "Sub-category of Accessoires",
               options: const [
-                {"robe": "Robe"},
-                {"caftan": "Caftan"},
-                {"t-shirt": "T-Shirt"},
-                {"pull chemise": "Pull Chemise"},
-                {"gilet": "Gilet"},
-                {"veste": "Veste"},
-                {"manteau": "Manteau"},
-                {"trench": "Trench"},
-                {"pantalon": "Pantalon"},
-                {"pantacourt": "Pantacourt"},
-                {"short": "Short"},
-                {"salopette": "Salopette"},
-                {"jupe": "Jupe"},
-                {"maillot": "Maillot"},
-                {"lingerie": "Lingerie"},
-                {"pyjamas": "Pyjamas"},
-                {"kimono": "Kimono"},
-                {"combinaison": "Combinaison"},
-                {"sari": "Sari"},
-                {"ensemble": "Ensemble"},
+                {"LU": "Lunette"},
+                {"CE": "Ceinture"},
+                {"CHE": "Accessoires pour cheveux"},
+                {"CO": "Collant"},
+                {"CHAUSS": "Chaussette"},
+                {"CHAP": "Chapeau"},
+                {"BONN": "Bonnet"},
+                {"ECH": "Écharpe"},
+                {"FOU": "Foulard"},
+                {"BI": "Bijoux"},
+                {"CR": "Cravate"},
+                {"PAP": "Nœud de papillon"},
               ],
               onChanged: (selectedKey) {
                 setState(() {
@@ -317,26 +292,13 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             CustomDropdownFormField<String, String>(
               label: "Sub-category of Bijoux",
               options: const [
-                {"robe": "Robe"},
-                {"caftan": "Caftan"},
-                {"t-shirt": "T-Shirt"},
-                {"pull chemise": "Pull Chemise"},
-                {"gilet": "Gilet"},
-                {"veste": "Veste"},
-                {"manteau": "Manteau"},
-                {"trench": "Trench"},
-                {"pantalon": "Pantalon"},
-                {"pantacourt": "Pantacourt"},
-                {"short": "Short"},
-                {"salopette": "Salopette"},
-                {"jupe": "Jupe"},
-                {"maillot": "Maillot"},
-                {"lingerie": "Lingerie"},
-                {"pyjamas": "Pyjamas"},
-                {"kimono": "Kimono"},
-                {"combinaison": "Combinaison"},
-                {"sari": "Sari"},
-                {"ensemble": "Ensemble"},
+                {"C": "Collier"},
+                {"B": "Bracelet"},
+                {"BO": "Boucles d'oreilles"},
+                {"BAG": "Bague"},
+                {"MO": "Montre"},
+                {"PAR": "Parure"},
+                {"PIER": "Piercing"},
               ],
               onChanged: (selectedKey) {
                 setState(() {
@@ -353,20 +315,20 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             CustomDropdownFormField<String, String>(
               label: "Sub-category of Chaussures",
               options: const [
-                {"bottes": "Bottes"},
-                {"bottines": "Bottines"},
-                {"escarpins": "Escarpins"},
-                {"compenses": "Compensés"},
-                {"sandales": "Sandales"},
-                {"baskets": "Baskets"},
-                {"espadrilles": "Espadrilles"},
-                {"slip-on": "Slip-on"},
-                {"ballerines": "Ballerines"},
-                {"mules": "Mules"},
-                {"derbies": "Derbies"},
-                {"bebe": "Bébé"},
-                {"chaussons": "Chaussons"},
-                {"mocassins": "Mocassins"},
+                {"BO": "Bottes"},
+                {"BOTI": "Bottines"},
+                {"ESC": "Escarpins"},
+                {"COMP": "Compensés"},
+                {"SA": "Sandales"},
+                {"BAS": "Baskets"},
+                {"ESP": "Espadrilles"},
+                {"S-O": "Slip-on"},
+                {"BALL": "Ballerines"},
+                {"MU": "Mules"},
+                {"DER": "Derbies"},
+                {"BB": "Bébé"},
+                {"CH": "Chaussons"},
+                {"MO": "Mocassins"},
               ],
               onChanged: (selectedKey) {
                 setState(() {
@@ -420,7 +382,8 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             ),
           ],
           const SizedBox(height: 24),
-          if (selectedCategory == "Mode and vintage") ...[
+          if (selectedCategory == "MV" &&
+              {"S", "A", "C", "V"}.contains(selectedSubCategory)) ...[
             CustomCheckboxFormField(
               label: "Men",
               initialValue: selectedCheckboxes["Men"]!,
@@ -445,6 +408,45 @@ class _ChooseCategoryState extends State<ChooseCategory> {
               onChanged: (newValue) => toggleCheckbox("Girls", newValue),
             ),
           ],
+          if (selectedCategory == "MV" &&
+              {"B"}.contains(selectedSubCategory)) ...[
+            const SizedBox(height: 12),
+            CustomCheckboxFormField(
+              label: "Women",
+              initialValue: selectedCheckboxes["Women"]!,
+              onChanged: (newValue) => toggleCheckbox("Women", newValue),
+            ),
+            const SizedBox(height: 12),
+            CustomCheckboxFormField(
+              label: "Girls",
+              initialValue: selectedCheckboxes["Girls"]!,
+              onChanged: (newValue) => toggleCheckbox("Girls", newValue),
+            ),
+          ],
+          if (selectedCategory == "MV" &&
+              {"J"}.contains(selectedSubCategory)) ...[
+            const SizedBox(height: 12),
+            CustomCheckboxFormField(
+              label: "Boys",
+              initialValue: selectedCheckboxes["Boys"]!,
+              onChanged: (newValue) => toggleCheckbox("Boys", newValue),
+            ),
+            const SizedBox(height: 12),
+            CustomCheckboxFormField(
+              label: "Girls",
+              initialValue: selectedCheckboxes["Girls"]!,
+              onChanged: (newValue) => toggleCheckbox("Girls", newValue),
+            ),
+          ],
+          if (selectedCategory == "MV" &&
+              {"P"}.contains(selectedSubCategory)) ...[
+            const SizedBox(height: 12),
+            const CustomCheckboxFormField(
+              label: "Women",
+              initialValue: true, // Par défaut cochée
+              onChanged: null, // Désactiver l'interaction utilisateur
+            ),
+          ],
           const SizedBox(height: 24),
           if (errorMessage != null) ...[
             Text(
@@ -461,6 +463,10 @@ class _ChooseCategoryState extends State<ChooseCategory> {
           CustomButton(
             label: "Choose Category",
             onTap: handleSubmit,
+            isDisabled: selectedCategory == null ||
+                (selectedCategory == "MV" &&
+                    (selectedSubCategory == null ||
+                        !validateCheckboxSelection())),
           ),
         ],
       ),
