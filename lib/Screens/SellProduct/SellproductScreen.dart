@@ -9,7 +9,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 
 class SellProductScreen extends StatefulWidget {
-  const SellProductScreen({super.key});
+  final String? category;
+  final String? keySubCategory;
+   final String? keyCategory;
+  const SellProductScreen({super.key, this.category, this.keySubCategory, this.keyCategory});
 
   @override
   State<SellProductScreen> createState() => _SellProductScreenState();
@@ -22,7 +25,9 @@ class _SellProductScreenState extends State<SellProductScreen> {
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _possibleDeffectsController =
       TextEditingController();
-  final TextEditingController _categoryController = TextEditingController();
+      final TextEditingController _quantityController =
+      TextEditingController();
+  TextEditingController _categoryController = TextEditingController();
 
   Future<void> _pickImage(int index) async {
     final picker = ImagePicker();
@@ -35,6 +40,12 @@ class _SellProductScreenState extends State<SellProductScreen> {
             File(pickedFile.path); // Met à jour l'image sélectionnée
       });
     }
+  }
+  @override
+  void initState() {
+    super.initState();
+    // Initialisez le TextEditingController avec la valeur de category si elle est non nulle
+    _categoryController = TextEditingController(text: widget.category ?? '');
   }
 
   @override
@@ -175,7 +186,16 @@ class _SellProductScreenState extends State<SellProductScreen> {
               controller: _possibleDeffectsController,
               label: "Possible deffects",
               isPassword: false,
-            )
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            CustomTextFormField(
+              controller: _quantityController,
+              label: "Quantity",
+              isPassword: false,
+              keyboardType: TextInputType.number,
+            ),
           ],
         ),
       ),

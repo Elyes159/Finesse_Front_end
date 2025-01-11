@@ -33,7 +33,13 @@ class _CustomDropdownFormFieldState<K, V>
   @override
   void initState() {
     super.initState();
-    _selectedKey = widget.selectedKey;
+    if (widget.selectedKey != null &&
+        widget.options
+            .any((option) => option.keys.first == widget.selectedKey)) {
+      _selectedKey = widget.selectedKey;
+    } else {
+      _selectedKey = null;
+    }
   }
 
   void _onChanged(K? newKey) {
@@ -42,9 +48,7 @@ class _CustomDropdownFormFieldState<K, V>
       _selectedKey = newKey;
       _errorMessage = widget.validator?.call(newKey);
     });
-    if (widget.onChanged != null) {
-      widget.onChanged!(newKey);
-    }
+    widget.onChanged?.call(newKey);
   }
 
   @override
@@ -64,45 +68,24 @@ class _CustomDropdownFormFieldState<K, V>
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
-            child: DropdownButtonFormField<K>(
-              value: _selectedKey,
+            child: DropdownButton<K>(
+              isExpanded: true,
+              value: widget.options
+                      .any((option) => option.keys.first == _selectedKey)
+                  ? _selectedKey
+                  : null,
               onChanged: _onChanged,
-              onSaved: widget.onSaved,
-              validator: (value) {
-                final error = widget.validator?.call(value);
-                if (mounted) {
-                  setState(() {
-                    _errorMessage = error;
-                  });
-                }
-                return error;
-              },
-              decoration: InputDecoration(
-                labelText: widget.label,
-                labelStyle: const TextStyle(
-                  color: Color(0xFF3E536E),
-                  fontSize: 16,
-                  fontFamily: 'Raleway',
-                  fontWeight: FontWeight.w400,
-                  height: 1.5,
-                  letterSpacing: 0.5,
-                ),
-                border: InputBorder.none,
-                contentPadding: const EdgeInsets.only(left: 10),
+              icon: SvgPicture.asset(
+                "assets/Icons/down.svg",
+                height: 24,
+                width: 24,
               ),
-              icon: Transform.translate(
-                offset: const Offset(0, -8),
-                child: SvgPicture.asset(
-                  "assets/Icons/down.svg",
-                  height: 24,
-                  width: 24,
-                ),
-              ),
-              // Personnalisation du menu déroulant
+              alignment: AlignmentDirectional.centerEnd,
               style: const TextStyle(
                 fontFamily: 'Raleway',
                 color: Color(0xFF3E536E),
               ),
+              underline: const SizedBox.shrink(),
               items: widget.options
                   .map(
                     (option) => DropdownMenuItem<K>(
@@ -117,6 +100,35 @@ class _CustomDropdownFormFieldState<K, V>
                     ),
                   )
                   .toList(),
+              hint: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      widget.selectedKey == null
+                          ? widget.label
+                          : widget.options.any(
+                                  (option) => option.keys.first == _selectedKey)
+                              ? widget.options
+                                  .firstWhere(
+                                    (option) =>
+                                        option.keys.first == _selectedKey,
+                                    orElse: () => {},
+                                  )
+                                  .values
+                                  .toString()
+                              : 'please select a category', // Message alternatif
+                      style: const TextStyle(
+                        color: Color(0xFF3E536E),
+                        fontSize: 14,
+                        fontFamily: 'Raleway',
+                        fontWeight: FontWeight.w400,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
           if (_isTouched && _errorMessage != null && _errorMessage!.isNotEmpty)

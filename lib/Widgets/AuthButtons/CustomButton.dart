@@ -27,7 +27,7 @@ class CustomButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
           decoration: BoxDecoration(
             color: isDisabled
-                ? Colors.grey // Grey out the button if disabled
+                ? Color(0xFFE5E7EB) // Grey out the button if disabled
                 : buttonColor, // Use the passed button color if enabled
             borderRadius: BorderRadius.circular(10),
           ),
