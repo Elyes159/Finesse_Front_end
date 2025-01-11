@@ -2,6 +2,7 @@ import 'package:finesse_frontend/Screens/SellProduct/SellproductScreen.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
 import 'package:finesse_frontend/Widgets/CustomOptionsFields/optionsField.dart';
 import 'package:finesse_frontend/Widgets/customchekcoptionfield/customchekcoptionfield.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -824,6 +825,49 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                     (selectedSubCategory == null &&
                         !validateCheckboxSelection())),
           ),
+          SizedBox(
+            width: 343,
+            child: RichText(
+              text: TextSpan(
+                style: const TextStyle(
+                  color: Color(0xFF334155),
+                  fontSize: 14,
+                  fontFamily: 'Raleway',
+                  fontWeight: FontWeight.w500,
+                  height: 1.43,
+                ),
+                children: <TextSpan>[
+                  TextSpan(
+                    text: 'Or you can ', // Partie du texte non stylisée
+                  ),
+                  TextSpan(
+                    text:
+                        'Reset', // Mot à colorier en rose et rendre interactif
+                    style: const TextStyle(
+                      color: Color(0xFFFB98B7), // Couleur rose
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        setState(() {
+                           selectedCategory = null;
+                           selectedSubCategory= null;
+                           selectedSubSubCategory=null;
+                           CategoryForEnd= null;
+                           CategoryForBackend= null;
+                           SubCategoryForBackend=null;
+                           SubSubCategoryForBackend=null;
+                        });
+                        print("Reset clicked");
+                      },
+                  ),
+                  TextSpan(
+                    text: ' your choices', // Partie du texte non stylisée
+                  ),
+                ],
+              ),
+              textAlign: TextAlign.center,
+            ),
+          )
         ],
       ),
     );
