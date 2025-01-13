@@ -45,7 +45,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
   void initState() {
     super.initState();
     // Initialisez le TextEditingController avec la valeur de category si elle est non nulle
-    _categoryController = TextEditingController(text: widget.category ?? '');
+    _categoryController = TextEditingController(text: widget.category =="MV" ? 'Mode and Vintage' : widget.category=="AC"?"Art and creation" : widget.category == "D" ? "decoration" : "");
   }
 
   @override

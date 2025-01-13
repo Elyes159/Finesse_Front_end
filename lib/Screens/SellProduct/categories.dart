@@ -29,55 +29,54 @@ class _ChooseCategoryState extends State<ChooseCategory> {
   };
   String? errorMessage;
 
-void toggleCheckbox(String key, bool value) {
-  setState(() {
-    // Mettre à jour la case sélectionnée
-    selectedCheckboxes[key] = value;
+  void toggleCheckbox(String key, bool value) {
+    setState(() {
+      // Mettre à jour la case sélectionnée
+      selectedCheckboxes[key] = value;
 
-    // Initialiser SubSubCategoryForBackend si null
-    SubSubCategoryForBackend ??= "";
+      // Initialiser SubSubCategoryForBackend si null
+      SubSubCategoryForBackend ??= "";
 
-    // Identifier le caractère à ajouter
-    String charToAdd = "";
-    if (key == "Men") {
-      charToAdd = "h";
-    } else if (key == "Women") {
-      charToAdd = "f";
-    } else if (key == "Boys") {
-      charToAdd = "g";
-    } else if (key == "Girls") {
-      charToAdd = "p";
-    }
+      // Identifier le caractère à ajouter
+      String charToAdd = "";
+      if (key == "Men") {
+        charToAdd = "h";
+      } else if (key == "Women") {
+        charToAdd = "f";
+      } else if (key == "Boys") {
+        charToAdd = "g";
+      } else if (key == "Girls") {
+        charToAdd = "p";
+      }
 
-    if (value && SubSubCategoryForBackend!=null) {
-      // Ajouter le caractère à la deuxième position s'il est absent
-      if (!SubSubCategoryForBackend!.contains(charToAdd)) {
-        if (SubSubCategoryForBackend!.length < 2) {
-          // Si la chaîne est trop courte, ajouter à la fin
-          SubSubCategoryForBackend = SubSubCategoryForBackend! + charToAdd;
-        } else {
-          // Ajouter à la deuxième position
-          SubSubCategoryForBackend = SubSubCategoryForBackend!.substring(0, 1) +
-              charToAdd +
-              SubSubCategoryForBackend!.substring(1);
+      if (value && SubSubCategoryForBackend != null) {
+        // Ajouter le caractère à la deuxième position s'il est absent
+        if (!SubSubCategoryForBackend!.contains(charToAdd)) {
+          if (SubSubCategoryForBackend!.length < 2) {
+            // Si la chaîne est trop courte, ajouter à la fin
+            SubSubCategoryForBackend = SubSubCategoryForBackend! + charToAdd;
+          } else {
+            // Ajouter à la deuxième position
+            SubSubCategoryForBackend =
+                SubSubCategoryForBackend!.substring(0, 1) +
+                    charToAdd +
+                    SubSubCategoryForBackend!.substring(1);
+          }
+        }
+      } else if (!value && SubSubCategoryForBackend != null) {
+        // Supprimer la première occurrence du caractère s'il existe
+        int index = SubSubCategoryForBackend!.indexOf(charToAdd);
+        if (index != -1) {
+          SubSubCategoryForBackend =
+              SubSubCategoryForBackend!.substring(0, index) +
+                  SubSubCategoryForBackend!.substring(index + 1);
         }
       }
-    } else if(!value && SubSubCategoryForBackend!=null) {
-      // Supprimer la première occurrence du caractère s'il existe
-      int index = SubSubCategoryForBackend!.indexOf(charToAdd);
-      if (index != -1) {
-        SubSubCategoryForBackend = SubSubCategoryForBackend!.substring(0, index) +
-            SubSubCategoryForBackend!.substring(index + 1);
-      }
-    }
 
-    errorMessage = null;
-  });
-  print(SubSubCategoryForBackend);
-}
-
-
-
+      errorMessage = null;
+    });
+    print(SubSubCategoryForBackend);
+  }
 
   bool validateCheckboxSelection() {
     int checkedCount =
@@ -108,16 +107,22 @@ void toggleCheckbox(String key, bool value) {
         });
         return;
       }
-      Navigator.pushAndRemoveUntil(
+      
+    }
+    print("heeeey $SubSubCategoryForBackend , $SubCategoryForBackend , ");
+    Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-            builder: (context) => SellProductScreen(
-                  category: selectedSubCategory,
-                  keyCategory: SubSubCategoryForBackend ?? SubCategoryForBackend,
-                )), // nouvelle route
+          builder: (context) => SellProductScreen(
+            category: selectedCategory?.toUpperCase(),
+            subCategory:"",
+            subsubcategory:"",
+            keyCategory: (SubSubCategoryForBackend ?? SubCategoryForBackend)!
+                .toUpperCase(),
+          ),
+        ), // nouvelle route
         (route) => false, // Supprime toutes les routes précédentes
       );
-    }
 
     // Si toutes les validations passent
     setState(() {
