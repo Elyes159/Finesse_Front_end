@@ -29,12 +29,56 @@ class _ChooseCategoryState extends State<ChooseCategory> {
   };
   String? errorMessage;
 
-  void toggleCheckbox(String key, bool value) {
-    setState(() {
-      selectedCheckboxes[key] = value;
-      errorMessage = null;
-    });
-  }
+void toggleCheckbox(String key, bool value) {
+  setState(() {
+    // Mettre à jour la case sélectionnée
+    selectedCheckboxes[key] = value;
+
+    // Initialiser SubSubCategoryForBackend si null
+    SubSubCategoryForBackend ??= "";
+
+    // Identifier le caractère à ajouter
+    String charToAdd = "";
+    if (key == "Men") {
+      charToAdd = "h";
+    } else if (key == "Women") {
+      charToAdd = "f";
+    } else if (key == "Boys") {
+      charToAdd = "g";
+    } else if (key == "Girls") {
+      charToAdd = "p";
+    }
+
+    if (value) {
+      // Ajouter le caractère à la deuxième position s'il est absent
+      if (!SubSubCategoryForBackend!.contains(charToAdd)) {
+        if (SubSubCategoryForBackend!.length < 2) {
+          // Si la chaîne est trop courte, ajouter à la fin
+          SubSubCategoryForBackend = SubSubCategoryForBackend! + charToAdd;
+        } else {
+          // Ajouter à la deuxième position
+          SubSubCategoryForBackend = SubSubCategoryForBackend!.substring(0, 1) +
+              charToAdd +
+              SubSubCategoryForBackend!.substring(1);
+        }
+      }
+    } else {
+      // Supprimer la première occurrence du caractère s'il existe
+      int index = SubSubCategoryForBackend!.indexOf(charToAdd);
+      if (index != -1) {
+        SubSubCategoryForBackend = SubSubCategoryForBackend!.substring(0, index) +
+            SubSubCategoryForBackend!.substring(index + 1);
+      }
+    }
+
+    // Réinitialiser le message d'erreur
+    errorMessage = null;
+  });
+  print(SubSubCategoryForBackend);
+}
+
+
+
 
   bool validateCheckboxSelection() {
     int checkedCount =
@@ -501,26 +545,6 @@ class _ChooseCategoryState extends State<ChooseCategory> {
               initialValue: selectedCheckboxes["Men"]!,
               onChanged: (newValue) {
                 toggleCheckbox("Men", newValue);
-
-                if (newValue) {
-                  if (SubSubCategoryForBackend != null &&
-                      SubSubCategoryForBackend!.length > 1) {
-                    SubSubCategoryForBackend =
-                        '${SubSubCategoryForBackend!.substring(0, 1)}H${SubSubCategoryForBackend!.substring(1)}';
-                  } else {
-                    SubSubCategoryForBackend = '${SubSubCategoryForBackend}H';
-                  }
-                } else {
-                  if (SubSubCategoryForBackend != null &&
-                      SubSubCategoryForBackend!.length > 1 &&
-                      SubSubCategoryForBackend![1] == 'H') {
-                    SubSubCategoryForBackend =
-                        SubSubCategoryForBackend!.substring(0, 1) +
-                            SubSubCategoryForBackend!.substring(2);
-                  }
-                }
-                print(
-                    "Updated SubSubCategoryForBackend: $SubSubCategoryForBackend");
               },
             ),
             const SizedBox(height: 12),
@@ -629,26 +653,6 @@ class _ChooseCategoryState extends State<ChooseCategory> {
               initialValue: selectedCheckboxes["Men"]!,
               onChanged: (newValue) {
                 toggleCheckbox("Men", newValue);
-
-                if (newValue) {
-                  if (SubSubCategoryForBackend != null &&
-                      SubSubCategoryForBackend!.length > 1) {
-                    SubSubCategoryForBackend =
-                        '${SubSubCategoryForBackend!.substring(0, 1)}H${SubSubCategoryForBackend!.substring(1)}';
-                  } else {
-                    SubSubCategoryForBackend = '${SubSubCategoryForBackend}H';
-                  }
-                } else {
-                  if (SubSubCategoryForBackend != null &&
-                      SubSubCategoryForBackend!.length > 1 &&
-                      SubSubCategoryForBackend![1] == 'H') {
-                    SubSubCategoryForBackend =
-                        SubSubCategoryForBackend!.substring(0, 1) +
-                            SubSubCategoryForBackend!.substring(2);
-                  }
-                }
-                print(
-                    "Updated SubSubCategoryForBackend: $SubSubCategoryForBackend");
               },
             ),
           ],
@@ -702,26 +706,6 @@ class _ChooseCategoryState extends State<ChooseCategory> {
               initialValue: selectedCheckboxes["Men"]!,
               onChanged: (newValue) {
                 toggleCheckbox("Men", newValue);
-
-                if (newValue) {
-                  if (SubSubCategoryForBackend != null &&
-                      SubSubCategoryForBackend!.length > 1) {
-                    SubSubCategoryForBackend =
-                        '${SubSubCategoryForBackend!.substring(0, 1)}H${SubSubCategoryForBackend!.substring(1)}';
-                  } else {
-                    SubSubCategoryForBackend = '${SubSubCategoryForBackend}H';
-                  }
-                } else {
-                  if (SubSubCategoryForBackend != null &&
-                      SubSubCategoryForBackend!.length > 1 &&
-                      SubSubCategoryForBackend![1] == 'H') {
-                    SubSubCategoryForBackend =
-                        SubSubCategoryForBackend!.substring(0, 1) +
-                            SubSubCategoryForBackend!.substring(2);
-                  }
-                }
-                print(
-                    "Updated SubSubCategoryForBackend: $SubSubCategoryForBackend");
               },
             ),
             const SizedBox(height: 12),
@@ -794,7 +778,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             const SizedBox(height: 12),
             CustomCheckboxFormField(
               label: "Women",
-              initialValue: true, // Par défaut cochée
+              initialValue: selectedCheckboxes["Women"]!, // Par défaut cochée
               onChanged: (newValue) {
                 toggleCheckbox("Women", newValue);
               }, // Désactiver l'interaction utilisateur
@@ -822,8 +806,9 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                             selectedSubSubCategory == null ||
                         !validateCheckboxSelection())) ||
                 (selectedCategory == "AC" &&
-                    (selectedSubCategory == null &&
-                        !validateCheckboxSelection())),
+                    (selectedSubCategory == null ||
+                        selectedSubSubCategory == null &&
+                            !validateCheckboxSelection())),
           ),
           SizedBox(
             width: 343,
@@ -849,13 +834,19 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
                         setState(() {
-                           selectedCategory = null;
-                           selectedSubCategory= null;
-                           selectedSubSubCategory=null;
-                           CategoryForEnd= null;
-                           CategoryForBackend= null;
-                           SubCategoryForBackend=null;
-                           SubSubCategoryForBackend=null;
+                          selectedCategory = null;
+                          selectedSubCategory = null;
+                          selectedSubSubCategory = null;
+                          CategoryForEnd = null;
+                          CategoryForBackend = null;
+                          SubCategoryForBackend = null;
+                          SubSubCategoryForBackend = null;
+                          selectedCheckboxes = {
+                            "Men": false,
+                            "Women": false,
+                            "Boys": false,
+                            "Girls": false,
+                          };
                         });
                         print("Reset clicked");
                       },
