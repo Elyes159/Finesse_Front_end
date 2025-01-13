@@ -115,7 +115,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
         MaterialPageRoute(
           builder: (context) => SellProductScreen(
             category: selectedCategory?.toUpperCase(),
-            subCategory:"",
+            subcategory:"",
             subsubcategory:"",
             keyCategory: (SubSubCategoryForBackend ?? SubCategoryForBackend)!
                 .toUpperCase(),

@@ -10,9 +10,18 @@ import 'package:image_picker/image_picker.dart';
 
 class SellProductScreen extends StatefulWidget {
   final String? category;
+  final String? subcategory;
+  final String? subsubcategory;
+
   final String? keySubCategory;
-   final String? keyCategory;
-  const SellProductScreen({super.key, this.category, this.keySubCategory, this.keyCategory});
+  final String? keyCategory;
+  const SellProductScreen(
+      {super.key,
+      this.category,
+      this.keySubCategory,
+      this.keyCategory,
+      this.subcategory,
+      this.subsubcategory});
 
   @override
   State<SellProductScreen> createState() => _SellProductScreenState();
@@ -25,8 +34,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _possibleDeffectsController =
       TextEditingController();
-      final TextEditingController _quantityController =
-      TextEditingController();
+  final TextEditingController _quantityController = TextEditingController();
   TextEditingController _categoryController = TextEditingController();
 
   Future<void> _pickImage(int index) async {
@@ -41,11 +49,19 @@ class _SellProductScreenState extends State<SellProductScreen> {
       });
     }
   }
+
   @override
   void initState() {
     super.initState();
     // Initialisez le TextEditingController avec la valeur de category si elle est non nulle
-    _categoryController = TextEditingController(text: widget.category =="MV" ? 'Mode and Vintage' : widget.category=="AC"?"Art and creation" : widget.category == "D" ? "decoration" : "");
+    _categoryController = TextEditingController(
+        text: widget.category == "MV"
+            ? 'Mode and Vintage'
+            : widget.category == "AC"
+                ? "Art and creation"
+                : widget.category == "D"
+                    ? "decoration"
+                    : "");
   }
 
   @override
