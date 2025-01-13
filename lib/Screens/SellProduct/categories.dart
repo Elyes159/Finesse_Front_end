@@ -49,7 +49,7 @@ void toggleCheckbox(String key, bool value) {
       charToAdd = "p";
     }
 
-    if (value) {
+    if (value && SubSubCategoryForBackend!=null) {
       // Ajouter le caractère à la deuxième position s'il est absent
       if (!SubSubCategoryForBackend!.contains(charToAdd)) {
         if (SubSubCategoryForBackend!.length < 2) {
@@ -62,7 +62,7 @@ void toggleCheckbox(String key, bool value) {
               SubSubCategoryForBackend!.substring(1);
         }
       }
-    } else {
+    } else if(!value && SubSubCategoryForBackend!=null) {
       // Supprimer la première occurrence du caractère s'il existe
       int index = SubSubCategoryForBackend!.indexOf(charToAdd);
       if (index != -1) {
@@ -71,7 +71,6 @@ void toggleCheckbox(String key, bool value) {
       }
     }
 
-    // Réinitialiser le message d'erreur
     errorMessage = null;
   });
   print(SubSubCategoryForBackend);
@@ -114,7 +113,7 @@ void toggleCheckbox(String key, bool value) {
         MaterialPageRoute(
             builder: (context) => SellProductScreen(
                   category: selectedSubCategory,
-                  keyCategory: "",
+                  keyCategory: SubSubCategoryForBackend ?? SubCategoryForBackend,
                 )), // nouvelle route
         (route) => false, // Supprime toutes les routes précédentes
       );
