@@ -17,6 +17,9 @@ class _ChooseCategoryState extends State<ChooseCategory> {
   String? selectedCategory;
   String? selectedSubCategory;
   String? selectedSubSubCategory;
+   String? selectedValueCategory;
+  String? selectedValueSubCategory;
+  String? selectedValueSubSubCategory;
   String? CategoryForEnd;
   String? CategoryForBackend;
   String? SubCategoryForBackend;
@@ -77,7 +80,6 @@ class _ChooseCategoryState extends State<ChooseCategory> {
     });
     print(SubSubCategoryForBackend);
   }
-
   bool validateCheckboxSelection() {
     int checkedCount =
         selectedCheckboxes.values.where((isChecked) => isChecked).length;
@@ -107,7 +109,6 @@ class _ChooseCategoryState extends State<ChooseCategory> {
         });
         return;
       }
-      
     }
     print("heeeey $SubSubCategoryForBackend , $SubCategoryForBackend , ");
     Navigator.pushAndRemoveUntil(
@@ -115,27 +116,22 @@ class _ChooseCategoryState extends State<ChooseCategory> {
         MaterialPageRoute(
           builder: (context) => SellProductScreen(
             category: selectedCategory?.toUpperCase(),
-            subcategory:"",
-            subsubcategory:"",
+            subcategory:selectedSubCategory ?? "",
+            subsubcategory:selectedSubSubCategory?? "",
             keyCategory: (SubSubCategoryForBackend ?? SubCategoryForBackend)!
                 .toUpperCase(),
           ),
         ), // nouvelle route
         (route) => false, // Supprime toutes les routes précédentes
       );
-
-    // Si toutes les validations passent
     setState(() {
       errorMessage = null;
     });
-
-    // Logic for handling category selection
     print("Category chosen: $selectedCategory");
     print("Sub-category chosen: $selectedSubCategory");
     print("Sub-sub-category chosen: $selectedSubSubCategory");
     print("Checkbox states: $selectedCheckboxes");
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -205,6 +201,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                   selectedCategory = "D";
                   CategoryForBackend = "D";
                   SubCategoryForBackend = selectedKey;
+                  
                   print("$CategoryForBackend $SubCategoryForBackend");
                   // Mettre la catégorie principale sur "Mode et Vintage"
                   selectedSubCategory =
@@ -261,7 +258,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                       "$SubCategoryForBackend$selectedKey";
                   print(SubSubCategoryForBackend);
                   selectedSubSubCategory =
-                      selectedKey; // Mise à jour de la sous-catégorie
+                      selectedKey; 
                 });
               },
               selectedKey:
@@ -809,7 +806,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                     (selectedSubCategory == null &&
                             selectedSubSubCategory == null ||
                         !validateCheckboxSelection())) ||
-                (selectedCategory == "AC" &&
+                (selectedCategory == "AC" && selectedSubCategory == "PEIN"&&
                     (selectedSubCategory == null ||
                         selectedSubSubCategory == null &&
                             !validateCheckboxSelection())),

@@ -4,7 +4,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 class CustomDropdownFormField<K, V> extends StatefulWidget {
   final List<Map<K, V>> options; // Liste des options sous forme de Map<K, V>
   final String label; // Label du champ
-  final K? selectedKey; // Clé sélectionnée par défaut
+  final K? selectedKey;
+  final String? selectedValue; // Clé sélectionnée par défaut
   final ValueChanged<K?>? onChanged; // Callback pour le changement de clé
   final FormFieldValidator<K>? validator; // Validation
   final FormFieldSetter<K>? onSaved; // Sauvegarde
@@ -14,6 +15,7 @@ class CustomDropdownFormField<K, V> extends StatefulWidget {
     required this.options,
     required this.label,
     this.selectedKey,
+    this.selectedValue,
     this.onChanged,
     this.validator,
     this.onSaved,
@@ -27,6 +29,7 @@ class CustomDropdownFormField<K, V> extends StatefulWidget {
 class _CustomDropdownFormFieldState<K, V>
     extends State<CustomDropdownFormField<K, V>> {
   K? _selectedKey;
+  String? _selectedValue;
   String? _errorMessage;
   bool _isTouched = false;
 
@@ -37,6 +40,7 @@ class _CustomDropdownFormFieldState<K, V>
         widget.options
             .any((option) => option.keys.first == widget.selectedKey)) {
       _selectedKey = widget.selectedKey;
+      
     } else {
       _selectedKey = null;
     }

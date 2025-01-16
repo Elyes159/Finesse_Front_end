@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:finesse_frontend/Screens/SellProduct/categories.dart';
+import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
 import 'package:finesse_frontend/Widgets/CustomOptionsFields/optionsField.dart';
 import 'package:finesse_frontend/Widgets/CustomTextField/DescTextField.dart';
 import 'package:finesse_frontend/Widgets/CustomTextField/customTextField.dart';
@@ -29,6 +30,7 @@ class SellProductScreen extends StatefulWidget {
 
 class _SellProductScreenState extends State<SellProductScreen> {
   final List<File?> _images = List.generate(5, (index) => null);
+  String? subCategoryOrSubsubcategory;
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
@@ -36,6 +38,8 @@ class _SellProductScreenState extends State<SellProductScreen> {
       TextEditingController();
   final TextEditingController _quantityController = TextEditingController();
   TextEditingController _categoryController = TextEditingController();
+  TextEditingController _pointureController = TextEditingController();
+  TextEditingController _tailleController = TextEditingController();
 
   Future<void> _pickImage(int index) async {
     final picker = ImagePicker();
@@ -53,15 +57,43 @@ class _SellProductScreenState extends State<SellProductScreen> {
   @override
   void initState() {
     super.initState();
+
     // Initialisez le TextEditingController avec la valeur de category si elle est non nulle
     _categoryController = TextEditingController(
-        text: widget.category == "MV"
-            ? 'Mode and Vintage'
-            : widget.category == "AC"
-                ? "Art and creation"
-                : widget.category == "D"
-                    ? "decoration"
-                    : "");
+      text: widget.category == "MV"
+          ? 'Mode and Vintage'
+          : widget.category == "AC"
+              ? "Art and creation"
+              : widget.category == "D"
+                  ? "Decoration"
+                  : "",
+    );
+
+    // Map des correspondances pour les sous-catégories
+    final Map<String, String> subCategoryMapping = {
+      "V": "Vêtements",
+      "C": "Chaussures",
+      "B": "Bijoux",
+      "A": "Accessoires",
+      "S": "Sacs",
+      "P": "Produits de beauté",
+      "J": "Jouets",
+      "PEIN": "Peinture"
+    };
+
+    final subCategoryOrSubSubcategory = (widget.subcategory != null &&
+            widget.subcategory!.isNotEmpty)
+        ? widget.subcategory
+        : (widget.subsubcategory != null && widget.subsubcategory!.isNotEmpty)
+            ? widget.subsubcategory
+            : null;
+
+    // Ajoutez la sous-catégorie uniquement si elle existe dans le mapping
+    if (subCategoryOrSubSubcategory != null &&
+        subCategoryMapping.containsKey(subCategoryOrSubSubcategory)) {
+      final subCategoryText = subCategoryMapping[subCategoryOrSubSubcategory]!;
+      _categoryController.text += " - $subCategoryText";
+    }
   }
 
   @override
@@ -83,16 +115,23 @@ class _SellProductScreenState extends State<SellProductScreen> {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(
-              width: 343,
-              child: Text(
-                'Add information about items you’re selling to help customers know more about it',
-                style: TextStyle(
-                  color: Color(0xFF334155),
-                  fontSize: 14,
-                  fontFamily: 'Raleway',
-                  fontWeight: FontWeight.w500,
-                  height: 1.43,
+            InkWell(
+              onTap: () {
+                print(widget.keyCategory);
+                print(widget.subcategory);
+                print(widget.category);
+              },
+              child: const SizedBox(
+                width: 343,
+                child: Text(
+                  'Add information about items you’re selling to help customers know more about it',
+                  style: TextStyle(
+                    color: Color(0xFF334155),
+                    fontSize: 14,
+                    fontFamily: 'Raleway',
+                    fontWeight: FontWeight.w500,
+                    height: 1.43,
+                  ),
                 ),
               ),
             ),
@@ -198,6 +237,28 @@ class _SellProductScreenState extends State<SellProductScreen> {
             const SizedBox(
               height: 16,
             ),
+            if (widget.subcategory == "C") ...[
+              CustomTextFormField(
+                controller: _pointureController,
+                label: "Pointure",
+                isPassword: false,
+                keyboardType: TextInputType.number,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+            ],
+            if (widget.subcategory == "V") ...[
+              CustomTextFormField(
+                controller: _tailleController,
+                label: "Taille",
+                isPassword: false,
+                keyboardType: TextInputType.number,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+            ],
             CustomTextFormField(
               controller: _possibleDeffectsController,
               label: "Possible deffects",
@@ -212,6 +273,10 @@ class _SellProductScreenState extends State<SellProductScreen> {
               isPassword: false,
               keyboardType: TextInputType.number,
             ),
+            SizedBox(
+              height: 24,
+            ),
+            CustomButton(label: "Publish item", onTap: (){})
           ],
         ),
       ),
