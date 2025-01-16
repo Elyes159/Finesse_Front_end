@@ -1,0 +1,108 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:finesse_frontend/ApiServices/backend_url.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+import 'package:mime/mime.dart';
+
+
+class Products extends ChangeNotifier {
+  final storage = FlutterSecureStorage();
+
+Future<bool> sellProduct(
+    String title,
+    String description,
+    String subCatgory,
+    double price,
+    String possibleDeff,
+    int? Quantity,
+    String? taille,
+    String? pointure,
+    List<File?> images) async {
+
+  // Vérification de la validité de l'ID utilisateur
+  String? storedUserId = await storage.read(key: 'user_id');
+  if (storedUserId == null || storedUserId.isEmpty) {
+    print("Erreur: L'ID utilisateur est manquant.");
+    return false;
+  }
+
+  final url = Uri.parse("${AppConfig.baseUrl}/api/products/createProduct/");
+  var request = http.MultipartRequest('POST', url);
+
+  // Ajouter les champs de texte à la requête
+  request.fields['owner_id'] = storedUserId;
+  request.fields['category_id'] = subCatgory;
+  request.fields['title'] = title;
+  request.fields['description'] = description;
+  request.fields['price'] = price.toString();
+  request.fields['taille'] = taille ?? "";
+  request.fields['quantity'] = Quantity?.toString() ?? '0';
+  request.fields['pointure'] = pointure ?? "0";
+  request.fields['is_available'] = "true";  // Défini comme "true"
+
+  // Ajouter les images à la requête
+  for (var image in images) {
+    if (image != null) {
+      try {
+        // Vérification que l'image existe bien et est lisible
+        if (!await image.exists()) {
+          print("Erreur: L'image ${image.uri.path} n'existe pas.");
+          continue;
+        }
+
+        // Détecter le type MIME de l'image
+        String? mimeType = lookupMimeType(image.uri.path);
+        String mimeTypePart = mimeType?.split('/')[1] ?? 'jpeg'; // Type MIME par défaut
+        print("Type MIME détecté : $mimeTypePart");
+
+        var imageStream = http.ByteStream(image.openRead());
+        var imageLength = await image.length();
+        var multipartFile = http.MultipartFile(
+          'images',
+          imageStream,
+          imageLength,
+          filename: image.uri.pathSegments.last,
+          contentType: MediaType('image', mimeTypePart),
+        );
+        request.files.add(multipartFile);
+      } catch (e) {
+        print("Erreur lors de l'ajout de l'image : $e");
+        return false;  // Retourner false si une erreur se produit lors de l'ajout d'image
+      }
+    }
+  }
+
+  // Affichage des données avant envoi pour débogage
+  print("Données envoyées : ");
+  print("Owner ID: $storedUserId");
+  print("Category ID: $subCatgory");
+  print("Title: $title");
+  print("Description: $description");
+  print("Price: $price");
+  print("Taille: $taille");
+  print("Quantity: $Quantity");
+  print("Pointure: $pointure");
+
+  try {
+    var response = await request.send();
+    final responseString = await response.stream.bytesToString();
+    print("Réponse du serveur : $responseString");
+
+    // Vérifier le code de statut de la réponse
+    if (response.statusCode == 201) {
+      notifyListeners();  // Notifier les auditeurs
+      return true;
+    } else {
+      print("Erreur serveur: ${response.statusCode}");
+      return false;
+    }
+  } catch (e) {
+    print("Erreur lors de l'envoi de la requête : $e");
+    return false;  // Retourner false si une exception se produit lors de l'envoi
+  }
+}
+}
