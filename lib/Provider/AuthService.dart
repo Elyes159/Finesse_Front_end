@@ -609,15 +609,15 @@ Future<bool> googleLogin() async {
         // Assurez-vous que toutes les valeurs sont définies correctement
         await storage.write(key: 'access_token', value: _accessToken);
         await storage.write(key: 'user_id', value: _currentUser!.id.toString());
-        await storage.write(key: 'user_email', value: _currentUser!.email ?? '');
-        await storage.write(key: 'user_phone_number', value: _currentUser!.phoneNumber ?? '');
-        await storage.write(key: 'user_username', value: _currentUser!.username ?? '');
+        await storage.write(key: 'user_email', value: _currentUser!.email);
+        await storage.write(key: 'user_phone_number', value: _currentUser!.phoneNumber);
+        await storage.write(key: 'user_username', value: _currentUser!.username);
         await storage.write(key: 'user_avatar', value: _currentUser!.avatar ?? '');
-        await storage.write(key: 'user_address', value: _currentUser!.address ?? '');
+        await storage.write(key: 'user_address', value: _currentUser!.address);
         await storage.write(key: 'user_is_email_verified', value: _currentUser!.isEmailVerified?.toString() ?? '');
         await storage.write(key: 'user_verification_code', value: _currentUser!.verificationCode ?? '');
-        await storage.write(key: 'user_description', value: _currentUser!.description ?? '');
-        await storage.write(key: 'user_full_name', value: _currentUser!.fullName ?? '');
+        await storage.write(key: 'user_description', value: _currentUser!.description);
+        await storage.write(key: 'user_full_name', value: _currentUser!.fullName);
         await storage.write(key: 'parametre', value: "google");
         notifyListeners();
         return true;
@@ -673,7 +673,7 @@ Future<bool> facebookLogin() async {
         await storage.write(key: 'user_username', value: _currentUser!.username);
         await storage.write(key: 'user_avatar', value: _currentUser!.avatar ?? ''); // Si avatar est null, on peut le mettre comme une chaîne vide
         await storage.write(key: 'user_address', value: _currentUser!.address);
-        await storage.write(key: 'user_is_email_verified', value: _currentUser!.isEmailVerified.toString()??"");
+        await storage.write(key: 'user_is_email_verified', value: _currentUser!.isEmailVerified.toString());
         await storage.write(key: 'user_verification_code', value: _currentUser!.verificationCode);
         await storage.write(key: 'user_description', value: _currentUser!.description);
         await storage.write(key: 'user_full_name', value: _currentUser!.fullName);
