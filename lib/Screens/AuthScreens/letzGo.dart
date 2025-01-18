@@ -40,6 +40,7 @@ class _LetzGoState extends State<LetzGo> {
       body: Form(
         key: _formKey,
         child: ListView(
+          padding: EdgeInsets.all(8),
           children: [
             const SizedBox(height: 12),
             const Text(

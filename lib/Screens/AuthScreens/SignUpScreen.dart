@@ -32,6 +32,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         children: [
           Center(
             child: ListView(
+              padding: EdgeInsets.all(8),
               children: [
                 const SizedBox(height: 96),
                 const Text(

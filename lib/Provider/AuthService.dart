@@ -165,6 +165,7 @@ Future<void> loadUserData() async {
   _currentUser = null;
 
   notifyListeners();
+  
 }
 
 
@@ -293,6 +294,7 @@ Future<http.Response> registerProfileGoogle({
     );
 
     if (response.statusCode == 200) {
+      
       print("Profil enregistré avec succès");
       return response; // Retourne la réponse avec un code 200
     } else {
@@ -460,6 +462,8 @@ Future<http.Response> signUpGoogle() async {
         final String userFirstName = account.displayName?.split(' ').first ?? '';
         final String userLastName = account.displayName?.split(' ').last ?? '';
         final String userAvatar = account.photoUrl ?? '';
+        _googleAvatar = userAvatar;
+        
 
         final Map<String, dynamic> bodyData = {
           'id_token': idToken,
@@ -474,6 +478,7 @@ Future<http.Response> signUpGoogle() async {
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode(bodyData),
         );
+        _userId = jsonDecode(response.body)["user"]["id"];
 
         return response;
       } else {
@@ -554,67 +559,83 @@ Future<http.Response> signUpFacebook() async {
 
 Future<bool> googleLogin() async {
   try {
+    print('Début de la connexion avec Google.');
     GoogleSignInAccount? account = await _googleSignIn.signIn();
+    print('Compte Google récupéré: $account');
+
     if (account != null) {
       final GoogleSignInAuthentication googleAuth = await account.authentication;
+      print('Authentification Google récupérée: $googleAuth');
+
       final String? idToken = googleAuth.idToken;
       final String? accessToken = googleAuth.accessToken;
 
+      print('idToken: $idToken');
+      print('accessToken: $accessToken');
+
+      if (idToken == null || accessToken == null) {
+        print('Erreur: idToken ou accessToken est nul');
+        return false;
+      }
+
       final url = Uri.parse("${AppConfig.baseUrl}/api/auth/googlelogin/");
+      print('URL pour l\'API: $url');
+
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
-        body: json.encode({
-          'id_token': idToken,  // L'ID Token Google que vous avez récupéré via le SDK Google
-        }),
+        body: json.encode({'id_token': idToken}),
       );
+
+      print('Réponse de l\'API: ${response.body}');
+      print('Code statut de l\'API: ${response.statusCode}');
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
+        print('Données retournées par l\'API: $data');
 
-        // Vérification si l'email existe déjà dans la base de données
         if (response.body.contains("Email does not exist in the database")) {
-          // Retourner false si l'email n'existe pas
           throw Exception('Email does not exist in the database');
         }
 
-        // Extraire le token d'accès et autres informations utilisateur
-        _accessToken = data['access_token'];
+        _accessToken = data['access_token'] ?? '';
+        print('AccessToken après API: $_accessToken');
+
         _isAuthenticated = true;
 
         _currentUser = Users.fromJson(data);
-      await storage.write(key: 'access_token', value: _accessToken);
-      await storage.write(key: 'user_id', value: _currentUser!.id.toString());
-      await storage.write(key: 'user_email', value: _currentUser!.email);
-      await storage.write(key: 'user_phone_number', value: _currentUser!.phoneNumber);
-      await storage.write(key: 'user_username', value: _currentUser!.username);
-      await storage.write(key: 'user_avatar', value: _currentUser!.avatar ?? ''); // Si avatar est null, on peut le mettre comme une chaîne vide
-      await storage.write(key: 'user_address', value: _currentUser!.address);
-      await storage.write(key: 'user_is_email_verified', value: _currentUser!.isEmailVerified.toString());
-      await storage.write(key: 'user_verification_code', value: _currentUser!.verificationCode);
-      await storage.write(key: 'user_description', value: _currentUser!.description);
-      await storage.write(key: 'user_full_name', value: _currentUser!.fullName);
-      await storage.write(key: 'parametre', value: "google");
-        notifyListeners();  // Mettre à jour les listeners pour la gestion de l'état
-        return true;  // Retourner true si la connexion est réussie
+        print('Utilisateur actuel après conversion: $_currentUser');
+
+        // Assurez-vous que toutes les valeurs sont définies correctement
+        await storage.write(key: 'access_token', value: _accessToken);
+        await storage.write(key: 'user_id', value: _currentUser!.id.toString());
+        await storage.write(key: 'user_email', value: _currentUser!.email ?? '');
+        await storage.write(key: 'user_phone_number', value: _currentUser!.phoneNumber ?? '');
+        await storage.write(key: 'user_username', value: _currentUser!.username ?? '');
+        await storage.write(key: 'user_avatar', value: _currentUser!.avatar ?? '');
+        await storage.write(key: 'user_address', value: _currentUser!.address ?? '');
+        await storage.write(key: 'user_is_email_verified', value: _currentUser!.isEmailVerified?.toString() ?? '');
+        await storage.write(key: 'user_verification_code', value: _currentUser!.verificationCode ?? '');
+        await storage.write(key: 'user_description', value: _currentUser!.description ?? '');
+        await storage.write(key: 'user_full_name', value: _currentUser!.fullName ?? '');
+        await storage.write(key: 'parametre', value: "google");
+        notifyListeners();
+        return true;
       } else {
-        print('Erreur lors de la connexion avec Google: ${response.body}');
-        return false; // Retourner false en cas d'échec de la connexion
+        print('Erreur lors de la connexion avec Google (statut HTTP): ${response.body}');
+        return false;
       }
     } else {
       print('L\'utilisateur a annulé la connexion Google.');
       return false;
     }
   } catch (e) {
-    if (e is Exception && e.toString() == 'Email does not exist in the database') {
-      print('L\'email n\'existe pas dans la base de données. Vous pouvez vous inscrire.');
-      return false;
-    } else {
-      print('Erreur lors de la connexion avec Google: $e');
-      return false; 
-    }
+    print('Erreur lors de la connexion avec Google: $e');
+    return false;
   }
 }
+
+
 Future<bool> facebookLogin() async {
   try {
     final LoginResult result = await FacebookAuth.instance.login();
@@ -652,7 +673,7 @@ Future<bool> facebookLogin() async {
         await storage.write(key: 'user_username', value: _currentUser!.username);
         await storage.write(key: 'user_avatar', value: _currentUser!.avatar ?? ''); // Si avatar est null, on peut le mettre comme une chaîne vide
         await storage.write(key: 'user_address', value: _currentUser!.address);
-        await storage.write(key: 'user_is_email_verified', value: _currentUser!.isEmailVerified.toString());
+        await storage.write(key: 'user_is_email_verified', value: _currentUser!.isEmailVerified.toString()??"");
         await storage.write(key: 'user_verification_code', value: _currentUser!.verificationCode);
         await storage.write(key: 'user_description', value: _currentUser!.description);
         await storage.write(key: 'user_full_name', value: _currentUser!.fullName);

@@ -1,5 +1,8 @@
+// ignore_for_file: dead_code
+
 import 'dart:io';
 import 'package:finesse_frontend/Provider/products.dart';
+import 'package:finesse_frontend/Screens/SellProduct/Itemsubmitted.dart';
 import 'package:finesse_frontend/Screens/SellProduct/categories.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
 import 'package:finesse_frontend/Widgets/CustomOptionsFields/optionsField.dart';
@@ -72,8 +75,6 @@ class _SellProductScreenState extends State<SellProductScreen> {
                   ? "Decoration"
                   : "",
     );
-
-    // Le mappage des sous-catégories
     final Map<String, String> subCategoryMapping = {
       "V": "Vêtements",
       "C": "Chaussures",
@@ -110,6 +111,10 @@ class _SellProductScreenState extends State<SellProductScreen> {
     }
   }
 
+  late String forBackend;
+  late String subcategory = "";
+  late String category = "";
+  bool _Loading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -135,6 +140,8 @@ class _SellProductScreenState extends State<SellProductScreen> {
                 onTap: () {
                   print(widget.keyCategory);
                   print(widget.category);
+                  print(category);
+                  print(subcategory);
                 },
                 child: const SizedBox(
                   width: 343,
@@ -217,8 +224,12 @@ class _SellProductScreenState extends State<SellProductScreen> {
                     if (value == null || value.isEmpty) {
                       _errorMessage = "osdhcoi";
                       return 'Title is required';
+                    } else {
+                      setState(() {
+                        _errorMessage = null;
+                      });
+                      return null;
                     }
-                    return null;
                   }),
               const SizedBox(
                 height: 16,
@@ -231,29 +242,87 @@ class _SellProductScreenState extends State<SellProductScreen> {
                     if (value == null || value.isEmpty) {
                       _errorMessage = "osdhcoi";
                       return 'Description is required';
+                    } else {
+                      setState(() {
+                        _errorMessage = null;
+                      });
+                      return null;
                     }
-                    return null;
                   }),
               const SizedBox(
                 height: 16,
               ),
               InkWell(
-                onTap: () {
-                  Navigator.push(
+                onTap: () async {
+                  // Appel à ChooseCategory et récupération des données
+                  final result = await Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ChooseCategory()),
+                    MaterialPageRoute(
+                      builder: (context) => ChooseCategory(),
+                    ),
                   );
+
+                  // Mise à jour des champs avec les données retournées
+                  if (result != null) {
+                    final Map<String, String> subCategoryMapping = {
+                      "V": "Vêtements",
+                      "C": "Chaussures",
+                      "B": "Bijoux",
+                      "A": "Accessoires",
+                      "S": "Sacs",
+                      "P": "Produits de beauté",
+                      "J": "Jouets",
+                      "PEIN": "Peinture"
+                    };
+                    category = result['category'] ?? "";
+                    forBackend = result['forBackend'] ?? "";
+                    subcategory = result['subcategory'] ?? "";
+                    final String subsubcategory =
+                        result['subsubcategory'] ?? "";
+                    print("trah chouf houni");
+                    print(forBackend);
+                    print(category);
+                    print(subcategory);
+                    print(subsubcategory);
+                    setState(() {
+                      // Mise à jour de la catégorie principale
+                      _categoryController.text = category == "MV"
+                          ? 'Mode and Vintage'
+                          : category == "AC"
+                              ? "Art and creation"
+                              : category == "D"
+                                  ? "Decoration"
+                                  : "";
+
+                      // Définir la sous-catégorie ou sous-sous-catégorie
+                      final String? mappedSubCategory = subcategory != null
+                          ? subCategoryMapping[subcategory]
+                          : subCategoryMapping[subsubcategory];
+
+                      if (mappedSubCategory != null) {
+                        _categoryController.text += " - $mappedSubCategory";
+                      }
+
+                      subCategoryOrSubsubcategory =
+                          subcategory != null ? subcategory : subsubcategory;
+                    });
+                  }
                 },
                 child: AbsorbPointer(
                   child: CustomTextFormField(
                     controller: _categoryController,
                     label: "Category",
                     isPassword: false,
-                    keyboardType: TextInputType.numberWithOptions(),
+                    keyboardType: TextInputType.text,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         _errorMessage = "osdhcoi";
                         return 'Category is required';
+                      } else {
+                        setState(() {
+                          _errorMessage = null;
+                        });
+                        return null;
                       }
                       return null;
                     },
@@ -272,14 +341,18 @@ class _SellProductScreenState extends State<SellProductScreen> {
                   if (value == null || value.isEmpty) {
                     _errorMessage = "osdhcoi";
                     return 'Price is required';
+                  } else {
+                    setState(() {
+                      _errorMessage = null;
+                    });
+                    return null;
                   }
-                  return null;
                 },
               ),
               const SizedBox(
                 height: 16,
               ),
-              if (widget.subcategory == "C") ...[
+              if (subcategory == "C") ...[
                 CustomTextFormField(
                   controller: _pointureController,
                   label: "Pointure",
@@ -289,15 +362,19 @@ class _SellProductScreenState extends State<SellProductScreen> {
                     if (value == null || value.isEmpty) {
                       _errorMessage = "osdhcoi";
                       return 'Pointure is required';
+                    } else {
+                      setState(() {
+                        _errorMessage = null;
+                      });
+                      return null;
                     }
-                    return null;
                   },
                 ),
                 const SizedBox(
                   height: 16,
                 ),
               ],
-              if (widget.subcategory == "V") ...[
+              if (subcategory == "V") ...[
                 CustomTextFormField(
                   controller: _tailleController,
                   label: "Taille",
@@ -307,8 +384,12 @@ class _SellProductScreenState extends State<SellProductScreen> {
                     if (value == null || value.isEmpty) {
                       _errorMessage = "osdhcoi";
                       return 'Taille is required';
+                    } else {
+                      setState(() {
+                        _errorMessage = null;
+                      });
+                      return null;
                     }
-                    return null;
                   },
                 ),
                 const SizedBox(
@@ -323,8 +404,12 @@ class _SellProductScreenState extends State<SellProductScreen> {
                   if (value == null || value.isEmpty) {
                     _errorMessage = "osdhcoi";
                     return 'Possible defects are required';
+                  } else {
+                    setState(() {
+                      _errorMessage = null;
+                    });
+                    return null;
                   }
-                  return null;
                 },
               ),
               const SizedBox(
@@ -336,42 +421,95 @@ class _SellProductScreenState extends State<SellProductScreen> {
                 isPassword: false,
                 keyboardType: TextInputType.number,
                 validator: (value) {
-                  if (value == null || value.isEmpty || value == "") {
+                  if (value == null || value.isEmpty) {
                     _errorMessage = "osdhcoi";
                     return 'Quantity is required';
+                  } else {
+                    setState(() {
+                      _errorMessage = null;
+                    });
+                    return null;
                   }
-                  return null;
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 24,
               ),
+              if (_errorMessage != null)
+                Text(
+                  "$_errorMessage",
+                  style: const TextStyle(
+                      color: Colors.red, fontFamily: "Raleway", fontSize: 14),
+                ),
               CustomButton(
-                onTap: () {
-                  final form = _formKey.currentState;
-                  if (form != null &&
-                      form.validate() &&
-                      _errorMessage != null) {
-                    double? price = double.tryParse(_priceController.text);
-                    int? quantity = int.tryParse(_quantityController.text);
+                buttonColor: _Loading ? const Color(0xffE5E7EB) : Color(0xffFB98B7),
+                textColor: _Loading ? Color(0xff111928) : Colors.white,
+                onTap: _Loading
+                    ? () {}
+                    : () async {
+                        setState(() {
+                          _Loading = true;
+                        });
+                        _errorMessage = null;
+                        if (_formKey.currentState?.validate() ?? false) {
+                          double? price =
+                              double.tryParse(_priceController.text);
+                          int? quantity =
+                              int.tryParse(_quantityController.text);
 
-                    Provider.of<Products>(context, listen: false).sellProduct(
-                        _titleController.text,
-                        _descriptionController.text,
-                        widget.keyCategory!,
-                        price!,
-                        _possibleDeffectsController.text,
-                        quantity,
-                        _tailleController.text,
-                        _pointureController.text,
-                        _images);
-                    print("Form submitted successfully!");
-                  } else {
-                    // Si le formulaire n'est pas valide
-                    print(
-                        "Form is not valid! Please fill all required fields.");
-                  }
-                },
+                          print("heeeeeeeeeeeeey $subCategoryOrSubsubcategory");
+
+                          // Appel de la méthode sellProduct et capture du résultat
+                          final bool result = await Provider.of<Products>(
+                                  context,
+                                  listen: false)
+                              .sellProduct(
+                            _titleController.text,
+                            _descriptionController.text,
+                            forBackend.isNotEmpty
+                                ? forBackend
+                                : subcategory, // Sous-catégorie obtenue depuis Navigator.push
+                            price!,
+                            _possibleDeffectsController.text,
+                            quantity,
+                            _tailleController.text,
+                            _pointureController.text,
+                            _images,
+                          );
+                          if (result) {
+                            setState(() {
+                              _Loading = false;
+                            });
+                            print("Form submitted successfully!");
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ItemSubmitted(),
+                              ),
+                              (route) => false,
+                            );
+                          } else {
+                            // Si une erreur survient, récupérer et afficher le message d'erreur
+                            setState(() {
+                              _errorMessage =
+                                  Provider.of<Products>(context, listen: false)
+                                      .errorMessage;
+                            });
+                            print("Error: $_errorMessage");
+                            setState(() {
+                              _Loading = false;
+                            });
+                          }
+                        } else {
+                          _errorMessage =
+                              "Form is not valid! Please fill all required fields.";
+                          print(
+                              "Form is not valid! Please fill all required fields.");
+                        }
+                        setState(() {
+                          _Loading = false;
+                        });
+                      },
                 label: "Publish item",
               ),
             ],

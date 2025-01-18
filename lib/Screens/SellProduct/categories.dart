@@ -17,7 +17,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
   String? selectedCategory;
   String? selectedSubCategory;
   String? selectedSubSubCategory;
-   String? selectedValueCategory;
+  String? selectedValueCategory;
   String? selectedValueSubCategory;
   String? selectedValueSubSubCategory;
   String? CategoryForEnd;
@@ -78,8 +78,10 @@ class _ChooseCategoryState extends State<ChooseCategory> {
 
       errorMessage = null;
     });
+    print("oisdhoidjfoiefpoezjf");
     print(SubSubCategoryForBackend);
   }
+
   bool validateCheckboxSelection() {
     int checkedCount =
         selectedCheckboxes.values.where((isChecked) => isChecked).length;
@@ -111,19 +113,15 @@ class _ChooseCategoryState extends State<ChooseCategory> {
       }
     }
     print("heeeey $SubSubCategoryForBackend , $SubCategoryForBackend , ");
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) => SellProductScreen(
-            category: selectedCategory?.toUpperCase(),
-            subcategory:selectedSubCategory ?? "",
-            subsubcategory:selectedSubSubCategory?? "",
-            keyCategory: (SubSubCategoryForBackend ?? SubCategoryForBackend)!
-                .toUpperCase(),
-          ),
-        ), // nouvelle route
-        (route) => false, // Supprime toutes les routes précédentes
-      );
+    Navigator.pop(context, {
+      'category': selectedCategory?.toUpperCase(),
+      'subcategory': selectedSubCategory ?? "",
+      'subsubcategory': selectedSubSubCategory ?? "",
+      'keyCategory':
+          (SubSubCategoryForBackend ?? SubCategoryForBackend)?.toUpperCase(),
+      'forBackend':SubSubCategoryForBackend?.toUpperCase(),
+    });
+
     setState(() {
       errorMessage = null;
     });
@@ -132,6 +130,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
     print("Sub-sub-category chosen: $selectedSubSubCategory");
     print("Checkbox states: $selectedCheckboxes");
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -201,7 +200,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                   selectedCategory = "D";
                   CategoryForBackend = "D";
                   SubCategoryForBackend = selectedKey;
-                  
+
                   print("$CategoryForBackend $SubCategoryForBackend");
                   // Mettre la catégorie principale sur "Mode et Vintage"
                   selectedSubCategory =
@@ -257,8 +256,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                   SubSubCategoryForBackend =
                       "$SubCategoryForBackend$selectedKey";
                   print(SubSubCategoryForBackend);
-                  selectedSubSubCategory =
-                      selectedKey; 
+                  selectedSubSubCategory = selectedKey;
                 });
               },
               selectedKey:
@@ -806,7 +804,8 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                     (selectedSubCategory == null &&
                             selectedSubSubCategory == null ||
                         !validateCheckboxSelection())) ||
-                (selectedCategory == "AC" && selectedSubCategory == "PEIN"&&
+                (selectedCategory == "AC" &&
+                    selectedSubCategory == "PEIN" &&
                     (selectedSubCategory == null ||
                         selectedSubSubCategory == null &&
                             !validateCheckboxSelection())),

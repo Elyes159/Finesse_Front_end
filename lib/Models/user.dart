@@ -34,7 +34,7 @@ class Users {
       avatar: json['user_profile']['avatar'],
       fullName: json['user_profile']['full_name'],
       address: json['user_profile']['address'],
-      isEmailVerified: json['user_profile']['is_email_verified'],
+      isEmailVerified: json['user_profile']['is_email_verified'] ?? true,
       verificationCode: json['user_profile']['verification_code'],
       description: json['user_profile']['description'],
       hasStory: json['user_profile']['hasStory'],

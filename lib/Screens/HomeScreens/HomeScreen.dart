@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:finesse_frontend/ApiServices/backend_url.dart';
 import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Provider/Stories.dart';
+import 'package:finesse_frontend/Provider/products.dart';
 import 'package:finesse_frontend/Widgets/cards/productCard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -32,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Provider.of<AuthService>(context, listen: false).loadUserGoogleData();
       }
     });
+    Provider.of<Products>(context,listen:false).getProductsByUser();
   }
 
   Future<void> _pickImage() async {
@@ -69,6 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
     ];
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -93,6 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(width: 14),
                       Text(
+                        user.fullName =="None None" ? "Hello ${user.username}" :
                         'Hello, ${user.fullName.split(' ')[0]}',
                         style: const TextStyle(
                           fontSize: 24,
@@ -125,13 +129,10 @@ class _HomeScreenState extends State<HomeScreen> {
             Padding(
               padding: const EdgeInsets.only(left: 16.0, right: 10),
               child: Container(
-                alignment:
-                    Alignment.topLeft, // Place le contenu en haut à gauche
+                alignment: Alignment.topLeft,
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Stack(
                         children: [
@@ -148,9 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       shape: BoxShape.circle,
                                       border: hasStory
                                           ? Border.all(
-                                              color: Colors.blue,
-                                              width:
-                                                  2) // Bordure bleue si hasStory est true
+                                              color: Colors.blue, width: 2)
                                           : null,
                                     ),
                                     child: CircleAvatar(
@@ -164,19 +163,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                           : AssetImage('assets/images/user.png')
                                               as ImageProvider,
                                       backgroundColor: Colors.transparent,
-                                      child:
-                                          user.avatar == null ? Container() : null,
+                                      child: user.avatar == null
+                                          ? Container()
+                                          : null,
                                     ),
                                   ),
-                                  SizedBox(height: 3,),
-                                  Text(
-                                      user.fullName,
-                                      style: TextStyle(
-                                          color: Color(0xFF0E1C36),
-                                          fontSize: 12,
-                                          fontFamily: 'Raleway',
-                                          fontWeight: FontWeight.w500,
-                                      ),
+                                  SizedBox(height: 3),
+                                  Text( 
+                                    user.fullName == "None None" ? user.username : 
+                                    user.fullName,
+                                    style: TextStyle(
+                                      color: Color(0xFF0E1C36),
+                                      fontSize: 12,
+                                      fontFamily: 'Raleway',
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   )
                                 ],
                               );
@@ -220,9 +221,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 decoration: BoxDecoration(
                                   color: Colors.blue,
                                   shape: BoxShape.circle,
-                                  border: Border.all(
-                                      color: Colors.white,
-                                      width: 2), // Bordure blanche
+                                  border:
+                                      Border.all(color: Colors.white, width: 2),
                                 ),
                                 child: const Icon(
                                   Icons.add,
@@ -239,15 +239,296 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            SizedBox(height: 13,),
+            SizedBox(height: 13),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      // Liste des catégories
+                      Padding(
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 4),
+                          decoration: ShapeDecoration(
+                            color: Color(0xFFE5E7EB),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                          ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Art and Creation',
+                                style: TextStyle(
+                                  color: Color(0xFF111928),
+                                  fontSize: 12,
+                                  fontFamily: 'Raleway',
+                                  fontWeight: FontWeight.w400,
+                                  height: 1.67,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 4),
+                          decoration: ShapeDecoration(
+                            color: Color(0xFFE5E7EB),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                          ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Decoration',
+                                style: TextStyle(
+                                  color: Color(0xFF111928),
+                                  fontSize: 12,
+                                  fontFamily: 'Raleway',
+                                  fontWeight: FontWeight.w400,
+                                  height: 1.67,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 4),
+                          decoration: ShapeDecoration(
+                            color: Color(0xFFE5E7EB),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                          ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Vetements',
+                                style: TextStyle(
+                                  color: Color(0xFF111928),
+                                  fontSize: 12,
+                                  fontFamily: 'Raleway',
+                                  fontWeight: FontWeight.w400,
+                                  height: 1.67,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 4),
+                          decoration: ShapeDecoration(
+                            color: Color(0xFFE5E7EB),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                          ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Jouets',
+                                style: TextStyle(
+                                  color: Color(0xFF111928),
+                                  fontSize: 12,
+                                  fontFamily: 'Raleway',
+                                  fontWeight: FontWeight.w400,
+                                  height: 1.67,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 4),
+                          decoration: ShapeDecoration(
+                            color: Color(0xFFE5E7EB),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                          ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Bijoux',
+                                style: TextStyle(
+                                  color: Color(0xFF111928),
+                                  fontSize: 12,
+                                  fontFamily: 'Raleway',
+                                  fontWeight: FontWeight.w400,
+                                  height: 1.67,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 4),
+                          decoration: ShapeDecoration(
+                            color: Color(0xFFE5E7EB),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                          ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Chaussures',
+                                style: TextStyle(
+                                  color: Color(0xFF111928),
+                                  fontSize: 12,
+                                  fontFamily: 'Raleway',
+                                  fontWeight: FontWeight.w400,
+                                  height: 1.67,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 4),
+                          decoration: ShapeDecoration(
+                            color: Color(0xFFE5E7EB),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                          ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Accessoires',
+                                style: TextStyle(
+                                  color: Color(0xFF111928),
+                                  fontSize: 12,
+                                  fontFamily: 'Raleway',
+                                  fontWeight: FontWeight.w400,
+                                  height: 1.67,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 4),
+                          decoration: ShapeDecoration(
+                            color: Color(0xFFE5E7EB),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                          ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Sacs',
+                                style: TextStyle(
+                                  color: Color(0xFF111928),
+                                  fontSize: 12,
+                                  fontFamily: 'Raleway',
+                                  fontWeight: FontWeight.w400,
+                                  height: 1.67,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 4),
+                          decoration: ShapeDecoration(
+                            color: Color(0xFFE5E7EB),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                          ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Produits de beauté',
+                                style: TextStyle(
+                                  color: Color(0xFF111928),
+                                  fontSize: 12,
+                                  fontFamily: 'Raleway',
+                                  fontWeight: FontWeight.w400,
+                                  height: 1.67,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  )),
+            ),
+            SizedBox(height:10),
+
+            // Liste des produits
             Expanded(
               child: ListView.builder(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
-                itemCount: products
-                    .map((e) => e['type'])
-                    .toSet()
-                    .length, // Nombre de catégories uniques
+                itemCount: products.map((e) => e['type']).toSet().length,
                 itemBuilder: (context, categoryIndex) {
                   final categoryType = products
                       .map((e) => e['type'])
@@ -273,10 +554,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       GridView.builder(
-                        shrinkWrap:
-                            true, // Permet à la grille de s'adapter à son contenu
-                        physics:
-                            const NeverScrollableScrollPhysics(), // Désactive le défilement interne
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,

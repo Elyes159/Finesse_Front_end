@@ -63,6 +63,7 @@ class _CompleteInfoState extends State<CompleteInfo> {
         ),
       ),
       body: ListView(
+        padding: EdgeInsets.all(8),
         children: [
           const SizedBox(height: 12),
           const Text(

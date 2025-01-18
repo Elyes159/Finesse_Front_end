@@ -1,5 +1,7 @@
 import 'package:finesse_frontend/ApiServices/backend_url.dart';
 import 'package:finesse_frontend/Provider/AuthService.dart';
+import 'package:finesse_frontend/Provider/products.dart';
+import 'package:finesse_frontend/Screens/Profile/Settings.dart';
 import 'package:finesse_frontend/Widgets/cards/productCard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -69,7 +71,7 @@ class _ProfileMainState extends State<ProfileMain> {
                         ),
                       ),
                       const SizedBox(height: 4),
-                      Text(
+                      const Text(
                         '422 Followers',
                         style: TextStyle(
                           color: Color(0xFF111928),
@@ -82,7 +84,12 @@ class _ProfileMainState extends State<ProfileMain> {
                   ),
                   const Spacer(),
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Settings()),
+                        );
+                      },
                       icon: SvgPicture.asset("assets/Icons/setting.svg")),
                 ],
               ),
@@ -166,37 +173,45 @@ class _ProfileMainState extends State<ProfileMain> {
   }
 
   // Contenu pour l'onglet "Items"
- Widget _buildItemsTab() {
-  // Liste des produits avec des données fictives
-  final products = List.generate(
-    10,
-    (index) => {
-      'imageUrl': 'assets/images/test1.png',
-      'productName': 'Recently ${index + 1}',
-      'productPrice': '${(index + 1) * 10} TND',
-    },
-  );
+  Widget _buildItemsTab() {
+    // Utilisation de la liste des produits récupérés via le provider
+    return Consumer<Products>(
+      builder: (context, provider, child) {
+        final products = provider.products;
 
-  return GridView.builder(
-    padding: const EdgeInsets.symmetric(vertical: 16.0), // Ajoute un padding au contenu
-    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-      crossAxisCount: 2, // Deux colonnes
-      crossAxisSpacing: 16.0, // Espacement horizontal
-      mainAxisSpacing: 16.0, // Espacement vertical
-      childAspectRatio: 3 / 4, // Proportion des items
-    ),
-    itemCount: products.length, // Nombre total de produits
-    itemBuilder: (context, index) {
-      final product = products[index]; // Récupérer un produit de la liste
-      return ProductCard(
-        imageUrl: product['imageUrl'] as String,
-        productName: product['productName'] as String,
-        productPrice: product['productPrice'] as String,
-      );
-    },
-  );
-}
+        if (products.isEmpty) {
+          return Center(
+            child: Text('Aucun produit disponible.'),
+          );
+        }
 
+        return GridView.builder(
+          padding: const EdgeInsets.symmetric(
+              vertical: 16.0), // Ajoute un padding au contenu
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, // Deux colonnes
+            crossAxisSpacing: 16.0, // Espacement horizontal
+            mainAxisSpacing: 16.0, // Espacement vertical
+            childAspectRatio: 3 / 4, // Proportion des items
+          ),
+          itemCount: products.length, // Nombre total de produits
+          itemBuilder: (context, index) {
+            final product = products[index]; // Récupérer un produit de la liste
+            final imageUrl = product['images'] != null &&
+                    product['images'].isNotEmpty
+                ? "${AppConfig.baseUrl}/${product['images'][0]}" // Première image
+                : 'assets/images/default.png'; // Image par défaut si aucune image
+
+            return ProductCard(
+              imageUrl: imageUrl,
+              productName: product['title'] as String,
+              productPrice: '${product['price']} TND', // Formater le prix
+            );
+          },
+        );
+      },
+    );
+  }
 
   // Contenu pour l'onglet "Ratings"
   Widget _buildRatingsTab() {

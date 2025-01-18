@@ -61,6 +61,7 @@ class _SignInScreenState extends State<SignInScreen> {
     return Scaffold(
       body: Center(
         child: ListView(
+          padding: EdgeInsets.all(8),
           children: [
             const SizedBox(height: 96),
             const Text(
@@ -234,12 +235,13 @@ class _SignInScreenState extends State<SignInScreen> {
                               .googleLogin();
                       if (isLoggedIn) {
                         Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  HomeScreen(parameter: "google")),
-                          (Route<dynamic> route) => false,
-                        );
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        Navigation(onItemSelected: (int value) {  },),
+                                  ),
+                                  (Route<dynamic> route) => false,
+                                );
                       } else {
                         setState(() {
                           _errorMessage =
@@ -264,13 +266,14 @@ class _SignInScreenState extends State<SignInScreen> {
                                 listen: false)
                             .facebookLogin();
                         if (isLoggedIn) {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    HomeScreen(parameter: "facebook")),
-                            (Route<dynamic> route) => false,
-                          );
+                         Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        Navigation(onItemSelected: (int value) {  },),
+                                  ),
+                                  (Route<dynamic> route) => false,
+                                );
                         } else {
                           setState(() {
                             _errorMessage =
