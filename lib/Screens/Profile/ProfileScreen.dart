@@ -177,7 +177,7 @@ class _ProfileMainState extends State<ProfileMain> {
     // Utilisation de la liste des produits récupérés via le provider
     return Consumer<Products>(
       builder: (context, provider, child) {
-        final products = provider.products;
+        final products = provider.productsByUser;
 
         if (products.isEmpty) {
           return Center(

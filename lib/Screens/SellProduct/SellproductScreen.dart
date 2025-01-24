@@ -45,6 +45,8 @@ class _SellProductScreenState extends State<SellProductScreen> {
   TextEditingController _categoryController = TextEditingController();
   TextEditingController _pointureController = TextEditingController();
   TextEditingController _tailleController = TextEditingController();
+    TextEditingController _etatController = TextEditingController();
+
 
   final _formKey = GlobalKey<FormState>();
   String? _errorMessage;
@@ -375,74 +377,75 @@ class _SellProductScreenState extends State<SellProductScreen> {
                 ),
               ],
               if (subcategory == "V") ...[
-                CustomTextFormField(
-                  controller: _tailleController,
+                CustomDropdownFormField<String, String>(
+                  options: const [
+                    {'S': 'S'},
+                    {'M': 'M'},
+                    {'L': 'L'},
+                    {'XL': 'XL'},
+                    {'XXL': 'XXL'},
+                    {'38': '38'},
+                    {'40': '40'},
+                    {'42': '42'},
+                    {'44': '44'},
+                  ],
                   label: "Taille",
-                  isPassword: false,
-                  keyboardType: TextInputType.number,
+                  selectedKey: null,
+                  onChanged: (value) {
+                    setState(() {
+                      _tailleController.text = value ?? '';
+                    });
+                  },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      _errorMessage = "osdhcoi";
                       return 'Taille is required';
-                    } else {
-                      setState(() {
-                        _errorMessage = null;
-                      });
-                      return null;
                     }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    _tailleController.text = value ?? '';
+                  },
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                CustomDropdownFormField<String, String>(
+                  options: const [
+                    {'neuf_avec_etiquette': 'Neuf avec étiquette'},
+                    {'neuf_sans_etiquette': 'Neuf sans étiquette'},
+                    {'tres_bon_etat': 'Très bon état'},
+                    {'bon_etat': 'Bon état'},
+                    {'satisfaisant': 'Satisfaisant'},
+                  ],
+                  label: "État",
+                  selectedKey: null,
+                  onChanged: (value) {
+                    setState(() {
+                      _etatController.text = value ?? '';
+                      print(value);
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'État is required';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    _etatController.text = value ?? '';
                   },
                 ),
                 const SizedBox(
                   height: 16,
                 ),
               ],
-              CustomTextFormField(
-                controller: _possibleDeffectsController,
-                label: "Possible deffects",
-                isPassword: false,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    _errorMessage = "osdhcoi";
-                    return 'Possible defects are required';
-                  } else {
-                    setState(() {
-                      _errorMessage = null;
-                    });
-                    return null;
-                  }
-                },
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              CustomTextFormField(
-                controller: _quantityController,
-                label: "Quantity",
-                isPassword: false,
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    _errorMessage = "osdhcoi";
-                    return 'Quantity is required';
-                  } else {
-                    setState(() {
-                      _errorMessage = null;
-                    });
-                    return null;
-                  }
-                },
-              ),
               const SizedBox(
                 height: 24,
               ),
-              if (_errorMessage != null)
-                Text(
-                  "$_errorMessage",
-                  style: const TextStyle(
-                      color: Colors.red, fontFamily: "Raleway", fontSize: 14),
-                ),
+              
               CustomButton(
-                buttonColor: _Loading ? const Color(0xffE5E7EB) : Color(0xffFB98B7),
+                buttonColor:
+                    _Loading ? const Color(0xffE5E7EB) : Color(0xffFB98B7),
                 textColor: _Loading ? Color(0xff111928) : Colors.white,
                 onTap: _Loading
                     ? () {}
@@ -451,7 +454,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                           _Loading = true;
                         });
                         _errorMessage = null;
-                        if (_formKey.currentState?.validate() ?? false) {
+                        if (_formKey.currentState?.validate() ?? false && _errorMessage != null) {
                           double? price =
                               double.tryParse(_priceController.text);
                           int? quantity =
@@ -471,9 +474,9 @@ class _SellProductScreenState extends State<SellProductScreen> {
                                 : subcategory, // Sous-catégorie obtenue depuis Navigator.push
                             price!,
                             _possibleDeffectsController.text,
-                            quantity,
                             _tailleController.text,
                             _pointureController.text,
+                            _etatController.text,
                             _images,
                           );
                           if (result) {

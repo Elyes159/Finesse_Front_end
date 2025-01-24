@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Provider/Stories.dart';
+import 'package:finesse_frontend/Provider/products.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/SignIn.dart';
 import 'package:finesse_frontend/Screens/HomeScreens/HomeScreen.dart';
 import 'package:finesse_frontend/Widgets/Navigation/Navigation.dart';
@@ -28,6 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     _startProgress();
     _initializeApp();
+    Provider.of<Products>(context,listen:false).getProducts();
     Provider.of<Stories>(context,listen:false).loadUserStoriesData();
   }
 

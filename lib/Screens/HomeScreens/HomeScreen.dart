@@ -61,17 +61,15 @@ class _HomeScreenState extends State<HomeScreen> {
           'productPrice': '${(index + 1) * 10}'
         },
       ),
-      ...List.generate(
-        10,
-        (index) => {
-          'type': 'For You',
-          'imageUrl': 'assets/images/test2.png',
-          'productName': 'For You ${index + 1}',
-          'productPrice': '${(index + 1) * 15}'
-        },
-      ),
+      ...Provider.of<Products>(context, listen: false).products.map((product) => {
+        'type': 'For You',
+        'imageUrl':"${AppConfig.baseUrl}/${product['images'][0]}".isNotEmpty == true
+            ? "${AppConfig.baseUrl}/${product['images'][0]}"
+            : 'assets/images/test1.png',
+        'productName': product['title'] ?? 'Unknown Product',
+        'productPrice': "${product['price']} TND".toString(),
+      }), 
     ];
-
     return Scaffold(
       body: SafeArea(
         child: Column(

@@ -12,6 +12,7 @@ class Products extends ChangeNotifier {
   final storage = FlutterSecureStorage();
   String? errorMessage;
   late List products = [];
+  late List productsByUser = [];
 
   Future<bool> sellProduct(
       String title,
@@ -19,9 +20,9 @@ class Products extends ChangeNotifier {
       String subCatgory,
       double price,
       String possibleDeff,
-      int? Quantity,
       String? taille,
       String? pointure,
+      String? etat,
       List<File?> images) async {
     // Vérification de la validité de l'ID utilisateur
     String? storedUserId = await storage.read(key: 'user_id');
@@ -40,8 +41,8 @@ class Products extends ChangeNotifier {
     request.fields['description'] = description;
     request.fields['price'] = price.toString();
     request.fields['taille'] = taille ?? "";
-    request.fields['quantity'] = Quantity?.toString() ?? '0';
     request.fields['pointure'] = pointure ?? "0";
+    request.fields['etat'] = etat ?? "";
     request.fields['is_available'] = "true"; // Défini comme "true"
 
     // Ajouter les images à la requête
@@ -72,12 +73,11 @@ class Products extends ChangeNotifier {
           request.files.add(multipartFile);
         } catch (e) {
           print("Erreur lors de l'ajout de l'image : $e");
-          return false; // Retourner false si une erreur se produit lors de l'ajout d'image
+          return false; 
         }
       }
     }
 
-    // Affichage des données avant envoi pour débogage
     print("Données envoyées : ");
     print("Owner ID: $storedUserId");
     print("Category ID: $subCatgory");
@@ -85,7 +85,6 @@ class Products extends ChangeNotifier {
     print("Description: $description");
     print("Price: $price");
     print("Taille: $taille");
-    print("Quantity: $Quantity");
     print("Pointure: $pointure");
 
     try {
@@ -122,6 +121,36 @@ class Products extends ChangeNotifier {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data['products'] != null) {
+          productsByUser = data['products'];
+          for (var product in products) {
+            print('Produit : ${product['title']}');
+            print('Description : ${product['description']}');
+            print('Prix : ${product['price']}');
+            print('Images : ${product['images']}');
+          }
+          notifyListeners();
+        } else {
+          print('Aucun produit trouvé pour cet utilisateur.');
+        }
+      } else {
+        print('Erreur lors de la récupération des produits: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Erreur rencontrée : $e');
+    }
+  }
+  Future<void> getProducts() async {
+    try {
+      String? storedUserId = await storage.read(key: 'user_id');
+      final url = Uri.parse(
+          '${AppConfig.baseUrl}/api/products/getProducts/');
+      final headers = {
+        'Content-Type': 'application/json',
+      };
+      final response = await http.get(url,headers: headers);
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['products'] != null) {
           products = data['products'];
           for (var product in products) {
             print('Produit : ${product['title']}');
@@ -130,6 +159,8 @@ class Products extends ChangeNotifier {
             print('Images : ${product['images']}');
           }
           notifyListeners();
+          print("hoooouuuni");
+          print(products);
         } else {
           print('Aucun produit trouvé pour cet utilisateur.');
         }
