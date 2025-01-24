@@ -192,7 +192,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           }
                         } catch (e) {
                           setState(() {
-                            _errorMessage = "Error signing in with Google: ${e.toString()}";
+                            _errorMessage = "Account already exist";
                           });
                         }
                       },

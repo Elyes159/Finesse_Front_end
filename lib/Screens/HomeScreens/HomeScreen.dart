@@ -4,6 +4,7 @@ import 'package:finesse_frontend/ApiServices/backend_url.dart';
 import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Provider/Stories.dart';
 import 'package:finesse_frontend/Provider/products.dart';
+import 'package:finesse_frontend/Screens/SellProduct/itemDetails.dart';
 import 'package:finesse_frontend/Widgets/cards/productCard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -33,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Provider.of<AuthService>(context, listen: false).loadUserGoogleData();
       }
     });
-    Provider.of<Products>(context,listen:false).getProductsByUser();
+    Provider.of<Products>(context, listen: false).getProductsByUser();
   }
 
   Future<void> _pickImage() async {
@@ -61,14 +62,19 @@ class _HomeScreenState extends State<HomeScreen> {
           'productPrice': '${(index + 1) * 10}'
         },
       ),
-      ...Provider.of<Products>(context, listen: false).products.map((product) => {
-        'type': 'For You',
-        'imageUrl':"${AppConfig.baseUrl}/${product['images'][0]}".isNotEmpty == true
-            ? "${AppConfig.baseUrl}/${product['images'][0]}"
-            : 'assets/images/test1.png',
-        'productName': product['title'] ?? 'Unknown Product',
-        'productPrice': "${product['price']} TND".toString(),
-      }), 
+      ...Provider.of<Products>(context, listen: false)
+          .products
+          .map((product) => {
+                'type': 'For You',
+                'imageUrl':
+                    "${AppConfig.baseUrl}/${product['images'][0]}".isNotEmpty ==
+                            true
+                        ? "${AppConfig.baseUrl}/${product['images'][0]}"
+                        : 'assets/images/test1.png',
+                'productName': product['title'] ?? 'Unknown Product',
+                'productPrice': "${product['price']} TND".toString(),
+                'product_id': "${product['id']}"
+              }),
     ];
     return Scaffold(
       body: SafeArea(
@@ -94,8 +100,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(width: 14),
                       Text(
-                        user.fullName =="None None" ? "Hello ${user.username}" :
-                        'Hello, ${user.fullName.split(' ')[0]}',
+                        user.fullName == "None None"
+                            ? "Hello ${user.username}"
+                            : 'Hello, ${user.fullName.split(' ')[0]}',
                         style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.w700,
@@ -167,9 +174,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                   SizedBox(height: 3),
-                                  Text( 
-                                    user.fullName == "None None" ? user.username : 
-                                    user.fullName,
+                                  Text(
+                                    user.fullName == "None None"
+                                        ? user.username
+                                        : user.fullName,
                                     style: TextStyle(
                                       color: Color(0xFF0E1C36),
                                       fontSize: 12,
@@ -519,7 +527,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   )),
             ),
-            SizedBox(height:10),
+            SizedBox(height: 10),
 
             // Liste des produits
             Expanded(
@@ -564,10 +572,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         itemCount: categoryProducts.length,
                         itemBuilder: (context, index) {
                           final product = categoryProducts[index];
-                          return ProductCard(
-                            imageUrl: product['imageUrl'] as String,
-                            productName: product['productName'] as String,
-                            productPrice: product['productPrice'] as String,
+                          return InkWell(
+                            onTap: () {
+                              
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ItemDetails()));
+                            },
+                            child: ProductCard(
+                              imageUrl: product['imageUrl'] as String,
+                              productName: product['productName'] as String,
+                              productPrice: product['productPrice'] as String,
+                            ),
                           );
                         },
                       ),

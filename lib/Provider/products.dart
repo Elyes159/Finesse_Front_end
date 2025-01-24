@@ -73,7 +73,7 @@ class Products extends ChangeNotifier {
           request.files.add(multipartFile);
         } catch (e) {
           print("Erreur lors de l'ajout de l'image : $e");
-          return false; 
+          return false;
         }
       }
     }
@@ -117,7 +117,7 @@ class Products extends ChangeNotifier {
       final headers = {
         'Content-Type': 'application/json',
       };
-      final response = await http.get(url,headers: headers);
+      final response = await http.get(url, headers: headers);
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data['products'] != null) {
@@ -133,21 +133,22 @@ class Products extends ChangeNotifier {
           print('Aucun produit trouvé pour cet utilisateur.');
         }
       } else {
-        print('Erreur lors de la récupération des produits: ${response.statusCode}');
+        print(
+            'Erreur lors de la récupération des produits: ${response.statusCode}');
       }
     } catch (e) {
       print('Erreur rencontrée : $e');
     }
   }
+
   Future<void> getProducts() async {
     try {
       String? storedUserId = await storage.read(key: 'user_id');
-      final url = Uri.parse(
-          '${AppConfig.baseUrl}/api/products/getProducts/');
+      final url = Uri.parse('${AppConfig.baseUrl}/api/products/getProducts/');
       final headers = {
         'Content-Type': 'application/json',
       };
-      final response = await http.get(url,headers: headers);
+      final response = await http.get(url, headers: headers);
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data['products'] != null) {
@@ -165,10 +166,27 @@ class Products extends ChangeNotifier {
           print('Aucun produit trouvé pour cet utilisateur.');
         }
       } else {
-        print('Erreur lors de la récupération des produits: ${response.statusCode}');
+        print(
+            'Erreur lors de la récupération des produits: ${response.statusCode}');
       }
     } catch (e) {
       print('Erreur rencontrée : $e');
     }
+  }
+
+  Future<void> createRecentlyViewedProducts({
+    required String userId,
+    required String productId,
+  }) async {
+    // String? storedUserId = await storage.read(key: 'user_id');
+    final url =
+        Uri.parse('${AppConfig.baseUrl}/api/products/createProductsViewed/');
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+    final response = http.post(url, headers: headers, body: jsonEncode({
+      "product_id" : productId,
+      "user_id" : userId,
+    }));
   }
 }
