@@ -175,7 +175,6 @@ class Products extends ChangeNotifier {
   }
 
   Future<void> createRecentlyViewedProducts({
-    required String userId,
     required String productId,
   }) async {
     // String? storedUserId = await storage.read(key: 'user_id');
@@ -186,7 +185,8 @@ class Products extends ChangeNotifier {
     };
     final response = http.post(url, headers: headers, body: jsonEncode({
       "product_id" : productId,
-      "user_id" : userId,
+      "user_id" :  storage.read(key: 'user_id'),
+
     }));
   }
 }

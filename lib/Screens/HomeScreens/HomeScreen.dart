@@ -24,6 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final storage = FlutterSecureStorage();
   XFile? _image;
 
+
   @override
   void initState() {
     super.initState();
@@ -253,7 +254,36 @@ class _HomeScreenState extends State<HomeScreen> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
-                      // Liste des catégories
+                       Padding(
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 4),
+                          decoration: ShapeDecoration(
+                            color: Color(0xFFE5E7EB),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                          ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'All',
+                                style: TextStyle(
+                                  color: Color(0xFF111928),
+                                  fontSize: 12,
+                                  fontFamily: 'Raleway',
+                                  fontWeight: FontWeight.w400,
+                                  height: 1.67,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(right: 16.0),
                         child: Container(
@@ -574,7 +604,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           final product = categoryProducts[index];
                           return InkWell(
                             onTap: () {
-                              
+                              Provider.of<Products>(context , listen:false).createRecentlyViewedProducts( productId: product["product_id"]);
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
