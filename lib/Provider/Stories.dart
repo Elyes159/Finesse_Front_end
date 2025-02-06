@@ -23,7 +23,7 @@ class Stories extends ChangeNotifier {
     }
 
     final url =
-        Uri.parse("${AppConfig.baseUrl}/api/stories/createStory/$userId/");
+        Uri.parse("${AppConfig.TestClientUrl}/api/stories/createStory/$userId/");
     var request = http.MultipartRequest('POST', url);
 
     var file =

@@ -31,7 +31,7 @@ class Products extends ChangeNotifier {
       return false;
     }
 
-    final url = Uri.parse("${AppConfig.baseUrl}/api/products/createProduct/");
+    final url = Uri.parse("${AppConfig.TestClientUrl}/api/products/createProduct/");
     var request = http.MultipartRequest('POST', url);
 
     // Ajouter les champs de texte à la requête
@@ -113,7 +113,7 @@ class Products extends ChangeNotifier {
     try {
       String? storedUserId = await storage.read(key: 'user_id');
       final url = Uri.parse(
-          '${AppConfig.baseUrl}/api/products/getProductsByUser/${storedUserId}/');
+          '${AppConfig.TestClientUrl}/api/products/getProductsByUser/${storedUserId}/');
       final headers = {
         'Content-Type': 'application/json',
       };
@@ -144,7 +144,7 @@ class Products extends ChangeNotifier {
   Future<void> getProducts() async {
     try {
       String? storedUserId = await storage.read(key: 'user_id');
-      final url = Uri.parse('${AppConfig.baseUrl}/api/products/getProducts/');
+      final url = Uri.parse('${AppConfig.TestClientUrl}/api/products/getProducts/');
       final headers = {
         'Content-Type': 'application/json',
       };
@@ -179,7 +179,7 @@ class Products extends ChangeNotifier {
   }) async {
     // String? storedUserId = await storage.read(key: 'user_id');
     final url =
-        Uri.parse('${AppConfig.baseUrl}/api/products/createProductsViewed/');
+        Uri.parse('${AppConfig.TestClientUrl}/api/products/createProductsViewed/');
     final headers = {
       'Content-Type': 'application/json',
     };

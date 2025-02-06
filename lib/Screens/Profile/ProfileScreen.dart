@@ -199,7 +199,7 @@ class _ProfileMainState extends State<ProfileMain> {
             final product = products[index]; // Récupérer un produit de la liste
             final imageUrl = product['images'] != null &&
                     product['images'].isNotEmpty
-                ? "${AppConfig.baseUrl}/${product['images'][0]}" // Première image
+                ? "${AppConfig.TestClientUrl}/${product['images'][0]}" // Première image
                 : 'assets/images/default.png'; // Image par défaut si aucune image
 
             return ProductCard(
