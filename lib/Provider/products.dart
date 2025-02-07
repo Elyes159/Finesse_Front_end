@@ -12,6 +12,7 @@ class Products extends ChangeNotifier {
   final storage = FlutterSecureStorage();
   String? errorMessage;
   late List products = [];
+  late List productsView = [];
   late List productsByUser = [];
 
   Future<bool> sellProduct(
@@ -31,7 +32,7 @@ class Products extends ChangeNotifier {
       return false;
     }
 
-    final url = Uri.parse("${AppConfig.TestClientUrl}/api/products/createProduct/");
+    final url = Uri.parse("${AppConfig.baseUrl}/api/products/createProduct/");
     var request = http.MultipartRequest('POST', url);
 
     // Ajouter les champs de texte à la requête
@@ -113,7 +114,7 @@ class Products extends ChangeNotifier {
     try {
       String? storedUserId = await storage.read(key: 'user_id');
       final url = Uri.parse(
-          '${AppConfig.TestClientUrl}/api/products/getProductsByUser/${storedUserId}/');
+          '${AppConfig.baseUrl}/api/products/getProductsByUser/${storedUserId}/');
       final headers = {
         'Content-Type': 'application/json',
       };
@@ -144,7 +145,7 @@ class Products extends ChangeNotifier {
   Future<void> getProducts() async {
     try {
       String? storedUserId = await storage.read(key: 'user_id');
-      final url = Uri.parse('${AppConfig.TestClientUrl}/api/products/getProducts/');
+      final url = Uri.parse('${AppConfig.baseUrl}/api/products/getProducts/');
       final headers = {
         'Content-Type': 'application/json',
       };
@@ -154,6 +155,8 @@ class Products extends ChangeNotifier {
         if (data['products'] != null) {
           products = data['products'];
           for (var product in products) {
+            print("category : ${product["category"]}");
+            print("subcategory : ${product["subcategory"]}");
             print('Produit : ${product['title']}');
             print('Description : ${product['description']}');
             print('Prix : ${product['price']}');
@@ -174,19 +177,65 @@ class Products extends ChangeNotifier {
     }
   }
 
-  Future<void> createRecentlyViewedProducts({
-    required String productId,
-  }) async {
-    // String? storedUserId = await storage.read(key: 'user_id');
-    final url =
-        Uri.parse('${AppConfig.TestClientUrl}/api/products/createProductsViewed/');
-    final headers = {
-      'Content-Type': 'application/json',
-    };
-    final response = http.post(url, headers: headers, body: jsonEncode({
-      "product_id" : productId,
-      "user_id" :  storage.read(key: 'user_id'),
-
-    }));
+    Future<void> getProductsViewed() async {
+    try {
+      String? storedUserId = await storage.read(key: 'user_id');
+      final url = Uri.parse('${AppConfig.baseUrl}/api/products/products/viewed/$storedUserId/');
+      final headers = {
+        'Content-Type': 'application/json',
+      };
+      final response = await http.get(url, headers: headers);
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['products'] != null) {
+          productsView = data['products'];
+          for (var product in productsView) {
+            print('Produit : ${product['title']}');
+            print('Description : ${product['description']}');
+            print('Prix : ${product['price']}');
+            print('Images : ${product['images']}');
+          }
+          notifyListeners();
+          print("hoooouuuni");
+          print(productsView);
+        } else {
+          print('Aucun produit trouvé pour cet utilisateur.');
+        }
+      } else {
+        print(
+            'Erreur lors de la récupération des produits: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Erreur rencontrée : $e');
+    }
   }
+
+Future<void> createRecentlyViewedProducts({
+  required String productId,
+}) async {
+  final url = Uri.parse('${AppConfig.baseUrl}/api/products/createProductsViewed/');
+  final headers = {
+    'Content-Type': 'application/json',
+  };
+  print(productId);
+
+  // Attendre la valeur du user_id
+  String? storedUserId = await storage.read(key: 'user_id');
+  print(storedUserId);
+  final response = await http.post(
+    url,
+    headers: headers,
+    body: jsonEncode({
+      "product_id": productId,
+      "user_id": storedUserId, // Maintenant c'est une valeur et non un Future
+    }),
+  );
+
+  // Vérifier la réponse
+  if (response.statusCode == 200) {
+    print("Produit ajouté aux vues récentes !");
+  } else {
+    print("Erreur : ${response.body}");
+  }
+}
 }

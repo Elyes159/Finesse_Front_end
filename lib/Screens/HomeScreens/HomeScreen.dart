@@ -6,6 +6,7 @@ import 'package:finesse_frontend/Provider/Stories.dart';
 import 'package:finesse_frontend/Provider/products.dart';
 import 'package:finesse_frontend/Screens/SellProduct/itemDetails.dart';
 import 'package:finesse_frontend/Widgets/cards/productCard.dart';
+import 'package:finesse_frontend/Widgets/categorieChip/categoryChip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -24,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final storage = FlutterSecureStorage();
   XFile? _image;
 
+  String selectedCategory = "All"; // Par défaut, afficher tous les produits
 
   @override
   void initState() {
@@ -53,30 +55,41 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<AuthService>(context, listen: false).currentUser!;
-    final products = [
-      ...List.generate(
-        10,
-        (index) => {
-          'type': 'Recently viewed',
-          'imageUrl': 'assets/images/test1.png',
-          'productName': 'Recently ${index + 1}',
-          'productPrice': '${(index + 1) * 10}'
-        },
-      ),
-      ...Provider.of<Products>(context, listen: false)
-          .products
-          .map((product) => {
-                'type': 'For You',
-                'imageUrl':
-                    "${AppConfig.baseUrl}/${product['images'][0]}".isNotEmpty ==
-                            true
-                        ? "${AppConfig.baseUrl}/${product['images'][0]}"
-                        : 'assets/images/test1.png',
-                'productName': product['title'] ?? 'Unknown Product',
-                'productPrice': "${product['price']} TND".toString(),
-                'product_id': "${product['id']}"
-              }),
+    final allProductss = [
+      ...Provider.of<Products>(context, listen: false).productsView.map(
+            (product) => {
+              'type': 'Recently Viewed',
+              'subcategory': product['subcategory'] ?? 'Unknown', // Catégorie
+              'imageUrl':
+                  "${AppConfig.baseUrl}/${product['images'][0]}".isNotEmpty
+                      ? "${AppConfig.baseUrl}/${product['images'][0]}"
+                      : 'assets/images/test1.png',
+              'productName': product['title'] ?? 'Unknown Product',
+              'productPrice': "${product['price']} TND".toString(),
+              'product_id': "${product['id']}"
+            },
+          ),
+      ...Provider.of<Products>(context, listen: false).products.map(
+            (product) => {
+              'type': 'For You',
+              'category': product['category'] ?? 'Unknown',
+              'subcategory': product['subcategory'] ?? 'Unknown',
+              'imageUrl':
+                  "${AppConfig.baseUrl}/${product['images'][0]}".isNotEmpty
+                      ? "${AppConfig.baseUrl}/${product['images'][0]}"
+                      : 'assets/images/test1.png',
+              'productName': product['title'] ?? 'Unknown Product',
+              'productPrice': "${product['price']} TND".toString(),
+              'product_id': "${product['id']}"
+            },
+          ),
     ];
+    final filteredProducts = selectedCategory == "All"
+        ? allProductss
+        : allProductss
+            .where((product) => product['category'] == selectedCategory)
+            .toList();
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -247,382 +260,225 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SizedBox(height: 13),
-
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                       Padding(
-                        padding: const EdgeInsets.only(right: 16.0),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 4),
-                          decoration: ShapeDecoration(
-                            color: Color(0xFFE5E7EB),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(40),
-                            ),
-                          ),
-                          child: const Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                'All',
-                                style: TextStyle(
-                                  color: Color(0xFF111928),
-                                  fontSize: 12,
-                                  fontFamily: 'Raleway',
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.67,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 16.0),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 4),
-                          decoration: ShapeDecoration(
-                            color: Color(0xFFE5E7EB),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(40),
-                            ),
-                          ),
-                          child: const Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Art and Creation',
-                                style: TextStyle(
-                                  color: Color(0xFF111928),
-                                  fontSize: 12,
-                                  fontFamily: 'Raleway',
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.67,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 16.0),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 4),
-                          decoration: ShapeDecoration(
-                            color: Color(0xFFE5E7EB),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(40),
-                            ),
-                          ),
-                          child: const Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Decoration',
-                                style: TextStyle(
-                                  color: Color(0xFF111928),
-                                  fontSize: 12,
-                                  fontFamily: 'Raleway',
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.67,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 16.0),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 4),
-                          decoration: ShapeDecoration(
-                            color: Color(0xFFE5E7EB),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(40),
-                            ),
-                          ),
-                          child: const Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Vetements',
-                                style: TextStyle(
-                                  color: Color(0xFF111928),
-                                  fontSize: 12,
-                                  fontFamily: 'Raleway',
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.67,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 16.0),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 4),
-                          decoration: ShapeDecoration(
-                            color: Color(0xFFE5E7EB),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(40),
-                            ),
-                          ),
-                          child: const Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Jouets',
-                                style: TextStyle(
-                                  color: Color(0xFF111928),
-                                  fontSize: 12,
-                                  fontFamily: 'Raleway',
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.67,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 16.0),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 4),
-                          decoration: ShapeDecoration(
-                            color: Color(0xFFE5E7EB),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(40),
-                            ),
-                          ),
-                          child: const Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Bijoux',
-                                style: TextStyle(
-                                  color: Color(0xFF111928),
-                                  fontSize: 12,
-                                  fontFamily: 'Raleway',
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.67,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 16.0),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 4),
-                          decoration: ShapeDecoration(
-                            color: Color(0xFFE5E7EB),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(40),
-                            ),
-                          ),
-                          child: const Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Chaussures',
-                                style: TextStyle(
-                                  color: Color(0xFF111928),
-                                  fontSize: 12,
-                                  fontFamily: 'Raleway',
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.67,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 16.0),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 4),
-                          decoration: ShapeDecoration(
-                            color: Color(0xFFE5E7EB),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(40),
-                            ),
-                          ),
-                          child: const Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Accessoires',
-                                style: TextStyle(
-                                  color: Color(0xFF111928),
-                                  fontSize: 12,
-                                  fontFamily: 'Raleway',
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.67,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 16.0),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 4),
-                          decoration: ShapeDecoration(
-                            color: Color(0xFFE5E7EB),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(40),
-                            ),
-                          ),
-                          child: const Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Sacs',
-                                style: TextStyle(
-                                  color: Color(0xFF111928),
-                                  fontSize: 12,
-                                  fontFamily: 'Raleway',
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.67,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 16.0),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 4),
-                          decoration: ShapeDecoration(
-                            color: Color(0xFFE5E7EB),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(40),
-                            ),
-                          ),
-                          child: const Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Produits de beauté',
-                                style: TextStyle(
-                                  color: Color(0xFF111928),
-                                  fontSize: 12,
-                                  fontFamily: 'Raleway',
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.67,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  )),
-            ),
-            SizedBox(height: 10),
-
-            // Liste des produits
-            Expanded(
-              child: ListView.builder(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
-                itemCount: products.map((e) => e['type']).toSet().length,
-                itemBuilder: (context, categoryIndex) {
-                  final categoryType = products
-                      .map((e) => e['type'])
-                      .toSet()
-                      .toList()[categoryIndex];
-                  final categoryProducts = products
-                      .where((product) => product['type'] == categoryType)
-                      .toList();
-
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 8.0, bottom: 8.0, top: 16.0),
-                        child: Text(
-                          categoryType as String,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            fontFamily: 'Raleway',
-                          ),
-                        ),
-                      ),
-                      GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 16.0,
-                          mainAxisSpacing: 0.0,
-                          childAspectRatio: 3 / 4,
-                        ),
-                        itemCount: categoryProducts.length,
-                        itemBuilder: (context, index) {
-                          final product = categoryProducts[index];
-                          return InkWell(
-                            onTap: () {
-                              Provider.of<Products>(context , listen:false).createRecentlyViewedProducts( productId: product["product_id"]);
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ItemDetails()));
-                            },
-                            child: ProductCard(
-                              imageUrl: product['imageUrl'] as String,
-                              productName: product['productName'] as String,
-                              productPrice: product['productPrice'] as String,
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  );
-                },
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    CategoryChip(
+                      text: "All",
+                      isSelected: selectedCategory == "All",
+                      onTap: () {
+                        setState(() {
+                          selectedCategory = "All";
+                        });
+                      },
+                    ),
+                    CategoryChip(
+                      text: "Art and creation",
+                      isSelected: selectedCategory == "AC",
+                      onTap: () {
+                        setState(() {
+                          selectedCategory = "AC";
+                        });
+                      },
+                    ),
+                    CategoryChip(
+                      text: "Decoration",
+                      isSelected: selectedCategory == "D",
+                      onTap: () {
+                        setState(() {
+                          selectedCategory = "D";
+                        });
+                      },
+                    ),
+                    CategoryChip(
+                      text: "Vetements",
+                      isSelected: selectedCategory == "Vetements",
+                      onTap: () {
+                        setState(() {
+                          selectedCategory = "Vetements";
+                        });
+                      },
+                    ),
+                    CategoryChip(
+                      text: "Jouets",
+                      isSelected: selectedCategory == "Jouets",
+                      onTap: () {
+                        setState(() {
+                          selectedCategory = "Jouets";
+                        });
+                      },
+                    ),
+                    CategoryChip(
+                      text: "Bijoux",
+                      isSelected: selectedCategory == "Bijoux",
+                      onTap: () {
+                        setState(() {
+                          selectedCategory = "Bijoux";
+                        });
+                      },
+                    ),
+                    CategoryChip(
+                      text: "Chaussures",
+                      isSelected: selectedCategory == "Chaussures",
+                      onTap: () {
+                        setState(() {
+                          selectedCategory = "Chaussures";
+                        });
+                      },
+                    ),
+                    CategoryChip(
+                      text: "Accessoires",
+                      isSelected: selectedCategory == "Accessoires",
+                      onTap: () {
+                        setState(() {
+                          selectedCategory = "Accessoires";
+                        });
+                      },
+                    ),
+                    CategoryChip(
+                      text: "Sacs",
+                      isSelected: selectedCategory == "Sacs",
+                      onTap: () {
+                        setState(() {
+                          selectedCategory = "Sacs";
+                        });
+                      },
+                    ),
+                    CategoryChip(
+                      text: "Produits de beauté",
+                      isSelected: selectedCategory == "Produits de beauté",
+                      onTap: () {
+                        setState(() {
+                          selectedCategory = "Produits de beauté";
+                        });
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
+            const SizedBox(height: 10),
+
+            // Liste des produits filtrés
+            Consumer<Products>(
+              builder: (context, productsProvider, child) {
+                // Filtrage des produits et création de la liste complète
+                final allProducts = [
+                  ...productsProvider.productsView.map(
+                    (product) => {
+                      'type': 'Recently Viewed',
+                      'subcategory': product['subcategory'] ?? 'Unknown',
+                      'imageUrl': "${AppConfig.baseUrl}/${product['images'][0]}"
+                              .isNotEmpty
+                          ? "${AppConfig.baseUrl}/${product['images'][0]}"
+                          : 'assets/images/test1.png',
+                      'productName': product['title'] ?? 'Unknown Product',
+                      'productPrice': "${product['price']} TND".toString(),
+                      'product_id': "${product['id']}"
+                    },
+                  ),
+                  ...productsProvider.products.map(
+                    (product) => {
+                      'type': 'For You',
+                      'category': product['category'] ?? 'Unknown',
+                      'subcategory': product['subcategory'] ?? 'Unknown',
+                      'imageUrl': "${AppConfig.baseUrl}/${product['images'][0]}"
+                              .isNotEmpty
+                          ? "${AppConfig.baseUrl}/${product['images'][0]}"
+                          : 'assets/images/test1.png',
+                      'productName': product['title'] ?? 'Unknown Product',
+                      'productPrice': "${product['price']} TND".toString(),
+                      'product_id': "${product['id']}"
+                    },
+                  ),
+                ];
+
+                // Filtre les produits en fonction de leur type
+                final filteredProducts = selectedCategory == "All"
+                    ? allProducts
+                    : allProducts
+                        .where((product) =>
+                            product['category'] == selectedCategory)
+                        .toList(); // Tu peux appliquer des filtres si nécessaire
+
+                return Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 16.0),
+                    itemCount:
+                        filteredProducts.map((e) => e['type']).toSet().length,
+                    itemBuilder: (context, categoryIndex) {
+                      final categoryType = filteredProducts
+                          .map((e) => e['type'])
+                          .toSet()
+                          .toList()[categoryIndex];
+                      final categoryProducts = filteredProducts
+                          .where((product) => product['type'] == categoryType)
+                          .toList();
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 8.0, bottom: 8.0, top: 16.0),
+                            child: Text(
+                              categoryType as String,
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Raleway',
+                              ),
+                            ),
+                          ),
+                          GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 16.0,
+                              mainAxisSpacing: 0.0,
+                              childAspectRatio: 3 / 4,
+                            ),
+                            itemCount: categoryProducts.length,
+                            itemBuilder: (context, index) {
+                              final product = categoryProducts[index];
+                              return InkWell(
+                                onTap: () {
+                                  // Ajouter le produit aux produits récemment vus
+                                  productsProvider.createRecentlyViewedProducts(
+                                      productId: product["product_id"]);
+                                  productsProvider.getProductsViewed();
+                                  // Naviguer vers la page de détails du produit
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ItemDetails()),
+                                  );
+
+                                  // Récupérer les produits récemment vus
+                                  
+                                },
+                                child: ProductCard(
+                                  imageUrl: product['imageUrl'] as String,
+                                  productName: product['productName'] as String,
+                                  productPrice:
+                                      product['productPrice'] as String,
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                );
+              },
+            )
           ],
         ),
       ),

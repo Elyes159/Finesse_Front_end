@@ -49,7 +49,7 @@ class _ProfileMainState extends State<ProfileMain> {
                     radius: 50.0,
                     backgroundImage: (user.avatar != "" && user.avatar != null)
                         ? NetworkImage(parametre == "normal"
-                            ? "${AppConfig.TestClientUrl}${user.avatar}"
+                            ? "${AppConfig.baseUrl}${user.avatar}"
                             : user.avatar!)
                         : AssetImage('assets/images/user.png') as ImageProvider,
                     backgroundColor: Colors.transparent,
@@ -199,7 +199,7 @@ class _ProfileMainState extends State<ProfileMain> {
             final product = products[index]; // Récupérer un produit de la liste
             final imageUrl = product['images'] != null &&
                     product['images'].isNotEmpty
-                ? "${AppConfig.TestClientUrl}/${product['images'][0]}" // Première image
+                ? "${AppConfig.baseUrl}/${product['images'][0]}" // Première image
                 : 'assets/images/default.png'; // Image par défaut si aucune image
 
             return ProductCard(
