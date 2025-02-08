@@ -365,7 +365,6 @@ class _HomeScreenState extends State<HomeScreen> {
             // Liste des produits filtrés
             Consumer<Products>(
               builder: (context, productsProvider, child) {
-                // Filtrage des produits et création de la liste complète
                 final allProducts = [
                   ...productsProvider.productsView.map(
                     (product) => {
@@ -375,9 +374,14 @@ class _HomeScreenState extends State<HomeScreen> {
                               .isNotEmpty
                           ? "${AppConfig.baseUrl}/${product['images'][0]}"
                           : 'assets/images/test1.png',
+                      'images':
+                          product['images'] ?? [], // Liste complète des images
                       'productName': product['title'] ?? 'Unknown Product',
                       'productPrice': "${product['price']} TND".toString(),
-                      'product_id': "${product['id']}"
+                      'product_id': "${product['id']}",
+                      'description': product['description'] ?? '',
+                      'is_available': product['is_available'] ?? false,
+                      'category': product['category'] ?? 'Unknown',
                     },
                   ),
                   ...productsProvider.products.map(
@@ -389,20 +393,23 @@ class _HomeScreenState extends State<HomeScreen> {
                               .isNotEmpty
                           ? "${AppConfig.baseUrl}/${product['images'][0]}"
                           : 'assets/images/test1.png',
+                      'images':
+                          product['images'] ?? [], // Liste complète des images
                       'productName': product['title'] ?? 'Unknown Product',
                       'productPrice': "${product['price']} TND".toString(),
-                      'product_id': "${product['id']}"
+                      'product_id': "${product['id']}",
+                      'description': product['description'] ?? '',
+                      'is_available': product['is_available'] ?? false,
                     },
                   ),
                 ];
 
-                // Filtre les produits en fonction de leur type
                 final filteredProducts = selectedCategory == "All"
                     ? allProducts
                     : allProducts
                         .where((product) =>
                             product['category'] == selectedCategory)
-                        .toList(); // Tu peux appliquer des filtres si nécessaire
+                        .toList();
 
                 return Expanded(
                   child: ListView.builder(
@@ -449,19 +456,18 @@ class _HomeScreenState extends State<HomeScreen> {
                               final product = categoryProducts[index];
                               return InkWell(
                                 onTap: () {
-                                  // Ajouter le produit aux produits récemment vus
                                   productsProvider.createRecentlyViewedProducts(
                                       productId: product["product_id"]);
                                   productsProvider.getProductsViewed();
-                                  // Naviguer vers la page de détails du produit
+
+                                  // Naviguer vers la page ItemDetails avec toutes les infos du produit
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => ItemDetails()),
+                                      builder: (context) =>
+                                          ItemDetails(product: product),
+                                    ),
                                   );
-
-                                  // Récupérer les produits récemment vus
-                                  
                                 },
                                 child: ProductCard(
                                   imageUrl: product['imageUrl'] as String,
