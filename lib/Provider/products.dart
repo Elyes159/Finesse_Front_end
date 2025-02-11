@@ -24,6 +24,7 @@ class Products extends ChangeNotifier {
       String? taille,
       String? pointure,
       String? etat,
+      String? brand,
       List<File?> images) async {
     // Vérification de la validité de l'ID utilisateur
     String? storedUserId = await storage.read(key: 'user_id');
@@ -35,7 +36,6 @@ class Products extends ChangeNotifier {
     final url = Uri.parse("${AppConfig.baseUrl}/api/products/createProduct/");
     var request = http.MultipartRequest('POST', url);
 
-    // Ajouter les champs de texte à la requête
     request.fields['owner_id'] = storedUserId;
     request.fields['category_id'] = subCatgory;
     request.fields['title'] = title;
@@ -44,6 +44,7 @@ class Products extends ChangeNotifier {
     request.fields['taille'] = taille ?? "";
     request.fields['pointure'] = pointure ?? "0";
     request.fields['etat'] = etat ?? "";
+    request.fields['brand'] = brand ?? "";
     request.fields['is_available'] = "true"; // Défini comme "true"
 
     // Ajouter les images à la requête
@@ -189,12 +190,6 @@ class Products extends ChangeNotifier {
         final data = json.decode(response.body);
         if (data['products'] != null) {
           productsView = data['products'];
-          for (var product in productsView) {
-            print('Produit : ${product['title']}');
-            print('Description : ${product['description']}');
-            print('Prix : ${product['price']}');
-            print('Images : ${product['images']}');
-          }
           notifyListeners();
           print("hoooouuuni");
           print(productsView);

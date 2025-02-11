@@ -361,8 +361,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 10),
-
-            // Liste des produits filtrés
             Consumer<Products>(
               builder: (context, productsProvider, child) {
                 final allProducts = [
@@ -382,6 +380,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       'description': product['description'] ?? '',
                       'is_available': product['is_available'] ?? false,
                       'category': product['category'] ?? 'Unknown',
+                      'taille' : product['taille'],
+                      'pointure' : product['pointure'],
+                      'brand' : product['brand'],
+                      'owner_profile_pic' : product["owner"]["profile_pic"] ?? "",
+                      'owner_username' : product["owner"]["username"] ?? "",
+                      'owner_ratings' : product["owner"]["ratings"] ?? "",
                     },
                   ),
                   ...productsProvider.products.map(
@@ -400,6 +404,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       'product_id': "${product['id']}",
                       'description': product['description'] ?? '',
                       'is_available': product['is_available'] ?? false,
+                      'taille' : product['taille'],
+                      'pointure' : product['pointure'],
+                      'brand' : product['brand'],
+                      'owner_profile_pic' : product["owner"]["profile_pic"] ?? "",
+                      'owner_username' : product["owner"]["username"] ?? "",
+                      'owner_ratings' : product["owner"]["ratings"] ?? "",
                     },
                   ),
                 ];
@@ -425,7 +435,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       final categoryProducts = filteredProducts
                           .where((product) => product['type'] == categoryType)
                           .toList();
-
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

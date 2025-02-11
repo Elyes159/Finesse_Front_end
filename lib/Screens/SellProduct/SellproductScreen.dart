@@ -45,7 +45,8 @@ class _SellProductScreenState extends State<SellProductScreen> {
   TextEditingController _categoryController = TextEditingController();
   TextEditingController _pointureController = TextEditingController();
   TextEditingController _tailleController = TextEditingController();
-    TextEditingController _etatController = TextEditingController();
+  TextEditingController _etatController = TextEditingController();
+    TextEditingController _brandController = TextEditingController();
 
 
   final _formKey = GlobalKey<FormState>();
@@ -438,11 +439,51 @@ class _SellProductScreenState extends State<SellProductScreen> {
                 const SizedBox(
                   height: 16,
                 ),
+                CustomDropdownFormField<String, String>(
+                  options: const [
+                    {'nike': 'Nike'},
+                    {'adidas': 'Adidas'},
+                    {'armani': 'Armani'},
+                    {'puma': 'Puma'},
+                    {'reebok': 'Reebok'},
+                    {'under_armour': 'Under Armour'},
+                    {'new_balance': 'New Balance'},
+                    {'converse': 'Converse'},
+                    {'vans': 'Vans'},
+                    {'fila': 'Fila'},
+                    {'balenciaga': 'Balenciaga'},
+                    {'tommy_hilfiger': 'Tommy Hilfiger'},
+                    {'levi_s': 'Levi\'s'},
+                    {'calvin_klein': 'Calvin Klein'},
+                    {'lacoste': 'Lacoste'},
+                    {'gucci': 'Gucci'},
+                    {'chanel': 'Chanel'},
+                    {'louis_vuitton': 'Louis Vuitton'},
+                    {'prada': 'Prada'},
+                    {'burberry': 'Burberry'},
+                  ],
+                  label: "Marque", // Changer "État" en "Marque"
+                  selectedKey: null,
+                  onChanged: (value) {
+                    setState(() {
+                      _brandController.text = value ?? '';
+                      print(value);
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'La marque est requise';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    _brandController.text = value ?? '';
+                  },
+                )
               ],
               const SizedBox(
                 height: 24,
               ),
-              
               CustomButton(
                 buttonColor:
                     _Loading ? const Color(0xffE5E7EB) : Color(0xffFB98B7),
@@ -454,7 +495,8 @@ class _SellProductScreenState extends State<SellProductScreen> {
                           _Loading = true;
                         });
                         _errorMessage = null;
-                        if (_formKey.currentState?.validate() ?? false && _errorMessage != null) {
+                        if (_formKey.currentState?.validate() ??
+                            false && _errorMessage != null) {
                           double? price =
                               double.tryParse(_priceController.text);
                           int? quantity =
@@ -477,6 +519,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                             _tailleController.text,
                             _pointureController.text,
                             _etatController.text,
+                            _brandController.text,
                             _images,
                           );
                           if (result) {
