@@ -380,12 +380,24 @@ class _HomeScreenState extends State<HomeScreen> {
                       'description': product['description'] ?? '',
                       'is_available': product['is_available'] ?? false,
                       'category': product['category'] ?? 'Unknown',
-                      'taille' : product['taille'],
-                      'pointure' : product['pointure'],
-                      'brand' : product['brand'],
-                      'owner_profile_pic' : product["owner"]["profile_pic"] ?? "",
-                      'owner_username' : product["owner"]["username"] ?? "",
-                      'owner_ratings' : product["owner"]["ratings"] ?? "",
+                      'taille': product['taille'],
+                      'pointure': product['pointure'],
+                      'brand': product['brand'],
+                      'is_favorite' : product['is_favorite'],
+                      'owner_profile_pic':
+                          product["owner"]["profile_pic"] ?? "",
+                      'owner_username': product["owner"]["username"] ?? "",
+                      'owner_ratings': product["owner"]["ratings"] ?? "",
+                      'comments': product['comments']
+                              ?.map((comment) => {
+                                    'username':
+                                        comment['username'] ?? 'Unknown',
+                                    'avatar': comment['avatar'] ?? '',
+                                    'content': comment['content'] ?? '',
+                                    'created_at': comment['created_at'] ?? '',
+                                  })
+                              .toList() ??
+                          [], // Ajout des commentaires ici
                     },
                   ),
                   ...productsProvider.products.map(
@@ -404,12 +416,24 @@ class _HomeScreenState extends State<HomeScreen> {
                       'product_id': "${product['id']}",
                       'description': product['description'] ?? '',
                       'is_available': product['is_available'] ?? false,
-                      'taille' : product['taille'],
-                      'pointure' : product['pointure'],
-                      'brand' : product['brand'],
-                      'owner_profile_pic' : product["owner"]["profile_pic"] ?? "",
-                      'owner_username' : product["owner"]["username"] ?? "",
-                      'owner_ratings' : product["owner"]["ratings"] ?? "",
+                      'taille': product['taille'],
+                      'is_favorite' : product['is_favorite'],
+                      'pointure': product['pointure'],
+                      'brand': product['brand'],
+                      'owner_profile_pic':
+                          product["owner"]["profile_pic"] ?? "",
+                      'owner_username': product["owner"]["username"] ?? "",
+                      'owner_ratings': product["owner"]["ratings"] ?? "",
+                      'comments': product['comments']
+                              ?.map((comment) => {
+                                    'username':
+                                        comment['username'] ?? 'Unknown',
+                                    'avatar': comment['avatar'] ?? '',
+                                    'content': comment['content'] ?? '',
+                                    'created_at': comment['created_at'] ?? '',
+                                  })
+                              .toList() ??
+                          [], // Ajout des commentaires ici
                     },
                   ),
                 ];

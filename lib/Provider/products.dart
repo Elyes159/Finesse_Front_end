@@ -233,4 +233,66 @@ Future<void> createRecentlyViewedProducts({
     print("Erreur : ${response.body}");
   }
 }
+
+Future<bool> createFavorite({
+  required String productId,
+}) async {
+  final url = Uri.parse('${AppConfig.baseUrl}/api/products/createFavourite/');
+  final headers = {
+    'Content-Type': 'application/json',
+  };
+  print(productId);
+
+  String? storedUserId = await storage.read(key: 'user_id');
+  print(storedUserId);
+  final response = await http.post(
+    url,
+    headers: headers,
+    body: jsonEncode({
+      "product_id": productId,
+      "user_id": storedUserId, // Maintenant c'est une valeur et non un Future
+    }),
+  );
+  if (response.statusCode == 201) {
+    print("Produit ajouté aux favorites avec succees !");
+    return true;
+  } else if(response.statusCode==200){
+    print("produit déja dans favoris");
+    return true;
+  }
+   else {
+    print("Erreur : ${response.body}");
+    return false;
+  }
+}
+Future<bool> createComment({
+  required String productId,
+  required String content,
+  
+}) async {
+  String? storedUserId = await storage.read(key: 'user_id');
+  final url = Uri.parse('${AppConfig.baseUrl}/api/products/createComnt/$productId/$storedUserId/');
+  final headers = {
+    'Content-Type': 'application/json',
+  };
+  print(productId);
+
+  print(storedUserId);
+  final response = await http.post(
+    url,
+    headers: headers,
+    body: jsonEncode({
+
+      "content": content, // Maintenant c'est une valeur et non un Future
+    }),
+  );
+  if (response.statusCode == 201) {
+    print("comnt ajouté");
+    return true;
+  } 
+   else {
+    print("Erreur : ${response.body}");
+    return false;
+  }
+}
 }

@@ -76,7 +76,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
               ? "Art and creation"
               : widget.category == "D"
                   ? "Decoration"
-                  : "",
+                  : widget.category == "L"? "Livre" : "",
     );
     final Map<String, String> subCategoryMapping = {
       "V": "Vêtements",
@@ -295,7 +295,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                               ? "Art and creation"
                               : category == "D"
                                   ? "Decoration"
-                                  : "";
+                                  : category == "L" ? "Livre" : "";
 
                       // Définir la sous-catégorie ou sous-sous-catégorie
                       final String? mappedSubCategory = subcategory != null

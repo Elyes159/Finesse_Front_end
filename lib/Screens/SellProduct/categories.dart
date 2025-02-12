@@ -212,6 +212,30 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                   selectedSubCategory, // Utiliser la sous-catégorie sélectionnée comme valeur
             ),
           ],
+          if ((selectedCategory == "L" || selectedCategory == null)) ...[
+            const SizedBox(height: 24),
+            CustomDropdownFormField<String, String>(
+              label: "Livre",
+              options: const [
+                {"L": "Livre"},
+              ],
+              onChanged: (selectedKey) {
+                setState(() {
+                  selectedCategory = "L";
+                  CategoryForBackend = "L";
+                  SubCategoryForBackend = selectedKey;
+
+                  print("$CategoryForBackend $SubCategoryForBackend");
+                  // Mettre la catégorie principale sur "Mode et Vintage"
+                  selectedSubCategory =
+                      selectedKey; // Mettre la sous-catégorie avec la clé sélectionnée
+                  errorMessage = null; // Réinitialiser le message d'erreur
+                });
+              },
+              selectedKey:
+                  selectedSubCategory, // Utiliser la sous-catégorie sélectionnée comme valeur
+            ),
+          ],
           if ((selectedCategory == "AC" || selectedCategory == null)) ...[
             const SizedBox(height: 24),
             CustomDropdownFormField<String, String>(
