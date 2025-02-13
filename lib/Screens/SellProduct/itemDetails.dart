@@ -366,7 +366,7 @@ class _ItemDetailsState extends State<ItemDetails> {
             child: Column(
               children: [
                 Container(
-                  color: Color(0XFFfef7ff),
+                  color: Colors.white,
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: CustomTextFormFieldwithButton(
                     isCommented: isComented,

@@ -36,6 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
       } else {
         Provider.of<AuthService>(context, listen: false).loadUserGoogleData();
       }
+      Provider.of<Products>(context,listen: false).getRatingByRatedUser(userId: Provider.of<AuthService>(context,listen:false).currentUser!.id);
     });
     Provider.of<Products>(context, listen: false).getProductsByUser();
   }
@@ -55,40 +56,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<AuthService>(context, listen: false).currentUser!;
-    final allProductss = [
-      ...Provider.of<Products>(context, listen: false).productsView.map(
-            (product) => {
-              'type': 'Recently Viewed',
-              'subcategory': product['subcategory'] ?? 'Unknown', // Catégorie
-              'imageUrl':
-                  "${AppConfig.baseUrl}/${product['images'][0]}".isNotEmpty
-                      ? "${AppConfig.baseUrl}/${product['images'][0]}"
-                      : 'assets/images/test1.png',
-              'productName': product['title'] ?? 'Unknown Product',
-              'productPrice': "${product['price']} TND".toString(),
-              'product_id': "${product['id']}"
-            },
-          ),
-      ...Provider.of<Products>(context, listen: false).products.map(
-            (product) => {
-              'type': 'For You',
-              'category': product['category'] ?? 'Unknown',
-              'subcategory': product['subcategory'] ?? 'Unknown',
-              'imageUrl':
-                  "${AppConfig.baseUrl}/${product['images'][0]}".isNotEmpty
-                      ? "${AppConfig.baseUrl}/${product['images'][0]}"
-                      : 'assets/images/test1.png',
-              'productName': product['title'] ?? 'Unknown Product',
-              'productPrice': "${product['price']} TND".toString(),
-              'product_id': "${product['id']}"
-            },
-          ),
-    ];
-    final filteredProducts = selectedCategory == "All"
-        ? allProductss
-        : allProductss
-            .where((product) => product['category'] == selectedCategory)
-            .toList();
+    
+    
 
     return Scaffold(
       body: SafeArea(

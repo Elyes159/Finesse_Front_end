@@ -13,6 +13,7 @@ class Products extends ChangeNotifier {
   String? errorMessage;
   late List products = [];
   late List productsView = [];
+  late List Ratings = [];
   late List productsByUser = [];
 
   Future<bool> sellProduct(
@@ -295,4 +296,32 @@ Future<bool> createComment({
     return false;
   }
 }
+   Future<bool> getRatingByRatedUser(
+    {
+      required int userId
+    }
+   ) async {
+    try {
+      final url = Uri.parse('${AppConfig.baseUrl}/api/auth/getRatings/$userId/');
+      final headers = {
+        'Content-Type': 'application/json',
+      };
+      final response = await http.get(url, headers: headers);
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        Ratings = data["ratings"];
+        print("Ratings");
+        print(Ratings);
+        notifyListeners();
+        return true;
+      } else {
+        print(
+            'Erreur lors de la récupération des produits: ${response.statusCode}');
+        return false;
+      }
+    } catch (e) {
+      print('Erreur rencontrée : $e');
+      return false;
+    }
+  }
 }

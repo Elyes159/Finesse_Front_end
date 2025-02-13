@@ -158,7 +158,6 @@ class _ProfileMainState extends State<ProfileMain> {
     );
   }
 
-  // Contenu des onglets
   Widget _buildTabContent() {
     switch (_selectedTabIndex) {
       case 0:
@@ -172,9 +171,7 @@ class _ProfileMainState extends State<ProfileMain> {
     }
   }
 
-  // Contenu pour l'onglet "Items"
   Widget _buildItemsTab() {
-    // Utilisation de la liste des produits récupérés via le provider
     return Consumer<Products>(
       builder: (context, provider, child) {
         final products = provider.productsByUser;
@@ -202,10 +199,48 @@ class _ProfileMainState extends State<ProfileMain> {
                 ? "${AppConfig.baseUrl}/${product['images'][0]}" // Première image
                 : 'assets/images/default.png'; // Image par défaut si aucune image
 
-            return ProductCard(
-              imageUrl: imageUrl,
-              productName: product['title'] as String,
-              productPrice: '${product['price']} TND', // Formater le prix
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ProductCard(
+                  imageUrl: imageUrl,
+                  productName: product['title'] as String,
+                  productPrice: '${product['price']} TND', // Formater le prix
+                ),
+                if (product["validated"] == false) ...[
+                  SizedBox(
+                    height: 4,
+                  ),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    decoration: ShapeDecoration(
+                      color: Color(0xFFFCF1D0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Pending approval',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 10,
+                            fontFamily: 'Raleway',
+                            fontWeight: FontWeight.w400,
+                            height: 2,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ]
+              ],
             );
           },
         );
@@ -214,14 +249,85 @@ class _ProfileMainState extends State<ProfileMain> {
   }
 
   // Contenu pour l'onglet "Ratings"
-  Widget _buildRatingsTab() {
-    return const Center(
-      child: Text(
-        "Ratings Tab Content",
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-      ),
-    );
-  }
+Widget _buildRatingsTab() {
+  return Consumer<Products>(
+    builder: (context, ratingsProvider, child) {
+      // Vérifier si la liste des évaluations est vide
+      if (ratingsProvider.Ratings.isEmpty) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset("assets/images/pana.svg"),
+              SizedBox(
+                height: 16,
+              ),
+              Text(
+                'No reviews yet',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color(0xFF111928),
+                  fontSize: 18,
+                  fontFamily: 'Raleway',
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: -0.18,
+                ),
+              )
+            ],
+          ),
+        );
+      } else {
+        // Afficher les évaluations
+        return ListView.builder(
+          itemCount: ratingsProvider.Ratings.length,
+          itemBuilder: (context, index) {
+            final rating = ratingsProvider.Ratings[index];
+            // Calculer les étoiles colorées en fonction de la note
+            int ratingValue = rating["rating"];
+            
+            return ListTile(
+              leading: CircleAvatar(
+                backgroundImage: (rating["avatar"] != "" && rating["avatar"] != null)
+                    ? NetworkImage(parametre == "normal"
+                        ? "${AppConfig.baseUrl}${rating["avatar"]}"
+                        : rating["avatar"]!)
+                    : AssetImage('assets/images/user.png') as ImageProvider,
+              ),
+              title: Text(rating["username"]),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(rating["content"]),
+                  SizedBox(height: 8),
+                  // Affichage des étoiles
+                  Row(
+                    children: List.generate(5, (starIndex) {
+                      if (starIndex < ratingValue) {
+                        return Icon(
+                          Icons.star,
+                          color: Colors.orange, // Couleur de l'étoile remplie
+                          size: 20,
+                        );
+                      } else {
+                        return Icon(
+                          Icons.star_border, // Étoile vide
+                          color: Colors.orange,
+                          size: 20,
+                        );
+                      }
+                    }),
+                  ),
+                ],
+              ),
+              trailing: Text('${rating["rating"]} / 5'),
+            );
+          },
+        );
+      }
+    },
+  );
+}
+
 
   // Contenu pour l'onglet "About"
   Widget _buildAboutTab() {
