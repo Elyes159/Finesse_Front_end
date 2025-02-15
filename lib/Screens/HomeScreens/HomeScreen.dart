@@ -352,6 +352,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       'taille': product['taille'],
                       'pointure': product['pointure'],
                       'brand': product['brand'],
+                      'owner_id':product["owner"]["id"],
                       'is_favorite' : product['is_favorite'],
                       'owner_profile_pic':
                           product["owner"]["profile_pic"] ?? "",
@@ -389,6 +390,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       'is_favorite' : product['is_favorite'],
                       'pointure': product['pointure'],
                       'brand': product['brand'],
+                      'owner_id':product["owner"]["id"],
                       'owner_profile_pic':
                           product["owner"]["profile_pic"] ?? "",
                       'owner_username': product["owner"]["username"] ?? "",

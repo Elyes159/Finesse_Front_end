@@ -14,7 +14,9 @@ class Products extends ChangeNotifier {
   late List products = [];
   late List productsView = [];
   late List Ratings = [];
+  late List RatingsVisited = [];
   late List productsByUser = [];
+  late List productsByUserVisited = [];
   double? avarageRate;
   int? countRate;
   late double ratingPercentage1 = 0;
@@ -22,6 +24,13 @@ class Products extends ChangeNotifier {
   late double ratingPercentage3 = 0;
   late double ratingPercentage4 = 0;
   late double ratingPercentage5 = 50;
+  double? avarageRateVisited;
+  int? countRateVisited;
+  late double ratingPercentage1Visited = 0;
+  late double ratingPercentage2Visited = 0;
+  late double ratingPercentage3Visited = 0;
+  late double ratingPercentage4Visited = 0;
+  late double ratingPercentage5Visited = 50;
 
 
   Future<bool> sellProduct(
@@ -133,6 +142,36 @@ class Products extends ChangeNotifier {
         final data = json.decode(response.body);
         if (data['products'] != null) {
           productsByUser = data['products'];
+          for (var product in products) {
+            print('Produit : ${product['title']}');
+            print('Description : ${product['description']}');
+            print('Prix : ${product['price']}');
+            print('Images : ${product['images']}');
+          }
+          notifyListeners();
+        } else {
+          print('Aucun produit trouvé pour cet utilisateur.');
+        }
+      } else {
+        print(
+            'Erreur lors de la récupération des produits: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Erreur rencontrée : $e');
+    }
+  }
+   Future<void> getProductsByUserVisited(int storedUserId) async {
+    try {
+      final url = Uri.parse(
+          '${AppConfig.baseUrl}/api/products/getProductsByUser/${storedUserId}/');
+      final headers = {
+        'Content-Type': 'application/json',
+      };
+      final response = await http.get(url, headers: headers);
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['products'] != null) {
+          productsByUserVisited = data['products'];
           for (var product in products) {
             print('Produit : ${product['title']}');
             print('Description : ${product['description']}');
@@ -347,6 +386,48 @@ Future<bool> getRatingByRatedUser({required int userId}) async {
     return false;
   }
 }
+Future<bool> getRatingByRatedUserVisited({required int userId}) async {
+  try {
+    final url = Uri.parse('${AppConfig.baseUrl}/api/auth/getRatings/$userId/');
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+    final response = await http.get(url, headers: headers);
 
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      
+      RatingsVisited = data["ratings"];
+      avarageRateVisited = data["average_rating"];
+      countRateVisited = data["count"];
+      print("heeeeeeeyoidzjciopzej ${data["rating_percentages"]}");
+
+      // Extraction des pourcentages de rating avec conversion en double
+      ratingPercentage1Visited = (data["rating_percentages"]["1"] ?? 0).toDouble();
+      ratingPercentage2Visited = (data["rating_percentages"]["2"] ?? 0).toDouble();
+      ratingPercentage3Visited = (data["rating_percentages"]["3"] ?? 0).toDouble();
+      ratingPercentage4Visited = (data["rating_percentages"]["4"] ?? 0).toDouble();
+      ratingPercentage5Visited = (data["rating_percentages"]["5"] ?? 0).toDouble();
+
+      print("Ratings: $RatingsVisited");
+      print("Average Rate: $avarageRateVisited");
+      print("Count Rate: $countRateVisited");
+      print("1 Star Percentage: $ratingPercentage1Visited%");
+      print("2 Stars Percentage: $ratingPercentage2Visited%");
+      print("3 Stars Percentage: $ratingPercentage3Visited%");
+      print("4 Stars Percentage: $ratingPercentage4Visited%");
+      print("5 Stars Percentage: $ratingPercentage5Visited%");
+
+      notifyListeners();
+      return true;
+    } else {
+      print('Erreur lors de la récupération des ratings: ${response.statusCode}');
+      return false;
+    }
+  } catch (e) {
+    print('Erreur rencontrée : $e');
+    return false;
+  }
+}
 
 }

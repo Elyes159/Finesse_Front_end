@@ -1,5 +1,7 @@
 import 'package:finesse_frontend/ApiServices/backend_url.dart';
 import 'package:finesse_frontend/Provider/products.dart';
+import 'package:finesse_frontend/Provider/profileProvider.dart';
+import 'package:finesse_frontend/Screens/Profile/ProfileScreen.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
 import 'package:finesse_frontend/Widgets/CustomTextField/customfieldbuton.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +34,14 @@ class _ItemDetailsState extends State<ItemDetails> {
     // TODO: implement initState
     super.initState();
     _loadParameter();
+    Provider.of<Profileprovider>(context, listen: false)
+        .fetchProfile(widget.product["owner_id"]);
+    Provider.of<Products>(context, listen: false)
+        .getProductsByUserVisited(widget.product["owner_id"]);
+    Provider.of<Products>(context, listen: false).getRatingByRatedUserVisited(
+      userId: widget.product["owner_id"],
+    );
+
     isFavorite = widget.product["is_favorite"] ?? false;
   }
 
@@ -242,7 +252,20 @@ class _ItemDetailsState extends State<ItemDetails> {
                             ],
                           ),
                           Spacer(),
-                          SvgPicture.asset("assets/Icons/arrow_profile.svg")
+                          InkWell(
+                              onTap: () {
+                                Provider.of<Profileprovider>(context,
+                                        listen: false)
+                                    .fetchProfile(widget.product["owner_id"]);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ProfileMain(
+                                              id: widget.product["owner_id"],
+                                            )));
+                              },
+                              child: SvgPicture.asset(
+                                  "assets/Icons/arrow_profile.svg"))
                         ],
                       )
                     ],
@@ -313,6 +336,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                                               style: TextStyle(
                                                 color: Colors.black,
                                                 fontSize: 14,
+                                                fontFamily: "Raleway",
                                                 fontWeight: FontWeight.w600,
                                               ),
                                             ),
@@ -323,6 +347,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                                               style: TextStyle(
                                                 color: Colors.black87,
                                                 fontSize: 13,
+                                                fontFamily: "Raleway",
                                                 fontWeight: FontWeight.w400,
                                               ),
                                             ),
@@ -333,6 +358,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                                               style: TextStyle(
                                                 color: Colors.grey,
                                                 fontSize: 12,
+                                                fontFamily: "Raleway",
                                                 fontWeight: FontWeight.w300,
                                               ),
                                             ),
@@ -345,7 +371,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                             .toList(),
                       )
                     : Padding(
-                        padding: const EdgeInsets.only(bottom: 90,left:16),
+                        padding: const EdgeInsets.only(bottom: 90, left: 16),
                         child: Text(
                           "Aucun commentaire pour le moment.",
                           style: TextStyle(
@@ -388,8 +414,10 @@ class _ItemDetailsState extends State<ItemDetails> {
                           setState(() {
                             errorMsg = null;
                             isComented = true;
-                            Provider.of<Products>(context,listen:false).getProducts();
-                             Provider.of<Products>(context,listen:false).getProductsViewed();
+                            Provider.of<Products>(context, listen: false)
+                                .getProducts();
+                            Provider.of<Products>(context, listen: false)
+                                .getProductsViewed();
                           });
                         } else {
                           setState(() {
@@ -411,26 +439,29 @@ class _ItemDetailsState extends State<ItemDetails> {
                   ),
                 Padding(
                   padding: const EdgeInsets.only(right: 16.0, left: 16),
-                  child: CustomButton(
-                    buttonColor: isFavorite ? Colors.grey : Color(0xFFFB98B7),
-                    label: "Add to cart",
-                    onTap: isFavorite
-                        ? () {}
-                        : () async {
-                            bool? favorite = await Provider.of<Products>(
-                                    context,
-                                    listen: false)
-                                .createFavorite(
-                                    productId: widget.product["product_id"]);
-                            
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    color: Colors.white,
+                    child: CustomButton(
+                      buttonColor: isFavorite ? Colors.grey : Color(0xFFFB98B7),
+                      label: "Add to cart",
+                      onTap: isFavorite
+                          ? () {}
+                          : () async {
+                              bool? favorite = await Provider.of<Products>(
+                                      context,
+                                      listen: false)
+                                  .createFavorite(
+                                      productId: widget.product["product_id"]);
 
-                            if (favorite != null) {
-                              setState(() {
-                                isFavorite =
-                                    favorite; // Met à jour l'état local
-                              });
-                            }
-                          },
+                              if (favorite != null) {
+                                setState(() {
+                                  isFavorite =
+                                      favorite; // Met à jour l'état local
+                                });
+                              }
+                            },
+                    ),
                   ),
                 ),
               ],

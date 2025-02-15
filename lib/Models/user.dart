@@ -42,34 +42,4 @@ class Users {
   }
 }
 
-// class UsersGoogle {
-//   final int id;
-//   final String email;
-//   final String username;
-//   final String firstName;
-//   final String lastName;
-//   final String fullName;
-//   final String avatar;
 
-//   UsersGoogle({
-//     required this.id,
-//     required this.email,
-//     required this.username,
-//     required this.firstName,
-//     required this.lastName,
-//     required this.fullName,
-//     required this.avatar,
-//   });
-
-//   factory UsersGoogle.fromJson(Map<String, dynamic> json) {
-//     return UsersGoogle(
-//       id: json['id'],
-//       email: json['email'],
-//       username: json['username'],
-//       firstName: json['first_name'],
-//       lastName: json['last_name'],
-//       fullName: json['full_name'],
-//       avatar: json['avatar'],
-//     );
-//   }
-// }
