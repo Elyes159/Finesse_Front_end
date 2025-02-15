@@ -15,6 +15,14 @@ class Products extends ChangeNotifier {
   late List productsView = [];
   late List Ratings = [];
   late List productsByUser = [];
+  double? avarageRate;
+  int? countRate;
+  late double ratingPercentage1 = 0;
+  late double ratingPercentage2 = 0;
+  late double ratingPercentage3 = 0;
+  late double ratingPercentage4 = 0;
+  late double ratingPercentage5 = 50;
+
 
   Future<bool> sellProduct(
       String title,
@@ -296,32 +304,49 @@ Future<bool> createComment({
     return false;
   }
 }
-   Future<bool> getRatingByRatedUser(
-    {
-      required int userId
-    }
-   ) async {
-    try {
-      final url = Uri.parse('${AppConfig.baseUrl}/api/auth/getRatings/$userId/');
-      final headers = {
-        'Content-Type': 'application/json',
-      };
-      final response = await http.get(url, headers: headers);
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        Ratings = data["ratings"];
-        print("Ratings");
-        print(Ratings);
-        notifyListeners();
-        return true;
-      } else {
-        print(
-            'Erreur lors de la récupération des produits: ${response.statusCode}');
-        return false;
-      }
-    } catch (e) {
-      print('Erreur rencontrée : $e');
+Future<bool> getRatingByRatedUser({required int userId}) async {
+  try {
+    final url = Uri.parse('${AppConfig.baseUrl}/api/auth/getRatings/$userId/');
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+    final response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      
+      Ratings = data["ratings"];
+      avarageRate = data["average_rating"];
+      countRate = data["count"];
+      print("heeeeeeeyoidzjciopzej ${data["rating_percentages"]}");
+
+      // Extraction des pourcentages de rating avec conversion en double
+      ratingPercentage1 = (data["rating_percentages"]["1"] ?? 0).toDouble();
+      ratingPercentage2 = (data["rating_percentages"]["2"] ?? 0).toDouble();
+      ratingPercentage3 = (data["rating_percentages"]["3"] ?? 0).toDouble();
+      ratingPercentage4 = (data["rating_percentages"]["4"] ?? 0).toDouble();
+      ratingPercentage5 = (data["rating_percentages"]["5"] ?? 0).toDouble();
+
+      print("Ratings: $Ratings");
+      print("Average Rate: $avarageRate");
+      print("Count Rate: $countRate");
+      print("1 Star Percentage: $ratingPercentage1%");
+      print("2 Stars Percentage: $ratingPercentage2%");
+      print("3 Stars Percentage: $ratingPercentage3%");
+      print("4 Stars Percentage: $ratingPercentage4%");
+      print("5 Stars Percentage: $ratingPercentage5%");
+
+      notifyListeners();
+      return true;
+    } else {
+      print('Erreur lors de la récupération des ratings: ${response.statusCode}');
       return false;
     }
+  } catch (e) {
+    print('Erreur rencontrée : $e');
+    return false;
   }
+}
+
+
 }

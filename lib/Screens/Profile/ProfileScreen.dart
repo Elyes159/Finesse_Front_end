@@ -3,6 +3,8 @@ import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Provider/products.dart';
 import 'package:finesse_frontend/Screens/Profile/Settings.dart';
 import 'package:finesse_frontend/Widgets/cards/productCard.dart';
+import 'package:finesse_frontend/Widgets/rating/ratingpercen.dart';
+import 'package:finesse_frontend/Widgets/rating/star.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -249,92 +251,311 @@ class _ProfileMainState extends State<ProfileMain> {
   }
 
   // Contenu pour l'onglet "Ratings"
-Widget _buildRatingsTab() {
-  return Consumer<Products>(
-    builder: (context, ratingsProvider, child) {
-      // Vérifier si la liste des évaluations est vide
-      if (ratingsProvider.Ratings.isEmpty) {
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SvgPicture.asset("assets/images/pana.svg"),
-              SizedBox(
-                height: 16,
-              ),
-              Text(
-                'No reviews yet',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Color(0xFF111928),
-                  fontSize: 18,
-                  fontFamily: 'Raleway',
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: -0.18,
+  Widget _buildRatingsTab() {
+    return Consumer<Products>(
+      builder: (context, ratingsProvider, child) {
+        // Vérifier si la liste des évaluations est vide
+        if (ratingsProvider.Ratings.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset("assets/images/pana.svg"),
+                SizedBox(
+                  height: 16,
                 ),
-              )
-            ],
-          ),
-        );
-      } else {
-        // Afficher les évaluations
-        return ListView.builder(
-          itemCount: ratingsProvider.Ratings.length,
-          itemBuilder: (context, index) {
-            final rating = ratingsProvider.Ratings[index];
-            // Calculer les étoiles colorées en fonction de la note
-            int ratingValue = rating["rating"];
-            
-            return ListTile(
-              leading: CircleAvatar(
-                backgroundImage: (rating["avatar"] != "" && rating["avatar"] != null)
-                    ? NetworkImage(parametre == "normal"
-                        ? "${AppConfig.baseUrl}${rating["avatar"]}"
-                        : rating["avatar"]!)
-                    : AssetImage('assets/images/user.png') as ImageProvider,
-              ),
-              title: Text(rating["username"]),
-              subtitle: Column(
+                Text(
+                  'No reviews yet',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(0xFF111928),
+                    fontSize: 18,
+                    fontFamily: 'Raleway',
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: -0.18,
+                  ),
+                )
+              ],
+            ),
+          );
+        } else {
+          // Afficher les évaluations
+          return ListView.builder(
+            itemCount: ratingsProvider.Ratings.length,
+            itemBuilder: (context, index) {
+              final rating = ratingsProvider.Ratings[index];
+              // Calculer les étoiles colorées en fonction de la note
+              int ratingValue = rating["rating"];
+
+              return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(rating["content"]),
-                  SizedBox(height: 8),
-                  // Affichage des étoiles
-                  Row(
-                    children: List.generate(5, (starIndex) {
-                      if (starIndex < ratingValue) {
-                        return Icon(
-                          Icons.star,
-                          color: Colors.orange, // Couleur de l'étoile remplie
-                          size: 20,
-                        );
-                      } else {
-                        return Icon(
-                          Icons.star_border, // Étoile vide
-                          color: Colors.orange,
-                          size: 20,
-                        );
-                      }
-                    }),
+                  SizedBox(
+                    height: 16,
                   ),
+                  Container(
+                    height: 136,
+                    decoration: ShapeDecoration(
+                      color: Color(0xFFF7F7F7),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            RatingPercentageRow(
+                                stars: 5,
+                                percentage: Provider.of<Products>(context,
+                                        listen: false)
+                                    .ratingPercentage5),
+                            RatingPercentageRow(
+                                stars: 4,
+                                percentage: Provider.of<Products>(context,
+                                        listen: false)
+                                    .ratingPercentage4),
+                            RatingPercentageRow(
+                                stars: 3,
+                                percentage: Provider.of<Products>(context,
+                                        listen: false)
+                                    .ratingPercentage3),
+                            RatingPercentageRow(
+                                stars: 2,
+                                percentage: Provider.of<Products>(context,
+                                        listen: false)
+                                    .ratingPercentage2),
+                            RatingPercentageRow(
+                                stars: 1,
+                                percentage: Provider.of<Products>(context,
+                                        listen: false)
+                                    .ratingPercentage1),
+                          ],
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        // Colonne des avis et de la moyenne
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${Provider.of<Products>(context, listen: false).avarageRate}',
+                              style: TextStyle(
+                                color: Color(0xFF333333),
+                                fontSize: 40,
+                                fontFamily: 'Raleway',
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: -0.40,
+                              ),
+                            ),
+                            StarRating(
+                              rating:
+                                  Provider.of<Products>(context, listen: false)
+                                      .avarageRate as double,
+                            ),
+                            Text(
+                              '${Provider.of<Products>(context, listen: false).countRate} Reviews',
+                              textAlign: TextAlign.right,
+                              style: TextStyle(
+                                color: Color(0xFF333333),
+                                fontSize: 14,
+                                fontFamily: 'Raleway',
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: -0.14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 30,
+                              backgroundImage: (rating["avatar"] != "" &&
+                                      rating["avatar"] != null)
+                                  ? NetworkImage(parametre == "normal"
+                                      ? "${AppConfig.baseUrl}${rating["avatar"]}"
+                                      : rating["avatar"]!)
+                                  : AssetImage('assets/images/user.png')
+                                      as ImageProvider,
+                            ),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  rating["username"],
+                                  style: TextStyle(
+                                    color: Color(0xFF333333),
+                                    fontSize: 16,
+                                    fontFamily: 'Raleway',
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: -0.16,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 4,
+                                ),
+                                Row(
+                                  children: List.generate(5, (starIndex) {
+                                    if (starIndex < ratingValue) {
+                                      return Icon(
+                                        Icons.star,
+                                        color: Color(
+                                            0xFFE4A709), // Couleur de l'étoile remplie
+                                        size: 20,
+                                      );
+                                    } else {
+                                      return Icon(
+                                        Icons.star_border, // Étoile vide
+                                        color: Color(0xFFDDDDDD),
+                                        size: 20,
+                                      );
+                                    }
+                                  }),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 13,
+                        ),
+                        Text(
+                          rating["content"],
+                          style: TextStyle(
+                            color: Color(0xFF333333),
+                            fontSize: 13,
+                            fontFamily: 'Raleway',
+                            fontWeight: FontWeight.w400,
+                            height: 1.38,
+                            letterSpacing: -0.13,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 24,
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: 2,
+                          decoration: ShapeDecoration(
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                  width: 1, color: Color(0xFFD9D9D9)),
+                            ),
+                          ),
+                        )
+                      ]),
                 ],
-              ),
-              trailing: Text('${rating["rating"]} / 5'),
-            );
-          },
-        );
-      }
-    },
-  );
-}
-
+              );
+            },
+          );
+        }
+      },
+    );
+  }
 
   // Contenu pour l'onglet "About"
   Widget _buildAboutTab() {
-    return const Center(
-      child: Text(
-        "About Tab Content",
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    return Align(
+      alignment: Alignment.topLeft, // Aligner le contenu en haut à gauche
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: 16,
+          ),
+          Text(
+            'Description',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 14,
+              fontFamily: 'Raleway',
+              fontWeight: FontWeight.w500,
+              letterSpacing: -0.14,
+            ),
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          Text(
+            "${Provider.of<AuthService>(context, listen: false).currentUser?.description ?? ''}",
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 13,
+              fontFamily: 'Raleway',
+              fontWeight: FontWeight.w400,
+              height: 1.54,
+              letterSpacing: -0.13,
+            ), // Assure que le texte reste aligné à gauche
+          ),
+          SizedBox(
+            height: 24,
+          ),
+          Text(
+            'Contacts',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 14,
+              fontFamily: 'Raleway',
+              fontWeight: FontWeight.w500,
+              letterSpacing: -0.14,
+            ),
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          Text(
+            "${Provider.of<AuthService>(context, listen: false).currentUser?.address ?? ''}",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 13,
+              fontFamily: 'Raleway',
+              fontWeight: FontWeight.w400,
+              height: 1.54,
+              letterSpacing: -0.13,
+            ),
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          Text(
+            "+216 ${Provider.of<AuthService>(context, listen: false).currentUser?.phoneNumber ?? ''}",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 13,
+              fontFamily: 'Raleway',
+              fontWeight: FontWeight.w400,
+              height: 1.54,
+              letterSpacing: -0.13,
+            ),
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          Text(
+            "${Provider.of<AuthService>(context, listen: false).currentUser?.email ?? ''}",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 13,
+              fontFamily: 'Raleway',
+              fontWeight: FontWeight.w400,
+              height: 1.54,
+              letterSpacing: -0.13,
+            ),
+          )
+        ],
       ),
     );
   }
