@@ -39,6 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
       Provider.of<Products>(context,listen: false).getRatingByRatedUser(userId: Provider.of<AuthService>(context,listen:false).currentUser!.id);
     });
     Provider.of<Products>(context, listen: false).getProductsByUser();
+    Provider.of<Products>(context , listen :false).getFollowers(Provider.of<AuthService>(context,listen:false).currentUser!.id);
   }
 
   Future<void> _pickImage() async {

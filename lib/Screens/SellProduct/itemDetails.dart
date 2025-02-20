@@ -41,7 +41,8 @@ class _ItemDetailsState extends State<ItemDetails> {
     Provider.of<Products>(context, listen: false).getRatingByRatedUserVisited(
       userId: widget.product["owner_id"],
     );
-
+    Provider.of<Products>(context, listen: false)
+        .getFollowersVisited(widget.product["owner_id"]);
     isFavorite = widget.product["is_favorite"] ?? false;
   }
 
@@ -191,82 +192,94 @@ class _ItemDetailsState extends State<ItemDetails> {
                         ],
                       ),
                       SizedBox(height: 26),
-                      Row(
-                        children: [
-                          Container(
-                            height: 40,
-                            width: 40,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                            ),
-                            child: CircleAvatar(
-                              radius: 50.0,
-                              backgroundImage: (widget
-                                              .product["owner_profile_pic"] !=
-                                          "" &&
-                                      widget.product["owner_profile_pic"] !=
-                                          null)
-                                  ? NetworkImage(parametre == "normal"
-                                      ? "${AppConfig.baseUrl}${widget.product["owner_profile_pic"]}"
-                                      : widget.product["owner_profile_pic"]!)
-                                  : AssetImage('assets/images/user.png')
-                                      as ImageProvider,
-                              backgroundColor: Colors.transparent,
-                              child: widget.product[""] == null
-                                  ? Container()
-                                  : null,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 16,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment
-                                .start, // Aligns the text to the left
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                "${widget.product["owner_username"]}",
-                                style: TextStyle(
-                                  color: Color(0xFF111928),
-                                  fontSize: 16,
-                                  fontFamily: 'Raleway',
-                                  fontWeight: FontWeight.w500,
-                                  height: 1.50,
-                                  letterSpacing: 0.15,
-                                ),
+                      InkWell(
+                        onTap: () {
+                          Provider.of<Profileprovider>(context, listen: false)
+                              .fetchProfile(widget.product["owner_id"]);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ProfileMain(
+                                        id: widget.product["owner_id"],
+                                      )));
+                        },
+                        child: Row(
+                          children: [
+                            Container(
+                              height: 40,
+                              width: 40,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
                               ),
-                              Text(
-                                '⭐️ ${widget.product["owner_ratings"]}',
-                                style: TextStyle(
-                                  color: Color(0xFF111928),
-                                  fontSize: 14,
-                                  fontFamily: 'Raleway',
-                                  fontWeight: FontWeight.w500,
-                                  height: 1.43,
-                                  letterSpacing: 0.10,
+                              child: CircleAvatar(
+                                radius: 50.0,
+                                backgroundImage: (widget
+                                                .product["owner_profile_pic"] !=
+                                            "" &&
+                                        widget.product["owner_profile_pic"] !=
+                                            null)
+                                    ? NetworkImage(parametre == "normal"
+                                        ? "${AppConfig.baseUrl}${widget.product["owner_profile_pic"]}"
+                                        : widget.product["owner_profile_pic"]!)
+                                    : AssetImage('assets/images/user.png')
+                                        as ImageProvider,
+                                backgroundColor: Colors.transparent,
+                                child: widget.product[""] == null
+                                    ? Container()
+                                    : null,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 16,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment
+                                  .start, // Aligns the text to the left
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "${widget.product["owner_username"]}",
+                                  style: TextStyle(
+                                    color: Color(0xFF111928),
+                                    fontSize: 16,
+                                    fontFamily: 'Raleway',
+                                    fontWeight: FontWeight.w500,
+                                    height: 1.50,
+                                    letterSpacing: 0.15,
+                                  ),
                                 ),
-                                textAlign: TextAlign
-                                    .start, // Ensures the text is left-aligned
-                              )
-                            ],
-                          ),
-                          Spacer(),
-                          InkWell(
-                              onTap: () {
-                                Provider.of<Profileprovider>(context,
-                                        listen: false)
-                                    .fetchProfile(widget.product["owner_id"]);
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ProfileMain(
-                                              id: widget.product["owner_id"],
-                                            )));
-                              },
-                              child: SvgPicture.asset(
-                                  "assets/Icons/arrow_profile.svg"))
-                        ],
+                                Text(
+                                  '⭐️ ${widget.product["owner_ratings"]?.toStringAsFixed(2) ?? "0.00"}',
+                                  style: TextStyle(
+                                    color: Color(0xFF111928),
+                                    fontSize: 14,
+                                    fontFamily: 'Raleway',
+                                    fontWeight: FontWeight.w500,
+                                    height: 1.43,
+                                    letterSpacing: 0.10,
+                                  ),
+                                  textAlign: TextAlign
+                                      .start, // Assure que le texte est aligné à gauche
+                                )
+                              ],
+                            ),
+                            Spacer(),
+                            InkWell(
+                                onTap: () {
+                                  Provider.of<Profileprovider>(context,
+                                          listen: false)
+                                      .fetchProfile(widget.product["owner_id"]);
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ProfileMain(
+                                                id: widget.product["owner_id"],
+                                              )));
+                                },
+                                child: SvgPicture.asset(
+                                    "assets/Icons/arrow_profile.svg"))
+                          ],
+                        ),
                       )
                     ],
                   ),

@@ -80,26 +80,90 @@ class _ProfileMainState extends State<ProfileMain> {
                         ),
                       ),
                       const SizedBox(height: 4),
-                      const Text(
-                        '422 Followers',
+                      Text(
+                        widget.id == null ?'${Provider.of<Products>(context, listen: false).nbfollowers} followers' : '${Provider.of<Products>(context, listen: false).nbfollowervisited} followers',
                         style: TextStyle(
                           color: Color(0xFF111928),
                           fontSize: 14,
                           fontFamily: 'Raleway',
                           fontWeight: FontWeight.w400,
                         ),
-                      )
+                      ),
+                      const SizedBox(height: 8),
+                      if (widget.id != null)
+                        InkWell(
+                          onTap: () async {
+                            bool followed = await Provider.of<Profileprovider>(
+                                    context,
+                                    listen: false)
+                                .followUser(
+                                    Provider.of<AuthService>(context,
+                                            listen: false)
+                                        .currentUser!
+                                        .id,
+                                    widget.id!);
+
+                                if(followed){
+                                  setState(() {
+                                   Provider.of<Products>(context,listen : false).getFollowersVisited(widget.id!);
+                                  });
+                                }
+                          },
+                          child: Container(
+                            width: 94,
+                            height: 36,
+                            clipBehavior: Clip.antiAlias,
+                            decoration: ShapeDecoration(
+                              color: Color(0xFFFB98B7),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 8),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Follow',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          fontFamily: 'Raleway',
+                                          fontWeight: FontWeight.w400,
+                                          height: 1.43,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                   const Spacer(),
-                  IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Settings()),
-                        );
-                      },
-                      icon: SvgPicture.asset("assets/Icons/setting.svg")),
+                  if (widget.id == null)
+                    IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Settings()),
+                          );
+                        },
+                        icon: SvgPicture.asset("assets/Icons/setting.svg")),
                 ],
               ),
             ),
@@ -603,7 +667,9 @@ class _ProfileMainState extends State<ProfileMain> {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 18,),
+                            SizedBox(
+                              height: 18,
+                            ),
                           ],
                         ),
                       ],

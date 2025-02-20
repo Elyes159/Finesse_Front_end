@@ -81,4 +81,30 @@ class Profileprovider with ChangeNotifier {
       return false;
     }
   }
+  Future<bool> followUser(int followerId, int followedId) async {
+  final url = Uri.parse('${AppConfig.baseUrl}/api/auth/follow_user/$followerId/$followedId/');
+  try {
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 201) {
+      print("Utilisateur suivi avec succès.");
+      notifyListeners();
+      return true;
+    } else if (response.statusCode == 200) {
+      print("Vous suivez déjà cet utilisateur.");
+      return true;
+    } else {
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      print("Erreur: ${data['error'] ?? 'Une erreur est survenue'}");
+      return false;
+    }
+  } catch (error) {
+    print("Erreur lors du follow: $error");
+    return false;
+  }
+}
+
 }

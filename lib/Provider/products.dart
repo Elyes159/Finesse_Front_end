@@ -11,8 +11,12 @@ import 'package:mime/mime.dart';
 class Products extends ChangeNotifier {
   final storage = FlutterSecureStorage();
   String? errorMessage;
+  int? nbfollowers;
+  int? nbfollowervisited;
   late List products = [];
   late List productsView = [];
+  late List followers = [];
+  late List followersvisited = [];
   late List Ratings = [];
   late List RatingsVisited = [];
   late List productsByUser = [];
@@ -429,5 +433,57 @@ Future<bool> getRatingByRatedUserVisited({required int userId}) async {
     return false;
   }
 }
+ Future<void> getFollowers(int userId) async {
+    try {
+      final url = Uri.parse('${AppConfig.baseUrl}/api/auth/get_followers/$userId/');
+      final headers = {
+        'Content-Type': 'application/json',
+      };
+      final response = await http.get(url, headers: headers);
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['followers'] != null){
+          nbfollowers = data["count"];
+          followers = data['followers'];
+          notifyListeners();
+          print("hoooouuuni");
+          print(followers);
+        } else {
+          print('Aucun produit trouvé pour cet utilisateur.');
+        }
+      } else {
+        print(
+            'Erreur lors de la récupération des produits: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Erreur rencontrée : $e');
+    }
+  }
+  Future<void> getFollowersVisited(int userId) async {
+    try {
+      final url = Uri.parse('${AppConfig.baseUrl}/api/auth/get_followers/$userId/');
+      final headers = {
+        'Content-Type': 'application/json',
+      };
+      final response = await http.get(url, headers: headers);
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['followers'] != null){
+          nbfollowervisited = data["count"];
+          followersvisited = data['followers'];
+          notifyListeners();
+          print("hoooouuuni");
+          print(followersvisited);
+        } else {
+          print('Aucun produit trouvé pour cet utilisateur.');
+        }
+      } else {
+        print(
+            'Erreur lors de la récupération des produits: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Erreur rencontrée : $e');
+    }
+  }
 
 }
