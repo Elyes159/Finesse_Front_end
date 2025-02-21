@@ -8,7 +8,6 @@ class Users {
   final String address;
   final bool? isEmailVerified;
   final String? verificationCode;
-  final String description;
   late final bool hasStory;
 
   Users({
@@ -21,7 +20,6 @@ class Users {
     required this.address,
      this.isEmailVerified,
      this.verificationCode,
-    required this.description,
     required this.hasStory,
   });
 
@@ -36,7 +34,6 @@ class Users {
       address: json['user_profile']['address'],
       isEmailVerified: json['user_profile']['is_email_verified'] ?? true,
       verificationCode: json['user_profile']['verification_code'],
-      description: json['user_profile']['description'],
       hasStory: json['user_profile']['hasStory'],
     );
   }

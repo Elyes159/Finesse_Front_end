@@ -219,8 +219,8 @@ class _ItemDetailsState extends State<ItemDetails> {
                                         widget.product["owner_profile_pic"] !=
                                             null)
                                     ? NetworkImage(parametre == "normal"
-                                        ? "${AppConfig.baseUrl}${widget.product["owner_profile_pic"]}"
-                                        : widget.product["owner_profile_pic"]!)
+                                        ? "${AppConfig.baseUrl}/${widget.product["owner_profile_pic"]}"
+                                        : "${AppConfig.baseUrl}/${widget.product["owner_profile_pic"]}")
                                     : AssetImage('assets/images/user.png')
                                         as ImageProvider,
                                 backgroundColor: Colors.transparent,

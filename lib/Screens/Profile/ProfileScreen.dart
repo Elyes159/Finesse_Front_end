@@ -81,7 +81,9 @@ class _ProfileMainState extends State<ProfileMain> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        widget.id == null ?'${Provider.of<Products>(context, listen: false).nbfollowers} followers' : '${Provider.of<Products>(context, listen: false).nbfollowervisited} followers',
+                        widget.id == null
+                            ? '${Provider.of<Products>(context, listen: false).nbfollowers} followers'
+                            : '${Provider.of<Products>(context, listen: false).nbfollowervisited} followers',
                         style: TextStyle(
                           color: Color(0xFF111928),
                           fontSize: 14,
@@ -103,11 +105,12 @@ class _ProfileMainState extends State<ProfileMain> {
                                         .id,
                                     widget.id!);
 
-                                if(followed){
-                                  setState(() {
-                                   Provider.of<Products>(context,listen : false).getFollowersVisited(widget.id!);
-                                  });
-                                }
+                            if (followed) {
+                              setState(() {
+                                Provider.of<Products>(context, listen: false)
+                                    .getFollowersVisited(widget.id!);
+                              });
+                            }
                           },
                           child: Container(
                             width: 94,
@@ -119,39 +122,34 @@ class _ProfileMainState extends State<ProfileMain> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  width: double.infinity,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 8),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Follow',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 14,
-                                          fontFamily: 'Raleway',
-                                          fontWeight: FontWeight.w400,
-                                          height: 1.43,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                            child: Center(
+                              child: Consumer<Products>(
+                                builder: (context, productsProvider, child) {
+                                  bool isFollowing = productsProvider
+                                      .followersvisited
+                                      .any((follower) =>
+                                          follower['id'] ==
+                                          Provider.of<AuthService>(context,
+                                                  listen: false)
+                                              .currentUser!
+                                              .id);
+
+                                  return Text(
+                                    isFollowing ? 'Unfollow' : 'Follow',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      fontFamily: 'Raleway',
+                                      fontWeight: FontWeight.w400,
+                                      height: 1.43,
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
                           ),
-                        ),
+                        )
                     ],
                   ),
                   const Spacer(),
@@ -705,23 +703,7 @@ class _ProfileMainState extends State<ProfileMain> {
               letterSpacing: -0.14,
             ),
           ),
-          SizedBox(
-            height: 8,
-          ),
-          Text(
-            widget.id == null
-                ? "${Provider.of<AuthService>(context, listen: false).currentUser?.description ?? ''}"
-                : "${Provider.of<Profileprovider>(context, listen: false).visitedProfile?.description ?? ''}",
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 13,
-              fontFamily: 'Raleway',
-              fontWeight: FontWeight.w400,
-              height: 1.54,
-              letterSpacing: -0.13,
-            ), // Assure que le texte reste aligné à gauche
-          ),
+          
           SizedBox(
             height: 24,
           ),

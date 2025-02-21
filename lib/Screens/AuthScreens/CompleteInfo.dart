@@ -28,7 +28,6 @@ class _CompleteInfoState extends State<CompleteInfo> {
   final TextEditingController _fullnameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
   String _errorMessage = '';
    bool isLoading = false; 
 
@@ -219,12 +218,7 @@ class _CompleteInfoState extends State<CompleteInfo> {
                   isPassword: false,
                 ),
                 const SizedBox(height: 16),
-                DescTextField(
-                  controller: _descriptionController,
-                  label: "Description",
-                  isPassword: false,
-                ),
-                const SizedBox(height: 16),
+                
                 _errorMessage.isNotEmpty
                     ? Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -261,7 +255,6 @@ class _CompleteInfoState extends State<CompleteInfo> {
                           full_name: _fullnameController.text,
                           phone_number: _phoneController.text,
                           address: _addressController.text,
-                          description: _descriptionController.text,
                           userId: Provider.of<AuthService>(context, listen: false).userId,
                           image: _imageFile,
                         );
@@ -290,7 +283,6 @@ class _CompleteInfoState extends State<CompleteInfo> {
                           full_name: _fullnameController.text,
                           phone_number: _phoneController.text,
                           address: _addressController.text,
-                          description: _descriptionController.text,
                           userId: Provider.of<AuthService>(context, listen: false).userId,
                         );
 
@@ -318,7 +310,6 @@ class _CompleteInfoState extends State<CompleteInfo> {
                           full_name: _fullnameController.text,
                           phone_number: _phoneController.text,
                           address: _addressController.text,
-                          description: _descriptionController.text,
                           userId: Provider.of<AuthService>(context, listen: false).userId,
                         );
 

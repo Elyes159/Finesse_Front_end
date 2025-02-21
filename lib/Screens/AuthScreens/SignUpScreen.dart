@@ -86,8 +86,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           if (value == null || value.isEmpty) {
                             return 'Please enter a password.';
                           }
-                          if (value.length < 6) {
-                            return 'Password must be at least 6 characters long.';
+                          if (value.length < 8) {
+                            return 'Password must be at least 8 characters long.';
+                          }
+                          if (!RegExp(r'^(.*[A-Z].*){2,}').hasMatch(value)) {
+                            return 'Password must contain at least 2 uppercase letters.';
+                          }
+                          if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]')
+                              .hasMatch(value)) {
+                            return 'Password must contain at least 1 special character.';
                           }
                           return null;
                         },
@@ -106,22 +113,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       const SizedBox(height: 16),
                       CustomButton(
-                         textColor: _isLoading ? Color(0xFF111928) : Colors.white,
-                  buttonColor: _isLoading? Color(0xFFE5E7EB) : Color(0xFFFB98B7),
+                        textColor:
+                            _isLoading ? Color(0xFF111928) : Colors.white,
+                        buttonColor:
+                            _isLoading ? Color(0xFFE5E7EB) : Color(0xFFFB98B7),
                         onTap: _isLoading
                             ? () {}
                             : () async {
                                 setState(() {
                                   _errorMessage = null; // Reset error message
                                 });
-                                if (_formKey.currentState?.validate() ?? false) {
+                                if (_formKey.currentState?.validate() ??
+                                    false) {
                                   setState(() {
                                     _isLoading = true;
                                   });
 
                                   try {
-                                    await Provider.of<AuthService>(context, listen: false).signUp(
-                                      username: _emailController.text.split('@')[0],
+                                    await Provider.of<AuthService>(context,
+                                            listen: false)
+                                        .signUp(
+                                      username:
+                                          _emailController.text.split('@')[0],
                                       email: _emailController.text,
                                       password: _passwordController.text,
                                       phoneNumber: "",
@@ -130,7 +143,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     );
                                     Navigator.pushReplacement(
                                       context,
-                                      MaterialPageRoute(builder: (context) => const VerificationMail(parametre: "signup",)),
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const VerificationMail(
+                                                parametre: "signup",
+                                              )),
                                     );
                                   } catch (error) {
                                     setState(() {
@@ -150,7 +167,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Text(
                             _errorMessage!,
-                            style: const TextStyle(color: Colors.red, fontSize: 14,fontFamily: "Raleway",fontWeight:FontWeight.w700),
+                            style: const TextStyle(
+                                color: Colors.red,
+                                fontSize: 14,
+                                fontFamily: "Raleway",
+                                fontWeight: FontWeight.w700),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -172,22 +193,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                   CustomContainer(
+                    CustomContainer(
                       onTap: () async {
                         setState(() {
-                          _errorMessage = null; // Réinitialise le message d'erreur
+                          _errorMessage =
+                              null; // Réinitialise le message d'erreur
                         });
                         try {
-                          final result = await Provider.of<AuthService>(context, listen: false).signUpGoogle();
+                          final result = await Provider.of<AuthService>(context,
+                                  listen: false)
+                              .signUpGoogle();
 
                           if (result.statusCode == 200) {
                             Navigator.pushReplacement(
                               context,
-                              MaterialPageRoute(builder: (context) => CompleteInfo(parameter: "google")),
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      CompleteInfo(parameter: "google")),
                             );
                           } else {
                             setState(() {
-                              _errorMessage = "${jsonDecode(result.body)["message"]}";
+                              _errorMessage =
+                                  "${jsonDecode(result.body)["message"]}";
                             });
                           }
                         } catch (e) {
@@ -198,36 +225,42 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       },
                       imagePath: "assets/Icons/google.svg",
                     ),
-
                     const SizedBox(width: 8.86),
                     CustomContainer(
                       onTap: () async {
                         setState(() {
-                          _errorMessage = null; // Réinitialise le message d'erreur
+                          _errorMessage =
+                              null; // Réinitialise le message d'erreur
                         });
                         try {
-                          final result = await Provider.of<AuthService>(context, listen: false).signUpFacebook();
+                          final result = await Provider.of<AuthService>(context,
+                                  listen: false)
+                              .signUpFacebook();
 
                           if (result.statusCode == 200) {
                             Navigator.pushReplacement(
                               context,
-                              MaterialPageRoute(builder: (context) => CompleteInfo(parameter: "facebook")),
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      CompleteInfo(parameter: "facebook")),
                             );
                           } else {
-                            final responseData = jsonDecode(result.body); // Décodage du JSON
+                            final responseData =
+                                jsonDecode(result.body); // Décodage du JSON
                             setState(() {
-                              _errorMessage = responseData["message"] ?? "An unknown error occurred.";
+                              _errorMessage = 
+                                  "An unknown error occurred.";
                             });
                           }
                         } catch (e) {
                           setState(() {
-                            _errorMessage = "Error signing in with Facebook: ${e.toString()}";
+                            _errorMessage =
+                                "Error signing in with Facebook";
                           });
                         }
                       },
                       imagePath: "assets/Icons/facebook.svg",
                     ),
-
                   ],
                 ),
                 const SizedBox(height: 24),
@@ -248,7 +281,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       onTap: () {
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => const SignInScreen()),
+                          MaterialPageRoute(
+                              builder: (context) => const SignInScreen()),
                         );
                       },
                       child: const Text(

@@ -7,11 +7,14 @@ PODS:
     - AppAuth/Core
   - FBAEMKit (17.1.0):
     - FBSDKCoreKit_Basics (= 17.1.0)
+  - FBAudienceNetwork (6.15.0)
   - FBSDKCoreKit (17.1.0):
     - FBAEMKit (= 17.1.0)
     - FBSDKCoreKit_Basics (= 17.1.0)
   - FBSDKCoreKit_Basics (17.1.0)
   - FBSDKLoginKit (17.1.0):
+    - FBSDKCoreKit (= 17.1.0)
+  - FBSDKShareKit (17.1.0):
     - FBSDKCoreKit (= 17.1.0)
   - Firebase/Auth (11.6.0):
     - Firebase/CoreOnly
@@ -97,6 +100,10 @@ PODS:
   - RecaptchaInterop (100.0.0)
 
 DEPENDENCIES:
+  - FBAudienceNetwork (= 6.15.0)
+  - FBSDKCoreKit
+  - FBSDKLoginKit
+  - FBSDKShareKit
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - Flutter (from `Flutter`)
@@ -110,9 +117,11 @@ SPEC REPOS:
   trunk:
     - AppAuth
     - FBAEMKit
+    - FBAudienceNetwork
     - FBSDKCoreKit
     - FBSDKCoreKit_Basics
     - FBSDKLoginKit
+    - FBSDKShareKit
     - Firebase
     - FirebaseAppCheckInterop
     - FirebaseAuth
@@ -147,9 +156,11 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AppAuth: d4f13a8fe0baf391b2108511793e4b479691fb73
   FBAEMKit: cb719c53575a3be86ea873279f30d6a2c4e15881
+  FBAudienceNetwork: 80a035aa69cc3a71c99e44cb5c2874e4cef9909f
   FBSDKCoreKit: ecdb980a24633ccb012700299ceb16d0235e14d2
   FBSDKCoreKit_Basics: 045101c4a9ef10c845347424d73a29aae02c3e43
   FBSDKLoginKit: 69eb59b2f839aba635616df6e422acd0ca88030a
+  FBSDKShareKit: be9db7d121cbc3d6700c1b712a61183cac407f64
   Firebase: 374a441a91ead896215703a674d58cdb3e9d772b
   firebase_auth: d60969911baf096763178412a28388c39f361e2d
   firebase_core: d3deb82d05dac4bc13190f9d1770787fd6a1cda4
@@ -171,6 +182,6 @@ SPEC CHECKSUMS:
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
 
-PODFILE CHECKSUM: a57f30d18f102dd3ce366b1d62a55ecbef2158e5
+PODFILE CHECKSUM: 87fae3a18abd67fa28e80df913dc838ec2134438
 
 COCOAPODS: 1.16.2

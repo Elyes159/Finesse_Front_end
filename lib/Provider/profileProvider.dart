@@ -11,13 +11,11 @@ class Profileprovider with ChangeNotifier {
   Future<void> fetchProfile(int userId) async {
     final url =
         Uri.parse('${AppConfig.baseUrl}/api/auth/getUserProfileVisit/$userId/');
-
     try {
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
-
         _visitedProfile = Users(
           id: userId,
           username: data["user_profile"]['username'] ?? "",
@@ -28,10 +26,8 @@ class Profileprovider with ChangeNotifier {
           address: data["user_profile"]['address'] ?? "",
           isEmailVerified: data["user_profile"]['is_email_verified'] ?? false,
           verificationCode: data["user_profile"]['verification_code'] ?? "",
-          description: data["user_profile"]['description'] ?? "",
           hasStory: data["user_profile"]['hasStory'] ?? false,
         );
-
         notifyListeners();
       } else {
         throw Exception("Erreur lors du chargement du profil");

@@ -47,18 +47,40 @@
 	<true/>
 	<key>GIDClientID</key>
 	<string>996086520169-kk9449feupn8qk31k4mtu3kfq19l75mp.apps.googleusercontent.com</string>
+
+	<!-- ✅ Fusion des CFBundleURLTypes -->
 	<key>CFBundleURLTypes</key>
-<array>
-  <dict>
-    <key>CFBundleTypeRole</key>
-    <string>Editor</string>
-    <key>CFBundleURLSchemes</key>
-    <array>
-      <string>com.googleusercontent.apps.996086520169-kk9449feupn8qk31k4mtu3kfq19l75mp</string>
-    </array>
-  </dict>
-</array>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.996086520169-kk9449feupn8qk31k4mtu3kfq19l75mp</string>
+				<string>fb1107580743939514</string> <!-- ✅ Suppression du "D" en trop -->
+			</array>
+		</dict>
+	</array>
 
+	<!-- ✅ Ajout de FacebookAppID correctement formaté -->
+	<key>FacebookAppID</key>
+	<string>1107580743939514</string>
 
+	<key>FacebookClientToken</key>
+	<string>6823c783ca4657d9ad0a7dcbdb37feeb</string>
+
+	<key>FacebookDisplayName</key>
+	<string>Finesse</string>
+
+	<!-- ✅ Permissions Facebook requises -->
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fbapi</string>
+		<string>fb-messenger-share-api</string>
+		<string>fbauth2</string>
+		<string>fbshareextension</string>
+	</array>
+	<key>NSUserTrackingUsageDescription</key>
+<string>This identifier will be used to deliver personalized ads to you.</string>
 </dict>
 </plist>
