@@ -35,6 +35,8 @@ class Products extends ChangeNotifier {
   late double ratingPercentage3Visited = 0;
   late double ratingPercentage4Visited = 0;
   late double ratingPercentage5Visited = 50;
+    List<dynamic> favoriteProducts = [];
+
 
 
   Future<bool> sellProduct(
@@ -485,5 +487,97 @@ Future<bool> getRatingByRatedUserVisited({required int userId}) async {
       print('Erreur rencontrée : $e');
     }
   }
+
+ Future<void> getFavourite(int userId) async {
+    try {
+      final url = Uri.parse('${AppConfig.baseUrl}/api/products/getFavourite/$userId/');
+      final headers = {
+        'Content-Type': 'application/json',
+      };
+      final response = await http.get(url, headers: headers);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        
+        if (data['favorites'] != null) {
+          favoriteProducts = data['favorites'];
+          notifyListeners();
+          print("Produits favoris récupérés : $favoriteProducts");
+        } else {
+          print('Aucun produit favori trouvé pour cet utilisateur.');
+        }
+      } else {
+        print('Erreur lors de la récupération des produits: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Erreur rencontrée : $e');
+    }
+  }
+  Future<void> deleteFavorite(int favoriteId) async {
+    try {
+      final url = Uri.parse('${AppConfig.baseUrl}/api/products/deleteFav/$favoriteId/');
+      final headers = {
+        'Content-Type': 'application/json',
+        // 'Authorization': 'Bearer votre_token', // Ajoutez l'en-tête d'autorisation si nécessaire
+      };
+      
+      final response = await http.delete(url, headers: headers);
+
+      if (response.statusCode == 204) {
+        // Si la suppression a réussi, retirez le produit de la liste locale
+        favoriteProducts.removeWhere((product) => product['id_fav'] == favoriteId);
+        notifyListeners(); // Notifiez les auditeurs de la mise à jour
+        print('Produit favori supprimé avec succès.');
+      } else {
+        print('Erreur lors de la suppression du produit : ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Erreur rencontrée : $e');
+    }
+  }
+Future<bool> createOrder(int buyerId, List<dynamic> productIds, String status , int price) async {
+  final response = await http.post(
+    Uri.parse("${AppConfig.baseUrl}/api/products/create_order/"),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: jsonEncode({
+      "buyer_id": buyerId,
+      "product_ids": productIds,  // Liste des IDs de produits
+      "status": status,
+      "price":price  // Statut de la commande, par défaut 'livraison'
+    }),
+  );
+
+  if (response.statusCode == 201) {
+    final data = jsonDecode(response.body);
+    final totalPrice = data["total_price"];
+    notifyListeners();
+    print("Commandes créées avec succès. Prix total: $totalPrice");
+    return true;
+  } else {
+    return false;
+  }
+}
+Future<bool> updateProductSelled(String productId, bool selled) async {
+  final String url = '${AppConfig.baseUrl}/api/products/update_product_selled/$productId/'; // Remplace par l'URL de ton API
+
+  final response = await http.patch(
+    Uri.parse(url),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: jsonEncode({'selled': selled}),
+  );
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+    print('Champ "selled" mis à jour avec succès: ${data['selled']}');
+    return true;
+  } else {
+    final errorData = jsonDecode(response.body);
+    return false;
+  }
+}
 
 }

@@ -1,4 +1,5 @@
 import 'package:finesse_frontend/ApiServices/backend_url.dart';
+import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Provider/products.dart';
 import 'package:finesse_frontend/Provider/profileProvider.dart';
 import 'package:finesse_frontend/Screens/Profile/ProfileScreen.dart';
@@ -457,18 +458,22 @@ class _ItemDetailsState extends State<ItemDetails> {
                     color: Colors.white,
                     child: CustomButton(
                       buttonColor: isFavorite ? Colors.grey : Color(0xFFFB98B7),
-                      label: "Add to cart",
-                      onTap: isFavorite
-                          ? () {}
-                          : () async {
+                      label: !isFavorite ? "Add to cart" : "Add to cart ✅ " ,
+                      onTap: () async {
                               bool? favorite = await Provider.of<Products>(
                                       context,
                                       listen: false)
                                   .createFavorite(
                                       productId: widget.product["product_id"]);
 
-                              if (favorite != null) {
+                              if (favorite != false) {
                                 setState(() {
+                                  Provider.of<Products>(context, listen: false)
+                                      .getFavourite(Provider.of<AuthService>(
+                                              context,
+                                              listen: false)
+                                          .currentUser!
+                                          .id);
                                   isFavorite =
                                       favorite; // Met à jour l'état local
                                 });

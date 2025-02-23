@@ -4,6 +4,7 @@ import 'package:finesse_frontend/ApiServices/backend_url.dart';
 import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Provider/Stories.dart';
 import 'package:finesse_frontend/Provider/products.dart';
+import 'package:finesse_frontend/Screens/HomeScreens/cart.dart';
 import 'package:finesse_frontend/Screens/SellProduct/itemDetails.dart';
 import 'package:finesse_frontend/Widgets/cards/productCard.dart';
 import 'package:finesse_frontend/Widgets/categorieChip/categoryChip.dart';
@@ -36,10 +37,15 @@ class _HomeScreenState extends State<HomeScreen> {
       } else {
         Provider.of<AuthService>(context, listen: false).loadUserGoogleData();
       }
-      Provider.of<Products>(context,listen: false).getRatingByRatedUser(userId: Provider.of<AuthService>(context,listen:false).currentUser!.id);
+      Provider.of<Products>(context, listen: false).getRatingByRatedUser(
+          userId:
+              Provider.of<AuthService>(context, listen: false).currentUser!.id);
     });
     Provider.of<Products>(context, listen: false).getProductsByUser();
-    Provider.of<Products>(context , listen :false).getFollowers(Provider.of<AuthService>(context,listen:false).currentUser!.id);
+    Provider.of<Products>(context, listen: false).getFavourite(
+        Provider.of<AuthService>(context, listen: false).currentUser!.id);
+    Provider.of<Products>(context, listen: false).getFollowers(
+        Provider.of<AuthService>(context, listen: false).currentUser!.id);
   }
 
   Future<void> _pickImage() async {
@@ -57,8 +63,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<AuthService>(context, listen: false).currentUser!;
-    
-    
 
     return Scaffold(
       body: SafeArea(
@@ -106,7 +110,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       const SizedBox(width: 20),
-                      SvgPicture.asset("assets/Icons/favv.svg"),
+                      InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Cart()));
+                          },
+                          child: SvgPicture.asset("assets/Icons/favv.svg")),
                     ],
                   ),
                 ],
@@ -353,8 +364,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       'taille': product['taille'],
                       'pointure': product['pointure'],
                       'brand': product['brand'],
-                      'owner_id':product["owner"]["id"],
-                      'is_favorite' : product['is_favorite'],
+                      'selled': product["selled"],
+                      'owner_id': product["owner"]["id"],
+                      'is_favorite': product['is_favorite'],
                       'owner_profile_pic':
                           product["owner"]["profile_pic"] ?? "",
                       'owner_username': product["owner"]["username"] ?? "",
@@ -388,10 +400,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       'description': product['description'] ?? '',
                       'is_available': product['is_available'] ?? false,
                       'taille': product['taille'],
-                      'is_favorite' : product['is_favorite'],
+                      'is_favorite': product['is_favorite'],
                       'pointure': product['pointure'],
+                      'selled': product["selled"],
                       'brand': product['brand'],
-                      'owner_id':product["owner"]["id"],
+                      'owner_id': product["owner"]["id"],
                       'owner_profile_pic':
                           product["owner"]["profile_pic"] ?? "",
                       'owner_username': product["owner"]["username"] ?? "",
@@ -460,9 +473,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             itemBuilder: (context, index) {
                               final product = categoryProducts[index];
                               return InkWell(
-                                onTap: () {
+                                onTap: product["selled"] ==
+                                        true ? (){} : () {
                                   productsProvider.createRecentlyViewedProducts(
-                                      productId: product["product_id"]);
+                                    productId: product["product_id"],
+                                  );
                                   productsProvider.getProductsViewed();
 
                                   // Naviguer vers la page ItemDetails avec toutes les infos du produit
@@ -474,11 +489,52 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   );
                                 },
-                                child: ProductCard(
-                                  imageUrl: product['imageUrl'] as String,
-                                  productName: product['productName'] as String,
-                                  productPrice:
-                                      product['productPrice'] as String,
+                                child: Stack(
+                                  children: [
+                                    ProductCard(
+                                      imageUrl: product['imageUrl'] as String,
+                                      productName:
+                                          product['productName'] as String,
+                                      productPrice:
+                                          product['productPrice'] as String,
+                                    ),
+                                    if (product["selled"] ==
+                                        true) // Vérifie si le produit est vendu
+                                      Positioned(
+                                        left: 0,
+                                        right: 0,
+                                        top: 0,
+                                        bottom: 70,
+                                        child: Center(
+                                          // Centre le badge dans le conteneur parent
+                                          child: Transform.rotate(
+                                            angle:
+                                                -0.1, // Angle pour incliner le badge
+                                            child: Container(
+                                              height: 40,
+                                              width: 100,
+                                              decoration: BoxDecoration(
+                                                color: Colors.red.withOpacity(
+                                                    0.7), // Couleur rouge avec opacité
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        10), // Coins arrondis
+                                              ),
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                'Vendu',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize:
+                                                      18, // Ajustement de la taille du texte
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                  ],
                                 ),
                               );
                             },

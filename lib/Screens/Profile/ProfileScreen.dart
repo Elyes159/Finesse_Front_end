@@ -3,6 +3,7 @@ import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Provider/products.dart';
 import 'package:finesse_frontend/Provider/profileProvider.dart';
 import 'package:finesse_frontend/Screens/Profile/Settings.dart';
+import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
 import 'package:finesse_frontend/Widgets/cards/productCard.dart';
 import 'package:finesse_frontend/Widgets/rating/ratingpercen.dart';
 import 'package:finesse_frontend/Widgets/rating/star.dart';
@@ -276,15 +277,100 @@ class _ProfileMainState extends State<ProfileMain> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ProductCard(
-                  imageUrl: imageUrl,
-                  productName: product['title'] as String,
-                  productPrice: '${product['price']} TND', // Formater le prix
+                Stack(
+                  children: [
+                    ProductCard(
+                      imageUrl: imageUrl,
+                      productName: product['title'] as String,
+                      productPrice: '${product['price']} TND',
+                    ),
+                    // Badge "Vendu"
+                    if (product["selled"] ==
+                        true) // Vérifie si le produit est vendu
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        top: 0,
+                        bottom: 0,
+                        child: Center(
+                          // Centre le badge dans le conteneur parent
+                          child: Transform.rotate(
+                            angle: -0.1, // Angle pour incliner le badge
+                            child: Container(
+                              height: 40,
+                              width: 100,
+                              decoration: BoxDecoration(
+                                color: Colors.red.withOpacity(
+                                    0.7), // Couleur rouge avec opacité
+                                borderRadius:
+                                    BorderRadius.circular(10), // Coins arrondis
+                              ),
+                              alignment: Alignment.center,
+                              child: Text(
+                                'Vendu',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize:
+                                      18, // Ajustement de la taille du texte
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: GestureDetector(
+                        onTap: () {
+                          // Afficher le BottomSheet lorsque l'utilisateur clique sur la flèche
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            builder: (context) {
+                              return Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.all(16),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    CustomButton(
+                                      label: product["selled"] == true
+                                          ? "Marquer comme disponible"
+                                          : "Marquer comme vendu",
+                                      onTap: () {
+                                        Provider.of<Products>(context,
+                                                listen: false)
+                                            .updateProductSelled(
+                                                product["id"],
+                                                product["selled"] == true
+                                                    ? false
+                                                    : true);
+                                        Provider.of<Products>(context,listen:false).getProducts();
+                                         Provider.of<Products>(context,listen:false).getProductsViewed();
+                                        product["selled"] = !product["selled"];
+                                      },
+                                    ),
+                                    SizedBox(height: 10),
+                                    // Ajoute ici d'autres widgets pour afficher les détails
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        child: Icon(
+                          Icons.arrow_drop_down,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 if (product["validated"] == false) ...[
-                  SizedBox(
-                    height: 4,
-                  ),
+                  SizedBox(height: 4),
                   Container(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -703,7 +789,6 @@ class _ProfileMainState extends State<ProfileMain> {
               letterSpacing: -0.14,
             ),
           ),
-          
           SizedBox(
             height: 24,
           ),
