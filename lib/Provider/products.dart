@@ -211,6 +211,8 @@ class Products extends ChangeNotifier {
         final data = json.decode(response.body);
         if (data['products'] != null) {
           products = data['products'];
+          filteredProducts = List.from(products); // Ajout de cette ligne
+
           for (var product in products) {
             print("category : ${product["category"]}");
             print("subcategory : ${product["subcategory"]}");
@@ -234,18 +236,19 @@ class Products extends ChangeNotifier {
     }
   }
   void filterProducts(String query) {
-    if (query.isEmpty) {
-      filteredProducts = products;
-    } else {
-      filteredProducts = products
-          .where((product) => product['title']
-              .toString()
-              .toLowerCase()
-              .contains(query.toLowerCase()))
-          .toList();
-    }
-    notifyListeners();
+  if (query.isEmpty) {
+    filteredProducts = List.from(products);
+  } else {
+    filteredProducts = products
+        .where((product) => product['title']
+            .toString()
+            .toLowerCase()
+            .contains(query.toLowerCase()))
+        .toList();
   }
+  print("Produits filtrés : ${filteredProducts.length}"); // Ajout de cette ligne
+  notifyListeners();
+}
 
   Future<void> getProductsViewed() async {
     try {

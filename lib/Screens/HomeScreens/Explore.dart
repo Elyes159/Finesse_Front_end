@@ -14,7 +14,13 @@ class Explore extends StatefulWidget {
 
 class _ExploreState extends State<Explore> {
   TextEditingController searchController = TextEditingController();
-
+@override
+void initState() {
+  super.initState();
+  searchController.addListener(() {
+    Provider.of<Products>(context, listen: false).filterProducts(searchController.text);
+  });
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,7 +72,7 @@ class _ExploreState extends State<Explore> {
                           ? "${AppConfig.baseUrl}${product['images'][0]}"
                           : 'assets/default_image.png',
                       productName: product['title'],
-                      productPrice: '${product['price']} millimes',
+                      productPrice: '${product['price']}',
                     );
                   },
                 );
