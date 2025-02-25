@@ -163,7 +163,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Brand: ${widget.product["brand"]}",
+                              widget.product["brand"]=="('',)" ? "" : "Brand: ${widget.product["brand"]}",
                               style: TextStyle(
                                 color: Color(0xFF111928),
                                 fontSize: 16,
@@ -173,9 +173,9 @@ class _ItemDetailsState extends State<ItemDetails> {
                               ),
                             ),
                             Text(
-                              widget.product["taille"] != "U"
+                              widget.product["taille"] != "XX"
                                   ? "Size: ${widget.product["taille"]}"
-                                  : widget.product["pointure"] != "99"
+                                  : widget.product["pointure"] != "XX"
                                       ? "Size: ${widget.product["taille"]}"
                                       : "",
                               style: TextStyle(
@@ -225,7 +225,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                                               "" &&
                                           widget.product["owner_profile_pic"] !=
                                               null)
-                                      ? NetworkImage(widget.product["type_pdp"] == "normal"
+                                      ? NetworkImage(widget.product["type_pdp"] == "google"
                                           ? "${AppConfig.baseUrl}/${widget.product["owner_profile_pic"]}"
                                           : "${widget.product["owner_profile_pic"]}")
                                       : AssetImage('assets/images/user.png')

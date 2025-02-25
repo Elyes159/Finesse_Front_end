@@ -5,6 +5,7 @@ import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Provider/Stories.dart';
 import 'package:finesse_frontend/Provider/products.dart';
 import 'package:finesse_frontend/Screens/HomeScreens/cart.dart';
+import 'package:finesse_frontend/Screens/HomeScreens/story.dart';
 import 'package:finesse_frontend/Screens/HomeScreens/wish.dart';
 import 'package:finesse_frontend/Screens/SellProduct/itemDetails.dart';
 import 'package:finesse_frontend/Widgets/cards/productCard.dart';
@@ -42,6 +43,9 @@ class _HomeScreenState extends State<HomeScreen> {
           userId:
               Provider.of<AuthService>(context, listen: false).currentUser!.id);
     });
+    Provider.of<Stories>(context, listen: false).fetchFollowersAndStories(
+        userId:
+            Provider.of<AuthService>(context, listen: false).currentUser!.id);
     Provider.of<Products>(context, listen: false).getProductsByUser();
     Provider.of<Products>(context, listen: false).getFavourite(
         Provider.of<AuthService>(context, listen: false).currentUser!.id);
@@ -140,25 +144,32 @@ class _HomeScreenState extends State<HomeScreen> {
                 alignment: Alignment.topLeft,
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      Stack(
+                  child: Consumer<Stories>(
+                    builder: (context, storiesProvider, child) {
+                      final stories = storiesProvider.stories;
+                      Map<String, List<Map<String, dynamic>>> groupedStories =
+                          {};
+                      for (var story in stories) {
+                        String username = story['user'];
+                        if (!groupedStories.containsKey(username)) {
+                          groupedStories[username] = [];
+                        }
+                        groupedStories[username]!.add(story);
+                      }
+                      return Row(
                         children: [
-                          Consumer<Stories>(
-                            builder: (context, stories, child) {
-                              bool hasStory = stories.hasStory;
-
-                              return Column(
+                          // Ajout de la story de l'utilisateur actuel
+                          Column(
+                            children: [
+                              Stack(
                                 children: [
                                   Container(
                                     height: 56,
                                     width: 56,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      border: hasStory
-                                          ? Border.all(
-                                              color: Colors.blue, width: 2)
-                                          : null,
+                                      border: Border.all(
+                                          color: Colors.blue, width: 2),
                                     ),
                                     child: CircleAvatar(
                                       radius: 50.0,
@@ -171,79 +182,159 @@ class _HomeScreenState extends State<HomeScreen> {
                                           : AssetImage('assets/images/user.png')
                                               as ImageProvider,
                                       backgroundColor: Colors.transparent,
-                                      child: user.avatar == null
-                                          ? Container()
-                                          : null,
                                     ),
                                   ),
-                                  SizedBox(height: 3),
-                                  Text(
-                                    user.fullName == "None None"
-                                        ? user.username
-                                        : user.fullName,
-                                    style: TextStyle(
-                                      color: Color(0xFF0E1C36),
-                                      fontSize: 12,
-                                      fontFamily: 'Raleway',
-                                      fontWeight: FontWeight.w500,
+                                  Positioned(
+                                    top: 0,
+                                    right: 0,
+                                    child: GestureDetector(
+                                      onTap: () async {
+                                        await _pickImage();
+                                        if (_image != null) {
+                                          try {
+                                            await Provider.of<Stories>(context,
+                                                    listen: false)
+                                                .createStory(
+                                              userId: await storage.read(
+                                                  key: 'user_id'),
+                                              storyImage: _image,
+                                            );
+                                            print("Story créée avec succès !");
+                                          } catch (e) {
+                                            print(
+                                                "Erreur lors de la création de la story : $e");
+                                          }
+                                        } else {
+                                          print(
+                                              "Aucune image sélectionnée. Veuillez en choisir une.");
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                  "Veuillez sélectionner une image pour créer une story."),
+                                              backgroundColor: Colors.red,
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      child: Container(
+                                        height: 16,
+                                        width: 16,
+                                        decoration: BoxDecoration(
+                                          color: Colors.blue,
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                              color: Colors.white, width: 2),
+                                        ),
+                                        child: const Icon(
+                                          Icons.add,
+                                          color: Colors.white,
+                                          size: 12,
+                                        ),
+                                      ),
                                     ),
-                                  )
+                                  ),
                                 ],
-                              );
-                            },
-                          ),
-                          Positioned(
-                            top: 0,
-                            right: 0,
-                            child: GestureDetector(
-                              onTap: () async {
-                                await _pickImage();
-                                if (_image != null) {
-                                  try {
-                                    await Provider.of<Stories>(context,
-                                            listen: false)
-                                        .createStory(
-                                      userId:
-                                          await storage.read(key: 'user_id'),
-                                      storyImage: _image,
-                                    );
-                                    print("Story créée avec succès !");
-                                  } catch (e) {
-                                    print(
-                                        "Erreur lors de la création de la story : $e");
-                                  }
-                                } else {
-                                  print(
-                                      "Aucune image sélectionnée. Veuillez en choisir une.");
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                          "Veuillez sélectionner une image pour créer une story."),
-                                      backgroundColor: Colors.red,
-                                    ),
-                                  );
-                                }
-                              },
-                              child: Container(
-                                height: 16,
-                                width: 16,
-                                decoration: BoxDecoration(
-                                  color: Colors.blue,
-                                  shape: BoxShape.circle,
-                                  border:
-                                      Border.all(color: Colors.white, width: 2),
-                                ),
-                                child: const Icon(
-                                  Icons.add,
-                                  color: Colors.white,
-                                  size: 12,
+                              ),
+                              SizedBox(height: 3),
+                              Text(
+                                user.fullName == "None None"
+                                    ? user.username
+                                    : user.fullName,
+                                style: TextStyle(
+                                  color: Color(0xFF0E1C36),
+                                  fontSize: 12,
+                                  fontFamily: 'Raleway',
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
-                            ),
+                            ],
                           ),
-                        ],
+                          const SizedBox(
+                              width:
+                                  10), // Espace entre le profil et les stories
+
+                          // Affichage des autres stories importées
+                          Row(
+      children: groupedStories.entries.map((entry) {
+        String username = entry.key;
+        List<Map<String, dynamic>> userStories = entry.value;
+        Map<String, dynamic> firstStory = userStories.first;
+
+        return Padding(
+          padding: const EdgeInsets.only(right: 10),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => StoryViewScreen(stories: userStories),
+                ),
+              );
+            },
+            child: Column(
+              children: [
+                Stack(
+                  children: [
+                    Container(
+                      height: 56,
+                      width: 56,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.blue,
+                          width: 2,
+                        ),
                       ),
-                    ],
+                      child: CircleAvatar(
+                        radius: 50.0,
+                        backgroundImage: (firstStory['avatar'] != null)
+                            ? firstStory["avatar_type"] == "normal"
+                                ? NetworkImage("${AppConfig.baseUrl}/${firstStory['avatar']}")
+                                : NetworkImage(firstStory['avatar'])
+                            : const AssetImage('assets/images/user.png') as ImageProvider,
+                        backgroundColor: Colors.transparent,
+                      ),
+                    ),
+                    // Afficher un indicateur si plusieurs stories
+                    if (userStories.length > 1)
+                      Positioned(
+                        bottom: 2,
+                        right: 2,
+                        child: Container(
+                          padding: const EdgeInsets.all(3),
+                          decoration: const BoxDecoration(
+                            color: Colors.red,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.collections,
+                            color: Colors.white,
+                            size: 12,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  username,
+                  style: const TextStyle(
+                    color: Color(0xFF0E1C36),
+                    fontSize: 12,
+                    fontFamily: 'Raleway',
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
+    ),
+                        ],
+                      );
+                    },
                   ),
                 ),
               ),
@@ -382,7 +473,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       'pointure': product['pointure'],
                       'brand': product['brand'],
                       'selled': product["selled"],
-                       'type_pdp' :product["type"],
+                      'type_pdp': product["type"],
                       'owner_id': product["owner"]["id"],
                       'is_favorite': product['is_favorite'],
                       'owner_profile_pic':
@@ -423,7 +514,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       'selled': product["selled"],
                       'brand': product['brand'],
                       'owner_id': product["owner"]["id"],
-                      'type_pdp' :product["type"],
+                      'type_pdp': product["type"],
                       'owner_profile_pic':
                           product["owner"]["profile_pic"] ?? "",
                       'owner_username': product["owner"]["username"] ?? "",

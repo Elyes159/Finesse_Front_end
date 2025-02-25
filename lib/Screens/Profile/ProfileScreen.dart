@@ -321,6 +321,7 @@ class _ProfileMainState extends State<ProfileMain> {
                           ),
                         ),
                       ),
+                      if(widget.id == null)
                     Positioned(
                       top: 8,
                       right: 8,

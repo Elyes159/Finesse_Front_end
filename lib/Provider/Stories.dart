@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:finesse_frontend/ApiServices/backend_url.dart';
@@ -6,12 +7,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class Stories extends ChangeNotifier {
   final storage = const FlutterSecureStorage();
   bool isStoryCreated = false;
   bool hasStory = false;
   Users? _currentUser;
+  late List<dynamic> followersIds = [];
+  List<Map<String, dynamic>> _stories = [];
+
+  List<Map<String, dynamic>> get stories => _stories;
+
   Users? get currentUser => _currentUser;
 
   Future<void> createStory({
@@ -56,4 +63,42 @@ class Stories extends ChangeNotifier {
       print("Erreur lors du chargement des données utilisateur : $e");
     }
   }
+
+ Future<void> fetchFollowersAndStories({required int userId}) async {
+  try {
+    // Étape 1 : Récupérer les IDs des followers
+    final followersUrl = Uri.parse("${AppConfig.baseUrl}/api/stories/followers_ids/$userId/");
+    final followersResponse = await http.get(followersUrl, headers: {'Content-Type': 'application/json'});
+
+    if (followersResponse.statusCode == 200) {
+      List<dynamic> followersIds = jsonDecode(followersResponse.body)["followers_ids"];
+      print("Followers IDs: $followersIds");
+
+      if (followersIds.isNotEmpty) {
+        // Étape 2 : Récupérer les stories des followers
+        String userIdsString = followersIds.join(',');
+        final storiesUrl = Uri.parse("${AppConfig.baseUrl}/api/stories/followed_stories/$userIdsString/");
+        final storiesResponse = await http.get(storiesUrl);
+
+        if (storiesResponse.statusCode == 200) {
+          Map<String, dynamic> data = jsonDecode(storiesResponse.body);
+          _stories = List<Map<String, dynamic>>.from(data['stories']);
+          print("Stories: $_stories");
+          notifyListeners();
+        } else {
+          print("Erreur stories: ${storiesResponse.statusCode} - ${storiesResponse.body}");
+        }
+      } else {
+        print("Aucun follower trouvé.");
+        _stories = [];
+        notifyListeners();
+      }
+    } else {
+      print("Erreur followers: ${followersResponse.statusCode} - ${followersResponse.body}");
+    }
+  } catch (e) {
+    print("Erreur lors de la requête: $e");
+  }
+}
+
 }
