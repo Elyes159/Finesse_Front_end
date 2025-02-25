@@ -38,6 +38,7 @@ class Products extends ChangeNotifier {
   List<dynamic> favoriteProducts = [];
   List<dynamic> wishProducts = [];
   bool? canRate;
+  List filteredProducts = [];
 
   Future<bool> sellProduct(
       String title,
@@ -232,6 +233,19 @@ class Products extends ChangeNotifier {
       print('Erreur rencontrée : $e');
     }
   }
+  void filterProducts(String query) {
+    if (query.isEmpty) {
+      filteredProducts = products;
+    } else {
+      filteredProducts = products
+          .where((product) => product['title']
+              .toString()
+              .toLowerCase()
+              .contains(query.toLowerCase()))
+          .toList();
+    }
+    notifyListeners();
+  }
 
   Future<void> getProductsViewed() async {
     try {
@@ -314,7 +328,7 @@ class Products extends ChangeNotifier {
       return false;
     }
   }
-  
+
   Future<bool> createFavorite({
     required String productId,
   }) async {

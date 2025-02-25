@@ -24,8 +24,8 @@ class _ProfileMainState extends State<ProfileMain> {
   String? parametre = "";
   int selectedRating = 0;
   int _selectedTabIndex = 0;
-  TextEditingController reviewController =
-      TextEditingController(); // Onglet actuellement sélectionné
+  TextEditingController reviewController = TextEditingController();
+  String? errormsg; // Onglet actuellement sélectionné
 
   Future<void> _loadParameter() async {
     parametre = await const FlutterSecureStorage().read(key: 'parametre');
@@ -419,8 +419,9 @@ class _ProfileMainState extends State<ProfileMain> {
       builder: (context, ratingsProvider, child) {
         if ((widget.id == null && ratingsProvider.Ratings.isEmpty) ||
             (widget.id != null && ratingsProvider.RatingsVisited.isEmpty)) {
-          return widget.id != null && Provider.of<Products>(context,listen: false).canRate == true
-          ? Column(
+          return widget.id != null &&
+                  Provider.of<Products>(context, listen: false).canRate == true
+              ? Column(
                   crossAxisAlignment: CrossAxisAlignment
                       .start, // Alignement horizontal à gauche
                   children: [
@@ -564,7 +565,6 @@ class _ProfileMainState extends State<ProfileMain> {
                     ],
                   ),
                 );
-               
         } else {
           // Afficher les évaluations
           return SingleChildScrollView(
@@ -731,7 +731,10 @@ class _ProfileMainState extends State<ProfileMain> {
                   InkWell(
                     onTap: () async {
                       if (selectedRating > 0 &&
-                          reviewController.text.isNotEmpty) {
+                          reviewController.text.isNotEmpty &&
+                          Provider.of<Products>(context, listen: false)
+                                  .canRate ==
+                              true) {
                         // Appel à la fonction d'ajout de review
                         bool rated = await Provider.of<Profileprovider>(context,
                                 listen: false)
@@ -750,6 +753,10 @@ class _ProfileMainState extends State<ProfileMain> {
                           );
                           setState(() {});
                         }
+                      } else {
+                        setState(() {
+                          errormsg = "tu ne peux pas rates cet utilisateur";
+                        });
                       }
                     },
                     child: Container(
@@ -789,6 +796,16 @@ class _ProfileMainState extends State<ProfileMain> {
                     ),
                   ),
                   SizedBox(height: 24),
+                  if (errormsg != null)
+                    Text(
+                      "$errormsg",
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 14,
+                        fontFamily: 'Raleway',
+                        fontWeight: FontWeight.w400,
+                      ),
+                    )
                 ],
                 ListView.builder(
                   shrinkWrap:

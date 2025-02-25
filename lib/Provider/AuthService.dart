@@ -318,8 +318,8 @@ class AuthService with ChangeNotifier {
       'full_name': full_name,
       'phone_number': phone_number,
       'address': address,
+      'description' :"",
     };
-
     try {
       // Envoi de la requête POST avec le corps JSON
       final response = await http.post(
