@@ -141,7 +141,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       phoneNumber: "",
                                       firstName: "",
                                       lastName: "",
-                                      fcmToken: await FirebaseMessaging.instance.getToken(),
+                                      fcmToken: "await FirebaseMessaging.instance.getToken()",
                                     );
                                     Navigator.pushReplacement(
                                       context,
@@ -205,7 +205,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           final result = await Provider.of<AuthService>(context,
                                   listen: false)
                               .signUpGoogle(
-                                fcmToken: await FirebaseMessaging.instance.getToken()
+                                fcmToken: "await FirebaseMessaging.instance.getToken()"
                               );
 
                           if (result.statusCode == 200) {
@@ -239,7 +239,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         try {
                           final result = await Provider.of<AuthService>(context,
                                   listen: false)
-                              .signUpFacebook(fcmToken: await FirebaseMessaging.instance.getToken(),
+                              .signUpFacebook(fcmToken: "await FirebaseMessaging.instance.getToken()",
                                 
                               );
 
