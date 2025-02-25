@@ -35,9 +35,9 @@ class Products extends ChangeNotifier {
   late double ratingPercentage3Visited = 0;
   late double ratingPercentage4Visited = 0;
   late double ratingPercentage5Visited = 50;
-    List<dynamic> favoriteProducts = [];
-
-
+  List<dynamic> favoriteProducts = [];
+  List<dynamic> wishProducts = [];
+  bool? canRate;
 
   Future<bool> sellProduct(
       String title,
@@ -166,7 +166,8 @@ class Products extends ChangeNotifier {
       print('Erreur rencontrée : $e');
     }
   }
-   Future<void> getProductsByUserVisited(int storedUserId) async {
+
+  Future<void> getProductsByUserVisited(int storedUserId) async {
     try {
       final url = Uri.parse(
           '${AppConfig.baseUrl}/api/products/getProductsByUser/${storedUserId}/');
@@ -232,10 +233,11 @@ class Products extends ChangeNotifier {
     }
   }
 
-    Future<void> getProductsViewed() async {
+  Future<void> getProductsViewed() async {
     try {
       String? storedUserId = await storage.read(key: 'user_id');
-      final url = Uri.parse('${AppConfig.baseUrl}/api/products/products/viewed/$storedUserId/');
+      final url = Uri.parse(
+          '${AppConfig.baseUrl}/api/products/products/viewed/$storedUserId/');
       final headers = {
         'Content-Type': 'application/json',
       };
@@ -259,192 +261,259 @@ class Products extends ChangeNotifier {
     }
   }
 
-Future<void> createRecentlyViewedProducts({
-  required String productId,
-}) async {
-  final url = Uri.parse('${AppConfig.baseUrl}/api/products/createProductsViewed/');
-  final headers = {
-    'Content-Type': 'application/json',
-  };
-  print(productId);
+  Future<void> createRecentlyViewedProducts({
+    required String productId,
+  }) async {
+    final url =
+        Uri.parse('${AppConfig.baseUrl}/api/products/createProductsViewed/');
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+    print(productId);
 
-  // Attendre la valeur du user_id
-  String? storedUserId = await storage.read(key: 'user_id');
-  print(storedUserId);
-  final response = await http.post(
-    url,
-    headers: headers,
-    body: jsonEncode({
-      "product_id": productId,
-      "user_id": storedUserId, // Maintenant c'est une valeur et non un Future
-    }),
-  );
+    // Attendre la valeur du user_id
+    String? storedUserId = await storage.read(key: 'user_id');
+    print(storedUserId);
+    final response = await http.post(
+      url,
+      headers: headers,
+      body: jsonEncode({
+        "product_id": productId,
+        "user_id": storedUserId, // Maintenant c'est une valeur et non un Future
+      }),
+    );
 
-  // Vérifier la réponse
-  if (response.statusCode == 200) {
-    print("Produit ajouté aux vues récentes !");
-  } else {
-    print("Erreur : ${response.body}");
+    // Vérifier la réponse
+    if (response.statusCode == 200) {
+      print("Produit ajouté aux vues récentes !");
+    } else {
+      print("Erreur : ${response.body}");
+    }
   }
-}
 
-Future<bool> createFavorite({
-  required String productId,
-}) async {
-  final url = Uri.parse('${AppConfig.baseUrl}/api/products/createFavourite/');
-  final headers = {
-    'Content-Type': 'application/json',
-  };
-  print(productId);
-
-  String? storedUserId = await storage.read(key: 'user_id');
-  print(storedUserId);
-  final response = await http.post(
-    url,
-    headers: headers,
-    body: jsonEncode({
-      "product_id": productId,
-      "user_id": storedUserId, // Maintenant c'est une valeur et non un Future
-    }),
-  );
-  if (response.statusCode == 201) {
-    print("Produit ajouté aux favorites avec succees !");
-    return true;
-  } else if(response.statusCode==200){
-    print("produit déja dans favoris");
-    return true;
+  Future<bool> checkOrderedorNot({
+    required int first_id,
+    required int second_id,
+  }) async {
+    final url = Uri.parse(
+        '${AppConfig.baseUrl}/api/products/check_order_status/$first_id/$second_id/');
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+    final response = await http.post(
+      url,
+      headers: headers,
+    );
+    if (response.statusCode == 200) {
+      print("yes");
+      canRate = true;
+      return true;
+    } else {
+      print("Erreur : ${response.body}");
+      canRate = false;
+      return false;
+    }
   }
-   else {
-    print("Erreur : ${response.body}");
-    return false;
-  }
-}
-Future<bool> createComment({
-  required String productId,
-  required String content,
   
-}) async {
-  String? storedUserId = await storage.read(key: 'user_id');
-  final url = Uri.parse('${AppConfig.baseUrl}/api/products/createComnt/$productId/$storedUserId/');
-  final headers = {
-    'Content-Type': 'application/json',
-  };
-  print(productId);
-
-  print(storedUserId);
-  final response = await http.post(
-    url,
-    headers: headers,
-    body: jsonEncode({
-
-      "content": content, // Maintenant c'est une valeur et non un Future
-    }),
-  );
-  if (response.statusCode == 201) {
-    print("comnt ajouté");
-    return true;
-  } 
-   else {
-    print("Erreur : ${response.body}");
-    return false;
-  }
-}
-Future<bool> getRatingByRatedUser({required int userId}) async {
-  try {
-    final url = Uri.parse('${AppConfig.baseUrl}/api/auth/getRatings/$userId/');
+  Future<bool> createFavorite({
+    required String productId,
+  }) async {
+    final url = Uri.parse('${AppConfig.baseUrl}/api/products/createFavourite/');
     final headers = {
       'Content-Type': 'application/json',
     };
-    final response = await http.get(url, headers: headers);
+    print(productId);
 
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      
-      Ratings = data["ratings"];
-      avarageRate = data["average_rating"];
-      countRate = data["count"];
-      print("heeeeeeeyoidzjciopzej ${data["rating_percentages"]}");
-
-      // Extraction des pourcentages de rating avec conversion en double
-      ratingPercentage1 = (data["rating_percentages"]["1"] ?? 0).toDouble();
-      ratingPercentage2 = (data["rating_percentages"]["2"] ?? 0).toDouble();
-      ratingPercentage3 = (data["rating_percentages"]["3"] ?? 0).toDouble();
-      ratingPercentage4 = (data["rating_percentages"]["4"] ?? 0).toDouble();
-      ratingPercentage5 = (data["rating_percentages"]["5"] ?? 0).toDouble();
-
-      print("Ratings: $Ratings");
-      print("Average Rate: $avarageRate");
-      print("Count Rate: $countRate");
-      print("1 Star Percentage: $ratingPercentage1%");
-      print("2 Stars Percentage: $ratingPercentage2%");
-      print("3 Stars Percentage: $ratingPercentage3%");
-      print("4 Stars Percentage: $ratingPercentage4%");
-      print("5 Stars Percentage: $ratingPercentage5%");
-
-      notifyListeners();
+    String? storedUserId = await storage.read(key: 'user_id');
+    print(storedUserId);
+    final response = await http.post(
+      url,
+      headers: headers,
+      body: jsonEncode({
+        "product_id": productId,
+        "user_id": storedUserId, // Maintenant c'est une valeur et non un Future
+      }),
+    );
+    if (response.statusCode == 201) {
+      print("Produit ajouté aux favorites avec succees !");
+      return true;
+    } else if (response.statusCode == 200) {
+      print("produit déja dans favoris");
       return true;
     } else {
-      print('Erreur lors de la récupération des ratings: ${response.statusCode}');
+      print("Erreur : ${response.body}");
       return false;
     }
-  } catch (e) {
-    print('Erreur rencontrée : $e');
-    return false;
   }
-}
-Future<bool> getRatingByRatedUserVisited({required int userId}) async {
-  try {
-    final url = Uri.parse('${AppConfig.baseUrl}/api/auth/getRatings/$userId/');
+
+  Future<bool> createWish({
+    required String productId,
+  }) async {
+    final url = Uri.parse('${AppConfig.baseUrl}/api/products/add_wish/');
     final headers = {
       'Content-Type': 'application/json',
     };
-    final response = await http.get(url, headers: headers);
+    print(productId);
 
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      
-      RatingsVisited = data["ratings"];
-      avarageRateVisited = data["average_rating"];
-      countRateVisited = data["count"];
-      print("heeeeeeeyoidzjciopzej ${data["rating_percentages"]}");
-
-      // Extraction des pourcentages de rating avec conversion en double
-      ratingPercentage1Visited = (data["rating_percentages"]["1"] ?? 0).toDouble();
-      ratingPercentage2Visited = (data["rating_percentages"]["2"] ?? 0).toDouble();
-      ratingPercentage3Visited = (data["rating_percentages"]["3"] ?? 0).toDouble();
-      ratingPercentage4Visited = (data["rating_percentages"]["4"] ?? 0).toDouble();
-      ratingPercentage5Visited = (data["rating_percentages"]["5"] ?? 0).toDouble();
-
-      print("Ratings: $RatingsVisited");
-      print("Average Rate: $avarageRateVisited");
-      print("Count Rate: $countRateVisited");
-      print("1 Star Percentage: $ratingPercentage1Visited%");
-      print("2 Stars Percentage: $ratingPercentage2Visited%");
-      print("3 Stars Percentage: $ratingPercentage3Visited%");
-      print("4 Stars Percentage: $ratingPercentage4Visited%");
-      print("5 Stars Percentage: $ratingPercentage5Visited%");
-
-      notifyListeners();
+    String? storedUserId = await storage.read(key: 'user_id');
+    print(storedUserId);
+    final response = await http.post(
+      url,
+      headers: headers,
+      body: jsonEncode({
+        "product_id": productId,
+        "user_id": storedUserId, // Maintenant c'est une valeur et non un Future
+      }),
+    );
+    if (response.statusCode == 201) {
+      print("Produit ajouté aux favorites avec succees !");
+      return true;
+    } else if (response.statusCode == 200) {
+      print("produit déja dans favoris");
       return true;
     } else {
-      print('Erreur lors de la récupération des ratings: ${response.statusCode}');
+      print("Erreur : ${response.body}");
       return false;
     }
-  } catch (e) {
-    print('Erreur rencontrée : $e');
-    return false;
   }
-}
- Future<void> getFollowers(int userId) async {
+
+  Future<bool> createComment({
+    required String productId,
+    required String content,
+  }) async {
+    String? storedUserId = await storage.read(key: 'user_id');
+    final url = Uri.parse(
+        '${AppConfig.baseUrl}/api/products/createComnt/$productId/$storedUserId/');
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+    print(productId);
+
+    print(storedUserId);
+    final response = await http.post(
+      url,
+      headers: headers,
+      body: jsonEncode({
+        "content": content, // Maintenant c'est une valeur et non un Future
+      }),
+    );
+    if (response.statusCode == 201) {
+      print("comnt ajouté");
+      return true;
+    } else {
+      print("Erreur : ${response.body}");
+      return false;
+    }
+  }
+
+  Future<bool> getRatingByRatedUser({required int userId}) async {
     try {
-      final url = Uri.parse('${AppConfig.baseUrl}/api/auth/get_followers/$userId/');
+      final url =
+          Uri.parse('${AppConfig.baseUrl}/api/auth/getRatings/$userId/');
+      final headers = {
+        'Content-Type': 'application/json',
+      };
+      final response = await http.get(url, headers: headers);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+
+        Ratings = data["ratings"];
+        avarageRate = data["average_rating"];
+        countRate = data["count"];
+        print("heeeeeeeyoidzjciopzej ${data["rating_percentages"]}");
+
+        // Extraction des pourcentages de rating avec conversion en double
+        ratingPercentage1 = (data["rating_percentages"]["1"] ?? 0).toDouble();
+        ratingPercentage2 = (data["rating_percentages"]["2"] ?? 0).toDouble();
+        ratingPercentage3 = (data["rating_percentages"]["3"] ?? 0).toDouble();
+        ratingPercentage4 = (data["rating_percentages"]["4"] ?? 0).toDouble();
+        ratingPercentage5 = (data["rating_percentages"]["5"] ?? 0).toDouble();
+
+        print("Ratings: $Ratings");
+        print("Average Rate: $avarageRate");
+        print("Count Rate: $countRate");
+        print("1 Star Percentage: $ratingPercentage1%");
+        print("2 Stars Percentage: $ratingPercentage2%");
+        print("3 Stars Percentage: $ratingPercentage3%");
+        print("4 Stars Percentage: $ratingPercentage4%");
+        print("5 Stars Percentage: $ratingPercentage5%");
+
+        notifyListeners();
+        return true;
+      } else {
+        print(
+            'Erreur lors de la récupération des ratings: ${response.statusCode}');
+        return false;
+      }
+    } catch (e) {
+      print('Erreur rencontrée : $e');
+      return false;
+    }
+  }
+
+  Future<bool> getRatingByRatedUserVisited({required int userId}) async {
+    try {
+      final url =
+          Uri.parse('${AppConfig.baseUrl}/api/auth/getRatings/$userId/');
+      final headers = {
+        'Content-Type': 'application/json',
+      };
+      final response = await http.get(url, headers: headers);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+
+        RatingsVisited = data["ratings"];
+        avarageRateVisited = data["average_rating"];
+        countRateVisited = data["count"];
+        print("heeeeeeeyoidzjciopzej ${data["rating_percentages"]}");
+
+        // Extraction des pourcentages de rating avec conversion en double
+        ratingPercentage1Visited =
+            (data["rating_percentages"]["1"] ?? 0).toDouble();
+        ratingPercentage2Visited =
+            (data["rating_percentages"]["2"] ?? 0).toDouble();
+        ratingPercentage3Visited =
+            (data["rating_percentages"]["3"] ?? 0).toDouble();
+        ratingPercentage4Visited =
+            (data["rating_percentages"]["4"] ?? 0).toDouble();
+        ratingPercentage5Visited =
+            (data["rating_percentages"]["5"] ?? 0).toDouble();
+
+        print("Ratings: $RatingsVisited");
+        print("Average Rate: $avarageRateVisited");
+        print("Count Rate: $countRateVisited");
+        print("1 Star Percentage: $ratingPercentage1Visited%");
+        print("2 Stars Percentage: $ratingPercentage2Visited%");
+        print("3 Stars Percentage: $ratingPercentage3Visited%");
+        print("4 Stars Percentage: $ratingPercentage4Visited%");
+        print("5 Stars Percentage: $ratingPercentage5Visited%");
+
+        notifyListeners();
+        return true;
+      } else {
+        print(
+            'Erreur lors de la récupération des ratings: ${response.statusCode}');
+        return false;
+      }
+    } catch (e) {
+      print('Erreur rencontrée : $e');
+      return false;
+    }
+  }
+
+  Future<void> getFollowers(int userId) async {
+    try {
+      final url =
+          Uri.parse('${AppConfig.baseUrl}/api/auth/get_followers/$userId/');
       final headers = {
         'Content-Type': 'application/json',
       };
       final response = await http.get(url, headers: headers);
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        if (data['followers'] != null){
+        if (data['followers'] != null) {
           nbfollowers = data["count"];
           followers = data['followers'];
           notifyListeners();
@@ -461,16 +530,18 @@ Future<bool> getRatingByRatedUserVisited({required int userId}) async {
       print('Erreur rencontrée : $e');
     }
   }
+
   Future<void> getFollowersVisited(int userId) async {
     try {
-      final url = Uri.parse('${AppConfig.baseUrl}/api/auth/get_followers/$userId/');
+      final url =
+          Uri.parse('${AppConfig.baseUrl}/api/auth/get_followers/$userId/');
       final headers = {
         'Content-Type': 'application/json',
       };
       final response = await http.get(url, headers: headers);
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        if (data['followers'] != null){
+        if (data['followers'] != null) {
           nbfollowervisited = data["count"];
           followersvisited = data['followers'];
           notifyListeners();
@@ -488,9 +559,10 @@ Future<bool> getRatingByRatedUserVisited({required int userId}) async {
     }
   }
 
- Future<void> getFavourite(int userId) async {
+  Future<void> getFavourite(int userId) async {
     try {
-      final url = Uri.parse('${AppConfig.baseUrl}/api/products/getFavourite/$userId/');
+      final url =
+          Uri.parse('${AppConfig.baseUrl}/api/products/getFavourite/$userId/');
       final headers = {
         'Content-Type': 'application/json',
       };
@@ -498,7 +570,7 @@ Future<bool> getRatingByRatedUserVisited({required int userId}) async {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        
+
         if (data['favorites'] != null) {
           favoriteProducts = data['favorites'];
           notifyListeners();
@@ -507,77 +579,138 @@ Future<bool> getRatingByRatedUserVisited({required int userId}) async {
           print('Aucun produit favori trouvé pour cet utilisateur.');
         }
       } else {
-        print('Erreur lors de la récupération des produits: ${response.statusCode}');
+        print(
+            'Erreur lors de la récupération des produits: ${response.statusCode}');
       }
     } catch (e) {
       print('Erreur rencontrée : $e');
     }
   }
+
+  Future<void> getWish(int userId) async {
+    try {
+      final url =
+          Uri.parse('${AppConfig.baseUrl}/api/products/get_wish/$userId/');
+      final headers = {
+        'Content-Type': 'application/json',
+      };
+      final response = await http.get(url, headers: headers);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+
+        if (data['favorites'] != null) {
+          wishProducts = data['favorites'];
+          notifyListeners();
+          print("Produits favoris récupérés : $favoriteProducts");
+        } else {
+          print('Aucun produit favori trouvé pour cet utilisateur.');
+        }
+      } else {
+        print(
+            'Erreur lors de la récupération des produits: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Erreur rencontrée : $e');
+    }
+  }
+
   Future<void> deleteFavorite(int favoriteId) async {
     try {
-      final url = Uri.parse('${AppConfig.baseUrl}/api/products/deleteFav/$favoriteId/');
+      final url =
+          Uri.parse('${AppConfig.baseUrl}/api/products/deleteFav/$favoriteId/');
       final headers = {
         'Content-Type': 'application/json',
         // 'Authorization': 'Bearer votre_token', // Ajoutez l'en-tête d'autorisation si nécessaire
       };
-      
+
       final response = await http.delete(url, headers: headers);
 
       if (response.statusCode == 204) {
         // Si la suppression a réussi, retirez le produit de la liste locale
-        favoriteProducts.removeWhere((product) => product['id_fav'] == favoriteId);
+        favoriteProducts
+            .removeWhere((product) => product['id_fav'] == favoriteId);
         notifyListeners(); // Notifiez les auditeurs de la mise à jour
         print('Produit favori supprimé avec succès.');
       } else {
-        print('Erreur lors de la suppression du produit : ${response.statusCode}');
+        print(
+            'Erreur lors de la suppression du produit : ${response.statusCode}');
       }
     } catch (e) {
       print('Erreur rencontrée : $e');
     }
   }
-Future<bool> createOrder(int buyerId, List<dynamic> productIds, String status , int price) async {
-  final response = await http.post(
-    Uri.parse("${AppConfig.baseUrl}/api/products/create_order/"),
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: jsonEncode({
-      "buyer_id": buyerId,
-      "product_ids": productIds,  // Liste des IDs de produits
-      "status": status,
-      "price":price  // Statut de la commande, par défaut 'livraison'
-    }),
-  );
 
-  if (response.statusCode == 201) {
-    final data = jsonDecode(response.body);
-    final totalPrice = data["total_price"];
-    notifyListeners();
-    print("Commandes créées avec succès. Prix total: $totalPrice");
-    return true;
-  } else {
-    return false;
+  Future<void> deleteWish(int favoriteId) async {
+    try {
+      final url = Uri.parse(
+          '${AppConfig.baseUrl}/api/products/deleteWish/$favoriteId/');
+      final headers = {
+        'Content-Type': 'application/json',
+        // 'Authorization': 'Bearer votre_token', // Ajoutez l'en-tête d'autorisation si nécessaire
+      };
+
+      final response = await http.delete(url, headers: headers);
+
+      if (response.statusCode == 204) {
+        // Si la suppression a réussi, retirez le produit de la liste locale
+        wishProducts.removeWhere((product) => product['id_wish'] == favoriteId);
+        notifyListeners(); // Notifiez les auditeurs de la mise à jour
+        print('Produit favori supprimé avec succès.');
+      } else {
+        print(
+            'Erreur lors de la suppression du produit : ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Erreur rencontrée : $e');
+    }
   }
-}
-Future<bool> updateProductSelled(String productId, bool selled) async {
-  final String url = '${AppConfig.baseUrl}/api/products/update_product_selled/$productId/'; // Remplace par l'URL de ton API
 
-  final response = await http.patch(
-    Uri.parse(url),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: jsonEncode({'selled': selled}),
-  );
+  Future<bool> createOrder(
+      int buyerId, List<dynamic> productIds, String status, int price) async {
+    final response = await http.post(
+      Uri.parse("${AppConfig.baseUrl}/api/products/create_order/"),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode({
+        "buyer_id": buyerId,
+        "product_ids": productIds, // Liste des IDs de produits
+        "status": status,
+        "price": price // Statut de la commande, par défaut 'livraison'
+      }),
+    );
 
-  if (response.statusCode == 200) {
-    final data = jsonDecode(response.body);
-    print('Champ "selled" mis à jour avec succès: ${data['selled']}');
-    return true;
-  } else {
-    final errorData = jsonDecode(response.body);
-    return false;
+    if (response.statusCode == 201) {
+      final data = jsonDecode(response.body);
+      final totalPrice = data["total_price"];
+      notifyListeners();
+      print("Commandes créées avec succès. Prix total: $totalPrice");
+      return true;
+    } else {
+      return false;
+    }
   }
-}
 
+  Future<bool> updateProductSelled(String productId, bool selled) async {
+    final String url =
+        '${AppConfig.baseUrl}/api/products/update_product_selled/$productId/'; // Remplace par l'URL de ton API
+
+    final response = await http.patch(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'selled': selled}),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      print('Champ "selled" mis à jour avec succès: ${data['selled']}');
+      return true;
+    } else {
+      final errorData = jsonDecode(response.body);
+      return false;
+    }
+  }
 }

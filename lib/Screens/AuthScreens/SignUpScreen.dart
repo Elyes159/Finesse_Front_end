@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/CompleteInfo.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/VerificationMail.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/SignIn.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
@@ -140,6 +141,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       phoneNumber: "",
                                       firstName: "",
                                       lastName: "",
+                                      fcmToken: await FirebaseMessaging.instance.getToken(),
                                     );
                                     Navigator.pushReplacement(
                                       context,
@@ -202,7 +204,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         try {
                           final result = await Provider.of<AuthService>(context,
                                   listen: false)
-                              .signUpGoogle();
+                              .signUpGoogle(
+                                fcmToken: await FirebaseMessaging.instance.getToken()
+                              );
 
                           if (result.statusCode == 200) {
                             Navigator.pushReplacement(
@@ -235,7 +239,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         try {
                           final result = await Provider.of<AuthService>(context,
                                   listen: false)
-                              .signUpFacebook();
+                              .signUpFacebook(fcmToken: await FirebaseMessaging.instance.getToken(),
+                                
+                              );
 
                           if (result.statusCode == 200) {
                             Navigator.pushReplacement(

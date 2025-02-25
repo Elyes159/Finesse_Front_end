@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:finesse_frontend/ApiServices/backend_url.dart';
@@ -26,6 +27,35 @@ class AuthService with ChangeNotifier {
   int get userId => _userId;
   String get googleAvatar => _googleAvatar;
   String get fullnameGoogle => _fullnameGoogle;
+  List<dynamic>? orderdata;
+  List<dynamic>? orderselldata;
+
+  Future<bool> registerToken({
+    required int user_id,
+    required String fcmtoken,
+  })async{
+    final url = Uri.parse("${AppConfig.baseUrl}/api/auth/register_token/$user_id/");
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'token': fcmtoken,
+        
+      }),
+    );
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      print(data);
+      
+
+      notifyListeners();
+      print('token creer');
+      return true;
+    } else {
+      return false;
+
+    }
+  }
 
   Future<void> signUp({
     required String username,
@@ -34,6 +64,7 @@ class AuthService with ChangeNotifier {
     required String phoneNumber,
     required String firstName,
     required String lastName,
+     String? fcmToken,
   }) async {
     final url = Uri.parse("${AppConfig.baseUrl}/api/auth/signup/");
     final response = await http.post(
@@ -54,6 +85,7 @@ class AuthService with ChangeNotifier {
       final data = json.decode(response.body);
       print(data);
       _userId = data["id"];
+      registerToken(user_id:_userId , fcmtoken: fcmToken! );
       notifyListeners();
       print('utilisateur creer');
     } else {
@@ -462,7 +494,7 @@ class AuthService with ChangeNotifier {
     }
   }
 
-  Future<http.Response> signUpGoogle() async {
+  Future<http.Response> signUpGoogle({required String? fcmToken}) async {
     try {
       GoogleSignInAccount? account = await _googleSignIn.signIn();
       if (account != null) {
@@ -493,7 +525,7 @@ class AuthService with ChangeNotifier {
             body: jsonEncode(bodyData),
           );
           _userId = jsonDecode(response.body)["user"]["id"];
-
+          registerToken(user_id: _userId, fcmtoken: fcmToken!);
           return response;
         } else {
           throw Exception("Google sign-in failed: ID token is null.");
@@ -505,86 +537,84 @@ class AuthService with ChangeNotifier {
       throw Exception("Error during Google sign-in: $error");
     }
   }
-Future<http.Response> signUpFacebook() async {
-  print("🔵 Début du processus de connexion Facebook");
 
-  try {
-    // Démarrer la connexion Facebook avec le suivi limité
-    final LoginResult result = await FacebookAuth.instance.login(
-      loginTracking: LoginTracking.enabled,
-      
-      loginBehavior: LoginBehavior.dialogOnly,
-      permissions: ['public_profile', 'email'],
-    );
+  Future<http.Response> signUpFacebook({required String? fcmToken}) async {
+    print("🔵 Début du processus de connexion Facebook");
 
-    if (result.status == LoginStatus.success) {
-      final AccessToken? accessToken = await FacebookAuth.instance.accessToken;
-
-      if (accessToken is! LimitedToken) {
-        print("❌ Le token n'est pas en mode limité.");
-        return http.Response('Le token n\'est pas un LimitedToken', 400);
-      }
-
-      print("✅ Facebook Access Token: ${accessToken.tokenString}");
-
-      // Récupérer les infos de l'utilisateur
-      final userData = await FacebookAuth.instance.getUserData(
-        fields: "email,first_name,last_name,picture",
+    try {
+      // Démarrer la connexion Facebook avec le suivi limité
+      final LoginResult result = await FacebookAuth.instance.login(
+        loginTracking: LoginTracking.enabled,
+        loginBehavior: LoginBehavior.dialogOnly,
+        permissions: ['public_profile', 'email'],
       );
 
-      final String? userEmail = userData['email'];
-      final String userFirstName = userData['first_name'] ?? "Inconnu";
-      final String userLastName = userData['last_name'] ?? "Inconnu";
-      final String? userAvatar = userData['picture']?['data']?['url'];
+      if (result.status == LoginStatus.success) {
+        final AccessToken? accessToken =
+            await FacebookAuth.instance.accessToken;
 
-      if (userEmail == null || userAvatar == null) {
-        print("❌ Erreur : Données utilisateur incomplètes.");
-        return http.Response('Données utilisateur manquantes', 400);
-      }
+        if (accessToken is! LimitedToken) {
+          print("❌ Le token n'est pas en mode limité.");
+          return http.Response('Le token n\'est pas un LimitedToken', 400);
+        }
 
-      // Construire le payload JSON
-      final Map<String, dynamic> bodyData = {
-        'id_token': accessToken.tokenString,
-        'email': userEmail,
-        'first_name': userFirstName,
-        'last_name': userLastName,
-        'avatar': userAvatar,
-      };
+        print("✅ Facebook Access Token: ${accessToken.tokenString}");
 
-      print("📡 Envoi des données au serveur: $bodyData");
+        // Récupérer les infos de l'utilisateur
+        final userData = await FacebookAuth.instance.getUserData(
+          fields: "email,first_name,last_name,picture",
+        );
 
-      // Envoyer la requête HTTP
-      final response = await http.post(
-        Uri.parse('${AppConfig.baseUrl}/api/auth/facebookSign/'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(bodyData),
-      );
+        final String? userEmail = userData['email'];
+        final String userFirstName = userData['first_name'] ?? "Inconnu";
+        final String userLastName = userData['last_name'] ?? "Inconnu";
+        final String? userAvatar = userData['picture']?['data']?['url'];
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        _userId = data["user"]["id"];
-        _googleAvatar = data["user"]["avatar"];
+        if (userEmail == null || userAvatar == null) {
+          print("❌ Erreur : Données utilisateur incomplètes.");
+          return http.Response('Données utilisateur manquantes', 400);
+        }
 
-        print("✅ Authentification réussie, ID utilisateur: $_userId");
-        notifyListeners();
+        // Construire le payload JSON
+        final Map<String, dynamic> bodyData = {
+          'id_token': accessToken.tokenString,
+          'email': userEmail,
+          'first_name': userFirstName,
+          'last_name': userLastName,
+          'avatar': userAvatar,
+        };
+
+        print("📡 Envoi des données au serveur: $bodyData");
+
+        // Envoyer la requête HTTP
+        final response = await http.post(
+          Uri.parse('${AppConfig.baseUrl}/api/auth/facebookSign/'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode(bodyData),
+        );
+
+        if (response.statusCode == 200) {
+          final data = json.decode(response.body);
+          _userId = data["user"]["id"];
+          _googleAvatar = data["user"]["avatar"];
+          registerToken(user_id: _userId, fcmtoken: fcmToken!);
+          print("✅ Authentification réussie, ID utilisateur: $_userId");
+          notifyListeners();
+        } else {
+          print("❌ Erreur serveur: ${response.statusCode}");
+          print("📜 Réponse serveur: ${response.body}");
+        }
+
+        return response;
       } else {
-        print("❌ Erreur serveur: ${response.statusCode}");
-        print("📜 Réponse serveur: ${response.body}");
+        print("❌ Échec de connexion Facebook : ${result.status}");
+        return http.Response('Erreur de connexion Facebook', 400);
       }
-
-      return response;
-    } else {
-      print("❌ Échec de connexion Facebook : ${result.status}");
-      return http.Response('Erreur de connexion Facebook', 400);
+    } catch (error) {
+      print("⚠️ Exception lors de la connexion Facebook: $error");
+      return http.Response('Erreur de connexion Facebook: $error', 500);
     }
-  } catch (error) {
-    print("⚠️ Exception lors de la connexion Facebook: $error");
-    return http.Response('Erreur de connexion Facebook: $error', 500);
   }
-}
-
-
-
 
   Future<bool> googleLogin() async {
     try {
@@ -675,76 +705,86 @@ Future<http.Response> signUpFacebook() async {
     }
   }
 
-Future<bool> facebookLogin() async {
-  try {
-    final LoginResult result = await FacebookAuth.instance.login();
+  Future<bool> facebookLogin() async {
+    try {
+      final LoginResult result = await FacebookAuth.instance.login();
 
-    if (result.status == LoginStatus.success) {
-      final AccessToken accessToken = result.accessToken!;
+      if (result.status == LoginStatus.success) {
+        final AccessToken accessToken = result.accessToken!;
 
-      // Récupérer les données de l'utilisateur de Facebook
-      final userData = await FacebookAuth.instance.getUserData(
-        fields: "email,first_name,last_name,picture",
-      );
+        // Récupérer les données de l'utilisateur de Facebook
+        final userData = await FacebookAuth.instance.getUserData(
+          fields: "email,first_name,last_name,picture",
+        );
 
-      final String? idToken = accessToken.tokenString;
+        final String? idToken = accessToken.tokenString;
 
-      final url = Uri.parse("${AppConfig.baseUrl}/api/auth/facebooklogin/");
-      final response = await http.post(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({
-          'id_token': idToken,
-          'email': userData['email'],
-          'first_name': userData['first_name'],
-          'last_name': userData['last_name'],
-          'avatar': userData['picture']['data']['url'],
-        }),
-      );
+        final url = Uri.parse("${AppConfig.baseUrl}/api/auth/facebooklogin/");
+        final response = await http.post(
+          url,
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode({
+            'id_token': idToken,
+            'email': userData['email'],
+            'first_name': userData['first_name'],
+            'last_name': userData['last_name'],
+            'avatar': userData['picture']['data']['url'],
+          }),
+        );
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
+        if (response.statusCode == 200) {
+          final data = json.decode(response.body);
 
-        if (response.body.contains("Email does not exist in the database")) {
-          throw Exception('Email does not exist in the database');
+          if (response.body.contains("Email does not exist in the database")) {
+            throw Exception('Email does not exist in the database');
+          }
+
+          _accessToken = data['access_token'];
+          _isAuthenticated = true;
+          _currentUser = Users.fromJson(data);
+          await storage.write(key: 'access_token', value: _accessToken);
+          await storage.write(
+              key: 'user_id', value: _currentUser!.id.toString());
+          await storage.write(key: 'user_email', value: _currentUser!.email);
+          await storage.write(
+              key: 'user_phone_number', value: _currentUser!.phoneNumber);
+          await storage.write(
+              key: 'user_username', value: _currentUser!.username);
+          await storage.write(
+              key: 'user_avatar', value: _currentUser!.avatar ?? '');
+          await storage.write(
+              key: 'user_address', value: _currentUser!.address);
+          await storage.write(
+              key: 'user_is_email_verified',
+              value: _currentUser!.isEmailVerified.toString());
+          await storage.write(
+              key: 'user_verification_code',
+              value: _currentUser!.verificationCode);
+          await storage.write(
+              key: 'user_full_name', value: _currentUser!.fullName);
+          await storage.write(key: 'parametre', value: "facebook");
+          notifyListeners();
+          return true;
+        } else {
+          print('Erreur lors de la connexion avec Facebook: ${response.body}');
+          return false;
         }
-
-        _accessToken = data['access_token'];
-        _isAuthenticated = true;
-
-        _currentUser = Users.fromJson(data);
-        await storage.write(key: 'access_token', value: _accessToken);
-        await storage.write(key: 'user_id', value: _currentUser!.id.toString());
-        await storage.write(key: 'user_email', value: _currentUser!.email);
-        await storage.write(key: 'user_phone_number', value: _currentUser!.phoneNumber);
-        await storage.write(key: 'user_username', value: _currentUser!.username);
-        await storage.write(key: 'user_avatar', value: _currentUser!.avatar ?? '');
-        await storage.write(key: 'user_address', value: _currentUser!.address);
-        await storage.write(key: 'user_is_email_verified', value: _currentUser!.isEmailVerified.toString());
-        await storage.write(key: 'user_verification_code', value: _currentUser!.verificationCode);
-        await storage.write(key: 'user_full_name', value: _currentUser!.fullName);
-        await storage.write(key: 'parametre', value: "facebook");
-        notifyListeners();
-        return true;
       } else {
-        print('Erreur lors de la connexion avec Facebook: ${response.body}');
+        print('L\'utilisateur a annulé la connexion Facebook.');
         return false;
       }
-    } else {
-      print('L\'utilisateur a annulé la connexion Facebook.');
-      return false;
-    }
-  } catch (e) {
-    if (e is Exception && e.toString() == 'Email does not exist in the database') {
-      print('L\'email n\'existe pas dans la base de données. Vous pouvez vous inscrire.');
-      return false;
-    } else {
-      print('Erreur lors de la connexion avec Facebook: $e');
-      return false;
+    } catch (e) {
+      if (e is Exception &&
+          e.toString() == 'Email does not exist in the database') {
+        print(
+            'L\'email n\'existe pas dans la base de données. Vous pouvez vous inscrire.');
+        return false;
+      } else {
+        print('Erreur lors de la connexion avec Facebook: $e');
+        return false;
+      }
     }
   }
-}
-
 
   Future<void> loadUserGoogleData() async {
     String? storedToken = await storage.read(key: 'access_token');
@@ -825,4 +865,119 @@ Future<bool> facebookLogin() async {
 
     notifyListeners();
   }
+
+Future<int> updateProfile(
+    int userId,
+    String fullName,
+    String username,
+    String phoneNumber,
+    String address,
+    File? avatar) async {
+  final url = '${AppConfig.baseUrl}/api/auth/update_user_profile/$userId/';
+
+  var request = http.MultipartRequest('POST', Uri.parse(url));
+
+  request.fields['full_name'] = fullName;
+  request.fields['username'] = username;
+  request.fields['phone_number'] = phoneNumber;
+  request.fields['address'] = address;
+
+  if (avatar != null) {
+    request.files.add(await http.MultipartFile.fromPath('avatar', avatar.path));
+  }
+
+  try {
+    var response = await request.send();
+
+    final responseData = await response.stream.bytesToString();
+    final responseJson = json.decode(responseData);
+
+    if (response.statusCode == 200) {
+      // La mise à jour a réussi
+      print('Profile updated successfully');
+
+      // Mettez à jour _currentUser en utilisant la méthode copyWith
+      _currentUser = _currentUser!.copyWith(
+        fullName: responseJson['data']['full_name'],
+        username: responseJson['data']['username'],
+        phoneNumber: responseJson['data']['phone_number'],
+        address: responseJson['data']['address'],
+        avatar: responseJson['data']['avatar'], // Assurez-vous que cette clé est présente dans la réponse
+      );
+      await storage.write(key: 'user_full_name', value: responseJson['data']['full_name']);
+      await storage.write(key: 'user_username', value: responseJson['data']['username']);
+      await storage.write(key: 'user_phone_number', value: responseJson['data']['phone_number']);
+      await storage.write(key: 'user_address', value: responseJson['data']['address']);
+      await storage.write(key: 'user_avatar', value: responseJson['data']['avatar']);
+
+      return response.statusCode; // Retourne le code de statut 200
+    } else {
+      print('Failed to update profile: ${response.reasonPhrase}');
+      return response.statusCode; // Retourne le code d'erreur
+    }
+  } catch (e) {
+    print('Error: $e');
+    return 500; // Retourne 500 en cas d'erreur
+  }
+}
+Future<bool> fetchOrders(int buyerId) async {
+  final url = '${AppConfig.baseUrl}/api/products/get_orders_with_products_and_images/$buyerId'; // Remplacez par votre URL
+
+  try {
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+       orderdata = json.decode(response.body)['orders'];
+      notifyListeners();
+      return true; // Succès
+    } else {
+      return false; // Échec de la récupération des commandes
+    }
+  } catch (error) {
+    return false; // Erreur lors de la récupération des commandes
+  }
+}
+Future<bool> fetchSellingOrders(int buyerId) async {
+  final url = '${AppConfig.baseUrl}/api/products/get_orders_by_owner/$buyerId'; // Remplacez par votre URL
+
+  try {
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+       orderselldata = json.decode(response.body)['orders'];
+      notifyListeners();
+      return true; // Succès
+    } else {
+      return false; // Échec de la récupération des commandes
+    }
+  } catch (error) {
+    return false; // Erreur lors de la récupération des commandes
+  }
+}
+
+
+ Future<bool> deleteUser(int userId) async {
+    final url = '${AppConfig.baseUrl}/api/auth/delete_user/$userId'; // Assurez-vous que cette URL correspond à votre API
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+      if (response.statusCode == 200) {
+        print('User deleted successfully');
+        return true;
+      } else {
+        // Gestion des erreurs
+        final errorResponse = json.decode(response.body);
+        return false;
+      }
+    } catch (error) {
+      print('Error: $error');
+      return false; // Vous pouvez gérer l'erreur ici ou la relancer
+    }
+  }
+
 }

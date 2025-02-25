@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -20,10 +22,46 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.996086520169-kk9449feupn8qk31k4mtu3kfq19l75mp</string>
+				<string>fb1107580743939514</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>FacebookAppID</key>
+	<string>1107580743939514</string>
+	<key>FacebookClientToken</key>
+	<string>6823c783ca4657d9ad0a7dcbdb37feeb</string>
+	<key>FacebookDisplayName</key>
+	<string>Finesse</string>
+	<key>GIDClientID</key>
+	<string>996086520169-kk9449feupn8qk31k4mtu3kfq19l75mp.apps.googleusercontent.com</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fbapi</string>
+		<string>fb-messenger-share-api</string>
+		<string>fbauth2</string>
+		<string>fbshareextension</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>This identifier will be used to deliver personalized ads to you.</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -41,46 +79,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>CADisableMinimumFrameDurationOnPhone</key>
-	<true/>
-	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
-	<key>GIDClientID</key>
-	<string>996086520169-kk9449feupn8qk31k4mtu3kfq19l75mp.apps.googleusercontent.com</string>
-
-	<!-- ✅ Fusion des CFBundleURLTypes -->
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>com.googleusercontent.apps.996086520169-kk9449feupn8qk31k4mtu3kfq19l75mp</string>
-				<string>fb1107580743939514</string> <!-- ✅ Suppression du "D" en trop -->
-			</array>
-		</dict>
-	</array>
-
-	<!-- ✅ Ajout de FacebookAppID correctement formaté -->
-	<key>FacebookAppID</key>
-	<string>1107580743939514</string>
-
-	<key>FacebookClientToken</key>
-	<string>6823c783ca4657d9ad0a7dcbdb37feeb</string>
-
-	<key>FacebookDisplayName</key>
-	<string>Finesse</string>
-
-	<!-- ✅ Permissions Facebook requises -->
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>fbapi</string>
-		<string>fb-messenger-share-api</string>
-		<string>fbauth2</string>
-		<string>fbshareextension</string>
-	</array>
-	<key>NSUserTrackingUsageDescription</key>
-<string>This identifier will be used to deliver personalized ads to you.</string>
 </dict>
 </plist>

@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:finesse_frontend/ApiServices/backend_url.dart';
 import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Provider/products.dart';
 import 'package:finesse_frontend/Screens/HomeScreens/livraison.dart';
+import 'package:finesse_frontend/Screens/HomeScreens/paymentpage.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
 import 'package:finesse_frontend/Widgets/CustomTextField/customfieldbuton.dart';
 import 'package:finesse_frontend/Widgets/Navigation/Navigation.dart';
@@ -11,7 +13,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
-import 'package:url_launcher/url_launcher.dart'; // Pour ouvrir le lien de paiement
+import 'package:url_launcher/url_launcher.dart';
+import 'package:uni_links/uni_links.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 
 class CheckoutPage extends StatefulWidget {
   final List<dynamic> productIds;
@@ -32,36 +36,59 @@ class CheckoutPage extends StatefulWidget {
 class _CheckoutPageState extends State<CheckoutPage> {
   final TextEditingController _promoCodeController = TextEditingController();
   String _promoCode = '';
-  String _selectedPaymentMethod = 'Cash on Delivery'; // Default selection
-  Future<bool> initiateFlouciPayment(double amount) async {
-    // Multiplier le montant par 1000 pour le convertir en millimes
+  String _selectedPaymentMethod = 'Cash on Delivery';
+  bool verified = false;
+  late Map data = {};
+
+  Future<bool> initiateFlouciPayment(
+      BuildContext context, double amount) async {
     int amountInMillimes = (amount * 1000).toInt();
     print("Envoi du montant en millimes: $amountInMillimes");
 
     final response = await http.post(
       Uri.parse("${AppConfig.baseUrl}/api/products/create-payment/"),
       headers: {
-        "Authorization":
-            "Bearer f6a54269-3908-4457-86ff-692dc4d67167", // Jeton d'authentification
+        "Authorization": "Bearer f6a54269-3908-4457-86ff-692dc4d67167",
         "Content-Type": "application/json",
       },
-      body: jsonEncode(
-          {"amount": amountInMillimes}), // Envoi du montant en millimes
+      body: jsonEncode({"amount": amountInMillimes}),
     );
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      final paymentUrl = data["result"]["link"];
+      final paymentUrl = data["link"];
 
-      if (await canLaunchUrl(Uri.parse(paymentUrl))) {
-        await launchUrl(Uri.parse(paymentUrl));
-        return true;
-      } else {
-        return false;
-      }
+      // Remplace ces URLs par tes propres liens
+      final successUrl = "https://elyes158.github.io/success_finesse/";
+      final failUrl = "https://elyes158.github.io/fail_finesse/";
+
+      bool? paymentStatus = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PaymentWebView(
+            paymentUrl: paymentUrl,
+            successUrl: successUrl,
+            failUrl: failUrl,
+          ),
+        ),
+      );
+      print("payment status : $paymentStatus");
+      return paymentStatus ?? false;
     } else {
+      print("Erreur lors de la création du paiement.");
       return false;
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Écouter les liens entrants
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -387,7 +414,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
               label: "Proceed",
               onTap: () async {
                 if (_selectedPaymentMethod == "Payment with Card") {
-                  bool payed = await initiateFlouciPayment(widget.total);
+                  bool payed =
+                      await initiateFlouciPayment(context, widget.total);
                   if (payed) {
                     bool ordered =
                         await Provider.of<Products>(context, listen: false)
@@ -404,8 +432,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
                               Provider.of<AuthService>(context, listen: false)
                                   .currentUser!
                                   .id);
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Livraison()));
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => Livraison()),
+                        (Route<dynamic> route) =>
+                            false, // Supprime toutes les routes précédentes
+                      );
                     }
                   }
                 } else {

@@ -37,11 +37,14 @@ class Cart extends StatelessWidget {
           double total = subtotal + deliveryFee;
 
           return SingleChildScrollView(
+            
             child: favorites.isEmpty
                 ? const Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
+                        SizedBox(height: 300,),
                         Text(
                           'Empty Cart',
                           style: TextStyle(

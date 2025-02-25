@@ -1,14 +1,14 @@
 class Users {
   final int id;
   final String username;
-  late final String email;
+  final String email;
   final String phoneNumber;
-  late final String? avatar;
+  final String? avatar;
   final String fullName;
   final String address;
   final bool? isEmailVerified;
   final String? verificationCode;
-  late final bool hasStory;
+  final bool hasStory;
 
   Users({
     required this.id,
@@ -18,8 +18,8 @@ class Users {
     this.avatar,
     required this.fullName,
     required this.address,
-     this.isEmailVerified,
-     this.verificationCode,
+    this.isEmailVerified,
+    this.verificationCode,
     required this.hasStory,
   });
 
@@ -37,6 +37,25 @@ class Users {
       hasStory: json['user_profile']['hasStory'],
     );
   }
+
+  Users copyWith({
+    String? fullName,
+    String? phoneNumber,
+    String? address,
+    String? avatar,
+    String? username
+  }) {
+    return Users(
+      id: this.id,
+      username: this.username,
+      email: this.email,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      avatar: avatar ?? this.avatar,
+      fullName: fullName ?? this.fullName,
+      address: address ?? this.address,
+      isEmailVerified: this.isEmailVerified,
+      verificationCode: this.verificationCode,
+      hasStory: this.hasStory,
+    );
+  }
 }
-
-

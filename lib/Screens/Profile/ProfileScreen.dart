@@ -59,7 +59,9 @@ class _ProfileMainState extends State<ProfileMain> {
                     radius: 50.0,
                     backgroundImage: (user.avatar != "" && user.avatar != null)
                         ? NetworkImage(parametre == "normal"
-                            ? "${AppConfig.baseUrl}${user.avatar}"
+                            ? widget.id == null
+                                ? "${AppConfig.baseUrl}${user.avatar}"
+                                : "${user.avatar}"
                             : user.avatar!)
                         : AssetImage('assets/images/user.png') as ImageProvider,
                     backgroundColor: Colors.transparent,
@@ -347,8 +349,12 @@ class _ProfileMainState extends State<ProfileMain> {
                                                 product["selled"] == true
                                                     ? false
                                                     : true);
-                                        Provider.of<Products>(context,listen:false).getProducts();
-                                         Provider.of<Products>(context,listen:false).getProductsViewed();
+                                        Provider.of<Products>(context,
+                                                listen: false)
+                                            .getProducts();
+                                        Provider.of<Products>(context,
+                                                listen: false)
+                                            .getProductsViewed();
                                         product["selled"] = !product["selled"];
                                       },
                                     ),
@@ -413,26 +419,152 @@ class _ProfileMainState extends State<ProfileMain> {
       builder: (context, ratingsProvider, child) {
         if ((widget.id == null && ratingsProvider.Ratings.isEmpty) ||
             (widget.id != null && ratingsProvider.RatingsVisited.isEmpty)) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SvgPicture.asset("assets/images/pana.svg"),
-                SizedBox(height: 16),
-                Text(
-                  'No reviews yet',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Color(0xFF111928),
-                    fontSize: 18,
-                    fontFamily: 'Raleway',
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: -0.18,
+          return widget.id != null && Provider.of<Products>(context,listen: false).canRate == true
+          ? Column(
+                  crossAxisAlignment: CrossAxisAlignment
+                      .start, // Alignement horizontal à gauche
+                  children: [
+                    Row(
+                      children: List.generate(5, (index) {
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              selectedRating = index +
+                                  1; // Mise à jour de la note sélectionnée
+                            });
+                          },
+                          child: Icon(
+                            Icons.star,
+                            color: index < selectedRating
+                                ? Color(
+                                    0xFFE4A709) // Couleur pour les étoiles sélectionnées
+                                : Color(
+                                    0xFFDDDDDD), // Couleur pour les étoiles non sélectionnées
+                            size: 30,
+                          ),
+                        );
+                      }),
+                    ),
+                    SizedBox(height: 8),
+                    TextField(
+                      controller: reviewController,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontFamily: 'Raleway',
+                        fontWeight: FontWeight.w400,
+                        height: 1.71,
+                        letterSpacing: 0.50,
+                      ),
+                      maxLines: 3,
+                      decoration: InputDecoration(
+                        labelStyle: TextStyle(
+                          color: Color(0xFF979797),
+                          fontSize: 14,
+                          fontFamily: 'Raleway',
+                          fontWeight: FontWeight.w400,
+                          height: 1.71,
+                          letterSpacing: 0.50,
+                        ),
+                        hintText: "Write your review...",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        hintStyle: TextStyle(
+                          color: Color(0xFF979797),
+                          fontSize: 14,
+                          fontFamily: 'Raleway',
+                          fontWeight: FontWeight.w400,
+                          height: 1.71,
+                          letterSpacing: 0.50,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 12),
+                    InkWell(
+                      onTap: () async {
+                        if (selectedRating > 0 &&
+                            reviewController.text.isNotEmpty) {
+                          // Appel à la fonction d'ajout de review
+                          bool rated = await Provider.of<Profileprovider>(
+                                  context,
+                                  listen: false)
+                              .addReview(
+                            Provider.of<AuthService>(context, listen: false)
+                                .currentUser!
+                                .id,
+                            widget.id!,
+                            selectedRating,
+                            reviewController.text,
+                          );
+                          if (rated) {
+                            Provider.of<Products>(context, listen: false)
+                                .getRatingByRatedUserVisited(
+                              userId: widget.id!,
+                            );
+                            setState(() {});
+                          }
+                        }
+                      },
+                      child: Container(
+                        width: 160,
+                        height: 36,
+                        clipBehavior: Clip.antiAlias,
+                        decoration: ShapeDecoration(
+                          color: Color(0xFFFB98B7),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: Center(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.star,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Submit review',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontFamily: 'Raleway',
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              : Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset("assets/images/pana.svg"),
+                      SizedBox(height: 16),
+                      Text(
+                        'No reviews yet',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Color(0xFF111928),
+                          fontSize: 18,
+                          fontFamily: 'Raleway',
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: -0.18,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-          );
+                );
+               
         } else {
           // Afficher les évaluations
           return SingleChildScrollView(
@@ -778,19 +910,6 @@ class _ProfileMainState extends State<ProfileMain> {
         children: [
           SizedBox(
             height: 16,
-          ),
-          Text(
-            'Description',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 14,
-              fontFamily: 'Raleway',
-              fontWeight: FontWeight.w500,
-              letterSpacing: -0.14,
-            ),
-          ),
-          SizedBox(
-            height: 24,
           ),
           Text(
             'Contacts',

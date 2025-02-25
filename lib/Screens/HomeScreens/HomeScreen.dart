@@ -5,6 +5,7 @@ import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Provider/Stories.dart';
 import 'package:finesse_frontend/Provider/products.dart';
 import 'package:finesse_frontend/Screens/HomeScreens/cart.dart';
+import 'package:finesse_frontend/Screens/HomeScreens/wish.dart';
 import 'package:finesse_frontend/Screens/SellProduct/itemDetails.dart';
 import 'package:finesse_frontend/Widgets/cards/productCard.dart';
 import 'package:finesse_frontend/Widgets/categorieChip/categoryChip.dart';
@@ -45,6 +46,8 @@ class _HomeScreenState extends State<HomeScreen> {
     Provider.of<Products>(context, listen: false).getFavourite(
         Provider.of<AuthService>(context, listen: false).currentUser!.id);
     Provider.of<Products>(context, listen: false).getFollowers(
+        Provider.of<AuthService>(context, listen: false).currentUser!.id);
+    Provider.of<Products>(context, listen: false).getWish(
         Provider.of<AuthService>(context, listen: false).currentUser!.id);
   }
 
@@ -102,7 +105,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   Row(
                     children: [
                       InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => WishList()));
+                        },
                         child: SvgPicture.asset(
                           "assets/Icons/heartt.svg",
                           height: 18,
@@ -257,6 +265,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     CategoryChip(
+                      iconPath: "assets/Icons/art.svg",
                       text: "Art and creation",
                       isSelected: selectedCategory == "AC",
                       onTap: () {
@@ -266,6 +275,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     CategoryChip(
+                      iconPath: "assets/Icons/deco.svg",
                       text: "Decoration",
                       isSelected: selectedCategory == "D",
                       onTap: () {
@@ -275,6 +285,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     CategoryChip(
+                      iconPath: "assets/Icons/vet.svg",
                       text: "Vetements",
                       isSelected: selectedCategory == "Vetements",
                       onTap: () {
@@ -284,6 +295,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     CategoryChip(
+                      iconPath: "assets/Icons/jeu.svg",
                       text: "Jouets",
                       isSelected: selectedCategory == "Jouets",
                       onTap: () {
@@ -293,6 +305,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     CategoryChip(
+                      iconPath: "assets/Icons/jew.svg",
                       text: "Bijoux",
                       isSelected: selectedCategory == "Bijoux",
                       onTap: () {
@@ -302,6 +315,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     CategoryChip(
+                      iconPath: "assets/Icons/ch.svg",
                       text: "Chaussures",
                       isSelected: selectedCategory == "Chaussures",
                       onTap: () {
@@ -311,6 +325,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     CategoryChip(
+                      iconPath: "assets/Icons/acc.svg",
                       text: "Accessoires",
                       isSelected: selectedCategory == "Accessoires",
                       onTap: () {
@@ -320,6 +335,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     CategoryChip(
+                      iconPath: "assets/Icons/sac.svg",
                       text: "Sacs",
                       isSelected: selectedCategory == "Sacs",
                       onTap: () {
@@ -329,6 +345,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     CategoryChip(
+                      iconPath: "assets/Icons/pb.svg",
                       text: "Produits de beauté",
                       isSelected: selectedCategory == "Produits de beauté",
                       onTap: () {
@@ -365,6 +382,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       'pointure': product['pointure'],
                       'brand': product['brand'],
                       'selled': product["selled"],
+                       'type_pdp' :product["type"],
                       'owner_id': product["owner"]["id"],
                       'is_favorite': product['is_favorite'],
                       'owner_profile_pic':
@@ -405,6 +423,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       'selled': product["selled"],
                       'brand': product['brand'],
                       'owner_id': product["owner"]["id"],
+                      'type_pdp' :product["type"],
                       'owner_profile_pic':
                           product["owner"]["profile_pic"] ?? "",
                       'owner_username': product["owner"]["username"] ?? "",
@@ -422,14 +441,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                 ];
-
                 final filteredProducts = selectedCategory == "All"
                     ? allProducts
                     : allProducts
                         .where((product) =>
                             product['category'] == selectedCategory)
                         .toList();
-
                 return Expanded(
                   child: ListView.builder(
                     padding: const EdgeInsets.symmetric(
@@ -473,22 +490,24 @@ class _HomeScreenState extends State<HomeScreen> {
                             itemBuilder: (context, index) {
                               final product = categoryProducts[index];
                               return InkWell(
-                                onTap: product["selled"] ==
-                                        true ? (){} : () {
-                                  productsProvider.createRecentlyViewedProducts(
-                                    productId: product["product_id"],
-                                  );
-                                  productsProvider.getProductsViewed();
+                                onTap: product["selled"] == true
+                                    ? () {}
+                                    : () {
+                                        productsProvider
+                                            .createRecentlyViewedProducts(
+                                          productId: product["product_id"],
+                                        );
+                                        productsProvider.getProductsViewed();
 
-                                  // Naviguer vers la page ItemDetails avec toutes les infos du produit
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          ItemDetails(product: product),
-                                    ),
-                                  );
-                                },
+                                        // Naviguer vers la page ItemDetails avec toutes les infos du produit
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ItemDetails(product: product),
+                                          ),
+                                        );
+                                      },
                                 child: Stack(
                                   children: [
                                     ProductCard(
@@ -504,7 +523,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         left: 0,
                                         right: 0,
                                         top: 0,
-                                        bottom: 70,
+                                        bottom: 100,
                                         child: Center(
                                           // Centre le badge dans le conteneur parent
                                           child: Transform.rotate(

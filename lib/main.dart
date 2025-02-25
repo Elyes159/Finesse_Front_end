@@ -1,22 +1,58 @@
+import 'dart:io';
+
 import 'package:finesse_frontend/FirebaseService/firebase_options.dart';
 import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Provider/Stories.dart';
 import 'package:finesse_frontend/Provider/products.dart';
 import 'package:finesse_frontend/Provider/profileProvider.dart';
+import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:finesse_frontend/Screens/SplashScreen/SplashScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print("Message reçu en arrière-plan : ${message.notification?.title}");
+}
+
+Future<void> initializeNotifications() async {
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  // Demander la permission aux utilisateurs
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+
+  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+    print("Permission accordée !");
+  } else {
+    print("Permission refusée !");
+  }
+
+  if(Platform.isIOS)
+  String? token = await messaging.getAPNSToken();
+  //print("FCM Token: $token");
+
+  // Gérer les messages en arrière-plan
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  await initializeNotifications(); // Initialiser les notifications
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthService()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => Profileprovider()),
         ChangeNotifierProvider(create: (_) => Stories()),
         ChangeNotifierProvider(create: (_) => Products()),
@@ -29,13 +65,16 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
+        colorScheme: themeProvider.isDarkMode
+            ? ColorScheme.fromSeed(seedColor: Colors.black, brightness: Brightness.dark)
+            : ColorScheme.fromSeed(seedColor: Colors.white, brightness: Brightness.light),
         useMaterial3: true,
       ),
       home: const SplashScreen(),
