@@ -74,7 +74,7 @@ Future<void> _toggleNotificationPermission(bool value) async {
         child: Column(
           children: [
             Container(
-              height: 70,
+              height: 60,
               width: double.infinity,
               decoration: ShapeDecoration(
                 color: Colors.white,
@@ -92,7 +92,7 @@ Future<void> _toggleNotificationPermission(bool value) async {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Silent all notifications',
+                          'Silencier toutes les notifications',
                           style: TextStyle(
                             color: Color(0xFF202020),
                             fontSize: 14,
@@ -103,14 +103,16 @@ Future<void> _toggleNotificationPermission(bool value) async {
                           ),
                         ),
                         SizedBox(height: 6),
-                        Text(
-                          'Disable notifications to enjoy \nuninterrupted focus and minimize distractions.',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 10,
-                            fontFamily: 'Raleway',
-                            fontWeight: FontWeight.w400,
-                            height: 1.40,
+                        Expanded(
+                          child: Text(
+                            'Désactiver les notifications pour\n une concentration ininterrompue.',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 10,
+                              fontFamily: 'Raleway',
+                              fontWeight: FontWeight.w400,
+                              height: 1.40,
+                            ),
                           ),
                         ),
                       ],
@@ -149,7 +151,7 @@ Future<void> _toggleNotificationPermission(bool value) async {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Delete account',
+                          'Supprimer le compte',
                           style: TextStyle(
                             color: Color(0xFFEA4335),
                             fontSize: 14,
@@ -246,7 +248,7 @@ Future<void> _toggleNotificationPermission(bool value) async {
                                     }
                                   },
                                   child: Container(
-                                    width: 95,
+                                    width: 110,
                                     height: 40,
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 24, vertical: 10),
@@ -264,11 +266,11 @@ Future<void> _toggleNotificationPermission(bool value) async {
                                           CrossAxisAlignment.center,
                                       children: [
                                         Text(
-                                          'Delete',
+                                          'Supprimer',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             color: Colors.white,
-                                            fontSize: 14,
+                                            fontSize: 12,
                                             fontFamily: 'Raleway',
                                             fontWeight: FontWeight.w500,
                                             height: 1.43,
@@ -294,11 +296,11 @@ Future<void> _toggleNotificationPermission(bool value) async {
                         ),
                         child: Center(
                           child: Text(
-                            'Delete',
+                            'Supprimer',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 14,
+                              fontSize: 12,
                               fontFamily: 'Raleway',
                               fontWeight: FontWeight.w500,
                               height: 1.43,
