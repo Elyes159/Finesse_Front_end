@@ -15,6 +15,7 @@ class Products extends ChangeNotifier {
   int? nbfollowervisited;
   late List products = [];
   late List productsView = [];
+  late List productsArt = [];
   late List followers = [];
   late List followersvisited = [];
   late List Ratings = [];
@@ -245,6 +246,42 @@ class Products extends ChangeNotifier {
         final data = json.decode(response.body);
         if (data['products'] != null) {
           products = data['products'];
+          filteredProducts = List.from(products); // Ajout de cette ligne
+
+          for (var product in products) {
+            print("category : ${product["category"]}");
+            print("subcategory : ${product["subcategory"]}");
+            print('Produit : ${product['title']}');
+            print('Description : ${product['description']}');
+            print('Prix : ${product['price']}');
+            print('Images : ${product['images']}');
+          }
+          notifyListeners();
+          print("hoooouuuni");
+          print(products);
+        } else {
+          print('Aucun produit trouvé pour cet utilisateur.');
+        }
+      } else {
+        print(
+            'Erreur lors de la récupération des produits: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Erreur rencontrée : $e');
+    }
+  }
+    Future<void> getProductsart() async {
+    try {
+      String? storedUserId = await storage.read(key: 'user_id');
+      final url = Uri.parse('${AppConfig.baseUrl}/api/products/getProductsart/');
+      final headers = {
+        'Content-Type': 'application/json',
+      };
+      final response = await http.get(url, headers: headers);
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['products'] != null) {
+          productsArt = data['products'];
           filteredProducts = List.from(products); // Ajout de cette ligne
 
           for (var product in products) {

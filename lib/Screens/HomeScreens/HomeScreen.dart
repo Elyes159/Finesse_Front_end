@@ -522,6 +522,45 @@ class _HomeScreenState extends State<HomeScreen> {
                           [], // Ajout des commentaires ici
                     },
                   ),
+                  ...productsProvider.productsArt.map(
+                    (product) => {
+                      'type': "Coin artistique",
+                      'subcategory': product['subcategory'] ?? 'Unknown',
+                      'imageUrl': "${AppConfig.baseUrl}${product['images'][0]}"
+                              .isNotEmpty
+                          ? "${AppConfig.baseUrl}${product['images'][0]}"
+                          : 'assets/images/test1.png',
+                      'images':
+                          product['images'] ?? [], // Liste complète des images
+                      'productName': product['title'] ?? 'Unknown Product',
+                      'productPrice': "${product['price']} TND".toString(),
+                      'product_id': "${product['id']}",
+                      'description': product['description'] ?? '',
+                      'is_available': product['is_available'] ?? false,
+                      'category': product['category'] ?? 'Unknown',
+                      'taille': product['taille'],
+                      'pointure': product['pointure'],
+                      'brand': product['brand'],
+                      'selled': product["selled"],
+                      'type_pdp': product["type"],
+                      'owner_id': product["owner"]["id"],
+                      'is_favorite': product['is_favorite'],
+                      'owner_profile_pic':
+                          product["owner"]["profile_pic"] ?? "",
+                      'owner_username': product["owner"]["username"] ?? "",
+                      'owner_ratings': product["owner"]["ratings"] ?? "",
+                      'comments': product['comments']
+                              ?.map((comment) => {
+                                    'username':
+                                        comment['username'] ?? 'Unknown',
+                                    'avatar': comment['avatar'] ?? '',
+                                    'content': comment['content'] ?? '',
+                                    'created_at': comment['created_at'] ?? '',
+                                  })
+                              .toList() ??
+                          [], // Ajout des commentaires ici
+                    },
+                  ),
                   ...productsProvider.products.map(
                     (product) => {
                       'type': 'Pour vous',

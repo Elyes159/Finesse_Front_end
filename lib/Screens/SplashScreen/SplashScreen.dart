@@ -30,6 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
     _startProgress();
     _initializeApp();
     Provider.of<Products>(context,listen:false).getProducts();
+    Provider.of<Products>(context,listen:false).getProductsart();
     Provider.of<Products>(context,listen:false).getProductsViewed();
     Provider.of<Stories>(context,listen:false).loadUserStoriesData();
   }
