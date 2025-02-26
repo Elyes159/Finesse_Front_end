@@ -22,20 +22,7 @@ class _ItemSubmittedState extends State<ItemSubmitted> {
           const SizedBox(
             height: 40,
           ),
-          const Center(
-            child: Text(
-              'Sell item',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 16,
-                fontFamily: 'Raleway',
-                fontWeight: FontWeight.w400,
-                height: 1.50,
-                letterSpacing: 0.50,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
+          
           const Spacer(),
           Center(
             child: Column(
@@ -45,7 +32,7 @@ class _ItemSubmittedState extends State<ItemSubmitted> {
                 const SizedBox(
                   width: 343,
                   child: Text(
-                    'Item submitted for verification',
+                    'Article soumis pour vérification',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Color(0xFF334155),
@@ -66,7 +53,7 @@ class _ItemSubmittedState extends State<ItemSubmitted> {
                       children: [
                         TextSpan(
                           text:
-                              'An admin will review your item before publishing it, ',
+                              'Un administrateur examinera votre article avant sa publication.',
                           style: TextStyle(
                             color: Color(0xFF334155),
                             fontSize: 14,
@@ -75,26 +62,8 @@ class _ItemSubmittedState extends State<ItemSubmitted> {
                             height: 1.43,
                           ),
                         ),
-                        TextSpan(
-                          text: 'Contact Us',
-                          style: TextStyle(
-                            color: Color(0xFF4285F4),
-                            fontSize: 14,
-                            fontFamily: 'Raleway',
-                            fontWeight: FontWeight.w500,
-                            height: 1.43,
-                          ),
-                        ),
-                        TextSpan(
-                          text: ' if your need help',
-                          style: TextStyle(
-                            color: Color(0xFF334155),
-                            fontSize: 14,
-                            fontFamily: 'Raleway',
-                            fontWeight: FontWeight.w500,
-                            height: 1.43,
-                          ),
-                        ),
+                        
+                        
                       ],
                     ),
                     textAlign: TextAlign.center,
@@ -106,7 +75,7 @@ class _ItemSubmittedState extends State<ItemSubmitted> {
                 Padding(
                   padding: const EdgeInsets.only(right: 8.0, left: 8),
                   child: CustomButton(
-                      label: "Add more items",
+                      label: "Ajouter plus d'articles",
                       onTap: () {
                         Navigator.pushAndRemoveUntil(
                           context,
@@ -140,7 +109,7 @@ class _ItemSubmittedState extends State<ItemSubmitted> {
                   child: const SizedBox(
                     width: 343,
                     child: Text(
-                      'Back home',
+                      "Retour à l'accueil",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Color(0xFF111928),

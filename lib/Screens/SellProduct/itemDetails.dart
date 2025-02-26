@@ -58,7 +58,7 @@ class _ItemDetailsState extends State<ItemDetails> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Item Details",
+         "Détails de l'article",
           style: TextStyle(
             color: Colors.black,
             fontSize: 16,
@@ -163,7 +163,9 @@ class _ItemDetailsState extends State<ItemDetails> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              widget.product["brand"]=="('',)" ? "" : "Brand: ${widget.product["brand"]}",
+                              widget.product["brand"] == "('',)"
+                                  ? ""
+                                  : "Brand: ${widget.product["brand"]}",
                               style: TextStyle(
                                 color: Color(0xFF111928),
                                 fontSize: 16,
@@ -225,13 +227,16 @@ class _ItemDetailsState extends State<ItemDetails> {
                                               "" &&
                                           widget.product["owner_profile_pic"] !=
                                               null)
-                                      ? NetworkImage(widget.product["type_pdp"] == "google"
-                                          ? "${AppConfig.baseUrl}/${widget.product["owner_profile_pic"]}"
-                                          : "${widget.product["owner_profile_pic"]}")
+                                      ? NetworkImage(widget
+                                                      .product["type_pdp"] ==
+                                                  "google" ||
+                                              widget.product["type_pdp"] ==
+                                                  "facebook"
+                                          ? "${widget.product["owner_profile_pic"]}"
+                                          : "${AppConfig.baseUrl}/${widget.product["owner_profile_pic"]}")
                                       : AssetImage('assets/images/user.png')
                                           as ImageProvider,
                                   backgroundColor: Colors.transparent,
-                                  
                                 ),
                               ),
                               SizedBox(
@@ -294,22 +299,26 @@ class _ItemDetailsState extends State<ItemDetails> {
                   //
                   SizedBox(height: 12),
                   Row(
+                    crossAxisAlignment:
+                        CrossAxisAlignment.start, // Alignement en haut
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 16.0, right: 16),
-                        child: Text(
-                          '${widget.product["description"]}',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 13,
-                            fontFamily: 'Raleway',
-                            fontWeight: FontWeight.w400,
-                            height: 1.38,
-                            letterSpacing: -0.13,
+                      Expanded(
+                        // Permet à la description de prendre plusieurs lignes
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 16.0, right: 16),
+                          child: Text(
+                            '${widget.product["description"]}',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 13,
+                              fontFamily: 'Raleway',
+                              fontWeight: FontWeight.w400,
+                              height: 1.38,
+                              letterSpacing: -0.13,
+                            ),
                           ),
                         ),
                       ),
-                      Spacer(),
                       Consumer<Products>(
                         builder: (context, productsProvider, child) {
                           final productId = widget.product["product_id"];
@@ -318,46 +327,53 @@ class _ItemDetailsState extends State<ItemDetails> {
                           final wishedProduct =
                               productsProvider.wishProducts.firstWhere(
                             (product) => product["id"] == productId,
-                            orElse: () => null, // Retourne null si non trouvé
+                            orElse: () => null,
                           );
 
-                          final isWished = wishedProduct != null;
+                          var isWished = wishedProduct != null;
 
-                          return InkWell(
-                            onTap: () {
-                              print(isWished);
+                          return Column(
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  if (!isWished) {
+                                    productsProvider.createWish(
+                                        productId: productId);
+                                      
+                                      
+                                        productsProvider.getWish(
+                                    Provider.of<AuthService>(context,
+                                            listen: false)
+                                        .currentUser!
+                                        .id,
+                                  );
+                                  setState(() {
+                                        isWished = true;
+                                      });
+                                  } else {
+                                    final wishId = wishedProduct?["id_wish"];
+                                    if (wishId != null) {
+                                      productsProvider.deleteWish(wishId);
+                                    }
+                                  }
 
-                              if (!isWished) {
-                                // Ajouter aux favoris
-                                productsProvider.createWish(
-                                    productId: productId);
-                              } else {
-                                // Supprimer des favoris
-                                final wishId = wishedProduct[
-                                    "id_wish"]; // Récupérer l'ID wish
-                                if (wishId != null) {
-                                  productsProvider.deleteWish(wishId);
-                                }
-                              }
-
-                              // Rafraîchir la liste des favoris
-                              productsProvider.getWish(
-                                Provider.of<AuthService>(context, listen: false)
-                                    .currentUser!
-                                    .id,
-                              );
-                            },
-                            child: SvgPicture.asset(
-                              isWished
-                                  ? "assets/Icons/heart-remove.svg"
-                                  : "assets/Icons/heart-add.svg",
-                            ),
+                                  // Rafraîchir la liste des favoris
+                                  
+                                },
+                                child: SvgPicture.asset(
+                                  isWished
+                                      ? "assets/Icons/heart-remove.svg"
+                                      : "assets/Icons/heart-add.svg",
+                                ),
+                              ),
+                            ],
                           );
                         },
                       ),
                       SizedBox(width: 20),
                     ],
                   ),
+
                   SizedBox(height: 24),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -446,6 +462,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                           child: Text(
                             "Aucun commentaire pour le moment.",
                             style: TextStyle(
+                              fontFamily: "Raleway",
                               color: Colors.black54,
                               fontSize: 14,
                               fontStyle: FontStyle.italic,
@@ -460,12 +477,12 @@ class _ItemDetailsState extends State<ItemDetails> {
           // Position the CustomTextFormFieldwithButton at the bottom of the screen
 
           Container(
-            color: Colors.white,
+            color: Color(0XFFf5fafb),
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: CustomTextFormFieldwithButton(
               isCommented: isComented,
               controller: _commentController,
-              label: 'Your comment',
+              label: 'Votre commentaire',
               isPassword: false,
               onButtonPressed: () async {
                 if (_commentController.text.isEmpty) {
@@ -489,7 +506,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                     });
                   } else {
                     setState(() {
-                      errorMsg = "something wrong";
+                      errorMsg = "Erreur survenue";
                     });
                   }
                 }
@@ -506,7 +523,7 @@ class _ItemDetailsState extends State<ItemDetails> {
               ),
             ),
           Container(
-            color: Colors.white,
+            color: Color(0XFFf5fafb),
             child: Padding(
               padding: const EdgeInsets.only(
                 bottom: 30,
@@ -515,15 +532,16 @@ class _ItemDetailsState extends State<ItemDetails> {
               ),
               child: Container(
                 width: MediaQuery.of(context).size.width,
-                color: Colors.white,
+                color: Color(0XFFf5fafb),
                 child: CustomButton(
                   buttonColor: isFavorite ? Colors.grey : Color(0xFFFB98B7),
-                  label: !isFavorite ? "Add to cart" : "Added",
+                  label: !isFavorite ? "Ajouter au panier" : "Ajouté",
                   onTap: () async {
-                    bool? favorite = await Provider.of<Products>(context,
-                            listen: false)
-                        .createFavorite(productId: widget.product["product_id"]);
-            
+                    bool? favorite =
+                        await Provider.of<Products>(context, listen: false)
+                            .createFavorite(
+                                productId: widget.product["product_id"]);
+
                     if (favorite != false) {
                       setState(() {
                         Provider.of<Products>(context, listen: false)

@@ -69,7 +69,7 @@ class _AccountState extends State<Account> {
               child: Padding(
                 padding: const EdgeInsets.only(right: 30.0),
                 child: Text(
-                  'Account',
+                  'Compte',
                   style: TextStyle(
                     color: Color(0xFF111928),
                     fontSize: 16,
@@ -148,19 +148,20 @@ class _AccountState extends State<Account> {
                     ),
                     CustomTextFormField(
                         controller: _fullnameController,
-                        label: "Full Name",
+                        label: "Nom complet",
                         isPassword: false),
                     SizedBox(
                       height: 16,
                     ),
                     CustomTextFormField(
                         controller: _usernameController,
-                        label: "Username",
+                        label: "Nom d'utilisateur",
                         isPassword: false),
                     SizedBox(
                       height: 16,
                     ),
                     CustomTextFormField(
+                      enabled: parametre == "normal",
                         controller: _emailController,
                         label: "E-mail",
                         isPassword: false),
@@ -169,21 +170,21 @@ class _AccountState extends State<Account> {
                     ),
                     CustomTextFormField(
                         controller: _phoneController,
-                        label: "Phone",
+                        label: "Numéro de téléphone",
                         isPassword: false),
                     SizedBox(
                       height: 16,
                     ),
                     CustomTextFormField(
                         controller: _addressController,
-                        label: "Address",
+                        label: "Addresse",
                         isPassword: false),
                     SizedBox(
                       height: 40,
                     ),
                     CustomButton(
                       buttonColor: Color(0xFFC668AA),
-                      label: "Save changes",
+                      label: "Enregistrer les modifications",
                       onTap: () async {
                         // Appel de la fonction updateProfile
                         int statusCode = await authService.updateProfile(
@@ -203,9 +204,9 @@ class _AccountState extends State<Account> {
                         } else {
                           setState(() {
                             if (statusCode == 444) {
-                              errorMessage = 'Username invalid'; // Message d'erreur spécifique
+                              errorMessage = "Nom d'utilisateur invalide"; // Message d'erreur spécifique
                             } else {
-                              errorMessage = 'Failed to update profile'; // Message d'erreur générique
+                              errorMessage = 'erreur inconnue '; // Message d'erreur générique
                             }
                           });
                         }

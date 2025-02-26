@@ -85,8 +85,8 @@ class _ProfileMainState extends State<ProfileMain> {
                       const SizedBox(height: 4),
                       Text(
                         widget.id == null
-                            ? '${Provider.of<Products>(context, listen: false).nbfollowers} followers'
-                            : '${Provider.of<Products>(context, listen: false).nbfollowervisited} followers',
+                            ? '${Provider.of<Products>(context, listen: false).nbfollowers ?? "0"} Abonnés'
+                            : '${Provider.of<Products>(context, listen: false).nbfollowervisited} Abonnés',
                         style: TextStyle(
                           color: Color(0xFF111928),
                           fontSize: 14,
@@ -138,7 +138,7 @@ class _ProfileMainState extends State<ProfileMain> {
                                               .id);
 
                                   return Text(
-                                    isFollowing ? 'Unfollow' : 'Follow',
+                                    isFollowing ? 'désabonner' : "S'abonner",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: Colors.white,
@@ -161,7 +161,7 @@ class _ProfileMainState extends State<ProfileMain> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => Settings()),
+                            MaterialPageRoute(builder: (context) => Parametres()),
                           );
                         },
                         icon: SvgPicture.asset("assets/Icons/setting.svg")),
@@ -174,9 +174,9 @@ class _ProfileMainState extends State<ProfileMain> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildTab("Items", index: 0, icon: "assets/Icons/item.svg"),
-                _buildTab("Ratings", index: 1, icon: "assets/Icons/rating.svg"),
-                _buildTab("About", index: 2, icon: "assets/Icons/about.svg"),
+                _buildTab("Articles", index: 0, icon: "assets/Icons/item.svg"),
+                _buildTab("Évaluations", index: 1, icon: "assets/Icons/rating.svg"),
+                _buildTab("À propos", index: 2, icon: "assets/Icons/about.svg"),
               ],
             ),
             const SizedBox(height: 8),
@@ -254,7 +254,11 @@ class _ProfileMainState extends State<ProfileMain> {
 
         if (products.isEmpty) {
           return Center(
-            child: Text('Aucun produit disponible.'),
+            child: Text('Aucun produit disponible.',style: TextStyle(
+              fontSize: 30,
+              fontFamily: 'Raleway',
+              fontWeight: FontWeight.w500,
+            ),),
           );
         }
 
@@ -311,6 +315,7 @@ class _ProfileMainState extends State<ProfileMain> {
                               child: Text(
                                 'Vendu',
                                 style: TextStyle(
+                                  fontFamily: "Raleway",
                                   color: Colors.white,
                                   fontSize:
                                       18, // Ajustement de la taille du texte
@@ -360,7 +365,6 @@ class _ProfileMainState extends State<ProfileMain> {
                                       },
                                     ),
                                     SizedBox(height: 10),
-                                    // Ajoute ici d'autres widgets pour afficher les détails
                                   ],
                                 ),
                               );
@@ -369,7 +373,7 @@ class _ProfileMainState extends State<ProfileMain> {
                         },
                         child: Icon(
                           Icons.arrow_drop_down,
-                          color: Colors.white,
+                          color: Color(0xFFFB98B7),
                           size: 30,
                         ),
                       ),
@@ -393,7 +397,7 @@ class _ProfileMainState extends State<ProfileMain> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          'Pending approval',
+                          "En attente d'approbation",
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 10,
@@ -468,7 +472,7 @@ class _ProfileMainState extends State<ProfileMain> {
                           height: 1.71,
                           letterSpacing: 0.50,
                         ),
-                        hintText: "Write your review...",
+                        hintText: "Écrivez votre avis...",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -530,7 +534,7 @@ class _ProfileMainState extends State<ProfileMain> {
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                'Submit review',
+                                "Soumettre l'avis",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   color: Colors.white,
@@ -553,7 +557,7 @@ class _ProfileMainState extends State<ProfileMain> {
                       SvgPicture.asset("assets/images/pana.svg"),
                       SizedBox(height: 16),
                       Text(
-                        'No reviews yet',
+                        "Pas encore d'avis",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Color(0xFF111928),
@@ -714,7 +718,7 @@ class _ProfileMainState extends State<ProfileMain> {
                         height: 1.71,
                         letterSpacing: 0.50,
                       ),
-                      hintText: "Write your review...",
+                      hintText: "Écrivez votre avis...",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -756,7 +760,7 @@ class _ProfileMainState extends State<ProfileMain> {
                         }
                       } else {
                         setState(() {
-                          errormsg = "tu ne peux pas rates cet utilisateur";
+                          errormsg = "vous ne pouvez pas ratez cet utilisateur";
                         });
                       }
                     },
@@ -782,7 +786,7 @@ class _ProfileMainState extends State<ProfileMain> {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              'Submit review',
+                              "Soumettre l'avis",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.white,
@@ -835,7 +839,7 @@ class _ProfileMainState extends State<ProfileMain> {
                                   radius: 30,
                                   backgroundImage: (rating["avatar"] != "" &&
                                           rating["avatar"] != null)
-                                      ? NetworkImage(parametre == "normal"
+                                      ? NetworkImage(rating["type"] == "normal"
                                           ? "${AppConfig.baseUrl}${rating["avatar"]}"
                                           : rating["avatar"]!)
                                       : AssetImage('assets/images/user.png')

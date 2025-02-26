@@ -5,6 +5,7 @@ class CustomTextFormField extends StatefulWidget {
   final TextEditingController controller;
   final String label;
   final bool isPassword;
+  final bool? enabled;
   final TextInputType keyboardType;
   final FormFieldValidator<String>? validator;
   final FormFieldSetter<String>? onSaved;
@@ -18,7 +19,7 @@ class CustomTextFormField extends StatefulWidget {
     this.keyboardType = TextInputType.text,
     this.validator,
     this.onSaved,
-    this.defaultValue, // Valeur par défaut optionnelle
+    this.defaultValue,  this.enabled, // Valeur par défaut optionnelle
   });
 
   @override
@@ -78,6 +79,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
               ),
             ),
             child: TextFormField(
+              enabled: widget.enabled ?? true,
               onSaved: widget.onSaved,
               controller: widget.controller,
               obscureText: widget.isPassword ? _obscureText : false,

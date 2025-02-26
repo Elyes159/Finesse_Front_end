@@ -96,7 +96,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Checkout',
+          'Paiement',
           style: TextStyle(
             color: Colors.black,
             fontSize: 16,
@@ -118,7 +118,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 SvgPicture.asset("assets/Icons/MapPin.svg"),
                 SizedBox(width: 16),
                 Text(
-                  'Address',
+                  'Addresse',
                   style: TextStyle(
                     color: Color(0xFF111928),
                     fontSize: 16,
@@ -137,7 +137,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       ? Provider.of<AuthService>(context, listen: false)
                           .currentUser!
                           .address
-                      : "to be completed",
+                      : "À compléter",
                   textAlign: TextAlign.right,
                   style: TextStyle(
                     color: Provider.of<AuthService>(context, listen: false)
@@ -168,7 +168,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: Text(
-                    'Promo Code',
+                    'Code Promo',
                     style: TextStyle(
                       color: Color(0xFF111928),
                       fontSize: 16,
@@ -202,7 +202,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                'Sub Total:',
+                'Sous-total:',
                 style: TextStyle(
                   color: Color(0xFF111928),
                   fontSize: 16,
@@ -230,7 +230,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                'Delivery:',
+                'Livraison:',
                 style: TextStyle(
                   color: Color(0xFF111928),
                   fontSize: 16,
@@ -258,7 +258,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                'Total Shop:',
+                'Total du magasin:',
                 style: TextStyle(
                   color: Color(0xFF111928),
                   fontSize: 22,
@@ -279,15 +279,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
               ),
             ],
           ),
-
-          // Sélection de la méthode de paiement
-
           SizedBox(height: 55),
           const Divider(thickness: 1, color: Color(0xFFE5E7EB)),
-
           Column(
             children: [
-              // Option "Cash on Delivery"
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
@@ -303,7 +298,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Cash on Delivery",
+                              "Paiement à la livraison",
                               style: TextStyle(
                                 color: Color(0xFF111928),
                                 fontSize: 16,
@@ -363,7 +358,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Payment with Card",
+                              "Paiement par carte",
                               style: TextStyle(
                                 color: Color(0xFF111928),
                                 fontSize: 16,
@@ -411,7 +406,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           ),
           CustomButton(
               buttonColor: Color(0xFFC668AA),
-              label: "Proceed",
+              label: "Continuer",
               onTap: () async {
                 if (_selectedPaymentMethod == "Payment with Card") {
                   bool payed =

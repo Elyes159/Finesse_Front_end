@@ -8,6 +8,7 @@ import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
 import 'package:finesse_frontend/Widgets/CustomOptionsFields/optionsField.dart';
 import 'package:finesse_frontend/Widgets/CustomTextField/DescTextField.dart';
 import 'package:finesse_frontend/Widgets/CustomTextField/customTextField.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
@@ -128,7 +129,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
           child: ListView(
             children: [
               const Text(
-                'Sell item',
+                'Vendre un article',
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 16,
@@ -149,7 +150,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                 child: const SizedBox(
                   width: 343,
                   child: Text(
-                    'Add information about items you’re selling to help customers know more about it',
+                    'Ajoutez des informations sur les articles que vous vendez pour aider les clients à en savoir plus.',
                     style: TextStyle(
                       color: Color(0xFF334155),
                       fontSize: 14,
@@ -199,7 +200,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                                       ),
                                       const SizedBox(height: 12),
                                       const Text(
-                                        'Add photo',
+                                        'Ajouter une photo',
                                         style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 14,
@@ -221,12 +222,12 @@ class _SellProductScreenState extends State<SellProductScreen> {
               ),
               CustomTextFormField(
                   controller: _titleController,
-                  label: "Title",
+                  label: 'Titre',
                   isPassword: false,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       _errorMessage = "osdhcoi";
-                      return 'Title is required';
+                      return 'Le titre est obligatoire';
                     } else {
                       setState(() {
                         _errorMessage = null;
@@ -244,7 +245,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       _errorMessage = "osdhcoi";
-                      return 'Description is required';
+                      return 'La description est obligatoire';
                     } else {
                       setState(() {
                         _errorMessage = null;
@@ -282,20 +283,23 @@ class _SellProductScreenState extends State<SellProductScreen> {
                     subcategory = result['subcategory'] ?? "";
                     final String subsubcategory =
                         result['subsubcategory'] ?? "";
-                    print("trah chouf houni");
-                    print(forBackend);
-                    print(category);
-                    print(subcategory);
+                    
+                    if (kDebugMode) {
+                      print(forBackend);
+                      print(subcategory);
                     print(subsubcategory);
+                    }
+                    
+                    
                     setState(() {
                       // Mise à jour de la catégorie principale
                       _categoryController.text = category == "MV"
-                          ? 'Mode and Vintage'
+                          ? 'Mode et Vintage'
                           : category == "AC"
-                              ? "Art and creation"
+                              ? "Art et création"
                               : category == "D"
                                   ? "Decoration"
-                                  : category == "L" ? "Livre" : "";
+                                  : category == "L" ? "Livres" : "";
 
                       // Définir la sous-catégorie ou sous-sous-catégorie
                       final String? mappedSubCategory = subcategory != null
@@ -314,13 +318,13 @@ class _SellProductScreenState extends State<SellProductScreen> {
                 child: AbsorbPointer(
                   child: CustomTextFormField(
                     controller: _categoryController,
-                    label: "Category",
+                    label: 'Catégorie',
                     isPassword: false,
                     keyboardType: TextInputType.text,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         _errorMessage = "osdhcoi";
-                        return 'Category is required';
+                        return 'La catégorie est obligatoire';
                       } else {
                         setState(() {
                           _errorMessage = null;
@@ -337,13 +341,13 @@ class _SellProductScreenState extends State<SellProductScreen> {
               ),
               CustomTextFormField(
                 controller: _priceController,
-                label: "Price",
+                label: "Prix",
                 isPassword: false,
                 keyboardType: TextInputType.numberWithOptions(),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     _errorMessage = "osdhcoi";
-                    return 'Price is required';
+                    return 'le Prix et obligatoire';
                   } else {
                     setState(() {
                       _errorMessage = null;
@@ -428,7 +432,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'État is required';
+                      return 'État est obligatoire';
                     }
                     return null;
                   },
@@ -496,7 +500,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                         });
                         _errorMessage = null;
                         if (_formKey.currentState?.validate() ??
-                            false && _errorMessage != null) {
+                            false && _errorMessage != null && _images !=null) {
                           double? price =
                               double.tryParse(_priceController.text);
                           int? quantity =
@@ -526,8 +530,8 @@ class _SellProductScreenState extends State<SellProductScreen> {
                             setState(() {
                               _Loading = false;
                             });
-                            print("Form submitted successfully!");
                             Navigator.pushAndRemoveUntil(
+                              // ignore: use_build_context_synchronously
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ItemSubmitted(),
@@ -541,22 +545,19 @@ class _SellProductScreenState extends State<SellProductScreen> {
                                   Provider.of<Products>(context, listen: false)
                                       .errorMessage;
                             });
-                            print("Error: $_errorMessage");
                             setState(() {
                               _Loading = false;
                             });
                           }
                         } else {
                           _errorMessage =
-                              "Form is not valid! Please fill all required fields.";
-                          print(
-                              "Form is not valid! Please fill all required fields.");
+                              "Le formulaire n'est pas valide ! Veuillez remplir tous les champs obligatoires.";
                         }
                         setState(() {
                           _Loading = false;
                         });
                       },
-                label: "Publish item",
+                label: "Publier l'article",
               ),
             ],
           ),

@@ -41,7 +41,6 @@ class _OrdersState extends State<Orders> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Image du produit (petite taille)
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.0), // Bords arrondis
                     child: Image.network(
@@ -290,7 +289,7 @@ class _OrdersState extends State<Orders> {
         return Scaffold(
           appBar: AppBar(
             title: Text(
-              'Orders',
+              'Commandes',
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 16,
@@ -316,7 +315,7 @@ class _OrdersState extends State<Orders> {
                         child: Column(
                           children: [
                             Text(
-                              'Buying',
+                              'Achat',
                               style: TextStyle(
                                 color: Color(0xFF111928),
                                 fontSize: 16,
@@ -344,7 +343,7 @@ class _OrdersState extends State<Orders> {
                         child: Column(
                           children: [
                             Text(
-                              'Selling',
+                              'Vente',
                               style: TextStyle(
                                 color: Color(0xFF111928),
                                 fontSize: 16,

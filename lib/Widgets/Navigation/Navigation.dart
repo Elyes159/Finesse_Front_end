@@ -68,7 +68,7 @@ class _NavigationState extends State<Navigation> {
               height: 24,
               width: 24,
             ),
-            label: 'Home',
+            label: "Accueil",
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
@@ -77,7 +77,7 @@ class _NavigationState extends State<Navigation> {
               "assets/Icons/explore.svg",
               color: _selectedIndex == 1 ? Color(0xFFFB98B7) : Colors.black,
             ),
-            label: 'Explore',
+            label: "Explorer",
           ),
           BottomNavigationBarItem(
             icon: Icon(
@@ -85,7 +85,7 @@ class _NavigationState extends State<Navigation> {
               color: _selectedIndex == 2 ? Color(0xFFFB98B7) : Colors.black,
               size: 24,
             ),
-            label: 'Sell',
+            label: "Vendre",
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
@@ -118,7 +118,7 @@ class _NavigationState extends State<Navigation> {
                     : null,
               ),
             ),
-            label: 'Profile',
+            label: "Profil",
           ),
         ],
         selectedLabelStyle: const TextStyle(

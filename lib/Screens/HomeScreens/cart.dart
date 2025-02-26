@@ -13,7 +13,7 @@ class Cart extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Cart",
+          "Panier",
           style: TextStyle(
             color: Colors.black,
             fontSize: 16,
@@ -46,7 +46,7 @@ class Cart extends StatelessWidget {
                       children: [
                         SizedBox(height: 300,),
                         Text(
-                          'Empty Cart',
+                          'Panier vide',
                           style: TextStyle(
                             color: Color(0xFF111928),
                             fontSize: 32,
@@ -62,7 +62,7 @@ class Cart extends StatelessWidget {
                             width: 251,
                             height: 48,
                             child: Text(
-                              'Add items to your cart',
+                              "Ajoutez des articles à votre panier",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Color(0xFF111928),
@@ -195,7 +195,7 @@ class Cart extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text(
-                              'Sub Total:',
+                              'Sous-total:',
                               style: TextStyle(
                                 color: Color(0xFF111928),
                                 fontSize: 16,
@@ -223,7 +223,7 @@ class Cart extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text(
-                              'Delivery:',
+                              'Livraison:',
                               style: TextStyle(
                                 color: Color(0xFF111928),
                                 fontSize: 16,
@@ -251,7 +251,7 @@ class Cart extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text(
-                              'Total Shop:',
+                              'Total des achats:',
                               style: TextStyle(
                                 color: Color(0xFF111928),
                                 fontSize: 22,
@@ -275,7 +275,7 @@ class Cart extends StatelessWidget {
                         const SizedBox(height: 25),
                         CustomButton(
                           buttonColor: Color(0xFFC668AA),
-                          label: "checkout",
+                          label: "Passer à la caisse",
                           onTap: () {
                             // Obtenez les IDs des produits
                             List<dynamic> productIds = favorites

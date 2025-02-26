@@ -88,10 +88,10 @@ class _ChooseCategoryState extends State<ChooseCategory> {
     return checkedCount == 1; // Exactement une case cochée
   }
 
-  void handleSubmit() {
+  void handleSubmit(bool ismontre) {
     if (selectedCategory == null) {
       setState(() {
-        errorMessage = "Please select a category.";
+        errorMessage = "Veuillez sélectionner une catégorie.";
       });
       return;
     }
@@ -99,19 +99,20 @@ class _ChooseCategoryState extends State<ChooseCategory> {
     if (selectedCategory == "MV") {
       if (selectedSubCategory == null) {
         setState(() {
-          errorMessage = "Please select a sub-category.";
+          errorMessage = "Veuillez sélectionner une sous-catégorie.";
         });
         return;
       }
 
-      if (!validateCheckboxSelection()) {
+      if (!validateCheckboxSelection() && !ismontre) {
         setState(() {
           errorMessage =
-              "Please select exactly one gender (Men, Women, Boys, or Girls).";
+              "Veuillez sélectionner exactement un genre (Homme, Femme, Garçon ou Fille).";
         });
         return;
       }
     }
+
     print("heeeey $SubSubCategoryForBackend , $SubCategoryForBackend , ");
     Navigator.pop(context, {
       'category': selectedCategory?.toUpperCase(),
@@ -119,7 +120,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
       'subsubcategory': selectedSubSubCategory ?? "",
       'keyCategory':
           (SubSubCategoryForBackend ?? SubCategoryForBackend)?.toUpperCase(),
-      'forBackend':SubSubCategoryForBackend?.toUpperCase(),
+      'forBackend': SubSubCategoryForBackend?.toUpperCase(),
     });
 
     setState(() {
@@ -139,7 +140,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
           child: Padding(
             padding: EdgeInsets.only(right: 30.0),
             child: Text(
-              'Choose a category',
+              "Choisissez une catégorie",
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 16,
@@ -169,7 +170,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
           const SizedBox(
             width: 343,
             child: Text(
-              'Select a category for your item from the list below',
+              "Sélectionnez une catégorie pour votre article dans la liste ci-dessous",
               style: TextStyle(
                 color: Color(0xFF334155),
                 fontSize: 14,
@@ -215,7 +216,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
           if ((selectedCategory == "L" || selectedCategory == null)) ...[
             const SizedBox(height: 24),
             CustomDropdownFormField<String, String>(
-              label: "Livre",
+              label: "Livres",
               options: const [
                 {"L": "Livre"},
               ],
@@ -239,19 +240,20 @@ class _ChooseCategoryState extends State<ChooseCategory> {
           if ((selectedCategory == "AC" || selectedCategory == null)) ...[
             const SizedBox(height: 24),
             CustomDropdownFormField<String, String>(
-              label: "Art and creation",
+              label: "Art et création",
               options: const [
                 {"PEIN": "Peinture"},
                 {"SCUL": "Sculpture"},
                 {"LITE": "Literature"},
+                {"tableaux": "Tableaux de peintures"},
+                {"ARTGRAPH": "Arts graphiques"},
+                {"ARTTABLE": "Arts de la table"},
                 {"ARTAUT": "Autres"},
               ],
               onChanged: (selectedKey) {
                 setState(() {
                   CategoryForBackend = "AC";
                   SubCategoryForBackend = selectedKey;
-                  print(
-                      "el backend : $SubCategoryForBackend $CategoryForBackend ");
                   selectedCategory = "AC";
                   selectedSubCategory = selectedKey;
                   errorMessage = null;
@@ -299,6 +301,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                 {"S": "Sacs"},
                 {"P": "Produits de beauté"},
                 {"J": "Jouets"},
+                {"MONTRE": "Montres"},
               ],
               onChanged: (selectedKey) {
                 setState(() {
@@ -308,6 +311,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                   selectedCategory = "MV";
                   selectedSubCategory = selectedKey;
                   errorMessage = null;
+                  if (selectedSubCategory == "MONTRE") {}
                 });
               },
 
@@ -345,6 +349,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                     selectedSubSubCategory, // Utiliser la sous-catégorie sélectionnée comme valeur
               ),
             ],
+            if (selectedSubCategory == "MONTRE") ...[],
             if (selectedSubCategory == "P") ...[
               const SizedBox(height: 12),
               CustomDropdownFormField<String, String>(
@@ -564,7 +569,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
               }.contains(selectedSubSubCategory)) ...[
             const SizedBox(height: 12),
             CustomCheckboxFormField(
-              label: "Men",
+              label: "Homme",
               initialValue: selectedCheckboxes["Men"]!,
               onChanged: (newValue) {
                 toggleCheckbox("Men", newValue);
@@ -572,7 +577,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             ),
             const SizedBox(height: 12),
             CustomCheckboxFormField(
-              label: "Women",
+              label: "Femme",
               initialValue: selectedCheckboxes["Women"]!,
               onChanged: (newValue) {
                 toggleCheckbox("Women", newValue);
@@ -580,7 +585,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             ),
             const SizedBox(height: 12),
             CustomCheckboxFormField(
-              label: "Boys",
+              label: "Garçon",
               initialValue: selectedCheckboxes["Boys"]!,
               onChanged: (newValue) {
                 toggleCheckbox("Boys", newValue);
@@ -588,7 +593,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             ),
             const SizedBox(height: 12),
             CustomCheckboxFormField(
-              label: "Girls",
+              label: "Fille",
               initialValue: selectedCheckboxes["Girls"]!,
               onChanged: (newValue) {
                 toggleCheckbox("Girls", newValue);
@@ -601,7 +606,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                   .contains(selectedSubSubCategory)) ...[
             const SizedBox(height: 12),
             CustomCheckboxFormField(
-              label: "Women",
+              label: "Femmme",
               initialValue: selectedCheckboxes["Women"]!,
               onChanged: (newValue) {
                 toggleCheckbox("Women", newValue);
@@ -609,7 +614,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             ),
             const SizedBox(height: 12),
             CustomCheckboxFormField(
-              label: "Girls",
+              label: "Fille",
               initialValue: selectedCheckboxes["Girls"]!,
               onChanged: (newValue) {
                 toggleCheckbox("Girls", newValue);
@@ -651,7 +656,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
               }.contains(selectedSubSubCategory)) ...[
             const SizedBox(height: 12),
             CustomCheckboxFormField(
-              label: "Women",
+              label: "Femme",
               initialValue: selectedCheckboxes["Women"]!, // Par défaut cochée
               onChanged: (newValue) {
                 toggleCheckbox("Women", newValue);
@@ -664,7 +669,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                   .contains(selectedSubSubCategory)) ...[
             const SizedBox(height: 12),
             CustomCheckboxFormField(
-              label: "Boys",
+              label: "Garçons",
               initialValue: selectedCheckboxes["Boys"]!,
               onChanged: (newValue) {
                 toggleCheckbox("Boys", newValue);
@@ -672,7 +677,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             ),
             const SizedBox(height: 12),
             CustomCheckboxFormField(
-              label: "Men",
+              label: "Homme",
               initialValue: selectedCheckboxes["Men"]!,
               onChanged: (newValue) {
                 toggleCheckbox("Men", newValue);
@@ -685,7 +690,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                   .contains(selectedSubSubCategory)) ...[
             const SizedBox(height: 12),
             CustomCheckboxFormField(
-              label: "Boys",
+              label: "Garçons",
               initialValue: selectedCheckboxes["Boys"]!,
               onChanged: (newValue) {
                 toggleCheckbox("Boys", newValue);
@@ -693,7 +698,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             ),
             const SizedBox(height: 12),
             CustomCheckboxFormField(
-              label: "Girls",
+              label: "Fille",
               initialValue: selectedCheckboxes["Girls"]!,
               onChanged: (newValue) {
                 toggleCheckbox("Girls", newValue);
@@ -705,7 +710,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
               {"BI"}.contains(selectedSubSubCategory)) ...[
             const SizedBox(height: 12),
             CustomCheckboxFormField(
-              label: "Girls",
+              label: "Fille",
               initialValue: selectedCheckboxes["Girls"]!,
               onChanged: (newValue) {
                 toggleCheckbox("Girls", newValue);
@@ -717,7 +722,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
               {"EX"}.contains(selectedSubSubCategory)) ...[
             const SizedBox(height: 12),
             CustomCheckboxFormField(
-              label: "Boys",
+              label: "Garçons",
               initialValue: selectedCheckboxes["Boys"]!,
               onChanged: (newValue) {
                 toggleCheckbox("Boys", newValue);
@@ -725,7 +730,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             ),
             const SizedBox(height: 12),
             CustomCheckboxFormField(
-              label: "Men",
+              label: "Homme",
               initialValue: selectedCheckboxes["Men"]!,
               onChanged: (newValue) {
                 toggleCheckbox("Men", newValue);
@@ -733,7 +738,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             ),
             const SizedBox(height: 12),
             CustomCheckboxFormField(
-              label: "Girls",
+              label: "Fille",
               initialValue: selectedCheckboxes["Girls"]!,
               onChanged: (newValue) {
                 toggleCheckbox("Girls", newValue);
@@ -744,7 +749,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
               {"B"}.contains(selectedSubCategory)) ...[
             const SizedBox(height: 12),
             CustomCheckboxFormField(
-              label: "Women",
+              label: "Femme",
               initialValue: true, // Par défaut cochée
               onChanged: (newValue) {
                 toggleCheckbox("Women", newValue);
@@ -757,7 +762,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                   .contains(selectedSubSubCategory)) ...[
             const SizedBox(height: 12),
             CustomCheckboxFormField(
-              label: "Boys",
+              label: "Hommes",
               initialValue: selectedCheckboxes["Boys"]!,
               onChanged: (newValue) {
                 toggleCheckbox("Boys", newValue);
@@ -765,7 +770,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             ),
             const SizedBox(height: 12),
             CustomCheckboxFormField(
-              label: "Girls",
+              label: "Fille",
               initialValue: selectedCheckboxes["Girls"]!,
               onChanged: (newValue) {
                 toggleCheckbox("Girls", newValue);
@@ -777,7 +782,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
               {"BA"}.contains(selectedSubSubCategory)) ...[
             const SizedBox(height: 12),
             CustomCheckboxFormField(
-              label: "Boys",
+              label: "Garçons",
               initialValue: selectedCheckboxes["Boys"]!,
               onChanged: (newValue) {
                 toggleCheckbox("Boys", newValue);
@@ -789,7 +794,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
               {"POU"}.contains(selectedSubSubCategory)) ...[
             const SizedBox(height: 12),
             CustomCheckboxFormField(
-              label: "Girls",
+              label: "Filles",
               initialValue: selectedCheckboxes["Girls"]!,
               onChanged: (newValue) {
                 toggleCheckbox("Girls", newValue);
@@ -800,7 +805,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
               {"P"}.contains(selectedSubCategory)) ...[
             const SizedBox(height: 12),
             CustomCheckboxFormField(
-              label: "Women",
+              label: "Femmes",
               initialValue: selectedCheckboxes["Women"]!, // Par défaut cochée
               onChanged: (newValue) {
                 toggleCheckbox("Women", newValue);
@@ -821,18 +826,22 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             const SizedBox(height: 12),
           ],
           CustomButton(
-            label: "Choose Category",
-            onTap: handleSubmit,
-            isDisabled: selectedCategory == null ||
-                (selectedCategory == "MV" &&
-                    (selectedSubCategory == null &&
-                            selectedSubSubCategory == null ||
-                        !validateCheckboxSelection())) ||
-                (selectedCategory == "AC" &&
-                    selectedSubCategory == "PEIN" &&
-                    (selectedSubCategory == null ||
-                        selectedSubSubCategory == null &&
-                            !validateCheckboxSelection())),
+            label: "Choisir une catégorie",
+            onTap: () {
+              handleSubmit(selectedSubCategory == "MONTRE");
+            },
+            isDisabled: selectedSubCategory == "MONTRE"
+                ? false
+                : selectedCategory == null ||
+                    (selectedCategory == "MV" &&
+                        (selectedSubCategory == null &&
+                                selectedSubSubCategory == null ||
+                            !validateCheckboxSelection())) ||
+                    (selectedCategory == "AC" &&
+                        selectedSubCategory == "PEIN" &&
+                        (selectedSubCategory == null ||
+                            selectedSubSubCategory == null &&
+                                !validateCheckboxSelection())),
           ),
           SizedBox(
             width: 343,
@@ -847,11 +856,11 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                 ),
                 children: <TextSpan>[
                   TextSpan(
-                    text: 'Or you can ', // Partie du texte non stylisée
+                    text: "Ou vous pouvez ", // Partie du texte non stylisée
                   ),
                   TextSpan(
                     text:
-                        'Reset', // Mot à colorier en rose et rendre interactif
+                        "Réinitialiser", // Mot à colorier en rose et rendre interactif
                     style: const TextStyle(
                       color: Color(0xFFFB98B7), // Couleur rose
                     ),
@@ -876,7 +885,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                       },
                   ),
                   TextSpan(
-                    text: ' your choices', // Partie du texte non stylisée
+                    text: ' votre choix', // Partie du texte non stylisée
                   ),
                 ],
               ),

@@ -15,17 +15,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-class Settings extends StatefulWidget {
-  const Settings({super.key});
+class Parametres extends StatefulWidget {
+  const Parametres({super.key});
 
   @override
-  State<Settings> createState() => _SettingsState();
+  State<Parametres> createState() => _ParametresState();
 }
 
-class _SettingsState extends State<Settings> {
+class _ParametresState extends State<Parametres> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Provider.of<AuthService>(context, listen: false).fetchOrders(
         Provider.of<AuthService>(context, listen: false).currentUser!.id);
@@ -35,8 +34,7 @@ class _SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider =
-        Provider.of<ThemeProvider>(context); // Ajoutez cette ligne
+    final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -44,7 +42,7 @@ class _SettingsState extends State<Settings> {
           child: Padding(
             padding: const EdgeInsets.only(right: 30.0),
             child: Text(
-              'Settings',
+              'Paramètres',
               style: TextStyle(
                 color: Color(0xFF111928),
                 fontSize: 16,
@@ -66,15 +64,15 @@ class _SettingsState extends State<Settings> {
                   context, MaterialPageRoute(builder: (context) => Account()));
             },
             child: SettingsTile(
-                iconPath: "assets/Icons/icon-3.svg", title: "Account"),
+                iconPath: "assets/Icons/icon-3.svg", title: "Compte"),
           ),
           InkWell(
             onTap: () {
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Orders()));
             },
-            child:
-                SettingsTile(iconPath: "assets/Icons/box.svg", title: "Orders"),
+            child: SettingsTile(
+                iconPath: "assets/Icons/box.svg", title: "Commandes"),
           ),
           InkWell(
             onTap: () {
@@ -83,46 +81,25 @@ class _SettingsState extends State<Settings> {
             },
             child: SettingsTile(
               iconPath: "assets/Icons/box.svg",
-              title: "Recently seen",
+              title: "Récemment vus",
             ),
           ),
           SettingsTile(
             iconPath: "assets/Icons/moon.svg",
-            title: "Dark Theme",
+            title: "Thème sombre",
             hasSwitch: true,
             switchValue: themeProvider.isDarkMode,
             onToggle: (value) {
               themeProvider.toggleTheme();
             },
           ),
-          SizedBox(height: 36),
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0),
-            child: Text(
-              'COOL STUFF',
-              style: TextStyle(
-                color: Color(0xFF111928),
-                fontSize: 14,
-                fontFamily: 'Raleway',
-                fontWeight: FontWeight.w500,
-                height: 1.43,
-                letterSpacing: 0.10,
-              ),
-            ),
-          ),
-          SizedBox(height: 18),
-          InkWell(
-              onTap: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Boost()));
-              },
-              child: SettingsTile(
-                  iconPath: "assets/Icons/airplane.svg", title: "Boost")),
+         
+          
           SizedBox(height: 46),
           Padding(
             padding: const EdgeInsets.only(left: 16.0),
             child: Text(
-              'Settings',
+              'Paramètres',
               style: TextStyle(
                 color: Color(0xFF111928),
                 fontSize: 14,
@@ -140,7 +117,7 @@ class _SettingsState extends State<Settings> {
                     MaterialPageRoute(builder: (context) => AppSetting()));
               },
               child: SettingsTile(
-                  iconPath: "assets/Icons/icon-5.svg", title: "App Settings")),
+                  iconPath: "assets/Icons/icon-5.svg", title: "Paramètres de l'App")),
           InkWell(
               onTap: () {
                 Navigator.push(context,
@@ -157,19 +134,20 @@ class _SettingsState extends State<Settings> {
               },
               child: SettingsTile(
                   iconPath: "assets/Icons/icon-6.svg",
-                  title: "Privacy Policy")),
+                  title: "Politique de confidentialité")),
           InkWell(
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => Contact()));
               },
               child: SettingsTile(
-                  iconPath: "assets/Icons/icon-6.svg", title: "Contact Us")),
-          SizedBox(height: 32),
+                  iconPath: "assets/Icons/icon-6.svg", title: "Nous contacter")),
+          SizedBox(height: 150),
+        
           Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 8),
             child: CustomButton(
-              label: "Log Out",
+              label: "Déconnexion",
               onTap: () {
                 Provider.of<AuthService>(context, listen: false).signOut();
                 Navigator.push(

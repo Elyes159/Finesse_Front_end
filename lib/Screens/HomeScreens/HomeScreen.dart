@@ -96,8 +96,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(width: 14),
                       Text(
                         user.fullName == "None None"
-                            ? "Hello ${user.username}"
-                            : 'Hello, ${user.fullName.split(' ')[0]}',
+                            ? "Bienvenue ${user.username}"
+                            : 'Bienvenue, ${user.fullName.split(' ')[0]}',
                         style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.w700,
@@ -347,7 +347,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Row(
                   children: [
                     CategoryChip(
-                      text: "All",
+                      text: "Tout",
                       isSelected: selectedCategory == "All",
                       onTap: () {
                         setState(() {
@@ -356,12 +356,22 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     CategoryChip(
-                      iconPath: "assets/Icons/art.svg",
-                      text: "Art and creation",
-                      isSelected: selectedCategory == "AC",
+                      iconPath: "assets/Icons/tab.svg",
+                      text: "Tableaux",
+                      isSelected: selectedCategory == "Tableaux",
                       onTap: () {
                         setState(() {
-                          selectedCategory = "AC";
+                          selectedCategory = "Tableaux";
+                        });
+                      },
+                    ),
+                    CategoryChip(
+                      iconPath: "assets/Icons/scul.svg",
+                      text: "Sculptures",
+                      isSelected: selectedCategory == "Sculptures",
+                      onTap: () {
+                        setState(() {
+                          selectedCategory = "Sculptures";
                         });
                       },
                     ),
@@ -376,12 +386,52 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     CategoryChip(
-                      iconPath: "assets/Icons/vet.svg",
-                      text: "Vetements",
-                      isSelected: selectedCategory == "Vetements",
+                      iconPath: "assets/Icons/art.svg",
+                      text: "Art graphiques",
+                      isSelected: selectedCategory == "Art graphiques",
                       onTap: () {
                         setState(() {
-                          selectedCategory = "Vetements";
+                          selectedCategory = "Art graphiques";
+                        });
+                      },
+                    ),
+                    CategoryChip(
+                      iconPath: "assets/Icons/vet.svg",
+                      text: "Mode et vintage",
+                      isSelected: selectedCategory == "Mode et vintage",
+                      onTap: () {
+                        setState(() {
+                          selectedCategory = "Mode et vintage";
+                        });
+                      },
+                    ),
+                    CategoryChip(
+                      iconPath: "assets/Icons/montre.svg",
+                      text: "Montres et Bijoux",
+                      isSelected: selectedCategory == "Montres et Bijoux",
+                      onTap: () {
+                        setState(() {
+                          selectedCategory = "Montres et Bijoux";
+                        });
+                      },
+                    ),
+                    CategoryChip(
+                      iconPath: "assets/Icons/mona-lisa.svg",
+                      text: "Arts de la table",
+                      isSelected: selectedCategory == "Arts de la table",
+                      onTap: () {
+                        setState(() {
+                          selectedCategory = "Arts de la table";
+                        });
+                      },
+                    ),
+                    CategoryChip(
+                      iconPath: "assets/Icons/bookk.svg",
+                      text: "Livres",
+                      isSelected: selectedCategory == "Livres",
+                      onTap: () {
+                        setState(() {
+                          selectedCategory = "Livres";
                         });
                       },
                     ),
@@ -395,56 +445,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         });
                       },
                     ),
-                    CategoryChip(
-                      iconPath: "assets/Icons/jew.svg",
-                      text: "Bijoux",
-                      isSelected: selectedCategory == "Bijoux",
-                      onTap: () {
-                        setState(() {
-                          selectedCategory = "Bijoux";
-                        });
-                      },
-                    ),
-                    CategoryChip(
-                      iconPath: "assets/Icons/ch.svg",
-                      text: "Chaussures",
-                      isSelected: selectedCategory == "Chaussures",
-                      onTap: () {
-                        setState(() {
-                          selectedCategory = "Chaussures";
-                        });
-                      },
-                    ),
-                    CategoryChip(
-                      iconPath: "assets/Icons/acc.svg",
-                      text: "Accessoires",
-                      isSelected: selectedCategory == "Accessoires",
-                      onTap: () {
-                        setState(() {
-                          selectedCategory = "Accessoires";
-                        });
-                      },
-                    ),
-                    CategoryChip(
-                      iconPath: "assets/Icons/sac.svg",
-                      text: "Sacs",
-                      isSelected: selectedCategory == "Sacs",
-                      onTap: () {
-                        setState(() {
-                          selectedCategory = "Sacs";
-                        });
-                      },
-                    ),
-                    CategoryChip(
-                      iconPath: "assets/Icons/pb.svg",
-                      text: "Produits de beauté",
-                      isSelected: selectedCategory == "Produits de beauté",
-                      onTap: () {
-                        setState(() {
-                          selectedCategory = "Produits de beauté";
-                        });
-                      },
-                    ),
                   ],
                 ),
               ),
@@ -455,7 +455,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 final allProducts = [
                   ...productsProvider.productsView.map(
                     (product) => {
-                      'type': 'Recently Viewed',
+                      'type': "Récemment consulté",
                       'subcategory': product['subcategory'] ?? 'Unknown',
                       'imageUrl': "${AppConfig.baseUrl}/${product['images'][0]}"
                               .isNotEmpty
@@ -494,7 +494,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   ...productsProvider.products.map(
                     (product) => {
-                      'type': 'For You',
+                      'type': 'Pour vous',
                       'category': product['category'] ?? 'Unknown',
                       'subcategory': product['subcategory'] ?? 'Unknown',
                       'imageUrl': "${AppConfig.baseUrl}/${product['images'][0]}"

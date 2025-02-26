@@ -65,7 +65,7 @@ class _SignInScreenState extends State<SignInScreen> {
           children: [
             const SizedBox(height: 96),
             const Text(
-              'Welcome',
+              'Bienvenue',
               style: TextStyle(
                 color: Color(0xFF111928),
                 fontSize: 32,
@@ -80,7 +80,7 @@ class _SignInScreenState extends State<SignInScreen> {
               width: 251,
               height: 48,
               child: Text(
-                'Enter your e-mail or username\nand password',
+                "Entrez nom d'utilisateur\net votre mot de passe",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Color(0xFF111928),
@@ -98,11 +98,11 @@ class _SignInScreenState extends State<SignInScreen> {
                 children: [
                   CustomTextFormField(
                     controller: _usernameController,
-                    label: "Username",
+                    label: "Nom d'utilisateur",
                     isPassword: false,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter a username';
+                        return "Veuillez entrer un nom d'utilisateur.";
                       }
                       return null;
                     },
@@ -111,11 +111,11 @@ class _SignInScreenState extends State<SignInScreen> {
                   const SizedBox(height: 16),
                   CustomTextFormField(
                     controller: _passwordController,
-                    label: "Your password",
+                    label: "Votre mot de passe",
                     isPassword: true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter a password';
+                        return 'Veuillez entrer un mot de passe';
                       }
                       return null;
                     },
@@ -137,7 +137,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Text(
-                            'Forgot password?',
+                            'Mot de passe oublié ?',
                             textAlign: TextAlign.left,
                             style: TextStyle(
                               color: Color(0xFF111928),
@@ -156,8 +156,8 @@ class _SignInScreenState extends State<SignInScreen> {
                     buttonColor:
                         _isLoading ? Color(0xFFE5E7EB) : Color(0xFFFB98B7),
                     label: _isLoading
-                        ? "Loading..."
-                        : "Login", // Change the label dynamically
+                        ? "Chargement..."
+                        : "Se connecter", // Change the label dynamically
                     onTap: _isLoading
                         ? () {}
                         : () async {
@@ -183,7 +183,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               } catch (e) {
                                 setState(() {
                                   _errorMessage =
-                                      'Verify your password or username';
+                                      "Vérifiez votre mot de passe ou nom d'utilisateur";
                                 });
                               } finally {
                                 setState(() {
@@ -213,7 +213,7 @@ class _SignInScreenState extends State<SignInScreen> {
             ),
             const SizedBox(height: 32),
             const Text(
-              'Or use',
+              'Ou utilisez',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Color(0xFF111928),
@@ -251,7 +251,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     } catch (e) {
                       setState(() {
                         _errorMessage =
-                            'Erreur lors de la connexion avec Google: $e';
+                            'Erreur lors de la connexion avec Google';
                       });
                     }
                   },
@@ -283,7 +283,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       } catch (e) {
                         setState(() {
                           _errorMessage =
-                              'Erreur lors de la connexion avec facebook: $e';
+                              'Erreur lors de la connexion avec facebook';
                         });
                       }
                     },
@@ -297,7 +297,7 @@ class _SignInScreenState extends State<SignInScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  'No account yet?',
+                  'Pas encore de compte ?',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Color(0xFF111928),
@@ -314,7 +314,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             builder: (context) => const SignUpScreen()));
                   },
                   child: const Text(
-                    ' Sign up now',
+                    ' Inscrivez-vous maintenant',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Color(0xFFC668AA),

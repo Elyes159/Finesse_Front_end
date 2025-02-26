@@ -44,7 +44,7 @@ class _LetzGoState extends State<LetzGo> {
           children: [
             const SizedBox(height: 12),
             const Text(
-              'Let’s go! ⚡️',
+              "C'est parti ! ⚡️",
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Color(0xFF111928),
@@ -56,7 +56,7 @@ class _LetzGoState extends State<LetzGo> {
             ),
             const SizedBox(height: 10),
             const Text(
-              'Choose a username and enter your\ntelephone number',
+              "Choisissez un nom d'utilisateur",
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Color(0xFF111928),
@@ -70,18 +70,18 @@ class _LetzGoState extends State<LetzGo> {
             const SizedBox(height: 24),
             CustomTextFormField(
               controller: _usernameController,
-              label: "Username",
+              label: "Nom d'utilisateur",
               isPassword: false,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   setState(() {
-                    _usernameError = 'Username is required';
+                    _usernameError = "Le nom d'utilisateur est requis.";
                   });
                   return null;
                 }
                 if (value.length < 3) {
                   setState(() {
-                     _usernameError = 'username must be longer than 3';
+                     _usernameError = "Le nom d'utilisateur doit contenir plus de 3 caractères.";
                   });
                   
                   return null;
@@ -98,7 +98,7 @@ class _LetzGoState extends State<LetzGo> {
                  Padding(
                    padding: const EdgeInsets.all(8.0),
                    child: Text(
-                    _usernameError!.contains("UNIQUE") ? "Existing username" : _usernameError!,
+                    _usernameError!.contains("UNIQUE") ?"Nom d'utilisateur existant" : _usernameError!,
                     style: const TextStyle(
                       color: Colors.red,
                       fontFamily: 'Raleway',
@@ -130,7 +130,7 @@ class _LetzGoState extends State<LetzGo> {
                 Expanded(
                   child: RichText(
                     text: TextSpan(
-                      text: 'I have read and accept ',
+                      text: "J'ai lu et j'accepte ",
                       style: const TextStyle(
                         color: Color(0xFF111928),
                         fontSize: 14,
@@ -139,7 +139,7 @@ class _LetzGoState extends State<LetzGo> {
                       ),
                       children: [
                         TextSpan(
-                          text: 'Finesse Terms of Use',
+                          text: "les Conditions d'utilisation de Finesse",
                           style: const TextStyle(
                             color: Colors.blue,
                             decoration: TextDecoration.underline,
@@ -151,7 +151,7 @@ class _LetzGoState extends State<LetzGo> {
                         ),
                         const TextSpan(text: ', '),
                         TextSpan(
-                          text: 'Privacy Policy',
+                          text: "Politique de confidentialité",
                           style: const TextStyle(
                             color: Colors.blue,
                             decoration: TextDecoration.underline,
@@ -183,7 +183,7 @@ class _LetzGoState extends State<LetzGo> {
                 ),
                 const Expanded(
                   child: Text(
-                    '(Optional) send me emails with updates, tips and special offers from Finesse',
+                    "(Optionnel) Envoyez-moi des e-mails avec des mises à jour, des conseils et des offres spéciales de Finesse",
                     style: TextStyle(
                       color: Color(0xFF111928),
                       fontSize: 14,
@@ -200,7 +200,7 @@ class _LetzGoState extends State<LetzGo> {
             CustomButton(
                textColor: _isLoading ? Color(0xFF111928) : Colors.white,
                   buttonColor: _isLoading? Color(0xFFE5E7EB) : Color(0xFFFB98B7),
-              label: _isLoading? "Loading...": "Let’s go! ⚡️",
+              label: _isLoading? "Chargement...": "C'est parti ! ⚡️",
               onTap: _isLoading?(){}: _usernameError !=null ? (){}: () async {
                 setState(() {
                   _isLoading = true;

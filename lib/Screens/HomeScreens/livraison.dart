@@ -16,7 +16,7 @@ class _LivraisonState extends State<Livraison> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Checkout',
+          'Paiement',
           style: TextStyle(
             color: Colors.black,
             fontSize: 16,
@@ -37,7 +37,7 @@ class _LivraisonState extends State<Livraison> {
             height: 24,
           ),
           Text(
-            'Thank you for\nyour purchase',
+            'Merci pour\nvotre achat',
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Color(0xFF334155),
@@ -50,7 +50,7 @@ class _LivraisonState extends State<Livraison> {
             height: 16,
           ),
           Text(
-            'Your order will be on its way shortly',
+            'Votre commande sera bientôt en route',
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Color(0xFF334155),
@@ -66,7 +66,7 @@ class _LivraisonState extends State<Livraison> {
           Padding(
             padding: const EdgeInsets.only(right: 8.0, left: 8),
             child: CustomButton(
-                label: "Back home",
+                label: "Retour à l'accueil",
                 onTap: () {
                   Navigator.pushAndRemoveUntil(
                     context,

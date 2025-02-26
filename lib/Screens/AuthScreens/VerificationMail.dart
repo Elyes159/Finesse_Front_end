@@ -42,7 +42,7 @@ class _VerificationMailState extends State<VerificationMail> {
       body: ListView(
         children: [
           const Text(
-            'Enter the passcode',
+            "Entrez le code d'accès",
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Color(0xFF111928),
@@ -56,7 +56,7 @@ class _VerificationMailState extends State<VerificationMail> {
             width: 343,
             height: 30,
             child: Text(
-              'Enter the passcode sent to "email​".',
+              "Entrez le code d'accès envoyé à 'email'.",
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Color(0xFF111928),
@@ -117,7 +117,7 @@ class _VerificationMailState extends State<VerificationMail> {
           const SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: CustomButton(label: "Next", onTap: ()async{
+            child: CustomButton(label: "Suivant", onTap: ()async{
               try{
                  if(widget.parametre=="signup") {
                    await Provider.of<AuthService>(context, listen: false).confirmEmailVerification(

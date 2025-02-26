@@ -84,7 +84,7 @@ class _PasswordResetState extends State<PasswordReset> {
         children: [
           SizedBox(height: 12),
           Text(
-            'Password reset',
+            'Réinitialisation du mot de passe',
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Color(0xFF111928),
@@ -98,7 +98,7 @@ class _PasswordResetState extends State<PasswordReset> {
           SizedBox(
             width: 267,
             child: Text(
-              'Type in your email to receive\nverification code',
+              'Entrez votre e-mail pour recevoir\nle code de vérification',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Color(0xFF111928),
@@ -111,13 +111,16 @@ class _PasswordResetState extends State<PasswordReset> {
             ),
           ),
           SizedBox(height: 24),
-          CustomTextFormField(
-            controller: _emailController,
-            label: 'Your Email',
-            isPassword: false,
-            // We don't need the validator here anymore
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: CustomTextFormField(
+              controller: _emailController,
+              label: 'Votre e-mail',
+              isPassword: false,
+              // We don't need the validator here anymore
+            ),
           ),
-          SizedBox(height: 8),
+          SizedBox(height: 0),
           // Display the error message if email is invalid
           if (!_isEmailValid && _emailController.text.isNotEmpty)
             Padding(
@@ -131,62 +134,65 @@ class _PasswordResetState extends State<PasswordReset> {
               ),
             ),
 
-          SizedBox(height: 24),
-          CustomButton(
-            label: "Send code",
-            onTap: (!_isEmailValid || isLoading)
-                ? () {}
-                : () async {
-                    setState(() {
-                      isLoading = true;
-                      _errorMessage = ""; // Reset error message
-                    });
-
-                    try {
-                      String? storedemailReset =
-                          await storage.read(key: 'email_reset');
-                      final result =
-                          await Provider.of<AuthService>(context, listen: false)
-                              .send_email_to_reset_password(
-                                  email: _emailController.text);
-
-                      if (result.statusCode == 200) {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  VerificationMail(parametre: "password")),
-                        );
-                      } else {
+          SizedBox(height: 0),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: CustomButton(
+              label: "Envoyer le code",
+              onTap: (!_isEmailValid || isLoading)
+                  ? () {}
+                  : () async {
+                      setState(() {
+                        isLoading = true;
+                        _errorMessage = ""; // Reset error message
+                      });
+            
+                      try {
+                        String? storedemailReset =
+                            await storage.read(key: 'email_reset');
+                        final result =
+                            await Provider.of<AuthService>(context, listen: false)
+                                .send_email_to_reset_password(
+                                    email: _emailController.text);
+            
+                        if (result.statusCode == 200) {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    VerificationMail(parametre: "password")),
+                          );
+                        } else {
+                          setState(() {
+                            _errorMessage =
+                                "${jsonDecode(result.body)["message"]}";
+                          });
+                        }
+                      } catch (e) {
                         setState(() {
-                          _errorMessage =
-                              "${jsonDecode(result.body)["message"]}";
+                          _errorMessage = "Erreur lors de la verification de email";
                         });
                       }
-                    } catch (e) {
+            
                       setState(() {
-                        _errorMessage = "${e.toString()}";
+                        isLoading = false;
                       });
-                    }
-
-                    setState(() {
-                      isLoading = false;
-                    });
-                  },
-            // Set button color based on loading state and email validity
-            buttonColor: isLoading
-                ? Color(0xFFE5E7EB) // Light grey when loading
-                : (_isEmailValid
-                    ? Color(0xFFFB98B7)
-                    : Color(0xFFE5E7EB)), // Color when email is valid/invalid
-
-            // Set text color based on loading state and email validity
-            textColor: isLoading
-                ? Color(0xFF111928) // Dark color when loading (can be adjusted)
-                : (_isEmailValid
-                    ? Colors.white
-                    : Color(
-                        0xFF111928)), // White text when valid, dark when invalid
+                    },
+              // Set button color based on loading state and email validity
+              buttonColor: isLoading
+                  ? Color(0xFFE5E7EB) // Light grey when loading
+                  : (_isEmailValid
+                      ? Color(0xFFFB98B7)
+                      : Color(0xFFE5E7EB)), // Color when email is valid/invalid
+            
+              // Set text color based on loading state and email validity
+              textColor: isLoading
+                  ? Color(0xFF111928) // Dark color when loading (can be adjusted)
+                  : (_isEmailValid
+                      ? Colors.white
+                      : Color(
+                          0xFF111928)), // White text when valid, dark when invalid
+            ),
           ),
           if (_errorMessage != "")
             Center(

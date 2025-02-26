@@ -3,6 +3,7 @@ import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Provider/products.dart';
 import 'package:finesse_frontend/Widgets/cards/productCard.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class WishList extends StatefulWidget {
@@ -21,7 +22,7 @@ class _WishListState extends State<WishList> {
           child: Padding(
             padding: EdgeInsets.only(right: 30.0),
             child: Text(
-              'Favourite',
+              'Favoris',
               style: TextStyle(
                 color: Color(0xFF111928),
                 fontSize: 16,
@@ -42,7 +43,13 @@ class _WishListState extends State<WishList> {
             return const Center(
               child: Text(
                 "Aucun produit favori",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                 style: TextStyle(
+                            color: Color(0xFF111928),
+                            fontSize: 32,
+                            fontFamily: 'Raleway',
+                            fontWeight: FontWeight.w800,
+                            height: 1.38,
+                          ),
               ),
             );
           }
@@ -93,11 +100,7 @@ class _WishListState extends State<WishList> {
                               ),
                             ],
                           ),
-                          child: const Icon(
-                            Icons.delete,
-                            color: Color(0xFFC668AA),
-                            size: 20,
-                          ),
+                          child: SvgPicture.asset("assets/Icons/heart-remove.svg")
                         ),
                       ),
                     ),

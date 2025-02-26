@@ -37,7 +37,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               children: [
                 const SizedBox(height: 96),
                 const Text(
-                  'Create an account',
+                  'Créer un compte',
                   style: TextStyle(
                     color: Color(0xFF111928),
                     fontSize: 32,
@@ -49,7 +49,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 const SizedBox(height: 10),
                 const Text(
-                  'Fill in information about\nyour account',
+                  "Complétez les informations sur\nvotre compte",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Color(0xFF111928),
@@ -66,14 +66,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     children: [
                       CustomTextFormField(
                         controller: _emailController,
-                        label: "Your e-mail address",
+                        label: "Votre adresse e-mail",
                         isPassword: false,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter your email.';
+                            return "Veuillez entrer votre e-mail.";
                           }
                           if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                            return 'Please enter a valid email.';
+                            return "Veuillez entrer un e-mail valide.";
                           }
                           return null;
                         },
@@ -81,21 +81,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       const SizedBox(height: 16),
                       CustomTextFormField(
                         controller: _passwordController,
-                        label: "Password",
+                        label: "Mot de passe",
                         isPassword: true,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter a password.';
+                            return "Veuillez entrer un mot de passe.";
                           }
                           if (value.length < 8) {
-                            return 'Password must be at least 8 characters long.';
+                            return "Le mot de passe doit comporter au moins 8 caractères.";
                           }
                           if (!RegExp(r'^(.*[A-Z].*){2,}').hasMatch(value)) {
-                            return 'Password must contain at least 2 uppercase letters.';
+                            return "Le mot de passe doit contenir au moins 2 lettres majuscules.";
                           }
                           if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]')
                               .hasMatch(value)) {
-                            return 'Password must contain at least 1 special character.';
+                            return "Le mot de passe doit contenir au moins 1 caractère spécial.";
                           }
                           return null;
                         },
@@ -103,11 +103,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       const SizedBox(height: 16),
                       CustomTextFormField(
                         controller: _confirmPassController,
-                        label: "Confirm password",
+                        label: "Confirmer le mot de passe",
                         isPassword: true,
                         validator: (value) {
                           if (value != _passwordController.text) {
-                            return 'Passwords do not match.';
+                            return "Les mots de passe ne correspondent pas.";
                           }
                           return null;
                         },
@@ -162,7 +162,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   }
                                 }
                               },
-                        label: _isLoading ? 'Loading...' : 'Continue',
+                        label: _isLoading ? 'Chargements...' : 'Continuer',
                       ),
                       if (_errorMessage != null)
                         Padding(
@@ -182,7 +182,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 const SizedBox(height: 32),
                 const Text(
-                  'Or use',
+                  'Ou utilisez',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Color(0xFF111928),
@@ -255,13 +255,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 jsonDecode(result.body); // Décodage du JSON
                             setState(() {
                               _errorMessage = 
-                                  "An unknown error occurred.";
+                                  "Une erreur inconnue est survenue.";
                             });
                           }
                         } catch (e) {
                           setState(() {
                             _errorMessage =
-                                "Error signing in with Facebook";
+                                "Erreur de connexion avec Facebook";
                           });
                         }
                       },
@@ -274,11 +274,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      'Already have an account?',
+                      "Vous avez déjà un compte ?",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Color(0xFF111928),
-                        fontSize: 16,
+                        fontSize: 14,
                         fontFamily: 'Raleway',
                         fontWeight: FontWeight.w500,
                       ),
@@ -291,8 +291,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               builder: (context) => const SignInScreen()),
                         );
                       },
-                      child: const Text(
-                        ' Login now',
+                      child:  Text(
+                        "Connectez-vous maintenant",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Color(0xFFC668AA),

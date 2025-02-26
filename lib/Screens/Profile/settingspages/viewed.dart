@@ -23,7 +23,7 @@ class _ViewedState extends State<Viewed> {
         return Scaffold(
           appBar: AppBar(
               title: Text(
-            'Recently Seen',
+            'Vu récemment',
             style: TextStyle(
               color: Colors.black,
               fontSize: 16,
@@ -43,12 +43,12 @@ class _ViewedState extends State<Viewed> {
                     crossAxisSpacing: 8, // Espacement horizontal
                     mainAxisSpacing: 8, // Espacement vertical
                   ),
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(0.0),
                   itemCount: viewedProducts.length,
                   itemBuilder: (context, index) {
                     final product = viewedProducts[index];
                     return Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(8.0),
                       child: ProductCard(
                         imageUrl:
                             "${AppConfig.baseUrl}${product["images"][0]}", // Assurez-vous que la clé correspond à votre modèle

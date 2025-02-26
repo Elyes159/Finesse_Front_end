@@ -18,14 +18,11 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 Future<void> initializeNotifications() async {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
-
-  // Demander la permission aux utilisateurs
   NotificationSettings settings = await messaging.requestPermission(
     alert: true,
     badge: true,
     sound: true,
   );
-
   if (settings.authorizationStatus == AuthorizationStatus.authorized) {
     print("Permission accordée !");
   } else {
@@ -34,9 +31,6 @@ Future<void> initializeNotifications() async {
 
   if(Platform.isIOS)
   String? token = await messaging.getAPNSToken();
-  //print("FCM Token: $token");
-
-  // Gérer les messages en arrière-plan
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 }
 
@@ -73,7 +67,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: themeProvider.isDarkMode
-            ? ColorScheme.fromSeed(seedColor: Colors.black, brightness: Brightness.dark)
+            ? ColorScheme.dark(primary: Color(0XFF1C1C1C))
             : ColorScheme.fromSeed(seedColor: Colors.white, brightness: Brightness.light),
         useMaterial3: true,
       ),

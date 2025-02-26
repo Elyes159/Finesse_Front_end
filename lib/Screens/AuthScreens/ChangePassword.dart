@@ -64,11 +64,12 @@ class _ChangePasswordState extends State<ChangePassword> {
       ),
       body: Center(
         child: ListView(
+          padding: EdgeInsets.all(16),
           children: [
             const SizedBox(height: 20),
             const Text(
               textAlign: TextAlign.center,
-              'Change Password',
+              'Changer le mot de passe',
               style: TextStyle(
                 color: Color(0xFF111928),
                 fontSize: 32,
@@ -82,7 +83,7 @@ class _ChangePasswordState extends State<ChangePassword> {
               width: 257,
               height: 48,
               child: Text(
-                'Set up a new password that you’ll\nremember this time',
+                "Définissez un nouveau mot de passe que vous\nvous souviendrez cette fois",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Color(0xFF111928),
@@ -96,22 +97,22 @@ class _ChangePasswordState extends State<ChangePassword> {
             const SizedBox(height: 24),
             CustomTextFormField(
               controller: _passwordController,
-              label: "New Password",
+              label: "Nouveau mot de passe",
               isPassword: true,
             ),
             const SizedBox(height: 16),
             CustomTextFormField(
               controller: _confirmPasswordController,
-              label: "Confirm Password",
+              label: "Confirmer le mot de passe",
               isPassword: true,
             ),
             const SizedBox(height: 24),
             CustomButton(
               label: _success
-                  ? "Done ✅"
+                  ? "Terminé ✅"
                   : isLoading
-                      ? "Loading..."
-                      : "Continue",
+                      ? "Chargement..."
+                      : "Continuer",
               onTap: _arePasswordsMatching
                   ? () async {
                       setState(() {
