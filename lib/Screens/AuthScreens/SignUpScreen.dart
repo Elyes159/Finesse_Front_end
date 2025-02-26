@@ -29,8 +29,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-            final theme = Provider.of<ThemeProvider>(context).isDarkMode;
-
+    final theme = Provider.of<ThemeProvider>(context).isDarkMode;
     return Scaffold(
       body: Stack(
         children: [
@@ -270,6 +269,45 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       },
                       imagePath: "assets/Icons/facebook.svg",
                     ),
+                    const SizedBox(width: 8.86),
+                    CustomContainer(
+                      onTap: () async {
+                        setState(() {
+                          _errorMessage =
+                              null; 
+                        });
+                        try {
+                          final result = await Provider.of<AuthService>(context,
+                                  listen: false)
+                              .signUpApple(fcmToken: "await FirebaseMessaging.instance.getToken()",
+                                
+                              );
+
+                          if (result.statusCode == 200) {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      CompleteInfo(parameter: "apple")),
+                            );
+                          } else {
+                            final responseData =
+                                jsonDecode(result.body); // Décodage du JSON
+                            setState(() {
+                              _errorMessage = 
+                                  "Une erreur inconnue est survenue.";
+                            });
+                          }
+                        } catch (e) {
+                          setState(() {
+                            _errorMessage =
+                                "Erreur de connexion avec Facebook";
+                          });
+                        }
+                      },
+                      imagePath: "assets/Icons/apple.svg",
+                    ),
+
                   ],
                 ),
                 const SizedBox(height: 24),

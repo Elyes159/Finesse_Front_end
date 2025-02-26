@@ -86,7 +86,7 @@ class _CompleteInfoState extends State<CompleteInfo> {
               children: [
                 Center(
                   child: GestureDetector(
-                    onTap: widget.parameter == "normal"
+                    onTap: widget.parameter == "normal" || widget.parameter=="apple"
                         ? () {
                             _pickImage();
                           }
