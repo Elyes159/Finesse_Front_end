@@ -1,5 +1,7 @@
+import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class SettingsTile extends StatelessWidget {
   final String iconPath;
@@ -18,6 +20,8 @@ class SettingsTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
+
     return Container(
       width: double.infinity,
       height: 56,
@@ -29,12 +33,12 @@ class SettingsTile extends StatelessWidget {
           Expanded(
             child: Row(
               children: [
-                SvgPicture.asset(iconPath),
+                SvgPicture.asset(iconPath,color: theme? Colors.white : null,),
                 SizedBox(width: 12),
                 Text(
                   title,
                   style: TextStyle(
-                    color: Color(0xFF111928),
+                    //color: Color(0xFF111928),
                     fontSize: 16,
                     fontFamily: 'Raleway',
                     fontWeight: FontWeight.w400,

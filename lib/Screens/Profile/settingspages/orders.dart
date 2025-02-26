@@ -1,5 +1,6 @@
 import 'package:finesse_frontend/ApiServices/backend_url.dart';
 import 'package:finesse_frontend/Provider/AuthService.dart';
+import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:finesse_frontend/Widgets/cards/productCard.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -63,7 +64,7 @@ class _OrdersState extends State<Orders> {
                         Text(
                           "${product['title']} (Ref${order["order_id"]})",
                           style: TextStyle(
-                            color: Colors.black,
+                            //color: Colors.black,
                             fontSize: 13,
                             fontFamily: 'Raleway',
                             fontWeight: FontWeight.w500,
@@ -78,7 +79,7 @@ class _OrdersState extends State<Orders> {
                           _formatDate(order[
                               'created_at']), // Utilisation de la fonction de formatage
                           style: TextStyle(
-                            color: Colors.black,
+                            //color: Colors.black,
                             fontSize: 13,
                             fontFamily: 'Raleway',
                             fontWeight: FontWeight.w500,
@@ -92,7 +93,7 @@ class _OrdersState extends State<Orders> {
                         Text(
                           "${product['price']} TND", // Affichage du prix
                           style: TextStyle(
-                            color: Colors.black,
+                            //color: Colors.black,
                             fontSize: 12,
                             fontFamily: 'Raleway',
                             fontWeight: FontWeight.w400,
@@ -113,7 +114,7 @@ class _OrdersState extends State<Orders> {
                   Text(
                     '${product["owner"]}',
                     style: TextStyle(
-                      color: Colors.black,
+                      //color: Colors.black,
                       fontSize: 13,
                       fontFamily: 'Raleway',
                       fontWeight: FontWeight.w500,
@@ -123,7 +124,7 @@ class _OrdersState extends State<Orders> {
                   Text(
                     '${order["total_price"]}',
                     style: TextStyle(
-                      color: Colors.black,
+                      //color: Colors.black,
                       fontSize: 13,
                       fontFamily: 'Raleway',
                       fontWeight: FontWeight.w500,
@@ -192,7 +193,7 @@ class _OrdersState extends State<Orders> {
                         Text(
                           "${product['title']} (Ref${order["order_id"]})",
                           style: TextStyle(
-                            color: Colors.black,
+                            //color: Colors.black,
                             fontSize: 13,
                             fontFamily: 'Raleway',
                             fontWeight: FontWeight.w500,
@@ -207,7 +208,7 @@ class _OrdersState extends State<Orders> {
                           _formatDate(order[
                               'created_at']), // Utilisation de la fonction de formatage
                           style: TextStyle(
-                            color: Colors.black,
+                            //color: Colors.black,
                             fontSize: 13,
                             fontFamily: 'Raleway',
                             fontWeight: FontWeight.w500,
@@ -221,7 +222,7 @@ class _OrdersState extends State<Orders> {
                         Text(
                           "${product['price']} TND", // Affichage du prix
                           style: TextStyle(
-                            color: Colors.black,
+                            //color: Colors.black,
                             fontSize: 12,
                             fontFamily: 'Raleway',
                             fontWeight: FontWeight.w400,
@@ -242,7 +243,7 @@ class _OrdersState extends State<Orders> {
                   Text(
                     '${order["full_name"]}',
                     style: TextStyle(
-                      color: Colors.black,
+                      //color: Colors.black,
                       fontSize: 13,
                       fontFamily: 'Raleway',
                       fontWeight: FontWeight.w500,
@@ -252,7 +253,7 @@ class _OrdersState extends State<Orders> {
                   Text(
                     '${order["phone_buyer"]}',
                     style: TextStyle(
-                      color: Colors.black,
+                      //color: Colors.black,
                       fontSize: 13,
                       fontFamily: 'Raleway',
                       fontWeight: FontWeight.w500,
@@ -262,7 +263,7 @@ class _OrdersState extends State<Orders> {
                   Text(
                     '${order["total_price"]}',
                     style: TextStyle(
-                      color: Colors.black,
+                     // color: Colors.black,
                       fontSize: 13,
                       fontFamily: 'Raleway',
                       fontWeight: FontWeight.w500,
@@ -281,6 +282,8 @@ class _OrdersState extends State<Orders> {
 
   @override
   Widget build(BuildContext context) {
+        final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
+
     return Consumer<AuthService>(
       builder: (context, provider, child) {
         final orderData =
@@ -291,7 +294,7 @@ class _OrdersState extends State<Orders> {
             title: Text(
               'Commandes',
               style: TextStyle(
-                color: Colors.black,
+                //color: Colors.black,
                 fontSize: 16,
                 fontFamily: 'Raleway',
                 fontWeight: FontWeight.w400,
@@ -317,7 +320,7 @@ class _OrdersState extends State<Orders> {
                             Text(
                               'Achat',
                               style: TextStyle(
-                                color: Color(0xFF111928),
+                                //color: Color(0xFF111928),
                                 fontSize: 16,
                                 fontFamily: 'Raleway',
                                 fontWeight: FontWeight.w500,
@@ -328,7 +331,7 @@ class _OrdersState extends State<Orders> {
                               height: 2,
                               width: MediaQuery.of(context).size.width * 0.5,
                               color: _selectedIndex == 0
-                                  ? Color(0xFF111928)
+                                  ? theme?Color.fromARGB(255, 249, 217, 144): Color(0xFF111928)
                                   : Color(
                                       0x26111928), // Change la couleur si sélectionné
                             ),
@@ -345,7 +348,7 @@ class _OrdersState extends State<Orders> {
                             Text(
                               'Vente',
                               style: TextStyle(
-                                color: Color(0xFF111928),
+                                //color: Color(0xFF111928),
                                 fontSize: 16,
                                 fontFamily: 'Raleway',
                                 fontWeight: FontWeight.w400,
@@ -356,7 +359,7 @@ class _OrdersState extends State<Orders> {
                               height: 2,
                               width: MediaQuery.of(context).size.width * 0.5,
                               color: _selectedIndex == 1
-                                  ? Color(0xFF111928)
+                                  ?theme?Color.fromARGB(255, 249, 217, 144):  Color(0xFF111928)
                                   : Color(
                                       0x26111928), // Change la couleur si sélectionné
                             ),

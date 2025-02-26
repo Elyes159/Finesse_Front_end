@@ -15,22 +15,31 @@ class ProductCard extends StatefulWidget {
 }
 
 Widget _buildImage(String imageUrl) {
-  if (imageUrl.startsWith('assets')) {
-    return Image.asset(
-      imageUrl,
-      height: 120,
-    );
-  } else {
+  
     return ClipRRect(
       borderRadius: BorderRadius.circular(8), // Arrondi des coins
       child: Image.network(
-        imageUrl,
-        height: 120,
-        width: double.infinity, // Prend toute la largeur du conteneur
-        fit: BoxFit.cover, // Étire l'image pour couvrir tout l'espace
-      ),
+  imageUrl,
+  height: 120,
+  width: double.infinity,
+  fit: BoxFit.cover,
+  loadingBuilder: (context, child, loadingProgress) {
+    if (loadingProgress == null) return child;
+    return Center(
+      child: CircularProgressIndicator(),
     );
-  }
+  },
+  errorBuilder: (context, error, stackTrace) {
+    return Image.asset(
+      'assets/images/test1.png', // Image de secours
+      height: 120,
+      width: double.infinity,
+      fit: BoxFit.cover,
+    );
+  },
+)
+    );
+  
 }
 
 class _ProductCardState extends State<ProductCard> {
@@ -46,7 +55,6 @@ class _ProductCardState extends State<ProductCard> {
         Text(
           widget.productName,
           style: const TextStyle(
-            color: Colors.black,
             fontSize: 13,
             fontFamily: 'Raleway',
             fontWeight: FontWeight.w500,
@@ -59,7 +67,6 @@ class _ProductCardState extends State<ProductCard> {
         Text(
           '${widget.productPrice}',
           style: const TextStyle(
-            color: Colors.black,
             fontSize: 12,
             fontFamily: 'Raleway',
             fontWeight: FontWeight.w400,

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:finesse_frontend/Provider/AuthService.dart';
+import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/CompleteInfo.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/VerificationMail.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -28,6 +29,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
+            final theme = Provider.of<ThemeProvider>(context).isDarkMode;
+
     return Scaffold(
       body: Stack(
         children: [
@@ -39,7 +42,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 const Text(
                   'Créer un compte',
                   style: TextStyle(
-                    color: Color(0xFF111928),
+                    //color: Color(0xFF111928),
                     fontSize: 32,
                     fontFamily: 'Raleway',
                     fontWeight: FontWeight.w800,
@@ -52,7 +55,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   "Complétez les informations sur\nvotre compte",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Color(0xFF111928),
+                    //color: Color(0xFF111928),
                     fontSize: 16,
                     fontFamily: 'Raleway',
                     fontWeight: FontWeight.w500,
@@ -185,7 +188,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   'Ou utilisez',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Color(0xFF111928),
+                    //color: Color(0xFF111928),
                     fontSize: 14,
                     fontFamily: 'Raleway',
                     fontWeight: FontWeight.w500,
@@ -277,7 +280,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       "Vous avez déjà un compte ?",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Color(0xFF111928),
+                        //color: Color(0xFF111928),
                         fontSize: 14,
                         fontFamily: 'Raleway',
                         fontWeight: FontWeight.w500,
@@ -295,7 +298,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         "Connectez-vous maintenant",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Color(0xFFC668AA),
+                          color:theme? Color.fromARGB(255, 249, 217, 144):  Color(0xFFC668AA),
                           fontSize: 16,
                           fontFamily: 'Raleway',
                           fontWeight: FontWeight.w500,

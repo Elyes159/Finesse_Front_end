@@ -2,7 +2,9 @@ import 'package:finesse_frontend/ApiServices/backend_url.dart';
 import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Provider/products.dart';
 import 'package:finesse_frontend/Provider/profileProvider.dart';
+import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:finesse_frontend/Screens/Profile/Settings.dart';
+import 'package:finesse_frontend/Screens/SellProduct/itemDetails.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
 import 'package:finesse_frontend/Widgets/cards/productCard.dart';
 import 'package:finesse_frontend/Widgets/rating/ratingpercen.dart';
@@ -40,6 +42,8 @@ class _ProfileMainState extends State<ProfileMain> {
 
   @override
   Widget build(BuildContext context) {
+        final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
+
     final user = widget.id == null
         ? Provider.of<AuthService>(context, listen: false).currentUser!
         : Provider.of<Profileprovider>(context, listen: false).visitedProfile!;
@@ -76,7 +80,7 @@ class _ProfileMainState extends State<ProfileMain> {
                       Text(
                         widget.id == null ? user.fullName : user.username,
                         style: TextStyle(
-                          color: Color(0xFF111928),
+                          //color: Color(0xFF111928),
                           fontSize: 20,
                           fontFamily: 'Raleway',
                           fontWeight: FontWeight.w600,
@@ -88,7 +92,7 @@ class _ProfileMainState extends State<ProfileMain> {
                             ? '${Provider.of<Products>(context, listen: false).nbfollowers ?? "0"} Abonnés'
                             : '${Provider.of<Products>(context, listen: false).nbfollowervisited} Abonnés',
                         style: TextStyle(
-                          color: Color(0xFF111928),
+                          //color: Color(0xFF111928),
                           fontSize: 14,
                           fontFamily: 'Raleway',
                           fontWeight: FontWeight.w400,
@@ -120,7 +124,7 @@ class _ProfileMainState extends State<ProfileMain> {
                             height: 36,
                             clipBehavior: Clip.antiAlias,
                             decoration: ShapeDecoration(
-                              color: Color(0xFFFB98B7),
+                              color: theme? Color.fromARGB(255, 249, 217, 144): Color(0xFFFB98B7),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -141,7 +145,7 @@ class _ProfileMainState extends State<ProfileMain> {
                                     isFollowing ? 'désabonner' : "S'abonner",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      color: Colors.white,
+                                      color:theme? Colors.black: Colors.white,
                                       fontSize: 14,
                                       fontFamily: 'Raleway',
                                       fontWeight: FontWeight.w400,
@@ -164,7 +168,7 @@ class _ProfileMainState extends State<ProfileMain> {
                             MaterialPageRoute(builder: (context) => Parametres()),
                           );
                         },
-                        icon: SvgPicture.asset("assets/Icons/setting.svg")),
+                        icon: SvgPicture.asset("assets/Icons/setting.svg",color: theme? Colors.white:null,)),
                 ],
               ),
             ),
@@ -194,6 +198,8 @@ class _ProfileMainState extends State<ProfileMain> {
 
   // Widget pour les onglets
   Widget _buildTab(String title, {required int index, required String icon}) {
+    final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
+
     bool isSelected = _selectedTabIndex == index;
     return GestureDetector(
       onTap: () {
@@ -205,7 +211,9 @@ class _ProfileMainState extends State<ProfileMain> {
         children: [
           SvgPicture.asset(
             icon,
-            color: isSelected ? Color(0xFFFB98B7) : Colors.black,
+            color: isSelected 
+            ? theme?Color.fromARGB(255, 249, 217, 144) : Color(0xFFFB98B7)
+             : theme? Colors.white: Colors.black,
             height: 24,
             width: 24,
           ),
@@ -217,7 +225,10 @@ class _ProfileMainState extends State<ProfileMain> {
               fontSize: 14,
               fontFamily: 'Raleway',
               fontWeight: FontWeight.w500,
-              color: isSelected ? Color(0xFFFB98B7) : Colors.black,
+              color: 
+              isSelected 
+            ? theme?Color.fromARGB(255, 249, 217, 144) : Color(0xFFFB98B7)
+             : theme? Colors.white: Colors.black,
             ),
           ),
           if (isSelected)
@@ -225,7 +236,7 @@ class _ProfileMainState extends State<ProfileMain> {
               margin: const EdgeInsets.only(top: 4),
               height: 2,
               width: 69,
-              color: Color(0xFFFB98B7),
+              color:theme?Color.fromARGB(255, 249, 217, 144): Color(0xFFFB98B7),
             ),
         ],
       ),
@@ -245,41 +256,80 @@ class _ProfileMainState extends State<ProfileMain> {
     }
   }
 
-  Widget _buildItemsTab() {
-    return Consumer<Products>(
-      builder: (context, provider, child) {
-        final products = widget.id == null
-            ? provider.productsByUser
-            : provider.productsByUserVisited;
+Widget _buildItemsTab() {
+  final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
+  return Consumer<Products>(
+    builder: (context, provider, child) {
+      final products = widget.id == null
+          ? provider.productsByUser
+          : provider.productsByUserVisited;
 
-        if (products.isEmpty) {
-          return Center(
-            child: Text('Aucun produit disponible.',style: TextStyle(
+      if (products.isEmpty) {
+        return Center(
+          child: Text(
+            'Aucun produit disponible.',
+            style: TextStyle(
               fontSize: 30,
               fontFamily: 'Raleway',
               fontWeight: FontWeight.w500,
-            ),),
-          );
-        }
-
-        return GridView.builder(
-          padding: const EdgeInsets.symmetric(
-              vertical: 16.0), // Ajoute un padding au contenu
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, // Deux colonnes
-            crossAxisSpacing: 16.0, // Espacement horizontal
-            mainAxisSpacing: 16.0, // Espacement vertical
-            childAspectRatio: 3 / 4, // Proportion des items
+            ),
           ),
-          itemCount: products.length, // Nombre total de produits
-          itemBuilder: (context, index) {
-            final product = products[index]; // Récupérer un produit de la liste
-            final imageUrl = product['images'] != null &&
-                    product['images'].isNotEmpty
-                ? "${AppConfig.baseUrl}/${product['images'][0]}" // Première image
-                : 'assets/images/default.png'; // Image par défaut si aucune image
+        );
+      }
 
-            return Column(
+      return GridView.builder(
+        itemCount: products.length,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 8,
+          mainAxisSpacing: 8,
+          childAspectRatio: 0.8,
+        ),
+        itemBuilder: (context, index) {
+          final product = products[index];
+          final imageUrl = product['images'] != null && product['images'].isNotEmpty
+              ? "${AppConfig.baseUrl}/${product['images'][0]}"
+              : 'assets/images/default.png';
+
+          return GestureDetector(
+            onTap: widget.id ==null ? null : () {
+              final productData = {
+                'type': 'Pour vous',
+                'category': product['category'] ?? 'Unknown',
+                'subcategory': product['subcategory'] ?? 'Unknown',
+                'imageUrl': imageUrl,
+                'images': product['images'] ?? [],
+                'productName': product['title'] ?? 'Unknown Product',
+                'productPrice': "${product['price']} TND",
+                'product_id': "${product['id']}",
+                'description': product['description'] ?? '',
+                'is_available': product['is_available'] ?? false,
+                'taille': product['taille'],
+                'is_favorite': product['is_favorite'] ?? false,
+                'pointure': product['pointure'],
+                'selled': product["selled"],
+                'brand': product['brand'],
+                'owner_id': widget.id,
+                'type_pdp': product["type"],
+                'owner_profile_pic': product["owner"]["profile_pic"] ?? "",
+                'owner_username': product["owner"]["username"] ?? "",
+                'owner_ratings': product["owner"]["ratings"] ?? "",
+                'comments': product['comments']?.map((comment) => {
+                      'username': comment['username'] ?? 'Unknown',
+                      'avatar': comment['avatar'] ?? '',
+                      'content': comment['content'] ?? '',
+                      'created_at': comment['created_at'] ?? '',
+                    }).toList() ?? [],
+              };
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ItemDetails(product: productData),
+                ),
+              );
+            },
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -290,26 +340,21 @@ class _ProfileMainState extends State<ProfileMain> {
                       productName: product['title'] as String,
                       productPrice: '${product['price']} TND',
                     ),
-                    // Badge "Vendu"
-                    if (product["selled"] ==
-                        true) // Vérifie si le produit est vendu
+                    if (product["selled"] == true)
                       Positioned(
                         left: 0,
                         right: 0,
                         top: 0,
                         bottom: 0,
                         child: Center(
-                          // Centre le badge dans le conteneur parent
                           child: Transform.rotate(
-                            angle: -0.1, // Angle pour incliner le badge
+                            angle: -0.1,
                             child: Container(
                               height: 40,
                               width: 100,
                               decoration: BoxDecoration(
-                                color: Colors.red.withOpacity(
-                                    0.7), // Couleur rouge avec opacité
-                                borderRadius:
-                                    BorderRadius.circular(10), // Coins arrondis
+                                color: Colors.red.withOpacity(0.7),
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               alignment: Alignment.center,
                               child: Text(
@@ -317,8 +362,7 @@ class _ProfileMainState extends State<ProfileMain> {
                                 style: TextStyle(
                                   fontFamily: "Raleway",
                                   color: Colors.white,
-                                  fontSize:
-                                      18, // Ajustement de la taille du texte
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -326,100 +370,42 @@ class _ProfileMainState extends State<ProfileMain> {
                           ),
                         ),
                       ),
-                      if(widget.id == null)
-                    Positioned(
-                      top: 8,
-                      right: 8,
-                      child: GestureDetector(
-                        onTap: () {
-                          // Afficher le BottomSheet lorsque l'utilisateur clique sur la flèche
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (context) {
-                              return Container(
-                                width: double.infinity,
-                                padding: EdgeInsets.all(16),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    CustomButton(
-                                      label: product["selled"] == true
-                                          ? "Marquer comme disponible"
-                                          : "Marquer comme vendu",
-                                      onTap: () {
-                                        Provider.of<Products>(context,
-                                                listen: false)
-                                            .updateProductSelled(
-                                                product["id"],
-                                                product["selled"] == true
-                                                    ? false
-                                                    : true);
-                                        Provider.of<Products>(context,
-                                                listen: false)
-                                            .getProducts();
-                                        Provider.of<Products>(context,
-                                                listen: false)
-                                            .getProductsViewed();
-                                        product["selled"] = !product["selled"];
-                                      },
-                                    ),
-                                    SizedBox(height: 10),
-                                  ],
-                                ),
-                              );
-                            },
-                          );
-                        },
-                        child: Icon(
-                          Icons.arrow_drop_down,
-                          color: Color(0xFFFB98B7),
-                          size: 30,
-                        ),
-                      ),
-                    ),
                   ],
                 ),
                 if (product["validated"] == false) ...[
                   SizedBox(height: 4),
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                     decoration: ShapeDecoration(
                       color: Color(0xFFFCF1D0),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          "En attente d'approbation",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 10,
-                            fontFamily: 'Raleway',
-                            fontWeight: FontWeight.w400,
-                            height: 2,
-                          ),
-                        ),
-                      ],
+                    child: Text(
+                      "En attente d'approbation",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 10,
+                        fontFamily: 'Raleway',
+                        fontWeight: FontWeight.w400,
+                        height: 2,
+                      ),
                     ),
                   )
                 ]
               ],
-            );
-          },
-        );
-      },
-    );
-  }
+            ),
+          );
+        },
+      );
+    },
+  );
+}
 
-  // Contenu pour l'onglet "Ratings"
+
   Widget _buildRatingsTab() {
+    final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
     return Consumer<Products>(
       builder: (context, ratingsProvider, child) {
         if ((widget.id == null && ratingsProvider.Ratings.isEmpty) ||
@@ -455,7 +441,7 @@ class _ProfileMainState extends State<ProfileMain> {
                     TextField(
                       controller: reviewController,
                       style: TextStyle(
-                        color: Colors.black,
+                        //color: Colors.black,
                         fontSize: 14,
                         fontFamily: 'Raleway',
                         fontWeight: FontWeight.w400,
@@ -517,7 +503,7 @@ class _ProfileMainState extends State<ProfileMain> {
                         height: 36,
                         clipBehavior: Clip.antiAlias,
                         decoration: ShapeDecoration(
-                          color: Color(0xFFFB98B7),
+                          color: theme?Color.fromARGB(255, 249, 217, 144): Color(0xFFFB98B7),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -529,7 +515,7 @@ class _ProfileMainState extends State<ProfileMain> {
                             children: [
                               Icon(
                                 Icons.star,
-                                color: Colors.white,
+                                color: theme? Colors.black: Colors.white,
                                 size: 20,
                               ),
                               const SizedBox(width: 8),
@@ -537,7 +523,7 @@ class _ProfileMainState extends State<ProfileMain> {
                                 "Soumettre l'avis",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: theme? Colors.black: Colors.white,
                                   fontSize: 14,
                                   fontFamily: 'Raleway',
                                   fontWeight: FontWeight.w400,
@@ -560,7 +546,7 @@ class _ProfileMainState extends State<ProfileMain> {
                         "Pas encore d'avis",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Color(0xFF111928),
+                          //color: Color(0xFF111928),
                           fontSize: 18,
                           fontFamily: 'Raleway',
                           fontWeight: FontWeight.w600,
@@ -579,7 +565,7 @@ class _ProfileMainState extends State<ProfileMain> {
                 Container(
                   height: 136,
                   decoration: ShapeDecoration(
-                    color: Color(0xFFF7F7F7),
+                    color: theme? Colors.grey[900]: Color(0xFFF7F7F7),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -644,7 +630,7 @@ class _ProfileMainState extends State<ProfileMain> {
                           Text(
                             '${widget.id == null ? Provider.of<Products>(context, listen: false).avarageRate : Provider.of<Products>(context, listen: false).avarageRateVisited}',
                             style: TextStyle(
-                              color: Color(0xFF333333),
+                              //color: Color(0xFF333333),
                               fontSize: 40,
                               fontFamily: 'Raleway',
                               fontWeight: FontWeight.w700,
@@ -662,7 +648,7 @@ class _ProfileMainState extends State<ProfileMain> {
                             '${widget.id == null ? Provider.of<Products>(context, listen: false).countRate : Provider.of<Products>(context, listen: false).countRateVisited} Reviews',
                             textAlign: TextAlign.right,
                             style: TextStyle(
-                              color: Color(0xFF333333),
+                              //color: Color(0xFF333333),
                               fontSize: 14,
                               fontFamily: 'Raleway',
                               fontWeight: FontWeight.w600,
@@ -701,7 +687,7 @@ class _ProfileMainState extends State<ProfileMain> {
                   TextField(
                     controller: reviewController,
                     style: TextStyle(
-                      color: Colors.black,
+                      //color: Colors.black,
                       fontSize: 14,
                       fontFamily: 'Raleway',
                       fontWeight: FontWeight.w400,
@@ -711,7 +697,7 @@ class _ProfileMainState extends State<ProfileMain> {
                     maxLines: 3,
                     decoration: InputDecoration(
                       labelStyle: TextStyle(
-                        color: Color(0xFF979797),
+                        //color: Color(0xFF979797),
                         fontSize: 14,
                         fontFamily: 'Raleway',
                         fontWeight: FontWeight.w400,
@@ -769,7 +755,7 @@ class _ProfileMainState extends State<ProfileMain> {
                       height: 36,
                       clipBehavior: Clip.antiAlias,
                       decoration: ShapeDecoration(
-                        color: Color(0xFFFB98B7),
+                        color:theme ? Color.fromARGB(255, 249, 217, 144): Color(0xFFFB98B7),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -781,7 +767,7 @@ class _ProfileMainState extends State<ProfileMain> {
                           children: [
                             Icon(
                               Icons.star,
-                              color: Colors.white,
+                              color: theme? Colors.black: Colors.white,
                               size: 20,
                             ),
                             const SizedBox(width: 8),
@@ -789,7 +775,7 @@ class _ProfileMainState extends State<ProfileMain> {
                               "Soumettre l'avis",
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                color: Colors.white,
+                                color: theme?Colors.black: Colors.white,
                                 fontSize: 14,
                                 fontFamily: 'Raleway',
                                 fontWeight: FontWeight.w400,
@@ -852,7 +838,7 @@ class _ProfileMainState extends State<ProfileMain> {
                                     Text(
                                       rating["username"],
                                       style: TextStyle(
-                                        color: Color(0xFF333333),
+                                        //color: Color(0xFF333333),
                                         fontSize: 16,
                                         fontFamily: 'Raleway',
                                         fontWeight: FontWeight.w600,
@@ -886,7 +872,7 @@ class _ProfileMainState extends State<ProfileMain> {
                             Text(
                               rating["content"],
                               style: TextStyle(
-                                color: Color(0xFF333333),
+                                //color: Color(0xFF333333),
                                 fontSize: 13,
                                 fontFamily: 'Raleway',
                                 fontWeight: FontWeight.w400,
@@ -936,7 +922,7 @@ class _ProfileMainState extends State<ProfileMain> {
           Text(
             'Contacts',
             style: TextStyle(
-              color: Colors.black,
+              //color: Colors.black,
               fontSize: 14,
               fontFamily: 'Raleway',
               fontWeight: FontWeight.w500,
@@ -951,7 +937,7 @@ class _ProfileMainState extends State<ProfileMain> {
                 ? "${Provider.of<AuthService>(context, listen: false).currentUser?.address ?? ''}"
                 : "${Provider.of<Profileprovider>(context, listen: false).visitedProfile?.address ?? ''}",
             style: TextStyle(
-              color: Colors.black,
+              //color: Colors.black,
               fontSize: 13,
               fontFamily: 'Raleway',
               fontWeight: FontWeight.w400,
@@ -967,7 +953,7 @@ class _ProfileMainState extends State<ProfileMain> {
                 ? "+216 ${Provider.of<AuthService>(context, listen: false).currentUser?.phoneNumber ?? ''}"
                 : "+216 ${Provider.of<Profileprovider>(context, listen: false).visitedProfile?.phoneNumber ?? ''}",
             style: TextStyle(
-              color: Colors.black,
+             // color: Colors.black,
               fontSize: 13,
               fontFamily: 'Raleway',
               fontWeight: FontWeight.w400,
@@ -983,7 +969,7 @@ class _ProfileMainState extends State<ProfileMain> {
                 ? "${Provider.of<AuthService>(context, listen: false).currentUser?.email ?? ''}"
                 : "${Provider.of<Profileprovider>(context, listen: false).visitedProfile?.email ?? ''}",
             style: TextStyle(
-              color: Colors.black,
+              //color: Colors.black,
               fontSize: 13,
               fontFamily: 'Raleway',
               fontWeight: FontWeight.w400,
@@ -996,77 +982,4 @@ class _ProfileMainState extends State<ProfileMain> {
     );
   }
 
-  // Carte d'un item
-  Widget _buildItemCard({
-    required String imageUrl,
-    required String title,
-    required String price,
-    int? notifications,
-  }) {
-    return Stack(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.3),
-                blurRadius: 5,
-                offset: const Offset(0, 3),
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: ClipRRect(
-                  borderRadius:
-                      const BorderRadius.vertical(top: Radius.circular(8)),
-                  child: Image.network(
-                    imageUrl,
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  title,
-                  style: const TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.bold),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Text(
-                  price,
-                  style: const TextStyle(fontSize: 14, color: Colors.grey),
-                ),
-              ),
-            ],
-          ),
-        ),
-        if (notifications != null)
-          Positioned(
-            top: 8,
-            left: 8,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-              decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                '$notifications',
-                style: const TextStyle(fontSize: 12, color: Colors.white),
-              ),
-            ),
-          ),
-      ],
-    );
-  }
 }

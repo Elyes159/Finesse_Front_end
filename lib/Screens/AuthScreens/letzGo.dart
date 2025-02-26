@@ -26,16 +26,7 @@ class _LetzGoState extends State<LetzGo> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: SvgPicture.asset(
-            'assets/Icons/ArrowLeft.svg',
-            width: 24,
-            height: 24,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        
       ),
       body: Form(
         key: _formKey,
@@ -47,7 +38,7 @@ class _LetzGoState extends State<LetzGo> {
               "C'est parti ! ⚡️",
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Color(0xFF111928),
+                //color: Color(0xFF111928),
                 fontSize: 36,
                 fontFamily: 'Raleway',
                 fontWeight: FontWeight.w800,
@@ -59,7 +50,7 @@ class _LetzGoState extends State<LetzGo> {
               "Choisissez un nom d'utilisateur",
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Color(0xFF111928),
+                //color: Color(0xFF111928),
                 fontSize: 16,
                 fontFamily: 'Raleway',
                 fontWeight: FontWeight.w500,
@@ -115,7 +106,7 @@ class _LetzGoState extends State<LetzGo> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Checkbox(
-                  checkColor: Colors.black,
+                  //checkColor: Colors.black,
                   activeColor: const Color(0xFFFFDEC3),
                   value: _isCheckedPrivacy,
                   onChanged: (bool? value) {
@@ -132,7 +123,7 @@ class _LetzGoState extends State<LetzGo> {
                     text: TextSpan(
                       text: "J'ai lu et j'accepte ",
                       style: const TextStyle(
-                        color: Color(0xFF111928),
+                        //color: Color(0xFF111928),
                         fontSize: 14,
                         fontFamily: 'Raleway',
                         fontWeight: FontWeight.w500,
@@ -185,7 +176,7 @@ class _LetzGoState extends State<LetzGo> {
                   child: Text(
                     "(Optionnel) Envoyez-moi des e-mails avec des mises à jour, des conseils et des offres spéciales de Finesse",
                     style: TextStyle(
-                      color: Color(0xFF111928),
+                      //color: Color(0xFF111928),
                       fontSize: 14,
                       fontFamily: 'Raleway',
                       fontWeight: FontWeight.w400,

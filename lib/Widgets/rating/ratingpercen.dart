@@ -13,7 +13,7 @@ class RatingPercentageRow extends StatelessWidget {
         Text(
           '${stars.toInt()}', // Convertit le double en entier
           style: TextStyle(
-            color: Color(0xFF333333),
+            //color: Color(0xFF333333),
             fontSize: 14,
             fontFamily: 'Raleway',
             fontWeight: FontWeight.w500,

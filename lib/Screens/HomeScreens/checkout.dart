@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:finesse_frontend/ApiServices/backend_url.dart';
 import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Provider/products.dart';
+import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:finesse_frontend/Screens/HomeScreens/livraison.dart';
 import 'package:finesse_frontend/Screens/HomeScreens/paymentpage.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
@@ -20,14 +21,14 @@ import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 class CheckoutPage extends StatefulWidget {
   final List<dynamic> productIds;
   final double subtotal;
-  final double total;
+  double total;
 
-  const CheckoutPage({
-    Key? key,
+  CheckoutPage({
+    super.key,
     required this.productIds,
     required this.subtotal,
     required this.total,
-  }) : super(key: key);
+  });
 
   @override
   _CheckoutPageState createState() => _CheckoutPageState();
@@ -39,7 +40,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   String _selectedPaymentMethod = 'Cash on Delivery';
   bool verified = false;
   late Map data = {};
-
+  double deliveryFee = 7.00;
   Future<bool> initiateFlouciPayment(
       BuildContext context, double amount) async {
     int amountInMillimes = (amount * 1000).toInt();
@@ -91,14 +92,39 @@ class _CheckoutPageState extends State<CheckoutPage> {
     super.dispose();
   }
 
+  bool promo = false;
+  double? promoprix;
+  void _applyPromoCode() async {
+    _promoCode = _promoCodeController.text;
+
+    bool isValid = await Provider.of<Products>(context, listen: false)
+        .checkPromoCode(_promoCode);
+
+    if (isValid) {
+      setState(() {
+        promo = true;
+        double discount =
+            Provider.of<Products>(context, listen: false).discount ?? 0;
+        promoprix = widget.total - (widget.total * discount / 100);
+        widget.total = promoprix ?? widget.total;
+      });
+    } else {
+      setState(() {
+        promoprix = widget.total;
+        promo = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
     return Scaffold(
       appBar: AppBar(
         title: Text(
           'Paiement',
           style: TextStyle(
-            color: Colors.black,
+            //color: Colors.black,
             fontSize: 16,
             fontFamily: 'Raleway',
             fontWeight: FontWeight.w400,
@@ -115,12 +141,15 @@ class _CheckoutPageState extends State<CheckoutPage> {
             padding: const EdgeInsets.only(left: 32.0, right: 32),
             child: Row(
               children: [
-                SvgPicture.asset("assets/Icons/MapPin.svg"),
+                SvgPicture.asset(
+                  "assets/Icons/MapPin.svg",
+                  color: theme ? Colors.white : null,
+                ),
                 SizedBox(width: 16),
                 Text(
                   'Addresse',
                   style: TextStyle(
-                    color: Color(0xFF111928),
+                    //color: Color(0xFF111928),
                     fontSize: 16,
                     fontFamily: 'Raleway',
                     fontWeight: FontWeight.w400,
@@ -145,7 +174,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                 .address ==
                             ""
                         ? Color(0xFFBA1A1A)
-                        : Color(0xFF111928),
+                        : theme
+                            ? Colors.white
+                            : Color(0xFF111928),
                     fontSize: 11,
                     fontFamily: 'Raleway',
                     fontWeight: FontWeight.w500,
@@ -163,14 +194,17 @@ class _CheckoutPageState extends State<CheckoutPage> {
             padding: const EdgeInsets.only(left: 32, right: 32),
             child: Row(
               children: [
-                SvgPicture.asset("assets/Icons/Tag.svg"),
+                SvgPicture.asset(
+                  "assets/Icons/Tag.svg",
+                  color: theme ? Colors.white : null,
+                ),
                 SizedBox(width: 16),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: Text(
                     'Code Promo',
                     style: TextStyle(
-                      color: Color(0xFF111928),
+                      //color: Color(0xFF111928),
                       fontSize: 16,
                       fontFamily: 'Raleway',
                       fontWeight: FontWeight.w400,
@@ -183,10 +217,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     controller: _promoCodeController,
                     label: "EX : ABC123",
                     isPassword: false,
-                    onButtonPressed: () {
-                      setState(() {
-                        _promoCode = _promoCodeController.text;
-                      });
+                    onButtonPressed: () async {
+                      if (promo) {
+                        return;
+                      }
+                      _applyPromoCode();
                     },
                   ),
                 ),
@@ -204,7 +239,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               const Text(
                 'Sous-total:',
                 style: TextStyle(
-                  color: Color(0xFF111928),
+                  //color: Color(0xFF111928),
                   fontSize: 16,
                   fontFamily: 'Raleway',
                   fontWeight: FontWeight.w500,
@@ -215,7 +250,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               Text(
                 '${widget.subtotal.toStringAsFixed(2)} DT',
                 style: TextStyle(
-                  color: Color(0xFF111928),
+                  //color: Color(0xFF111928),
                   fontSize: 16,
                   fontFamily: 'Raleway',
                   fontWeight: FontWeight.w500,
@@ -232,7 +267,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               const Text(
                 'Livraison:',
                 style: TextStyle(
-                  color: Color(0xFF111928),
+                  //color: Color(0xFF111928),
                   fontSize: 16,
                   fontFamily: 'Raleway',
                   fontWeight: FontWeight.w500,
@@ -243,7 +278,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               const Text(
                 '7.00 DT',
                 style: TextStyle(
-                  color: Color(0xFF111928),
+                  //color: Color(0xFF111928),
                   fontSize: 16,
                   fontFamily: 'Raleway',
                   fontWeight: FontWeight.w500,
@@ -260,7 +295,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               const Text(
                 'Total du magasin:',
                 style: TextStyle(
-                  color: Color(0xFF111928),
+                  //color: Color(0xFF111928),
                   fontSize: 22,
                   fontFamily: 'Raleway',
                   fontWeight: FontWeight.w500,
@@ -270,7 +305,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               Text(
                 '${widget.total.toStringAsFixed(2)} DT',
                 style: TextStyle(
-                  color: Color(0xFF111928),
+                  //color: Color(0xFF111928),
                   fontSize: 22,
                   fontFamily: 'Raleway',
                   fontWeight: FontWeight.w500,
@@ -292,7 +327,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     Row(
                       children: [
                         SvgPicture.asset(
-                            "assets/Icons/Wallet.svg"), // Icône Cash
+                          "assets/Icons/Wallet.svg",
+                          color: theme ? Colors.white : null,
+                        ), // Icône Cash
                         SizedBox(width: 12),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -300,7 +337,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             Text(
                               "Paiement à la livraison",
                               style: TextStyle(
-                                color: Color(0xFF111928),
+                                //color: Color(0xFF111928),
                                 fontSize: 16,
                                 fontFamily: 'Raleway',
                                 fontWeight: FontWeight.w400,
@@ -311,7 +348,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             Text(
                               '${widget.total.toStringAsFixed(2)} DT',
                               style: TextStyle(
-                                color: Color(0xFF3E536E),
                                 fontSize: 14,
                                 fontFamily: 'Raleway',
                                 fontWeight: FontWeight.w400,
@@ -326,6 +362,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     Row(
                       children: [
                         Radio<String>(
+                          activeColor:
+                              theme ? Color.fromARGB(255, 249, 217, 144) : null,
                           value: "Cash on Delivery",
                           groupValue: _selectedPaymentMethod,
                           onChanged: (value) {
@@ -339,8 +377,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   ],
                 ),
               ),
-
-              // Option "Payment with Card"
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
@@ -350,8 +386,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     Row(
                       children: [
                         SvgPicture.asset(
-                            "assets/Icons/CreditCard.svg"), // Icône Cash
-// Icône Carte
+                          "assets/Icons/CreditCard.svg",
+                          color: theme ? Colors.white : null,
+                        ), // Icône Cash
+
                         SizedBox(width: 12),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -360,7 +398,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             Text(
                               "Paiement par carte",
                               style: TextStyle(
-                                color: Color(0xFF111928),
+                                //color: Color(0xFF111928),
                                 fontSize: 16,
                                 fontFamily: 'Raleway',
                                 fontWeight: FontWeight.w400,
@@ -371,7 +409,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             Text(
                               '${widget.total.toStringAsFixed(2)} DT',
                               style: TextStyle(
-                                color: Color(0xFF3E536E),
+                                //color: Color(0xFF3E536E),
                                 fontSize: 14,
                                 fontFamily: 'Raleway',
                                 fontWeight: FontWeight.w400,
@@ -386,6 +424,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     Row(
                       children: [
                         Radio<String>(
+                          activeColor:
+                              theme ? Color.fromARGB(255, 249, 217, 144) : null,
                           value: "Payment with Card",
                           groupValue: _selectedPaymentMethod,
                           onChanged: (value) {
@@ -412,15 +452,18 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   bool payed =
                       await initiateFlouciPayment(context, widget.total);
                   if (payed) {
+                    double totalWithDelivery =
+                        (promoprix ?? widget.total) + deliveryFee;
                     bool ordered =
                         await Provider.of<Products>(context, listen: false)
                             .createOrder(
-                                Provider.of<AuthService>(context, listen: false)
-                                    .currentUser!
-                                    .id,
-                                widget.productIds,
-                                "paye",
-                                widget.total.toInt());
+                      Provider.of<AuthService>(context, listen: false)
+                          .currentUser!
+                          .id,
+                      widget.productIds,
+                      "paye",
+                      totalWithDelivery.toInt(),
+                    );
                     if (ordered) {
                       Provider.of<Products>(context, listen: false)
                           .getFavourite(
@@ -436,23 +479,30 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     }
                   }
                 } else {
+                   double totalWithDelivery =
+                        (promoprix ?? widget.total) + deliveryFee;
                   bool ordered =
                       await Provider.of<Products>(context, listen: false)
                           .createOrder(
-                              Provider.of<AuthService>(context, listen: false)
-                                  .currentUser!
-                                  .id,
-                              widget.productIds,
-                              "livraison",
-                              widget.total.toInt());
+                    Provider.of<AuthService>(context, listen: false)
+                        .currentUser!
+                        .id,
+                    widget.productIds,
+                    "livraison",
+                    totalWithDelivery.toInt(),
+                  );
                   if (ordered) {
                     Provider.of<Products>(context, listen: false).getFavourite(
                         Provider.of<AuthService>(context, listen: false)
                             .currentUser!
                             .id);
 
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Livraison()));
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => Livraison()),
+                      (Route<dynamic> route) =>
+                          false, // Supprime toutes les pages précédentes
+                    );
                   }
                 }
               }),

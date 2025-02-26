@@ -39,6 +39,40 @@ class Products extends ChangeNotifier {
   List<dynamic> wishProducts = [];
   bool? canRate;
   List filteredProducts = [];
+   String? _promoCode;
+  double? _discount;
+  String? _errorMessage;
+
+  String? get promoCode => _promoCode;
+  double? get discount => _discount;
+
+  Future<bool> checkPromoCode(String code) async {
+    final url = Uri.parse("${AppConfig.baseUrl}/api/products/check_promo_code/$code/");
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        _promoCode = data["code"];
+        _discount = data["discount"];
+        _errorMessage = null;
+        return true;
+      } else {
+        _errorMessage = "Code promo invalide.";
+        _promoCode = null;
+        _discount = null;
+        return false;
+      }
+
+     
+    } catch (error) {
+      _errorMessage = "Erreur de connexion.";
+      _promoCode = null;
+      _discount = null;
+      notifyListeners();
+      return false;
+    }
+  }
 
   Future<bool> sellProduct(
       String title,

@@ -1,5 +1,7 @@
+import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class DescTextField extends StatefulWidget {
   final TextEditingController controller;
@@ -47,6 +49,7 @@ class _DescTextFieldState extends State<DescTextField> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeProvider>(context,listen: false).isDarkMode;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 0.0),
       child: Column(
@@ -58,7 +61,7 @@ class _DescTextFieldState extends State<DescTextField> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: ShapeDecoration(
               shape: RoundedRectangleBorder(
-                side: BorderSide(width: 1, color: Color(0xFF5C7CA4)),
+                side: BorderSide(width: 1, color: theme ? Color.fromARGB(255, 249, 217, 144) : Color(0xFF5C7CA4)),
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
@@ -87,7 +90,6 @@ class _DescTextFieldState extends State<DescTextField> {
                     : null,
                 labelText: widget.label,
                 labelStyle: const TextStyle(
-                  color: Color(0xFF3E536E),
                   fontSize: 16,
                   fontFamily: 'Raleway',
                   fontWeight: FontWeight.w400,

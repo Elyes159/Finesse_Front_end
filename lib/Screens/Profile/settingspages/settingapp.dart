@@ -58,7 +58,7 @@ Future<void> _toggleNotificationPermission(bool value) async {
             child: Text(
               'App Settings',
               style: TextStyle(
-                color: Color(0xFF111928),
+                //color: Color(0xFF111928),
                 fontSize: 16,
                 fontFamily: 'Raleway',
                 fontWeight: FontWeight.w400,

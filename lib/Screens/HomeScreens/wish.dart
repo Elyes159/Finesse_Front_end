@@ -24,7 +24,6 @@ class _WishListState extends State<WishList> {
             child: Text(
               'Favoris',
               style: TextStyle(
-                color: Color(0xFF111928),
                 fontSize: 16,
                 fontFamily: 'Raleway',
                 fontWeight: FontWeight.w400,
@@ -44,7 +43,7 @@ class _WishListState extends State<WishList> {
               child: Text(
                 "Aucun produit favori",
                  style: TextStyle(
-                            color: Color(0xFF111928),
+                            //color: Color(0xFF111928),
                             fontSize: 32,
                             fontFamily: 'Raleway',
                             fontWeight: FontWeight.w800,

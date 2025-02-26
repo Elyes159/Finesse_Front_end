@@ -2,6 +2,7 @@ import 'package:finesse_frontend/ApiServices/backend_url.dart';
 import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Provider/products.dart';
 import 'package:finesse_frontend/Provider/profileProvider.dart';
+import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:finesse_frontend/Screens/Profile/ProfileScreen.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
 import 'package:finesse_frontend/Widgets/CustomTextField/customfieldbuton.dart';
@@ -55,12 +56,13 @@ class _ItemDetailsState extends State<ItemDetails> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeProvider>(context,listen: false).isDarkMode;
     return Scaffold(
       appBar: AppBar(
         title: Text(
          "Détails de l'article",
           style: TextStyle(
-            color: Colors.black,
+            //color: Colors.black,
             fontSize: 16,
             fontFamily: 'Raleway',
             fontWeight: FontWeight.w400,
@@ -68,16 +70,7 @@ class _ItemDetailsState extends State<ItemDetails> {
             letterSpacing: 0.50,
           ),
         ),
-        leading: IconButton(
-          icon: SvgPicture.asset(
-            'assets/Icons/ArrowLeft.svg',
-            width: 24,
-            height: 24,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+       
       ),
       body: Column(
         children: [
@@ -152,7 +145,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                         Text(
                           widget.product['productName'],
                           style: TextStyle(
-                            color: Colors.black,
+                            //color: Colors.black,
                             fontSize: 16,
                             fontFamily: 'Raleway',
                             fontWeight: FontWeight.w600,
@@ -167,7 +160,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                                   ? ""
                                   : "Brand: ${widget.product["brand"]}",
                               style: TextStyle(
-                                color: Color(0xFF111928),
+                                //color: Color(0xFF111928),
                                 fontSize: 16,
                                 fontFamily: 'Raleway',
                                 fontWeight: FontWeight.w500,
@@ -181,7 +174,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                                       ? "Size: ${widget.product["taille"]}"
                                       : "",
                               style: TextStyle(
-                                color: Color(0xFF111928),
+                                //color: Color(0xFF111928),
                                 fontSize: 16,
                                 fontFamily: 'Raleway',
                                 fontWeight: FontWeight.w500,
@@ -191,7 +184,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                             Text(
                               "${widget.product["productPrice"]}",
                               style: TextStyle(
-                                color: Color(0xFF111928),
+                                //color: Color(0xFF111928),
                                 fontSize: 16,
                                 fontFamily: 'Raleway',
                                 fontWeight: FontWeight.w500,
@@ -250,7 +243,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                                   Text(
                                     "${widget.product["owner_username"]}",
                                     style: TextStyle(
-                                      color: Color(0xFF111928),
+                                      //color: Color(0xFF111928),
                                       fontSize: 16,
                                       fontFamily: 'Raleway',
                                       fontWeight: FontWeight.w500,
@@ -261,7 +254,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                                   Text(
                                     '⭐️ ${widget.product["owner_ratings"]?.toStringAsFixed(2) ?? "0.00"}',
                                     style: TextStyle(
-                                      color: Color(0xFF111928),
+                                      //color: Color(0xFF111928),
                                       fontSize: 14,
                                       fontFamily: 'Raleway',
                                       fontWeight: FontWeight.w500,
@@ -289,7 +282,8 @@ class _ItemDetailsState extends State<ItemDetails> {
                                                 )));
                                   },
                                   child: SvgPicture.asset(
-                                      "assets/Icons/arrow_profile.svg"))
+                                      "assets/Icons/arrow_profile.svg",
+                                      color: theme?Color.fromARGB(255, 249, 217, 144):null ,))
                             ],
                           ),
                         )
@@ -309,7 +303,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                           child: Text(
                             '${widget.product["description"]}',
                             style: TextStyle(
-                              color: Colors.black,
+                              //color: Colors.black,
                               fontSize: 13,
                               fontFamily: 'Raleway',
                               fontWeight: FontWeight.w400,
@@ -363,7 +357,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                                 child: SvgPicture.asset(
                                   isWished
                                       ? "assets/Icons/heart-remove.svg"
-                                      : "assets/Icons/heart-add.svg",
+                                      : "assets/Icons/heart-add.svg",color: theme? Color.fromARGB(255, 249, 217, 144):null,
                                 ),
                               ),
                             ],
@@ -380,7 +374,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                     child: Text(
                       "Commentaires",
                       style: TextStyle(
-                        color: Colors.black,
+                        //color: Colors.black,
                         fontSize: 13,
                         fontFamily: 'Raleway',
                         fontWeight: FontWeight.w400,
@@ -421,7 +415,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                                                 comment['username'] ??
                                                     "Utilisateur inconnu",
                                                 style: TextStyle(
-                                                  color: Colors.black,
+                                                  //color: Colors.black,
                                                   fontSize: 14,
                                                   fontFamily: "Raleway",
                                                   fontWeight: FontWeight.w600,
@@ -432,7 +426,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                                                 comment['content'] ??
                                                     "Commentaire vide",
                                                 style: TextStyle(
-                                                  color: Colors.black87,
+                                                  //color: Colors.black87,
                                                   fontSize: 13,
                                                   fontFamily: "Raleway",
                                                   fontWeight: FontWeight.w400,
@@ -443,7 +437,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                                                 comment['created_at'] ??
                                                     "Date inconnue",
                                                 style: TextStyle(
-                                                  color: Colors.grey,
+                                                  //color: Colors.grey,
                                                   fontSize: 12,
                                                   fontFamily: "Raleway",
                                                   fontWeight: FontWeight.w300,
@@ -463,7 +457,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                             "Aucun commentaire pour le moment.",
                             style: TextStyle(
                               fontFamily: "Raleway",
-                              color: Colors.black54,
+                              //color: Colors.black54,
                               fontSize: 14,
                               fontStyle: FontStyle.italic,
                             ),
@@ -477,7 +471,7 @@ class _ItemDetailsState extends State<ItemDetails> {
           // Position the CustomTextFormFieldwithButton at the bottom of the screen
 
           Container(
-            color: Color(0XFFf5fafb),
+            color: theme? Color(0XFF1C1C1C): Color(0XFFf5fafb),
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: CustomTextFormFieldwithButton(
               isCommented: isComented,
@@ -523,7 +517,7 @@ class _ItemDetailsState extends State<ItemDetails> {
               ),
             ),
           Container(
-            color: Color(0XFFf5fafb),
+            color: theme? Color(0XFF1C1C1C): Color(0XFFf5fafb),
             child: Padding(
               padding: const EdgeInsets.only(
                 bottom: 30,
@@ -532,7 +526,7 @@ class _ItemDetailsState extends State<ItemDetails> {
               ),
               child: Container(
                 width: MediaQuery.of(context).size.width,
-                color: Color(0XFFf5fafb),
+                color:theme? Color(0XFF1C1C1C): Color(0XFFf5fafb),
                 child: CustomButton(
                   buttonColor: isFavorite ? Colors.grey : Color(0xFFFB98B7),
                   label: !isFavorite ? "Ajouter au panier" : "Ajouté",

@@ -1,5 +1,6 @@
 import 'package:finesse_frontend/ApiServices/backend_url.dart';
 import 'package:finesse_frontend/Provider/AuthService.dart';
+import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:finesse_frontend/Screens/HomeScreens/Explore.dart';
 import 'package:finesse_frontend/Screens/HomeScreens/HomeScreen.dart';
 import 'package:finesse_frontend/Screens/Notifications/NotifScreens.dart';
@@ -23,6 +24,7 @@ class Navigation extends StatefulWidget {
   @override
   State<Navigation> createState() => _NavigationState();
 }
+
 class _NavigationState extends State<Navigation> {
   String? parametre = "";
   int _selectedIndex = 0;
@@ -32,6 +34,7 @@ class _NavigationState extends State<Navigation> {
     super.initState();
     _loadParameter();
   }
+
   Future<void> _loadParameter() async {
     parametre = await const FlutterSecureStorage().read(key: 'parametre');
     setState(() {
@@ -45,7 +48,7 @@ class _NavigationState extends State<Navigation> {
     });
   }
 
-  void _onItemTapped(int index){
+  void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
@@ -55,6 +58,7 @@ class _NavigationState extends State<Navigation> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<AuthService>(context, listen: false).currentUser!;
+    bool theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
     return Scaffold(
       body: _pages.isNotEmpty ? _pages[_selectedIndex] : Container(),
       bottomNavigationBar: BottomNavigationBar(
@@ -64,7 +68,13 @@ class _NavigationState extends State<Navigation> {
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
               "assets/Icons/home.svg",
-              color: _selectedIndex == 0 ? Color(0xFFFB98B7) : Colors.black,
+              color: _selectedIndex == 0
+                  ? theme
+                      ?  Color.fromARGB(255, 249, 217, 144)
+                      : Color(0xFFFB98B7)
+                  : theme
+                      ? Colors.white
+                      : Colors.black,
               height: 24,
               width: 24,
             ),
@@ -75,14 +85,26 @@ class _NavigationState extends State<Navigation> {
               height: 24,
               width: 24,
               "assets/Icons/explore.svg",
-              color: _selectedIndex == 1 ? Color(0xFFFB98B7) : Colors.black,
+              color: _selectedIndex == 1
+                  ? theme
+                      ?  Color.fromARGB(255, 249, 217, 144)
+                      : Color(0xFFFB98B7)
+                  : theme
+                      ? Colors.white
+                      : Colors.black,
             ),
             label: "Explorer",
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.add,
-              color: _selectedIndex == 2 ? Color(0xFFFB98B7) : Colors.black,
+              color: _selectedIndex == 2
+                  ? theme
+                      ?  Color.fromARGB(255, 249, 217, 144)
+                      : Color(0xFFFB98B7)
+                  : theme
+                      ? Colors.white
+                      : Colors.black,
               size: 24,
             ),
             label: "Vendre",
@@ -90,8 +112,13 @@ class _NavigationState extends State<Navigation> {
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
               "assets/Icons/notification.svg",
-              color:
-                  _selectedIndex == 3 ? const Color(0xFFFB98B7) : Colors.black,
+              color: _selectedIndex == 3
+                  ? theme
+                      ?  Color.fromARGB(255, 249, 217, 144)
+                      : Color(0xFFFB98B7)
+                  : theme
+                      ? Colors.white
+                      : Colors.black,
             ),
             label: 'Notifications',
           ),
@@ -100,39 +127,38 @@ class _NavigationState extends State<Navigation> {
               height: 24,
               width: 24,
               decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: _selectedIndex == 4
-                    ? Border.all(color: Color(0xFFFB98B7), width: 2)
-                    : null,
-              ),
+                  shape: BoxShape.circle,
+                  border: _selectedIndex == 4
+                      ? (theme
+                          ? Border.all(color:  Color.fromARGB(255, 249, 217, 144), width: 2)
+                          : Border.all(color: Color(0xFFFB98B7), width: 2))
+                      : null),
               child: CircleAvatar(
                 radius: 50.0,
-                backgroundImage: (user.avatar != "" && user.avatar != null)
+                backgroundImage:  (user.avatar != "" && user.avatar != null)
                     ? NetworkImage(parametre == "normal"
                         ? "${AppConfig.baseUrl}${user.avatar}"
                         : user.avatar!)
                     : AssetImage('assets/images/user.png') as ImageProvider,
                 backgroundColor: Colors.transparent,
-                child: user.avatar == null
-                    ?  Container()
-                    : null,
+                child: user.avatar == null ? Container() : null,
               ),
             ),
             label: "Profil",
           ),
         ],
-        selectedLabelStyle: const TextStyle(
+        selectedLabelStyle: TextStyle(
           fontFamily: "Raleway",
           fontSize: 12,
-          color: Color(0xFFFB98B7),
+          color: theme ?  Color.fromARGB(255, 249, 217, 144) : Color(0xFFFB98B7),
         ),
-        unselectedLabelStyle: const TextStyle(
+        unselectedLabelStyle: TextStyle(
           fontFamily: "Raleway",
           fontSize: 12,
-          color: Colors.black,
+          color: theme ? Colors.white  :Colors.black,
         ),
-        selectedItemColor: Color(0xFFFB98B7),
-        unselectedItemColor: Colors.black,
+        selectedItemColor: theme ?  Color.fromARGB(255, 249, 217, 144) :  Color(0xFFFB98B7),
+        unselectedItemColor:theme ? Colors.white : Colors.black,
         type: BottomNavigationBarType.fixed,
       ),
     );

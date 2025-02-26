@@ -69,16 +69,7 @@ class _PasswordResetState extends State<PasswordReset> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: SvgPicture.asset(
-            'assets/Icons/ArrowLeft.svg',
-            width: 24,
-            height: 24,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        
       ),
       body: ListView(
         children: [
@@ -87,7 +78,7 @@ class _PasswordResetState extends State<PasswordReset> {
             'Réinitialisation du mot de passe',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Color(0xFF111928),
+              //color: Color(0xFF111928),
               fontSize: 36,
               fontFamily: 'Raleway',
               fontWeight: FontWeight.w800,
@@ -101,7 +92,7 @@ class _PasswordResetState extends State<PasswordReset> {
               'Entrez votre e-mail pour recevoir\nle code de vérification',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Color(0xFF111928),
+                //color: Color(0xFF111928),
                 fontSize: 16,
                 fontFamily: 'Raleway',
                 fontWeight: FontWeight.w500,

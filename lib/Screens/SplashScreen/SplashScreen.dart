@@ -23,30 +23,35 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    _startProgressAnimation();
     _initializeApp();
   }
 
-  /// Fonction pour initialiser l'application et mettre à jour la barre de progression
+  /// Anime la barre de progression sur 10 secondes
+  void _startProgressAnimation() {
+    Timer.periodic(const Duration(milliseconds: 50), (timer) {
+      if (progress >= 1.0) {
+        timer.cancel();
+      } else {
+        setState(() => progress += 0.01);
+      }
+    });
+  }
+
+  /// Fonction pour initialiser l'application sans affecter la barre de progression
   Future<void> _initializeApp() async {
-    double step = 1 / 4; // 4 étapes de progression
-
     String? accessToken = await storage.read(key: 'access_token');
-    setState(() => progress += step); // Étape 1 : Lecture du token
-
     String? parametre = await storage.read(key: 'parametre');
-    setState(() => progress += step); // Étape 2 : Lecture des paramètres
 
     await Future.wait([
       Provider.of<Products>(context, listen: false).getProducts(),
       Provider.of<Products>(context, listen: false).getProductsViewed(),
       Provider.of<Stories>(context, listen: false).loadUserStoriesData(),
     ]);
-    setState(() => progress += step); // Étape 3 : Chargement des produits et stories
 
     _loadUserDataBasedOnParam(parametre);
-    setState(() => progress = 1.0); // Étape 4 : Chargement terminé
 
-    _navigateToNextScreen(accessToken);
+    Future.delayed(const Duration(seconds: 5), () => _navigateToNextScreen(accessToken));
   }
 
   /// Charge les données utilisateur en fonction du paramètre sauvegardé
@@ -60,19 +65,17 @@ class _SplashScreenState extends State<SplashScreen> {
     });
   }
 
-  /// Navigue vers l'écran suivant une fois le chargement terminé
+  /// Navigue vers l'écran suivant après 10 secondes
   void _navigateToNextScreen(String? accessToken) {
-    Future.delayed(const Duration(milliseconds: 500), () {
-      if (!mounted) return;
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => accessToken != null && accessToken.isNotEmpty
-              ? Navigation(onItemSelected: (int value) {}, currentIndex: 0)
-              : const SignInScreen(),
-        ),
-      );
-    });
+    if (!mounted) return;
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => accessToken != null && accessToken.isNotEmpty
+            ? Navigation(onItemSelected: (int value) {}, currentIndex: 0)
+            : const SignInScreen(),
+      ),
+    );
   }
 
   @override
@@ -113,7 +116,7 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  /// Widget pour afficher la barre de progression dynamique
+  /// Widget pour afficher la barre de progression animée sur 10 secondes
   Widget _buildProgressBar() {
     return Container(
       width: 247,
@@ -132,7 +135,7 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
           ),
           AnimatedContainer(
-            duration: const Duration(milliseconds: 500),
+            duration: const Duration(milliseconds: 100),
             width: 247 * progress,
             height: 10,
             decoration: ShapeDecoration(

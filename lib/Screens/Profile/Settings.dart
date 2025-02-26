@@ -10,6 +10,7 @@ import 'package:finesse_frontend/Screens/Profile/settingspages/privacupolicy.dar
 import 'package:finesse_frontend/Screens/Profile/settingspages/settingapp.dart';
 import 'package:finesse_frontend/Screens/Profile/settingspages/viewed.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
+import 'package:finesse_frontend/Widgets/AuthButtons/logout.dart';
 import 'package:finesse_frontend/Widgets/settings/containerinsettings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -34,6 +35,8 @@ class _ParametresState extends State<Parametres> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
+
     final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
@@ -44,7 +47,7 @@ class _ParametresState extends State<Parametres> {
             child: Text(
               'Paramètres',
               style: TextStyle(
-                color: Color(0xFF111928),
+                //color: Color(0xFF111928),
                 fontSize: 16,
                 fontFamily: 'Raleway',
                 fontWeight: FontWeight.w400,
@@ -101,7 +104,7 @@ class _ParametresState extends State<Parametres> {
             child: Text(
               'Paramètres',
               style: TextStyle(
-                color: Color(0xFF111928),
+                //color: Color(0xFF111928),
                 fontSize: 14,
                 fontFamily: 'Raleway',
                 fontWeight: FontWeight.w500,
@@ -146,7 +149,7 @@ class _ParametresState extends State<Parametres> {
         
           Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 8),
-            child: CustomButton(
+            child: CustomButtonLogOut(
               label: "Déconnexion",
               onTap: () {
                 Provider.of<AuthService>(context, listen: false).signOut();

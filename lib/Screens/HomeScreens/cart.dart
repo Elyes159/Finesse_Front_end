@@ -1,5 +1,6 @@
 import 'package:finesse_frontend/ApiServices/backend_url.dart';
 import 'package:finesse_frontend/Provider/products.dart';
+import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:finesse_frontend/Screens/HomeScreens/checkout.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
 import 'package:flutter/material.dart';
@@ -10,12 +11,13 @@ class Cart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
+    final theme = Provider.of<ThemeProvider>(context,listen:false).isDarkMode;
     return Scaffold(
       appBar: AppBar(
         title: const Text(
           "Panier",
           style: TextStyle(
-            color: Colors.black,
             fontSize: 16,
             fontFamily: 'Raleway',
             fontWeight: FontWeight.w400,
@@ -48,7 +50,6 @@ class Cart extends StatelessWidget {
                         Text(
                           'Panier vide',
                           style: TextStyle(
-                            color: Color(0xFF111928),
                             fontSize: 32,
                             fontFamily: 'Raleway',
                             fontWeight: FontWeight.w800,
@@ -65,7 +66,6 @@ class Cart extends StatelessWidget {
                               "Ajoutez des articles à votre panier",
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                color: Color(0xFF111928),
                                 fontSize: 16,
                                 fontFamily: 'Raleway',
                                 fontWeight: FontWeight.w500,
@@ -123,7 +123,6 @@ class Cart extends StatelessWidget {
                                             Text(
                                               product['title'],
                                               style: TextStyle(
-                                                color: Color(0xFF111928),
                                                 fontSize: 16,
                                                 fontFamily: 'Raleway',
                                                 fontWeight: FontWeight.w400,
@@ -135,7 +134,6 @@ class Cart extends StatelessWidget {
                                               product['description'] ??
                                                   'Aucune description',
                                               style: TextStyle(
-                                                color: Color(0xFF111928),
                                                 fontSize: 16,
                                                 fontFamily: 'Raleway',
                                                 fontWeight: FontWeight.w400,
@@ -153,7 +151,7 @@ class Cart extends StatelessWidget {
                                           Text(
                                             '${product['price']} DT',
                                             style: TextStyle(
-                                              color: Color(0xFF111928),
+                                              
                                               fontSize: 16,
                                               fontFamily: 'Raleway',
                                               fontWeight: FontWeight.w500,
@@ -197,7 +195,7 @@ class Cart extends StatelessWidget {
                             const Text(
                               'Sous-total:',
                               style: TextStyle(
-                                color: Color(0xFF111928),
+                                
                                 fontSize: 16,
                                 fontFamily: 'Raleway',
                                 fontWeight: FontWeight.w500,
@@ -208,7 +206,7 @@ class Cart extends StatelessWidget {
                             Text(
                               '${subtotal.toStringAsFixed(2)} DT',
                               style: TextStyle(
-                                color: Color(0xFF111928),
+                                
                                 fontSize: 16,
                                 fontFamily: 'Raleway',
                                 fontWeight: FontWeight.w500,
@@ -225,7 +223,7 @@ class Cart extends StatelessWidget {
                             const Text(
                               'Livraison:',
                               style: TextStyle(
-                                color: Color(0xFF111928),
+                                //color: Color(0xFF111928),
                                 fontSize: 16,
                                 fontFamily: 'Raleway',
                                 fontWeight: FontWeight.w500,
@@ -236,7 +234,7 @@ class Cart extends StatelessWidget {
                             const Text(
                               '7.00 DT',
                               style: TextStyle(
-                                color: Color(0xFF111928),
+                                //color: Color(0xFF111928),
                                 fontSize: 16,
                                 fontFamily: 'Raleway',
                                 fontWeight: FontWeight.w500,
@@ -253,7 +251,7 @@ class Cart extends StatelessWidget {
                             const Text(
                               'Total des achats:',
                               style: TextStyle(
-                                color: Color(0xFF111928),
+                                 //color: Color(0xFF111928),
                                 fontSize: 22,
                                 fontFamily: 'Raleway',
                                 fontWeight: FontWeight.w500,
@@ -263,7 +261,7 @@ class Cart extends StatelessWidget {
                             Text(
                               '${total.toStringAsFixed(2)} DT',
                               style: TextStyle(
-                                color: Color(0xFF111928),
+                                //color: Color(0xFF111928),
                                 fontSize: 22,
                                 fontFamily: 'Raleway',
                                 fontWeight: FontWeight.w500,
@@ -277,12 +275,10 @@ class Cart extends StatelessWidget {
                           buttonColor: Color(0xFFC668AA),
                           label: "Passer à la caisse",
                           onTap: () {
-                            // Obtenez les IDs des produits
                             List<dynamic> productIds = favorites
                                 .map((product) => product['id'])
                                 .toList();
 
-                            // Naviguer vers la page de paiement avec les paramètres requis
                             Navigator.push(
                               context,
                               MaterialPageRoute(

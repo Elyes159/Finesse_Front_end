@@ -51,16 +51,7 @@ class _ChangePasswordState extends State<ChangePassword> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: SvgPicture.asset(
-            'assets/Icons/ArrowLeft.svg',
-            width: 24,
-            height: 24,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        
       ),
       body: Center(
         child: ListView(
@@ -71,7 +62,7 @@ class _ChangePasswordState extends State<ChangePassword> {
               textAlign: TextAlign.center,
               'Changer le mot de passe',
               style: TextStyle(
-                color: Color(0xFF111928),
+                //color: Color(0xFF111928),
                 fontSize: 32,
                 fontFamily: 'Raleway',
                 fontWeight: FontWeight.w800,
@@ -86,7 +77,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                 "Définissez un nouveau mot de passe que vous\nvous souviendrez cette fois",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Color(0xFF111928),
+                  //color: Color(0xFF111928),
                   fontSize: 16,
                   fontFamily: 'Raleway',
                   fontWeight: FontWeight.w500,

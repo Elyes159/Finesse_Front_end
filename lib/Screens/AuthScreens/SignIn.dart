@@ -1,4 +1,5 @@
 import 'package:finesse_frontend/Provider/AuthService.dart';
+import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/PasswordReset.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/SignUpScreen.dart';
 import 'package:finesse_frontend/Screens/HomeScreens/HomeScreen.dart';
@@ -57,6 +58,8 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
+        final theme = Provider.of<ThemeProvider>(context).isDarkMode;
+
     final authService = Provider.of<AuthService>(context);
     return Scaffold(
       body: Center(
@@ -67,7 +70,7 @@ class _SignInScreenState extends State<SignInScreen> {
             const Text(
               'Bienvenue',
               style: TextStyle(
-                color: Color(0xFF111928),
+                //color: Color(0xFF111928),
                 fontSize: 32,
                 fontFamily: 'Raleway',
                 fontWeight: FontWeight.bold,
@@ -83,7 +86,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 "Entrez nom d'utilisateur\net votre mot de passe",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Color(0xFF111928),
+                  //color: Color(0xFF111928),
                   fontSize: 16,
                   fontFamily: 'Raleway',
                   fontWeight: FontWeight.w500,
@@ -140,7 +143,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             'Mot de passe oublié ?',
                             textAlign: TextAlign.left,
                             style: TextStyle(
-                              color: Color(0xFF111928),
+                              //color: Color(0xFF111928),
                               fontSize: 14,
                               fontFamily: 'Raleway',
                               fontWeight: FontWeight.w500,
@@ -216,7 +219,7 @@ class _SignInScreenState extends State<SignInScreen> {
               'Ou utilisez',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Color(0xFF111928),
+                //color: Color(0xFF111928),
                 fontSize: 14,
                 fontFamily: 'Raleway',
                 fontWeight: FontWeight.w500,
@@ -300,7 +303,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   'Pas encore de compte ?',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Color(0xFF111928),
+                    //color: Color(0xFF111928),
                     fontSize: 16,
                     fontFamily: 'Raleway',
                     fontWeight: FontWeight.w500,
@@ -313,11 +316,11 @@ class _SignInScreenState extends State<SignInScreen> {
                         MaterialPageRoute(
                             builder: (context) => const SignUpScreen()));
                   },
-                  child: const Text(
+                  child: Text(
                     ' Inscrivez-vous maintenant',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Color(0xFFC668AA),
+                      color: theme? Color.fromARGB(255, 249, 217, 144):  Color(0xFFC668AA),
                       fontSize: 16,
                       fontFamily: 'Raleway',
                       fontWeight: FontWeight.w500,

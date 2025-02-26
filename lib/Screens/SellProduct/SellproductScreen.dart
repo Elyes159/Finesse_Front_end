@@ -131,7 +131,6 @@ class _SellProductScreenState extends State<SellProductScreen> {
               const Text(
                 'Vendre un article',
                 style: TextStyle(
-                  color: Colors.black,
                   fontSize: 16,
                   fontFamily: 'Raleway',
                   fontWeight: FontWeight.w400,
@@ -152,7 +151,6 @@ class _SellProductScreenState extends State<SellProductScreen> {
                   child: Text(
                     'Ajoutez des informations sur les articles que vous vendez pour aider les clients à en savoir plus.',
                     style: TextStyle(
-                      color: Color(0xFF334155),
                       fontSize: 14,
                       fontFamily: 'Raleway',
                       fontWeight: FontWeight.w500,

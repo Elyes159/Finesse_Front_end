@@ -45,7 +45,7 @@ class _VerificationMailState extends State<VerificationMail> {
             "Entrez le code d'accès",
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Color(0xFF111928),
+              //color: Color(0xFF111928),
               fontSize: 32,
               fontFamily: 'Raleway',
               fontWeight: FontWeight.w800,
@@ -59,7 +59,7 @@ class _VerificationMailState extends State<VerificationMail> {
               "Entrez le code d'accès envoyé à 'email'.",
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Color(0xFF111928),
+                //color: Color(0xFF111928),
                 fontSize: 16,
                 fontFamily: 'Raleway',
                 fontWeight: FontWeight.w500,

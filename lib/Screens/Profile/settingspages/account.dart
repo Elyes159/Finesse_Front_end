@@ -71,7 +71,7 @@ class _AccountState extends State<Account> {
                 child: Text(
                   'Compte',
                   style: TextStyle(
-                    color: Color(0xFF111928),
+                    //color: Color(0xFF111928),
                     fontSize: 16,
                     fontFamily: 'Raleway',
                     fontWeight: FontWeight.w400,

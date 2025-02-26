@@ -51,16 +51,7 @@ class _CompleteInfoState extends State<CompleteInfo> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: SvgPicture.asset(
-            'assets/Icons/ArrowLeft.svg',
-            width: 24,
-            height: 24,
-          ),
-          onPressed: () {
-            Navigator.pop(context); // Retour à la page précédente
-          },
-        ),
+        
       ),
       body: ListView(
         padding: EdgeInsets.all(8),
@@ -70,7 +61,7 @@ class _CompleteInfoState extends State<CompleteInfo> {
             "Complétez les informations",
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Color(0xFF111928),
+              //color: Color(0xFF111928),
               fontSize: 32,
               fontFamily: 'Raleway',
               fontWeight: FontWeight.w800,
@@ -81,7 +72,7 @@ class _CompleteInfoState extends State<CompleteInfo> {
             "Configurez votre profil",
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Color(0xFF111928),
+              //color: Color(0xFF111928),
               fontSize: 16,
               fontFamily: 'Raleway',
               fontWeight: FontWeight.w500,

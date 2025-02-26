@@ -1,5 +1,7 @@
+import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class CustomDropdownFormField<K, V> extends StatefulWidget {
   final List<Map<K, V>> options; // Liste des options sous forme de Map<K, V>
@@ -57,6 +59,7 @@ class _CustomDropdownFormFieldState<K, V>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeProvider>(context,listen: false).isDarkMode;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 0.0),
       child: Column(
@@ -68,7 +71,7 @@ class _CustomDropdownFormFieldState<K, V>
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: ShapeDecoration(
               shape: RoundedRectangleBorder(
-                side: const BorderSide(width: 1, color: Color(0xFF5C7CA4)),
+                side: BorderSide(width: 1, color: theme ? Color.fromARGB(255, 249, 217, 144) :  Color(0xFF5C7CA4)),
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
@@ -87,7 +90,6 @@ class _CustomDropdownFormFieldState<K, V>
               alignment: AlignmentDirectional.centerEnd,
               style: const TextStyle(
                 fontFamily: 'Raleway',
-                color: Color(0xFF3E536E),
               ),
               underline: const SizedBox.shrink(),
               items: widget.options
@@ -98,7 +100,6 @@ class _CustomDropdownFormFieldState<K, V>
                         option.values.first.toString(),
                         style: const TextStyle(
                           fontFamily: 'Raleway',
-                          color: Color(0xFF3E536E),
                         ),
                       ),
                     ),
@@ -123,7 +124,6 @@ class _CustomDropdownFormFieldState<K, V>
                                   .toString()
                               : 'please select a category', // Message alternatif
                       style: const TextStyle(
-                        color: Color(0xFF3E536E),
                         fontSize: 14,
                         fontFamily: 'Raleway',
                         fontWeight: FontWeight.w400,

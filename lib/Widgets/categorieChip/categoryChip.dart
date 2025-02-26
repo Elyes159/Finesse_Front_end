@@ -1,5 +1,7 @@
+import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart'; // Importer le package pour SVG
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart'; // Importer le package pour SVG
 
 class CategoryChip extends StatelessWidget {
   final String text;
@@ -17,6 +19,7 @@ class CategoryChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeProvider>(context,listen:false).isDarkMode;
     return Padding(
       padding: const EdgeInsets.only(right: 16.0),
       child: GestureDetector(
@@ -24,7 +27,9 @@ class CategoryChip extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           decoration: ShapeDecoration(
-            color: isSelected ? Colors.blue : const Color(0xFFE5E7EB),
+            color: isSelected
+             ? theme ? Color.fromARGB(255, 249, 217, 144) : Colors.blue 
+             : const Color(0xFFE5E7EB),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(40),
             ),
@@ -39,13 +44,17 @@ class CategoryChip extends StatelessWidget {
                     iconPath!, // Utiliser le chemin de l'icône SVG
                     height: 16, // Définir la taille de l'icône
                     width: 16,
-                    color: isSelected ? Colors.white : const Color(0xFF111928),
+                    color: isSelected 
+                    ? theme? Colors.black : Colors.white :
+                     const Color(0xFF111928),
                   ),
                 ),
               Text(
                 text,
                 style: TextStyle(
-                  color: isSelected ? Colors.white : const Color(0xFF111928),
+                  color: isSelected 
+                  ? theme? Colors.black : Colors.white
+                   : const Color(0xFF111928),
                   fontSize: 12,
                   fontFamily: 'Raleway',
                   fontWeight: FontWeight.w400,

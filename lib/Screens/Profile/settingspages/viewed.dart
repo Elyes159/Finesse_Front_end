@@ -25,7 +25,7 @@ class _ViewedState extends State<Viewed> {
               title: Text(
             'Vu récemment',
             style: TextStyle(
-              color: Colors.black,
+              //color: Colors.black,
               fontSize: 16,
               fontFamily: 'Raleway',
               fontWeight: FontWeight.w400,

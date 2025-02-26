@@ -1,3 +1,4 @@
+import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:finesse_frontend/Screens/SellProduct/SellproductScreen.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
 import 'package:finesse_frontend/Widgets/CustomOptionsFields/optionsField.dart';
@@ -5,6 +6,7 @@ import 'package:finesse_frontend/Widgets/customchekcoptionfield/customchekcoptio
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 class ChooseCategory extends StatefulWidget {
   const ChooseCategory({super.key});
@@ -134,6 +136,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeProvider>(context,listen:false ).isDarkMode;
     return Scaffold(
       appBar: AppBar(
         title: const Center(
@@ -142,7 +145,6 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             child: Text(
               "Choisissez une catégorie",
               style: TextStyle(
-                color: Colors.black,
                 fontSize: 16,
                 fontFamily: 'Raleway',
                 fontWeight: FontWeight.w400,
@@ -153,16 +155,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             ),
           ),
         ),
-        leading: IconButton(
-          icon: SvgPicture.asset(
-            'assets/Icons/ArrowLeft.svg',
-            width: 24,
-            height: 24,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
@@ -172,7 +165,6 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             child: Text(
               "Sélectionnez une catégorie pour votre article dans la liste ci-dessous",
               style: TextStyle(
-                color: Color(0xFF334155),
                 fontSize: 14,
                 fontFamily: 'Raleway',
                 fontWeight: FontWeight.w500,
@@ -848,7 +840,6 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             child: RichText(
               text: TextSpan(
                 style: const TextStyle(
-                  color: Color(0xFF334155),
                   fontSize: 14,
                   fontFamily: 'Raleway',
                   fontWeight: FontWeight.w500,
@@ -861,8 +852,8 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                   TextSpan(
                     text:
                         "Réinitialiser", // Mot à colorier en rose et rendre interactif
-                    style: const TextStyle(
-                      color: Color(0xFFFB98B7), // Couleur rose
+                    style:  TextStyle(
+                      color: theme? Color.fromARGB(255, 249, 217, 144) : Color(0xFFFB98B7), // Couleur rose
                     ),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {

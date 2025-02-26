@@ -35,7 +35,7 @@ class _ItemSubmittedState extends State<ItemSubmitted> {
                     'Article soumis pour vérification',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Color(0xFF334155),
+                      //color: Color(0xFF334155),
                       fontSize: 24,
                       fontFamily: 'Raleway',
                       fontWeight: FontWeight.w700,
@@ -55,7 +55,7 @@ class _ItemSubmittedState extends State<ItemSubmitted> {
                           text:
                               'Un administrateur examinera votre article avant sa publication.',
                           style: TextStyle(
-                            color: Color(0xFF334155),
+                            //color: Color(0xFF334155),
                             fontSize: 14,
                             fontFamily: 'Raleway',
                             fontWeight: FontWeight.w500,
@@ -112,7 +112,7 @@ class _ItemSubmittedState extends State<ItemSubmitted> {
                       "Retour à l'accueil",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Color(0xFF111928),
+                        //color: Color(0xFF111928),
                         fontSize: 14,
                         fontFamily: 'Raleway',
                         fontWeight: FontWeight.w500,

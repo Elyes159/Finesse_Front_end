@@ -14,7 +14,7 @@ class Contact extends StatelessWidget {
             child: Text(
               "Centre d'aide",
               style: TextStyle(
-                color: Color(0xFF111928),
+                //color: Color(0xFF111928),
                 fontSize: 18,
                 fontFamily: 'Raleway',
                 fontWeight: FontWeight.w500,

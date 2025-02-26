@@ -1,7 +1,9 @@
+import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
 import 'package:finesse_frontend/Widgets/Navigation/Navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class Livraison extends StatefulWidget {
   const Livraison({super.key});
@@ -13,12 +15,13 @@ class Livraison extends StatefulWidget {
 class _LivraisonState extends State<Livraison> {
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
     return Scaffold(
       appBar: AppBar(
         title: Text(
           'Paiement',
           style: TextStyle(
-            color: Colors.black,
+            //color: Colors.black,
             fontSize: 16,
             fontFamily: 'Raleway',
             fontWeight: FontWeight.w400,
@@ -32,7 +35,8 @@ class _LivraisonState extends State<Livraison> {
           SizedBox(
             height: 200,
           ),
-          SvgPicture.asset("assets/Icons/truck-time.svg"),
+          SvgPicture.asset("assets/Icons/truck-time.svg",
+              color: theme ? Color.fromARGB(255, 249, 217, 144) : null),
           SizedBox(
             height: 24,
           ),
@@ -40,7 +44,7 @@ class _LivraisonState extends State<Livraison> {
             'Merci pour\nvotre achat',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Color(0xFF334155),
+              //color: Color(0xFF334155),
               fontSize: 24,
               fontFamily: 'Raleway',
               fontWeight: FontWeight.w700,
@@ -53,7 +57,7 @@ class _LivraisonState extends State<Livraison> {
             'Votre commande sera bientôt en route',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Color(0xFF334155),
+              //color: Color(0xFF334155),
               fontSize: 14,
               fontFamily: 'Raleway',
               fontWeight: FontWeight.w500,

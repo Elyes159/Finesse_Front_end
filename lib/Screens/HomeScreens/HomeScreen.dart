@@ -4,6 +4,7 @@ import 'package:finesse_frontend/ApiServices/backend_url.dart';
 import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Provider/Stories.dart';
 import 'package:finesse_frontend/Provider/products.dart';
+import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:finesse_frontend/Screens/HomeScreens/cart.dart';
 import 'package:finesse_frontend/Screens/HomeScreens/story.dart';
 import 'package:finesse_frontend/Screens/HomeScreens/wish.dart';
@@ -70,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<AuthService>(context, listen: false).currentUser!;
-
+    final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -119,6 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           "assets/Icons/heartt.svg",
                           height: 18,
                           width: 18,
+                          color: theme ? Colors.white : null,
                         ),
                       ),
                       const SizedBox(width: 20),
@@ -129,7 +131,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 MaterialPageRoute(
                                     builder: (context) => Cart()));
                           },
-                          child: SvgPicture.asset("assets/Icons/favv.svg")),
+                          child: SvgPicture.asset("assets/Icons/favv.svg",
+                              color: theme ? Colors.white : null)),
                     ],
                   ),
                 ],
@@ -169,7 +172,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       border: Border.all(
-                                          color: Colors.blue, width: 2),
+                                          color: theme
+                                              ? Color.fromARGB(
+                                                  255, 249, 217, 144)
+                                              : Colors.blue,
+                                          width: 2),
                                     ),
                                     child: CircleAvatar(
                                       radius: 50.0,
@@ -221,14 +228,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                         height: 16,
                                         width: 16,
                                         decoration: BoxDecoration(
-                                          color: Colors.blue,
+                                          color: theme
+                                              ? Color.fromARGB(
+                                                  255, 249, 217, 144)
+                                              : Colors.blue,
                                           shape: BoxShape.circle,
                                           border: Border.all(
                                               color: Colors.white, width: 2),
                                         ),
-                                        child: const Icon(
+                                        child: Icon(
                                           Icons.add,
-                                          color: Colors.white,
+                                          color: theme
+                                              ? Colors.black
+                                              : Colors.white,
                                           size: 12,
                                         ),
                                       ),
@@ -242,7 +254,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ? user.username
                                     : user.fullName,
                                 style: TextStyle(
-                                  color: Color(0xFF0E1C36),
+                                  color:
+                                      theme ? Colors.white : Color(0xFF0E1C36),
                                   fontSize: 12,
                                   fontFamily: 'Raleway',
                                   fontWeight: FontWeight.w500,
@@ -256,82 +269,99 @@ class _HomeScreenState extends State<HomeScreen> {
 
                           // Affichage des autres stories importées
                           Row(
-      children: groupedStories.entries.map((entry) {
-        String username = entry.key;
-        List<Map<String, dynamic>> userStories = entry.value;
-        Map<String, dynamic> firstStory = userStories.first;
+                            children: groupedStories.entries.map((entry) {
+                              String username = entry.key;
+                              List<Map<String, dynamic>> userStories =
+                                  entry.value;
+                              Map<String, dynamic> firstStory =
+                                  userStories.first;
 
-        return Padding(
-          padding: const EdgeInsets.only(right: 10),
-          child: GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => StoryViewScreen(stories: userStories),
-                ),
-              );
-            },
-            child: Column(
-              children: [
-                Stack(
-                  children: [
-                    Container(
-                      height: 56,
-                      width: 56,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: Colors.blue,
-                          width: 2,
-                        ),
-                      ),
-                      child: CircleAvatar(
-                        radius: 50.0,
-                        backgroundImage: (firstStory['avatar'] != null)
-                            ? firstStory["avatar_type"] == "normal"
-                                ? NetworkImage("${AppConfig.baseUrl}/${firstStory['avatar']}")
-                                : NetworkImage(firstStory['avatar'])
-                            : const AssetImage('assets/images/user.png') as ImageProvider,
-                        backgroundColor: Colors.transparent,
-                      ),
-                    ),
-                    // Afficher un indicateur si plusieurs stories
-                    if (userStories.length > 1)
-                      Positioned(
-                        bottom: 2,
-                        right: 2,
-                        child: Container(
-                          padding: const EdgeInsets.all(3),
-                          decoration: const BoxDecoration(
-                            color: Colors.red,
-                            shape: BoxShape.circle,
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => StoryViewScreen(
+                                            stories: userStories),
+                                      ),
+                                    );
+                                  },
+                                  child: Column(
+                                    children: [
+                                      Stack(
+                                        children: [
+                                          Container(
+                                            height: 56,
+                                            width: 56,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                color: theme
+                                                    ? Color.fromARGB(
+                                                        255, 249, 217, 144)
+                                                    : Colors.blue,
+                                                width: 2,
+                                              ),
+                                            ),
+                                            child: CircleAvatar(
+                                              radius: 50.0,
+                                              backgroundImage: (firstStory[
+                                                          'avatar'] !=
+                                                      null)
+                                                  ? firstStory["avatar_type"] ==
+                                                          "normal"
+                                                      ? NetworkImage(
+                                                          "${AppConfig.baseUrl}/${firstStory['avatar']}")
+                                                      : NetworkImage(
+                                                          firstStory['avatar'])
+                                                  : const AssetImage(
+                                                          'assets/images/user.png')
+                                                      as ImageProvider,
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                            ),
+                                          ),
+                                          // Afficher un indicateur si plusieurs stories
+                                          if (userStories.length > 1)
+                                            Positioned(
+                                              bottom: 2,
+                                              right: 2,
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.all(3),
+                                                decoration: const BoxDecoration(
+                                                  color: Colors.red,
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: const Icon(
+                                                  Icons.collections,
+                                                  color: Colors.white,
+                                                  size: 12,
+                                                ),
+                                              ),
+                                            ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 3),
+                                      Text(
+                                        username,
+                                        style: TextStyle(
+                                          color: theme
+                                              ? Colors.white
+                                              : Color(0xFF0E1C36),
+                                          fontSize: 12,
+                                          fontFamily: 'Raleway',
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }).toList(),
                           ),
-                          child: const Icon(
-                            Icons.collections,
-                            color: Colors.white,
-                            size: 12,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 3),
-                Text(
-                  username,
-                  style: const TextStyle(
-                    color: Color(0xFF0E1C36),
-                    fontSize: 12,
-                    fontFamily: 'Raleway',
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      }).toList(),
-    ),
                         ],
                       );
                     },
@@ -457,9 +487,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     (product) => {
                       'type': "Récemment consulté",
                       'subcategory': product['subcategory'] ?? 'Unknown',
-                      'imageUrl': "${AppConfig.baseUrl}/${product['images'][0]}"
+                      'imageUrl': "${AppConfig.baseUrl}${product['images'][0]}"
                               .isNotEmpty
-                          ? "${AppConfig.baseUrl}/${product['images'][0]}"
+                          ? "${AppConfig.baseUrl}${product['images'][0]}"
                           : 'assets/images/test1.png',
                       'images':
                           product['images'] ?? [], // Liste complète des images
@@ -497,9 +527,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       'type': 'Pour vous',
                       'category': product['category'] ?? 'Unknown',
                       'subcategory': product['subcategory'] ?? 'Unknown',
-                      'imageUrl': "${AppConfig.baseUrl}/${product['images'][0]}"
+                      'imageUrl': "${AppConfig.baseUrl}${product['images'][0]}"
                               .isNotEmpty
-                          ? "${AppConfig.baseUrl}/${product['images'][0]}"
+                          ? "${AppConfig.baseUrl}${product['images'][0]}"
                           : 'assets/images/test1.png',
                       'images':
                           product['images'] ?? [], // Liste complète des images
