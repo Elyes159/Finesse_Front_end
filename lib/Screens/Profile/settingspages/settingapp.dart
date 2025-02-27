@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-
 class AppSetting extends StatefulWidget {
   const AppSetting({super.key});
 
@@ -13,43 +12,45 @@ class AppSetting extends StatefulWidget {
 }
 
 class _AppSettingState extends State<AppSetting> {
-  bool _notificationsEnabled = false; 
+  bool _notificationsEnabled = false;
+
   Future<void> _checkNotificationPermission() async {
     var status = await Permission.notification.status;
     setState(() {
       _notificationsEnabled = status.isGranted;
     });
-  }// Variable d'état pour le switch
-Future<void> _toggleNotificationPermission(bool value) async {
+  }
+
+  Future<void> _toggleNotificationPermission(bool value) async {
     if (value) {
-      // Demander la permission
       var status = await Permission.notification.request();
       if (status.isGranted) {
         setState(() {
           _notificationsEnabled = true;
         });
       } else {
-        // Gérer le refus de la permission
         setState(() {
           _notificationsEnabled = false;
         });
       }
     } else {
-      // Pour désactiver les notifications, vous devrez probablement gérer cela dans votre logique de notification
       setState(() {
         _notificationsEnabled = false;
       });
     }
-  } @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-        _checkNotificationPermission();
-
-
   }
+
+  @override
+  void initState() {
+    super.initState();
+    _checkNotificationPermission();
+  }
+
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -58,7 +59,6 @@ Future<void> _toggleNotificationPermission(bool value) async {
             child: Text(
               'App Settings',
               style: TextStyle(
-                //color: Color(0xFF111928),
                 fontSize: 16,
                 fontFamily: 'Raleway',
                 fontWeight: FontWeight.w400,
@@ -73,8 +73,9 @@ Future<void> _toggleNotificationPermission(bool value) async {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            // Notification settings container
             Container(
-              height: 60,
+              height: screenHeight * 0.1, // Dynamically set height
               width: double.infinity,
               decoration: ShapeDecoration(
                 color: Colors.white,
@@ -125,10 +126,11 @@ Future<void> _toggleNotificationPermission(bool value) async {
                 ],
               ),
             ),
-            SizedBox(height: 18),
+            SizedBox(height: screenHeight * 0.03), // Dynamic spacing
+            // Delete account container
             Container(
               width: double.infinity,
-              height: 70,
+              height: screenHeight * 0.1, // Dynamically set height
               clipBehavior: Clip.antiAlias,
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -171,7 +173,7 @@ Future<void> _toggleNotificationPermission(bool value) async {
                             fontWeight: FontWeight.w400,
                             height: 1.40,
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -179,7 +181,6 @@ Future<void> _toggleNotificationPermission(bool value) async {
                     padding: const EdgeInsets.only(right: 16),
                     child: GestureDetector(
                       onTap: () {
-                        // Afficher le dialog de confirmation
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
@@ -187,7 +188,7 @@ Future<void> _toggleNotificationPermission(bool value) async {
                               title: Text(
                                 'Confirmation',
                                 style: TextStyle(
-                                  color: Colors.black,
+                                  //color: Colors.black,
                                   fontSize: 14,
                                   fontFamily: 'Raleway',
                                   fontWeight: FontWeight.w500,
@@ -198,7 +199,7 @@ Future<void> _toggleNotificationPermission(bool value) async {
                               content: Text(
                                 'Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.',
                                 style: TextStyle(
-                                  color: Colors.black,
+                                  //color: Colors.black,
                                   fontSize: 14,
                                   fontFamily: 'Raleway',
                                   fontWeight: FontWeight.w500,
@@ -209,12 +210,13 @@ Future<void> _toggleNotificationPermission(bool value) async {
                               actions: [
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.of(context).pop(); // Ferme le dialog
+                                    Navigator.of(context).pop();
                                   },
                                   child: Text(
                                     'Annuler',
                                     style: TextStyle(
-                                      color: Colors.black,
+                                      color: Colors.white,
+                                      
                                       fontSize: 14,
                                       fontFamily: 'Raleway',
                                       fontWeight: FontWeight.w500,
@@ -248,8 +250,8 @@ Future<void> _toggleNotificationPermission(bool value) async {
                                     }
                                   },
                                   child: Container(
-                                    width: 110,
-                                    height: 40,
+                                    width: screenWidth * 0.3, // Dynamically set width
+                                    height: screenHeight * 0.05, // Dynamically set height
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 24, vertical: 10),
                                     decoration: ShapeDecoration(
@@ -288,6 +290,7 @@ Future<void> _toggleNotificationPermission(bool value) async {
                       },
                       child: Container(
                         height: 40,
+                        width: 104, // Dynamically set height
                         padding: const EdgeInsets.symmetric(
                             horizontal: 24, vertical: 10),
                         decoration: BoxDecoration(
@@ -300,7 +303,7 @@ Future<void> _toggleNotificationPermission(bool value) async {
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 12,
+                              fontSize: 10,
                               fontFamily: 'Raleway',
                               fontWeight: FontWeight.w500,
                               height: 1.43,
@@ -313,7 +316,7 @@ Future<void> _toggleNotificationPermission(bool value) async {
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),

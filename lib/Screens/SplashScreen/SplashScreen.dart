@@ -118,19 +118,11 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             SvgPicture.asset(
               "assets/images/logoapp.svg",
-              width: 89.7,
-              height: 113.49,
+              width: 180.7,
+              height: 180.49,
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Finesse',
-              style: TextStyle(
-                color: Color(0xFFFB98B7),
-                fontSize: 40,
-                fontFamily: 'Raleway',
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            
             const SizedBox(height: 20),
             const Text(
               'Buy and sell your clothes easily and quickly.',

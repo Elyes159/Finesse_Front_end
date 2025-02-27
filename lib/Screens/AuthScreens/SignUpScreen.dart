@@ -124,10 +124,43 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ? () {}
                             : () async {
                                 setState(() {
-                                  _errorMessage = null; // Reset error message
+                                  _errorMessage =
+                                      null; // Réinitialiser le message d'erreur
                                 });
-                                if (_formKey.currentState?.validate() ??
-                                    false) {
+
+                                // Vérification des conditions
+                                if (_emailController.text.isEmpty ||
+                                    !_emailController.text.contains('@') ||
+                                    !_emailController.text.contains('.')) {
+                                  setState(() {
+                                    _errorMessage =
+                                        "Veuillez entrer un email valide.";
+                                  });
+                                } else if (_passwordController.text.length <
+                                    8) {
+                                  setState(() {
+                                    _errorMessage =
+                                        "Le mot de passe doit contenir au moins 8 caractères.";
+                                  });
+                                } else if (!_passwordController.text
+                                    .contains(RegExp(r'[A-Z].*[A-Z]'))) {
+                                  setState(() {
+                                    _errorMessage =
+                                        "Le mot de passe doit contenir au moins 2 majuscules.";
+                                  });
+                                } else if (!_passwordController.text.contains(
+                                    RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+                                  setState(() {
+                                    _errorMessage =
+                                        "Le mot de passe doit contenir un caractère spécial.";
+                                  });
+                                } else if (_passwordController.text !=
+                                    _confirmPassController.text) {
+                                  setState(() {
+                                    _errorMessage =
+                                        "Les mots de passe ne correspondent pas.";
+                                  });
+                                } else {
                                   setState(() {
                                     _isLoading = true;
                                   });
@@ -148,10 +181,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) =>
-                                              const VerificationMail(
-                                                parametre: "signup",
-                                              )),
+                                        builder: (context) =>
+                                            const VerificationMail(
+                                                parametre: "signup"),
+                                      ),
                                     );
                                   } catch (error) {
                                     setState(() {
@@ -207,8 +240,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           final result = await Provider.of<AuthService>(context,
                                   listen: false)
                               .signUpGoogle(
-                                fcmToken: "await FirebaseMessaging.instance.getToken()"
-                              );
+                                  fcmToken:
+                                      "await FirebaseMessaging.instance.getToken()");
 
                           if (result.statusCode == 200) {
                             Navigator.pushReplacement(
@@ -241,9 +274,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         try {
                           final result = await Provider.of<AuthService>(context,
                                   listen: false)
-                              .signUpFacebook(fcmToken: "await FirebaseMessaging.instance.getToken()",
-                                
-                              );
+                              .signUpFacebook(
+                            fcmToken:
+                                "await FirebaseMessaging.instance.getToken()",
+                          );
 
                           if (result.statusCode == 200) {
                             Navigator.pushReplacement(
@@ -256,14 +290,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             final responseData =
                                 jsonDecode(result.body); // Décodage du JSON
                             setState(() {
-                              _errorMessage = 
+                              _errorMessage =
                                   "Une erreur inconnue est survenue.";
                             });
                           }
                         } catch (e) {
                           setState(() {
-                            _errorMessage =
-                                "Erreur de connexion avec Facebook";
+                            _errorMessage = "Erreur de connexion avec Facebook";
                           });
                         }
                       },
@@ -273,15 +306,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     CustomContainer(
                       onTap: () async {
                         setState(() {
-                          _errorMessage =
-                              null; 
+                          _errorMessage = null;
                         });
                         try {
                           final result = await Provider.of<AuthService>(context,
                                   listen: false)
-                              .signUpApple(fcmToken: "await FirebaseMessaging.instance.getToken()",
-                                
-                              );
+                              .signUpApple(
+                            fcmToken:
+                                "await FirebaseMessaging.instance.getToken()",
+                          );
 
                           if (result.statusCode == 200) {
                             Navigator.pushReplacement(
@@ -294,20 +327,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             final responseData =
                                 jsonDecode(result.body); // Décodage du JSON
                             setState(() {
-                              _errorMessage = 
+                              _errorMessage =
                                   "Une erreur inconnue est survenue.";
                             });
                           }
                         } catch (e) {
                           setState(() {
-                            _errorMessage =
-                                "Erreur de connexion avec Facebook";
+                            _errorMessage = "Erreur de connexion avec apple";
                           });
                         }
                       },
                       imagePath: "assets/Icons/apple.svg",
                     ),
-
                   ],
                 ),
                 const SizedBox(height: 24),
@@ -332,11 +363,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               builder: (context) => const SignInScreen()),
                         );
                       },
-                      child:  Text(
+                      child: Text(
                         "Connectez-vous maintenant",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color:theme? Color.fromARGB(255, 249, 217, 144):  Color(0xFFC668AA),
+                          color: theme
+                              ? Color.fromARGB(255, 249, 217, 144)
+                              : Color(0xFFC668AA),
                           fontSize: 16,
                           fontFamily: 'Raleway',
                           fontWeight: FontWeight.w500,

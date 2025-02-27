@@ -386,7 +386,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     CategoryChip(
-                      iconPath: "assets/Icons/tab.svg",
+                      iconPath: "assets/images/tableau.jpeg",
                       text: "Tableaux",
                       isSelected: selectedCategory == "Tableaux",
                       onTap: () {
@@ -396,7 +396,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     CategoryChip(
-                      iconPath: "assets/Icons/scul.svg",
+                      iconPath: "assets/images/scul.jpeg",
                       text: "Sculptures",
                       isSelected: selectedCategory == "Sculptures",
                       onTap: () {
@@ -406,7 +406,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     CategoryChip(
-                      iconPath: "assets/Icons/deco.svg",
+                      iconPath: "assets/images/deco.jpeg",
                       text: "Decoration",
                       isSelected: selectedCategory == "D",
                       onTap: () {
@@ -416,7 +416,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     CategoryChip(
-                      iconPath: "assets/Icons/art.svg",
+                      iconPath: "assets/images/graph.jpeg",
                       text: "Art graphiques",
                       isSelected: selectedCategory == "Art graphiques",
                       onTap: () {
@@ -426,7 +426,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     CategoryChip(
-                      iconPath: "assets/Icons/vet.svg",
+                      iconPath: "assets/images/mv.jpeg",
                       text: "Mode et vintage",
                       isSelected: selectedCategory == "Mode et vintage",
                       onTap: () {
@@ -436,7 +436,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     CategoryChip(
-                      iconPath: "assets/Icons/montre.svg",
+                      iconPath: "assets/images/mb.jpeg",
                       text: "Montres et Bijoux",
                       isSelected: selectedCategory == "Montres et Bijoux",
                       onTap: () {
@@ -446,7 +446,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     CategoryChip(
-                      iconPath: "assets/Icons/mona-lisa.svg",
+                      iconPath: "assets/images/at.jpeg",
                       text: "Arts de la table",
                       isSelected: selectedCategory == "Arts de la table",
                       onTap: () {
@@ -456,7 +456,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     CategoryChip(
-                      iconPath: "assets/Icons/bookk.svg",
+                      iconPath: "assets/images/livre.jpeg",
                       text: "Livres",
                       isSelected: selectedCategory == "Livres",
                       onTap: () {
@@ -466,7 +466,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     CategoryChip(
-                      iconPath: "assets/Icons/jeu.svg",
+                      iconPath: "assets/images/jouets.jpeg",
                       text: "Jouets",
                       isSelected: selectedCategory == "Jouets",
                       onTap: () {

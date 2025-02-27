@@ -170,6 +170,103 @@ class Products extends ChangeNotifier {
       return false; // Retourner false si une exception se produit lors de l'envoi
     }
   }
+    Future<bool> updateProduct(
+      String productId,
+      String title,
+      String description,
+      String subCatgory,
+      double price,
+      String possibleDeff,
+      String? taille,
+      String? pointure,
+      String? etat,
+      String? brand,
+      List<File?> images) async {
+    // Vérification de la validité de l'ID utilisateur
+    String? storedUserId = await storage.read(key: 'user_id');
+    if (storedUserId == null || storedUserId.isEmpty) {
+      print("Erreur: L'ID utilisateur est manquant.");
+      return false;
+    }
+
+    final url = Uri.parse("${AppConfig.baseUrl}/api/products/updateProduct/");
+    var request = http.MultipartRequest('POST', url);
+
+    request.fields['owner_id'] = storedUserId;
+    request.fields['product_id'] = productId;
+    request.fields['category_id'] = subCatgory;
+    request.fields['title'] = title;
+    request.fields['description'] = description;
+    request.fields['price'] = price.toString();
+    request.fields['taille'] = taille ?? "";
+    request.fields['pointure'] = pointure ?? "0";
+    request.fields['etat'] = etat ?? "";
+    request.fields['brand'] = brand ?? "";
+    request.fields['is_available'] = "true"; // Défini comme "true"
+
+    // Ajouter les images à la requête
+    for (var image in images) {
+      if (image != null) {
+        try {
+          // Vérification que l'image existe bien et est lisible
+          if (!await image.exists()) {
+            print("Erreur: L'image ${image.uri.path} n'existe pas.");
+            continue;
+          }
+
+          // Détecter le type MIME de l'image
+          String? mimeType = lookupMimeType(image.uri.path);
+          String mimeTypePart =
+              mimeType?.split('/')[1] ?? 'jpeg'; // Type MIME par défaut
+          print("Type MIME détecté : $mimeTypePart");
+
+          var imageStream = http.ByteStream(image.openRead());
+          var imageLength = await image.length();
+          var multipartFile = http.MultipartFile(
+            'images',
+            imageStream,
+            imageLength,
+            filename: image.uri.pathSegments.last,
+            contentType: MediaType('image', mimeTypePart),
+          );
+          request.files.add(multipartFile);
+        } catch (e) {
+          print("Erreur lors de l'ajout de l'image : $e");
+          return false;
+        }
+      }
+    }
+
+    print("Données envoyées : ");
+    print("Owner ID: $storedUserId");
+    print("Category ID: $subCatgory");
+    print("Title: $title");
+    print("Description: $description");
+    print("Price: $price");
+    print("Taille: $taille");
+    print("Pointure: $pointure");
+
+    try {
+      var response = await request.send();
+      final responseString = await response.stream.bytesToString();
+      print("Réponse du serveur : $responseString");
+
+      // Vérifier le code de statut de la réponse
+      if (response.statusCode == 200) {
+        notifyListeners(); // Notifier les auditeurs
+        return true;
+      } else {
+        final Map<String, dynamic> responseJson = json.decode(responseString);
+
+        errorMessage = responseJson["message"];
+        print("Erreur serveur: ${response.statusCode}");
+        return false;
+      }
+    } catch (e) {
+      print("Erreur lors de l'envoi de la requête : $e");
+      return false; // Retourner false si une exception se produit lors de l'envoi
+    }
+  }
 
   Future<void> getProductsByUser() async {
     try {
@@ -690,7 +787,7 @@ class Products extends ChangeNotifier {
         if (data['favorites'] != null) {
           wishProducts = data['favorites'];
           notifyListeners();
-          print("Produits favoris récupérés : $favoriteProducts");
+          print("Produits favoris récupérés : $wishProducts");
         } else {
           print('Aucun produit favori trouvé pour cet utilisateur.');
         }
@@ -700,6 +797,34 @@ class Products extends ChangeNotifier {
       }
     } catch (e) {
       print('Erreur rencontrée : $e');
+    }
+  }
+  Future<bool> deleteProduct(String productId ,int userId ) async {
+    try {
+      final url =
+          Uri.parse('${AppConfig.baseUrl}/api/products/delete_product/$productId/$userId/');
+      final headers = {
+        'Content-Type': 'application/json',
+        // 'Authorization': 'Bearer votre_token', // Ajoutez l'en-tête d'autorisation si nécessaire
+      };
+
+      final response = await http.delete(url, headers: headers);
+
+      if (response.statusCode == 204) {
+        // Si la suppression a réussi, retirez le produit de la liste locale
+        products
+            .removeWhere((product) => product['id'] == productId);
+        notifyListeners(); // Notifiez les auditeurs de la mise à jour
+        print('Produit favori supprimé avec succès.');
+        return true;
+      } else {
+        print(
+            'Erreur lors de la suppression du produit : ${response.statusCode}');
+        return false;
+      }
+    } catch (e) {
+      print('Erreur rencontrée : $e');
+      return false;
     }
   }
 

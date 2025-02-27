@@ -56,11 +56,11 @@ class _ItemDetailsState extends State<ItemDetails> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Provider.of<ThemeProvider>(context,listen: false).isDarkMode;
+    final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
     return Scaffold(
       appBar: AppBar(
         title: Text(
-         "Détails de l'article",
+          "Détails de l'article",
           style: TextStyle(
             //color: Colors.black,
             fontSize: 16,
@@ -70,7 +70,6 @@ class _ItemDetailsState extends State<ItemDetails> {
             letterSpacing: 0.50,
           ),
         ),
-       
       ),
       body: Column(
         children: [
@@ -282,8 +281,11 @@ class _ItemDetailsState extends State<ItemDetails> {
                                                 )));
                                   },
                                   child: SvgPicture.asset(
-                                      "assets/Icons/arrow_profile.svg",
-                                      color: theme?Color.fromARGB(255, 249, 217, 144):null ,))
+                                    "assets/Icons/arrow_profile.svg",
+                                    color: theme
+                                        ? Color.fromARGB(255, 249, 217, 144)
+                                        : null,
+                                  ))
                             ],
                           ),
                         )
@@ -318,46 +320,32 @@ class _ItemDetailsState extends State<ItemDetails> {
                           final productId = widget.product["product_id"];
 
                           // Trouver le produit dans wishProducts
-                          final wishedProduct =
-                              productsProvider.wishProducts.firstWhere(
-                            (product) => product["id"] == productId,
-                            orElse: () => null,
-                          );
 
-                          var isWished = wishedProduct != null;
+                          bool isWished = false;
 
                           return Column(
                             children: [
                               InkWell(
                                 onTap: () {
-                                  if (!isWished) {
-                                    productsProvider.createWish(
-                                        productId: productId);
-                                      
-                                      
-                                        productsProvider.getWish(
+                                  productsProvider.createWish(
+                                      productId: productId);
+
+                                  
+                                  setState(() {
+                                    productsProvider.getWish(
                                     Provider.of<AuthService>(context,
                                             listen: false)
                                         .currentUser!
                                         .id,
                                   );
-                                  setState(() {
-                                        isWished = true;
-                                      });
-                                  } else {
-                                    final wishId = wishedProduct?["id_wish"];
-                                    if (wishId != null) {
-                                      productsProvider.deleteWish(wishId);
-                                    }
-                                  }
-
-                                  // Rafraîchir la liste des favoris
-                                  
+                                    isWished = true;
+                                  });
                                 },
                                 child: SvgPicture.asset(
-                                  isWished
-                                      ? "assets/Icons/heart-remove.svg"
-                                      : "assets/Icons/heart-add.svg",color: theme? Color.fromARGB(255, 249, 217, 144):null,
+                                  "assets/Icons/heart-add.svg",
+                                  color: theme
+                                      ? Color.fromARGB(255, 249, 217, 144)
+                                      : null,
                                 ),
                               ),
                             ],
@@ -471,7 +459,7 @@ class _ItemDetailsState extends State<ItemDetails> {
           // Position the CustomTextFormFieldwithButton at the bottom of the screen
 
           Container(
-            color: theme? Color(0XFF1C1C1C): Color(0XFFf5fafb),
+            color: theme ? Color(0XFF1C1C1C) : Color(0XFFf5fafb),
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: CustomTextFormFieldwithButton(
               isCommented: isComented,
@@ -517,7 +505,7 @@ class _ItemDetailsState extends State<ItemDetails> {
               ),
             ),
           Container(
-            color: theme? Color(0XFF1C1C1C): Color(0XFFf5fafb),
+            color: theme ? Color(0XFF1C1C1C) : Color(0XFFf5fafb),
             child: Padding(
               padding: const EdgeInsets.only(
                 bottom: 30,
@@ -526,7 +514,7 @@ class _ItemDetailsState extends State<ItemDetails> {
               ),
               child: Container(
                 width: MediaQuery.of(context).size.width,
-                color:theme? Color(0XFF1C1C1C): Color(0XFFf5fafb),
+                color: theme ? Color(0XFF1C1C1C) : Color(0XFFf5fafb),
                 child: CustomButton(
                   buttonColor: isFavorite ? Colors.grey : Color(0xFFFB98B7),
                   label: !isFavorite ? "Ajouter au panier" : "Ajouté",

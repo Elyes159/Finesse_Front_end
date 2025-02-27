@@ -14,11 +14,14 @@ import 'package:provider/provider.dart';
 class Navigation extends StatefulWidget {
   final ValueChanged<int> onItemSelected;
   final int currentIndex;
+  final product;
+
 
   const Navigation({
     Key? key,
     required this.onItemSelected,
     this.currentIndex = 0,
+    this.product
   }) : super(key: key);
 
   @override
@@ -41,7 +44,7 @@ class _NavigationState extends State<Navigation> {
       _pages = [
         HomeScreen(parameter: parametre!),
         Explore(),
-        SellProductScreen(),
+        SellProductScreen(product: widget.product,),
         NotifScreen(),
         ProfileMain(),
       ];

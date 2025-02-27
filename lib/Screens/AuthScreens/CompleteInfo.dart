@@ -50,9 +50,7 @@ class _CompleteInfoState extends State<CompleteInfo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        
-      ),
+      appBar: AppBar(),
       body: ListView(
         padding: EdgeInsets.all(8),
         children: [
@@ -86,7 +84,8 @@ class _CompleteInfoState extends State<CompleteInfo> {
               children: [
                 Center(
                   child: GestureDetector(
-                    onTap: widget.parameter == "normal" || widget.parameter=="apple"
+                    onTap: widget.parameter == "normal" ||
+                            widget.parameter == "apple"
                         ? () {
                             _pickImage();
                           }
@@ -236,7 +235,53 @@ class _CompleteInfoState extends State<CompleteInfo> {
                           setState(() {
                             isLoading = true; // Set loading state to true
                           });
+
                           Uint8List imageToSend;
+
+                          // Vérification des champs
+                          if (_fullnameController.text.isEmpty) {
+                            setState(() {
+                              _errorMessage = "Le nom complet est requis.";
+                            });
+                            setState(() {
+                              isLoading = false; // Reset loading state
+                            });
+                            return;
+                          }
+
+                          if (_phoneController.text.isEmpty) {
+                            setState(() {
+                              _errorMessage =
+                                  "Le numéro de téléphone est requis.";
+                            });
+                            setState(() {
+                              isLoading = false; // Reset loading state
+                            });
+                            return;
+                          }
+
+                          if (_phoneController.text.length != 8 ||
+                              !_phoneController.text
+                                  .contains(RegExp(r'^[0-9]+$'))) {
+                            setState(() {
+                              _errorMessage =
+                                  "Le numéro de téléphone doit contenir exactement 8 chiffres.";
+                            });
+                            setState(() {
+                              isLoading = false; // Reset loading state
+                            });
+                            return;
+                          }
+
+                          if (_addressController.text.isEmpty) {
+                            setState(() {
+                              _errorMessage = "L'adresse est requise.";
+                            });
+                            setState(() {
+                              isLoading = false; // Reset loading state
+                            });
+                            return;
+                          }
 
                           if (_imageFile == null) {
                             imageToSend = await _loadImageFromAssets(
@@ -277,7 +322,7 @@ class _CompleteInfoState extends State<CompleteInfo> {
                             } catch (e) {
                               setState(() {
                                 _errorMessage =
-                                    "Erreur survenu"; // Affichage du message d'erreur
+                                    "Erreur survenue"; // Affichage du message d'erreur
                               });
                             }
                           } else if (widget.parameter == "google") {
@@ -304,7 +349,8 @@ class _CompleteInfoState extends State<CompleteInfo> {
                                 );
                               } else {
                                 setState(() {
-                                  _errorMessage = "Error: ${jsonDecode(response.body)["message"] }";
+                                  _errorMessage =
+                                      "Error: ${jsonDecode(response.body)["message"]}";
                                 });
                               }
                             } catch (e) {
@@ -336,7 +382,8 @@ class _CompleteInfoState extends State<CompleteInfo> {
                                 );
                               } else {
                                 setState(() {
-                                  _errorMessage = "${jsonDecode(response.body)["message"]}";
+                                  _errorMessage =
+                                      "${jsonDecode(response.body)["message"]}";
                                 });
                               }
                             } catch (e) {
@@ -345,12 +392,13 @@ class _CompleteInfoState extends State<CompleteInfo> {
                               });
                             }
                           }
+
                           setState(() {
                             isLoading =
                                 false; // Reset loading state once the process is finished
                           });
                         },
-                ),
+                )
               ],
             ),
           ),

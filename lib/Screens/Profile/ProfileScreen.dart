@@ -4,8 +4,10 @@ import 'package:finesse_frontend/Provider/products.dart';
 import 'package:finesse_frontend/Provider/profileProvider.dart';
 import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:finesse_frontend/Screens/Profile/Settings.dart';
+import 'package:finesse_frontend/Screens/SellProduct/SellproductScreen.dart';
 import 'package:finesse_frontend/Screens/SellProduct/itemDetails.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
+import 'package:finesse_frontend/Widgets/Navigation/Navigation.dart';
 import 'package:finesse_frontend/Widgets/cards/productCard.dart';
 import 'package:finesse_frontend/Widgets/rating/ratingpercen.dart';
 import 'package:finesse_frontend/Widgets/rating/star.dart';
@@ -42,7 +44,7 @@ class _ProfileMainState extends State<ProfileMain> {
 
   @override
   Widget build(BuildContext context) {
-        final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
+    final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
 
     final user = widget.id == null
         ? Provider.of<AuthService>(context, listen: false).currentUser!
@@ -124,7 +126,9 @@ class _ProfileMainState extends State<ProfileMain> {
                             height: 36,
                             clipBehavior: Clip.antiAlias,
                             decoration: ShapeDecoration(
-                              color: theme? Color.fromARGB(255, 249, 217, 144): Color(0xFFFB98B7),
+                              color: theme
+                                  ? Color.fromARGB(255, 249, 217, 144)
+                                  : Color(0xFFFB98B7),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -145,7 +149,8 @@ class _ProfileMainState extends State<ProfileMain> {
                                     isFollowing ? 'désabonner' : "S'abonner",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      color:theme? Colors.black: Colors.white,
+                                      color:
+                                          theme ? Colors.black : Colors.white,
                                       fontSize: 14,
                                       fontFamily: 'Raleway',
                                       fontWeight: FontWeight.w400,
@@ -165,10 +170,14 @@ class _ProfileMainState extends State<ProfileMain> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => Parametres()),
+                            MaterialPageRoute(
+                                builder: (context) => Parametres()),
                           );
                         },
-                        icon: SvgPicture.asset("assets/Icons/setting.svg",color: theme? Colors.white:null,)),
+                        icon: SvgPicture.asset(
+                          "assets/Icons/setting.svg",
+                          color: theme ? Colors.white : null,
+                        )),
                 ],
               ),
             ),
@@ -179,7 +188,8 @@ class _ProfileMainState extends State<ProfileMain> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _buildTab("Articles", index: 0, icon: "assets/Icons/item.svg"),
-                _buildTab("Évaluations", index: 1, icon: "assets/Icons/rating.svg"),
+                _buildTab("Évaluations",
+                    index: 1, icon: "assets/Icons/rating.svg"),
                 _buildTab("À propos", index: 2, icon: "assets/Icons/about.svg"),
               ],
             ),
@@ -211,9 +221,13 @@ class _ProfileMainState extends State<ProfileMain> {
         children: [
           SvgPicture.asset(
             icon,
-            color: isSelected 
-            ? theme?Color.fromARGB(255, 249, 217, 144) : Color(0xFFFB98B7)
-             : theme? Colors.white: Colors.black,
+            color: isSelected
+                ? theme
+                    ? Color.fromARGB(255, 249, 217, 144)
+                    : Color(0xFFFB98B7)
+                : theme
+                    ? Colors.white
+                    : Colors.black,
             height: 24,
             width: 24,
           ),
@@ -225,10 +239,13 @@ class _ProfileMainState extends State<ProfileMain> {
               fontSize: 14,
               fontFamily: 'Raleway',
               fontWeight: FontWeight.w500,
-              color: 
-              isSelected 
-            ? theme?Color.fromARGB(255, 249, 217, 144) : Color(0xFFFB98B7)
-             : theme? Colors.white: Colors.black,
+              color: isSelected
+                  ? theme
+                      ? Color.fromARGB(255, 249, 217, 144)
+                      : Color(0xFFFB98B7)
+                  : theme
+                      ? Colors.white
+                      : Colors.black,
             ),
           ),
           if (isSelected)
@@ -236,7 +253,9 @@ class _ProfileMainState extends State<ProfileMain> {
               margin: const EdgeInsets.only(top: 4),
               height: 2,
               width: 69,
-              color:theme?Color.fromARGB(255, 249, 217, 144): Color(0xFFFB98B7),
+              color: theme
+                  ? Color.fromARGB(255, 249, 217, 144)
+                  : Color(0xFFFB98B7),
             ),
         ],
       ),
@@ -256,153 +275,389 @@ class _ProfileMainState extends State<ProfileMain> {
     }
   }
 
-Widget _buildItemsTab() {
-  final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
-  return Consumer<Products>(
-    builder: (context, provider, child) {
-      final products = widget.id == null
-          ? provider.productsByUser
-          : provider.productsByUserVisited;
+  Widget _buildItemsTab() {
+    final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
+    return Consumer<Products>(
+      builder: (context, provider, child) {
+        final products = widget.id == null
+            ? provider.productsByUser
+            : provider.productsByUserVisited;
 
-      if (products.isEmpty) {
-        return Center(
-          child: Text(
-            'Aucun produit disponible.',
-            style: TextStyle(
-              fontSize: 30,
-              fontFamily: 'Raleway',
-              fontWeight: FontWeight.w500,
+        if (products.isEmpty) {
+          return Center(
+            child: Text(
+              'Aucun produit disponible.',
+              style: TextStyle(
+                fontSize: 30,
+                fontFamily: 'Raleway',
+                fontWeight: FontWeight.w500,
+              ),
             ),
+          );
+        }
+
+        return GridView.builder(
+          itemCount: products.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 8,
+            mainAxisSpacing: 8,
+            childAspectRatio: 0.8,
           ),
-        );
-      }
+          itemBuilder: (context, index) {
+            final product = products[index];
+            final imageUrl = product['images']?.isNotEmpty == true
+                ? "${AppConfig.baseUrl}/${product['images'][0]}"
+                : 'assets/images/default.png';
 
-      return GridView.builder(
-        itemCount: products.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 8,
-          mainAxisSpacing: 8,
-          childAspectRatio: 0.8,
-        ),
-        itemBuilder: (context, index) {
-          final product = products[index];
-          final imageUrl = product['images'] != null && product['images'].isNotEmpty
-              ? "${AppConfig.baseUrl}/${product['images'][0]}"
-              : 'assets/images/default.png';
+            return GestureDetector(
+              onTap: widget.id == null
+                  ? null
+                  : () {
+                      final productData = {
+                        'type': 'Pour vous',
+                        'category': product['category'] ?? 'Unknown',
+                        'subcategory': product['subcategory'] ?? 'Unknown',
+                        'imageUrl': imageUrl,
+                        'images': product['images'] ?? [],
+                        'productName': product['title'] ?? 'Unknown Product',
+                        'productPrice': "${product['price']} TND",
+                        'product_id': "${product['id']}",
+                        'description': product['description'] ?? '',
+                        'is_available': product['is_available'] ?? false,
+                        'taille': product['taille'],
+                        'is_favorite': product['is_favorite'] ?? false,
+                        'pointure': product['pointure'],
+                        'selled': product['selled'],
+                        'brand': product['brand'],
+                        'owner_id': widget.id,
+                        'type_pdp': product['type'],
+                        'owner_profile_pic':
+                            product['owner']?['profile_pic'] ?? "",
+                        'owner_username': product['owner']?['username'] ?? "",
+                        'owner_ratings': product['owner']?['ratings'] ?? "",
+                        'comments': (product['comments'] as List<dynamic>?)
+                                ?.map((comment) => {
+                                      'username':
+                                          comment['username'] ?? 'Unknown',
+                                      'avatar': comment['avatar'] ?? '',
+                                      'content': comment['content'] ?? '',
+                                      'created_at': comment['created_at'] ?? '',
+                                    })
+                                .toList() ??
+                            [],
+                      };
 
-          return GestureDetector(
-            onTap: widget.id ==null ? null : () {
-              final productData = {
-                'type': 'Pour vous',
-                'category': product['category'] ?? 'Unknown',
-                'subcategory': product['subcategory'] ?? 'Unknown',
-                'imageUrl': imageUrl,
-                'images': product['images'] ?? [],
-                'productName': product['title'] ?? 'Unknown Product',
-                'productPrice': "${product['price']} TND",
-                'product_id': "${product['id']}",
-                'description': product['description'] ?? '',
-                'is_available': product['is_available'] ?? false,
-                'taille': product['taille'],
-                'is_favorite': product['is_favorite'] ?? false,
-                'pointure': product['pointure'],
-                'selled': product["selled"],
-                'brand': product['brand'],
-                'owner_id': widget.id,
-                'type_pdp': product["type"],
-                'owner_profile_pic': product["owner"]["profile_pic"] ?? "",
-                'owner_username': product["owner"]["username"] ?? "",
-                'owner_ratings': product["owner"]["ratings"] ?? "",
-                'comments': product['comments']?.map((comment) => {
-                      'username': comment['username'] ?? 'Unknown',
-                      'avatar': comment['avatar'] ?? '',
-                      'content': comment['content'] ?? '',
-                      'created_at': comment['created_at'] ?? '',
-                    }).toList() ?? [],
-              };
-
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ItemDetails(product: productData),
-                ),
-              );
-            },
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Stack(
-                  children: [
-                    ProductCard(
-                      imageUrl: imageUrl,
-                      productName: product['title'] as String,
-                      productPrice: '${product['price']} TND',
-                    ),
-                    if (product["selled"] == true)
-                      Positioned(
-                        left: 0,
-                        right: 0,
-                        top: 0,
-                        bottom: 0,
-                        child: Center(
-                          child: Transform.rotate(
-                            angle: -0.1,
-                            child: Container(
-                              height: 40,
-                              width: 100,
-                              decoration: BoxDecoration(
-                                color: Colors.red.withOpacity(0.7),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              alignment: Alignment.center,
-                              child: Text(
-                                'Vendu',
-                                style: TextStyle(
-                                  fontFamily: "Raleway",
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ItemDetails(product: productData),
+                        ),
+                      );
+                    },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Stack(
+                    children: [
+                      ProductCard(
+                        imageUrl: imageUrl,
+                        productName: product['title'] ?? '',
+                        productPrice: '${product['price']} TND',
+                      ),
+                      if (product['selled'] == true)
+                        Positioned.fill(
+                          child: Center(
+                            child: Transform.rotate(
+                              angle: -0.1,
+                              child: Container(
+                                height: 40,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.red.withOpacity(0.7),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                alignment: Alignment.center,
+                                child: const Text(
+                                  'Vendu',
+                                  style: TextStyle(
+                                    fontFamily: "Raleway",
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                  ],
-                ),
-                if (product["validated"] == false) ...[
-                  SizedBox(height: 4),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                    decoration: ShapeDecoration(
-                      color: Color(0xFFFCF1D0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                      if (widget.id == null)
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: GestureDetector(
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                builder: (context) {
+                                  return Container(
+                                    padding: const EdgeInsets.all(16.0),
+                                    height: 200, // Hauteur ajustée
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            Provider.of<Products>(context,
+                                                    listen: false)
+                                                .updateProductSelled(
+                                                    product['id'],
+                                                    !(product['selled'] ??
+                                                        false));
+                                            Provider.of<Products>(context,
+                                                    listen: false)
+                                                .getProducts();
+                                            Provider.of<Products>(context,
+                                                    listen: false)
+                                                .getProductsViewed();
+                                            product['selled'] =
+                                                !(product['selled'] ?? false);
+                                          },
+                                          child: Text(
+                                            product['selled'] == true
+                                                ? "Marquer comme disponible"
+                                                : "Marquer comme vendu",
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontFamily: 'Raleway',
+                                              fontWeight: FontWeight.w700,
+                                              height: 2,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 20),
+                                        InkWell(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    SellProductScreen(
+                                                  product: product,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "Modifier l'article",
+                                                style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontFamily: 'Raleway',
+                                                  fontWeight: FontWeight.w700,
+                                                  height: 2,
+                                                ),
+                                              ),
+                                              const Spacer(),
+                                              SvgPicture.asset(
+                                                "assets/Icons/edit.svg",
+                                                color: theme
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                                width: 30,
+                                                height: 30,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(height: 20),
+                                        InkWell(
+                                          onTap: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Text(
+                                                    'Confirmation',
+                                                    style: TextStyle(
+                                                      //color: Colors.black,
+                                                      fontSize: 14,
+                                                      fontFamily: 'Raleway',
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      height: 1.43,
+                                                      letterSpacing: 0.10,
+                                                    ),
+                                                  ),
+                                                  content: Text(
+                                                    'Êtes-vous sûr de vouloir supprimer cette article ? ',
+                                                    style: TextStyle(
+                                                      //color: Colors.black,
+                                                      fontSize: 14,
+                                                      fontFamily: 'Raleway',
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      height: 1.43,
+                                                      letterSpacing: 0.10,
+                                                    ),
+                                                  ),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop(); // Ferme le dialog
+                                                      },
+                                                      child: Text(
+                                                        'Annuler',
+                                                        style: TextStyle(
+                                                          //color: Colors.black,
+                                                          fontSize: 14,
+                                                          fontFamily: 'Raleway',
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          height: 1.43,
+                                                          letterSpacing: 0.10,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    TextButton(
+                                                      onPressed: () async {
+                                                      bool deleted = await  Provider.of<Products>(
+                                                                context,
+                                                                listen: false)
+                                                            .deleteProduct(
+                                                                product["id"],
+                                                                Provider.of<AuthService>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .currentUser!
+                                                                    .id);
+                                                      if (deleted) {
+                                                        Navigator.pop(context);
+                                                        setState(() {
+                                                        
+                                                      });
+                                                      }
+                                                      },
+                                                      child: Container(
+                                                        width: 110,
+                                                        height: 40,
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                horizontal: 24,
+                                                                vertical: 10),
+                                                        decoration:
+                                                            ShapeDecoration(
+                                                          color:
+                                                              Color(0xFFEA4335),
+                                                          shape: RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8)),
+                                                        ),
+                                                        child: Row(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Text(
+                                                              'Supprimer',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 12,
+                                                                fontFamily:
+                                                                    'Raleway',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                height: 1.43,
+                                                                letterSpacing:
+                                                                    0.10,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          },
+                                          child: Text(
+                                            'Supprimer',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: Colors.red,
+                                              fontSize: 20,
+                                              fontFamily: 'Raleway',
+                                              fontWeight: FontWeight.w700,
+                                              height: 1.43,
+                                              letterSpacing: 0.10,
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                            child: const Icon(
+                              Icons.arrow_drop_down,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  if (product['validated'] == false)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFCF1D0),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: const Text(
+                          "En attente d'approbation",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 10,
+                            fontFamily: 'Raleway',
+                            fontWeight: FontWeight.w400,
+                            height: 2,
+                          ),
+                        ),
                       ),
                     ),
-                    child: Text(
-                      "En attente d'approbation",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 10,
-                        fontFamily: 'Raleway',
-                        fontWeight: FontWeight.w400,
-                        height: 2,
-                      ),
-                    ),
-                  )
-                ]
-              ],
-            ),
-          );
-        },
-      );
-    },
-  );
-}
-
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 
   Widget _buildRatingsTab() {
     final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
@@ -503,7 +758,9 @@ Widget _buildItemsTab() {
                         height: 36,
                         clipBehavior: Clip.antiAlias,
                         decoration: ShapeDecoration(
-                          color: theme?Color.fromARGB(255, 249, 217, 144): Color(0xFFFB98B7),
+                          color: theme
+                              ? Color.fromARGB(255, 249, 217, 144)
+                              : Color(0xFFFB98B7),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -515,7 +772,7 @@ Widget _buildItemsTab() {
                             children: [
                               Icon(
                                 Icons.star,
-                                color: theme? Colors.black: Colors.white,
+                                color: theme ? Colors.black : Colors.white,
                                 size: 20,
                               ),
                               const SizedBox(width: 8),
@@ -523,7 +780,7 @@ Widget _buildItemsTab() {
                                 "Soumettre l'avis",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  color: theme? Colors.black: Colors.white,
+                                  color: theme ? Colors.black : Colors.white,
                                   fontSize: 14,
                                   fontFamily: 'Raleway',
                                   fontWeight: FontWeight.w400,
@@ -565,7 +822,7 @@ Widget _buildItemsTab() {
                 Container(
                   height: 136,
                   decoration: ShapeDecoration(
-                    color: theme? Colors.grey[900]: Color(0xFFF7F7F7),
+                    color: theme ? Colors.grey[900] : Color(0xFFF7F7F7),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -755,7 +1012,9 @@ Widget _buildItemsTab() {
                       height: 36,
                       clipBehavior: Clip.antiAlias,
                       decoration: ShapeDecoration(
-                        color:theme ? Color.fromARGB(255, 249, 217, 144): Color(0xFFFB98B7),
+                        color: theme
+                            ? Color.fromARGB(255, 249, 217, 144)
+                            : Color(0xFFFB98B7),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -767,7 +1026,7 @@ Widget _buildItemsTab() {
                           children: [
                             Icon(
                               Icons.star,
-                              color: theme? Colors.black: Colors.white,
+                              color: theme ? Colors.black : Colors.white,
                               size: 20,
                             ),
                             const SizedBox(width: 8),
@@ -775,7 +1034,7 @@ Widget _buildItemsTab() {
                               "Soumettre l'avis",
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                color: theme?Colors.black: Colors.white,
+                                color: theme ? Colors.black : Colors.white,
                                 fontSize: 14,
                                 fontFamily: 'Raleway',
                                 fontWeight: FontWeight.w400,
@@ -953,7 +1212,7 @@ Widget _buildItemsTab() {
                 ? "+216 ${Provider.of<AuthService>(context, listen: false).currentUser?.phoneNumber ?? ''}"
                 : "+216 ${Provider.of<Profileprovider>(context, listen: false).visitedProfile?.phoneNumber ?? ''}",
             style: TextStyle(
-             // color: Colors.black,
+              // color: Colors.black,
               fontSize: 13,
               fontFamily: 'Raleway',
               fontWeight: FontWeight.w400,
@@ -981,5 +1240,4 @@ Widget _buildItemsTab() {
       ),
     );
   }
-
 }

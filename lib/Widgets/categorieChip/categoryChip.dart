@@ -19,7 +19,7 @@ class CategoryChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Provider.of<ThemeProvider>(context,listen:false).isDarkMode;
+    final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
     return Padding(
       padding: const EdgeInsets.only(right: 16.0),
       child: GestureDetector(
@@ -28,8 +28,10 @@ class CategoryChip extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           decoration: ShapeDecoration(
             color: isSelected
-             ? theme ? Color.fromARGB(255, 249, 217, 144) : Colors.blue 
-             : const Color(0xFFE5E7EB),
+                ? theme
+                    ? Color.fromARGB(255, 249, 217, 144)
+                    : Colors.blue
+                : const Color(0xFFE5E7EB),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(40),
             ),
@@ -38,23 +40,26 @@ class CategoryChip extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (iconPath != null) // Vérifier si iconPath n'est pas null
-                Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: SvgPicture.asset(
-                    iconPath!, // Utiliser le chemin de l'icône SVG
-                    height: 16, // Définir la taille de l'icône
-                    width: 16,
-                    color: isSelected 
-                    ? theme? Colors.black : Colors.white :
-                     const Color(0xFF111928),
+                Container(
+                  width: 24,
+                  height: 24,
+                  decoration: ShapeDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(iconPath!),
+                      fit: BoxFit.fill,
+                    ),
+                    shape: OvalBorder(),
                   ),
                 ),
+                SizedBox(width: 3,),
               Text(
                 text,
                 style: TextStyle(
-                  color: isSelected 
-                  ? theme? Colors.black : Colors.white
-                   : const Color(0xFF111928),
+                  color: isSelected
+                      ? theme
+                          ? Colors.black
+                          : Colors.white
+                      : const Color(0xFF111928),
                   fontSize: 12,
                   fontFamily: 'Raleway',
                   fontWeight: FontWeight.w400,
