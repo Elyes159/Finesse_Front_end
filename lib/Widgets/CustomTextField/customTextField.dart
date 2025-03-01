@@ -11,7 +11,8 @@ class CustomTextFormField extends StatefulWidget {
   final TextInputType keyboardType;
   final FormFieldValidator<String>? validator;
   final FormFieldSetter<String>? onSaved;
-  final String? defaultValue; // Texte par défaut
+  final String? defaultValue;
+  final ValueChanged<String>? onChanged; // ✅ Nouveau paramètre
 
   CustomTextFormField({
     super.key,
@@ -21,7 +22,9 @@ class CustomTextFormField extends StatefulWidget {
     this.keyboardType = TextInputType.text,
     this.validator,
     this.onSaved,
-    this.defaultValue,  this.enabled, // Valeur par défaut optionnelle
+    this.defaultValue,
+    this.enabled,
+    this.onChanged, // ✅ Ajout de onChanged
   });
 
   @override
@@ -30,8 +33,8 @@ class CustomTextFormField extends StatefulWidget {
 
 class _CustomTextFormFieldState extends State<CustomTextFormField> {
   bool _obscureText = true;
-  String? _errorMessage; // Message d'erreur
-  bool _isTouched = false; // Indique si le champ a été touché
+  String? _errorMessage;
+  bool _isTouched = false;
 
   void _togglePasswordVisibility() {
     setState(() {
@@ -42,15 +45,19 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   void _onTextChanged() {
     if (mounted) {
       setState(() {
-        _errorMessage = widget.validator?.call(widget.controller.text); // Validation
+        _errorMessage = widget.validator?.call(widget.controller.text);
       });
+    }
+
+    // ✅ Appeler onChanged si défini
+    if (widget.onChanged != null) {
+      widget.onChanged!(widget.controller.text);
     }
   }
 
   @override
   void initState() {
     super.initState();
-    // Initialiser le texte par défaut si défini
     if (widget.defaultValue != null && widget.defaultValue!.isNotEmpty) {
       widget.controller.text = widget.defaultValue!;
     }
@@ -65,7 +72,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Provider.of<ThemeProvider>(context,listen:false).isDarkMode;
+    final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 0.0),
       child: Column(
@@ -77,7 +84,10 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: ShapeDecoration(
               shape: RoundedRectangleBorder(
-                side: BorderSide(width: 1, color: theme ? Color.fromARGB(255, 249, 217, 144) : Color(0xFF5C7CA4)),
+                side: BorderSide(
+                  width: 1,
+                  color: theme ? Color.fromARGB(255, 249, 217, 144) : Color(0xFF5C7CA4),
+                ),
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
@@ -89,9 +99,10 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
               keyboardType: widget.keyboardType,
               cursorColor: Colors.grey,
               style: const TextStyle(fontFamily: 'Raleway'),
+              onChanged: (value) => _onTextChanged(), // ✅ Ajout de onChanged
               onTap: () {
                 setState(() {
-                  _isTouched = true; // Champ touché
+                  _isTouched = true;
                 });
               },
               decoration: InputDecoration(
@@ -100,8 +111,8 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
                         onTap: _togglePasswordVisibility,
                         child: SvgPicture.asset(
                           _obscureText
-                              ? "assets/Icons/eye-slash.svg" // Default "eye-slash" icon
-                              : "assets/Icons/eye.svg", // When clicked, "eye" icon
+                              ? "assets/Icons/eye-slash.svg"
+                              : "assets/Icons/eye.svg",
                           height: 24,
                           width: 24,
                         ),

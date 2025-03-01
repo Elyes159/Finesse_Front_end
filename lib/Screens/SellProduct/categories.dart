@@ -1,5 +1,6 @@
 import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:finesse_frontend/Screens/SellProduct/SellproductScreen.dart';
+import 'package:finesse_frontend/Screens/SellProduct/agender.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
 import 'package:finesse_frontend/Widgets/CustomOptionsFields/optionsField.dart';
 import 'package:finesse_frontend/Widgets/customchekcoptionfield/customchekcoptionfield.dart';
@@ -84,11 +85,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
     print(SubSubCategoryForBackend);
   }
 
-  bool validateCheckboxSelection() {
-    int checkedCount =
-        selectedCheckboxes.values.where((isChecked) => isChecked).length;
-    return checkedCount == 1; // Exactement une case cochée
-  }
+  
 
   void handleSubmit(bool ismontre) {
     if (selectedCategory == null) {
@@ -106,13 +103,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
         return;
       }
 
-      if (!validateCheckboxSelection() && !ismontre) {
-        setState(() {
-          errorMessage =
-              "Veuillez sélectionner exactement un genre (Homme, Femme, Garçon ou Fille).";
-        });
-        return;
-      }
+     
     }
 
     print("heeeey $SubSubCategoryForBackend , $SubCategoryForBackend , ");
@@ -133,10 +124,9 @@ class _ChooseCategoryState extends State<ChooseCategory> {
     print("Sub-sub-category chosen: $selectedSubSubCategory");
     print("Checkbox states: $selectedCheckboxes");
   }
-
   @override
   Widget build(BuildContext context) {
-    final theme = Provider.of<ThemeProvider>(context,listen:false ).isDarkMode;
+    final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
     return Scaffold(
       appBar: AppBar(
         title: const Center(
@@ -155,7 +145,6 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             ),
           ),
         ),
-        
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
@@ -210,8 +199,16 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             CustomDropdownFormField<String, String>(
               label: "Livres",
               options: const [
-                {"L": "Livre"},
+                {"LLIT": "Littérature"},
+                {"LPH": "Philosophie"},
+                {"LAL": "Arts et loisirs "},
+                {"LD": "Droit"},
+                {"LC": "conte"},
+                {"LDO": "Documentaire"},
+                {"LED": "Éducation"},
+                {"LBD": "Bande dessinée"},
               ],
+
               onChanged: (selectedKey) {
                 setState(() {
                   selectedCategory = "L";
@@ -229,24 +226,25 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                   selectedSubCategory, // Utiliser la sous-catégorie sélectionnée comme valeur
             ),
           ],
-          if ((selectedCategory == "AC" || selectedCategory == null)) ...[
+          if ((selectedCategory == "CRA" || selectedCategory == null)) ...[
             const SizedBox(height: 24),
             CustomDropdownFormField<String, String>(
-              label: "Art et création",
+              label: "Création Artisanale",
               options: const [
-                {"PEIN": "Peinture"},
-                {"SCUL": "Sculpture"},
-                {"LITE": "Literature"},
-                {"tableaux": "Tableaux de peintures"},
-                {"ARTGRAPH": "Arts graphiques"},
-                {"ARTTABLE": "Arts de la table"},
-                {"ARTAUT": "Autres"},
+                {"TCREA": "Toutes les créations "},
+                {"CERAPO": "Céramique et poterie "},
+                {"HAUCO": "Haute couture"},
+                {"MACRA": "Macramé  "},
+                {"BIJOUX": "Bijoux  "},
+                {"SACOU": "Sacs et couffin  "},
+                {"TAPI": "Tapis  "},
               ],
               onChanged: (selectedKey) {
                 setState(() {
-                  CategoryForBackend = "AC";
+                  CategoryForBackend = "CRA";
+                  selectedCategory = "CRA";
                   SubCategoryForBackend = selectedKey;
-                  selectedCategory = "AC";
+                  
                   selectedSubCategory = selectedKey;
                   errorMessage = null;
                 });
@@ -255,18 +253,46 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                   selectedSubCategory, // Assurez-vous que cette valeur est correcte
             ),
           ],
-          if (selectedSubCategory == "PEIN") ...[
+          if ((selectedCategory == "OV" || selectedCategory == null)) ...[
+            const SizedBox(height: 24),
+            CustomDropdownFormField<String, String>(
+              label: "œuvres d’art",
+              options: const [
+                {"TOEU": "Toutes les œuvres "},
+                {"tableaux": "Tableaux "},
+                {"ARTGRAPH": "Arts graphiques"},
+                {"SCUL": "Sculptures "},
+              ],
+              onChanged: (selectedKey) {
+                setState(() {
+                  CategoryForBackend = "OV";
+                  selectedCategory = "OV";
+                  SubCategoryForBackend = selectedKey;
+                  
+                  selectedSubCategory = selectedKey;
+                  errorMessage = null;
+                });
+              },
+              selectedKey:
+                  selectedSubCategory, // Assurez-vous que cette valeur est correcte
+            ),
+          ],
+          if (selectedSubCategory == "tableaux") ...[
             const SizedBox(height: 12),
             CustomDropdownFormField<String, String>(
-              label: "Sub-category of Peinture",
+              label: "Sub-category of TABLEAUX",
               options: const [
-                {"ACRY": "Peinture acrylique"},
-                {"AQ": "Peinture aquarelle"},
+                {"TPEIN": "Toutes les peintures"},
+                {"PH": "Peinture acrylique"},
+                {"AQ": "Aquarelles"},
                 {"CUB": "Cubisme"},
-                {"EXPRE": "Expressionnisme"},
-                {"ARTABS": "Art abstrait"},
-                {"PH": "Peinture à l'huile"},
-                {"AUT": "Autre"},
+                {"ARTEXPR": "Expressionnisme"},
+                {"REAL": "Réalisme"},
+                {"ARTABS": "Art abstrait "},
+                {"ARTPOP": "Pop art"},
+                {"ARTPORT": "Portrait "},
+                {"ARTIMPR": "impressionnisme "},
+                {"ARTURB": "Art urban "},
               ],
               onChanged: (selectedKey) {
                 setState(() {
@@ -281,529 +307,72 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                   selectedSubSubCategory, // Utiliser la sous-catégorie sélectionnée comme valeur
             ),
           ],
-          if ((selectedCategory == "MV" || selectedCategory == null)) ...[
-            const SizedBox(height: 24),
+          if (selectedSubCategory == "SCUL") ...[
+            const SizedBox(height: 12),
             CustomDropdownFormField<String, String>(
-              label: "Mode and vintage",
+              label: "Sub-category of SCULPTURES",
               options: const [
-                {"V": "Vêtements"},
-                {"C": "Chaussures"},
-                {"B": "Bijoux"},
-                {"A": "Accessoires"},
-                {"S": "Sacs"},
-                {"P": "Produits de beauté"},
-                {"J": "Jouets"},
-                {"MONTRE": "Montres"},
+                {"SCULT": "Toutes les sculptures"},
+                {"SCULBR": "Bronzes"},
+                {"SCULMAR": "Sculptures en marbre"},
+                {"SCULPLA": "Sculptures en plâtre"},
+                {"SCULBOI": "Sculptures en bois"},
+                {"SCULTERRE": "Sculptures en terre cuite "},
               ],
               onChanged: (selectedKey) {
                 setState(() {
-                  CategoryForBackend = "MV";
-                  SubCategoryForBackend = selectedKey;
-                  print("$CategoryForBackend $SubCategoryForBackend");
-                  selectedCategory = "MV";
-                  selectedSubCategory = selectedKey;
-                  errorMessage = null;
-                  if (selectedSubCategory == "MONTRE") {}
+                  SubSubCategoryForBackend = SubCategoryForBackend;
+                  SubSubCategoryForBackend =
+                      "$SubCategoryForBackend$selectedKey";
+                  print(SubSubCategoryForBackend);
+                  selectedSubSubCategory = selectedKey;
                 });
               },
-
               selectedKey:
-                  selectedSubCategory, // Utiliser la sous-catégorie sélectionnée comme valeur
+                  selectedSubSubCategory, // Utiliser la sous-catégorie sélectionnée comme valeur
             ),
           ],
-          if (selectedCategory == "MV") ...[
-            if (selectedSubCategory == "J") ...[
-              const SizedBox(height: 12),
-              CustomDropdownFormField<String, String>(
-                label: "Sub-category of Jouets",
-                options: const [
-                  {"BA": "Ballons"},
-                  {"DO": "Dominos"},
-                  {"JE": "Jeux éducatifs"},
-                  {"PA": "Patins"},
-                  {"PE": "Peluches"},
-                  {"PU": "Puzzles"},
-                  {"TRO": "Trottinettes"},
-                  {"VHE": "Véhicules"},
-                  {"POU": "Poupées"},
-                ],
-                onChanged: (selectedKey) {
-                  setState(() {
-                    SubSubCategoryForBackend = SubCategoryForBackend;
-                    SubSubCategoryForBackend =
-                        "$SubSubCategoryForBackend$selectedKey";
-                    print(SubSubCategoryForBackend);
-                    selectedSubSubCategory =
-                        selectedKey; // Mise à jour de la sous-catégorie
-                  });
-                },
-                selectedKey:
-                    selectedSubSubCategory, // Utiliser la sous-catégorie sélectionnée comme valeur
-              ),
+          if (selectedSubCategory == "ARTGRAPH") ...[
+            const SizedBox(height: 12),
+            CustomDropdownFormField<String, String>(
+              label: "Sub-category of art graphique",
+              options: const [
+                {"PHOTOGRAPH": "Photographies"},
+                {"AFFICH": "Affiches"},
+                {"STREET": "Street art, graffiti"},
+                {"AQUA": "Aquarelles"},
+                {"OEUPAP": "Œuvres sur papier"},
+              ],
+              onChanged: (selectedKey) {
+                setState(() {
+                  SubSubCategoryForBackend = SubCategoryForBackend;
+                  SubSubCategoryForBackend =
+                      "$SubCategoryForBackend$selectedKey";
+                  print(SubSubCategoryForBackend);
+                  selectedSubSubCategory = selectedKey;
+                });
+              },
+              selectedKey:
+                  selectedSubSubCategory, // Utiliser la sous-catégorie sélectionnée comme valeur
+            ),
+          ],
+          SizedBox(
+            height: 16,
+          ),
+          if(selectedCategory ==null && selectedSubCategory==null && selectedSubSubCategory==null)
+          CustomDropdownFormField<String, String>(
+            label: "Mode et vintage",
+            isButton: true,
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Gender()));
+            },
+            options: const [
+              {"": ""},
             ],
-            if (selectedSubCategory == "MONTRE") ...[],
-            if (selectedSubCategory == "P") ...[
-              const SizedBox(height: 12),
-              CustomDropdownFormField<String, String>(
-                label: "Sub-category of Produit de beauté",
-                options: const [
-                  {"PF": "Parfum"},
-                  {"SV": "Soins visage"},
-                  {"SC": "Soins corps"},
-                  {"SCH": "Soins cheveux"},
-                  {"SM": "Soins mains"},
-                  {"DOU": "Douche"},
-                  {"MAQUI": "Maquillage"},
-                  {"VER": "Vernis"},
-                ],
-                onChanged: (selectedKey) {
-                  setState(() {
-                    SubSubCategoryForBackend = SubCategoryForBackend;
-                    SubSubCategoryForBackend =
-                        "$SubSubCategoryForBackend$selectedKey";
-                    print(SubSubCategoryForBackend);
-                    selectedSubSubCategory =
-                        selectedKey; // Mise à jour de la sous-catégorie
-                  });
-                },
-                selectedKey:
-                    selectedSubSubCategory, // Utiliser la sous-catégorie sélectionnée comme valeur
-              ),
-            ],
-            if (selectedSubCategory == "S") ...[
-              const SizedBox(height: 12),
-              CustomDropdownFormField<String, String>(
-                label: "Sub-category of Sacs",
-                options: const [
-                  {"SM": "Sac à main"},
-                  {"BAND": "Sac à bandoulière"},
-                  {"P": "Pochette"},
-                  {"SD": "Sac à dos"},
-                  {"COU": "Couffin"},
-                  {"PORT": "Portefeuille"},
-                  {"PORTM": "Porte-monnaie"},
-                  {"CA": "Cartable"},
-                  {"BB": "Sac bébé"},
-                  {"EC": "Étui à crayon"},
-                  {"SS": "Sac de sport"},
-                ],
-                onChanged: (selectedKey) {
-                  setState(() {
-                    SubSubCategoryForBackend = SubCategoryForBackend;
-                    SubSubCategoryForBackend =
-                        "$SubSubCategoryForBackend$selectedKey";
-                    print(SubSubCategoryForBackend);
-                    selectedSubSubCategory =
-                        selectedKey; // Mise à jour de la sous-catégorie
-                  });
-                },
-                selectedKey:
-                    selectedSubSubCategory, // Utiliser la sous-catégorie sélectionnée comme valeur
-              ),
-            ],
-            if (selectedSubCategory == "A") ...[
-              const SizedBox(height: 12),
-              CustomDropdownFormField<String, String>(
-                label: "Sub-category of Accessoires",
-                options: const [
-                  {"LU": "Lunette"},
-                  {"CE": "Ceinture"},
-                  {"CHE": "Accessoires pour cheveux"},
-                  {"CO": "Collant"},
-                  {"CHAUSS": "Chaussette"},
-                  {"CHAP": "Chapeau"},
-                  {"BONN": "Bonnet"},
-                  {"ECH": "Écharpe"},
-                  {"FOU": "Foulard"},
-                  {"BI": "Bijoux"},
-                  {"CR": "Cravate"},
-                  {"PAP": "Nœud de papillon"},
-                ],
-                onChanged: (selectedKey) {
-                  setState(() {
-                    SubSubCategoryForBackend = SubCategoryForBackend;
-                    SubSubCategoryForBackend =
-                        "$SubSubCategoryForBackend$selectedKey";
-                    print(SubSubCategoryForBackend);
-                    selectedSubSubCategory =
-                        selectedKey; // Mise à jour de la sous-catégorie
-                  });
-                },
-                selectedKey:
-                    selectedSubSubCategory, // Utiliser la sous-catégorie sélectionnée comme valeur
-              ),
-            ],
-            if (selectedSubCategory == "B") ...[
-              const SizedBox(height: 12),
-              CustomDropdownFormField<String, String>(
-                label: "Sub-category of Bijoux",
-                options: const [
-                  {"C": "Collier"},
-                  {"B": "Bracelet"},
-                  {"BO": "Boucles d'oreilles"},
-                  {"BAG": "Bague"},
-                  {"MO": "Montre"},
-                  {"PAR": "Parure"},
-                  {"PIER": "Piercing"},
-                ],
-                onChanged: (selectedKey) {
-                  setState(() {
-                    SubSubCategoryForBackend = SubCategoryForBackend;
-                    SubSubCategoryForBackend =
-                        "$SubSubCategoryForBackend$selectedKey";
-                    print(SubSubCategoryForBackend);
-                    selectedSubSubCategory =
-                        selectedKey; // Mise à jour de la sous-catégorie
-                  });
-                },
-                selectedKey:
-                    selectedSubSubCategory, // Utiliser la sous-catégorie sélectionnée comme valeur
-              ),
-            ],
-            if (selectedSubCategory == "C") ...[
-              const SizedBox(height: 12),
-              CustomDropdownFormField<String, String>(
-                label: "Sub-category of Chaussures",
-                options: const [
-                  {"BO": "Bottes"},
-                  {"BOTI": "Bottines"},
-                  {"ESC": "Escarpins"},
-                  {"COMP": "Compensés"},
-                  {"SA": "Sandales"},
-                  {"BAS": "Baskets"},
-                  {"ESP": "Espadrilles"},
-                  {"S-O": "Slip-on"},
-                  {"BALL": "Ballerines"},
-                  {"MU": "Mules"},
-                  {"DER": "Derbies"},
-                  {"BB": "Bébé"},
-                  {"CHAUSS": "Chaussons"},
-                  {"MO": "Mocassins"},
-                ],
-                onChanged: (selectedKey) {
-                  setState(() {
-                    SubSubCategoryForBackend = SubCategoryForBackend;
-                    SubSubCategoryForBackend =
-                        "$SubSubCategoryForBackend$selectedKey";
-                    print(SubSubCategoryForBackend);
-                    selectedSubSubCategory =
-                        selectedKey; // Mise à jour de la sous-catégorie
-                  });
-                },
-                selectedKey:
-                    selectedSubSubCategory, // Utiliser la sous-catégorie sélectionnée comme valeur
-              ),
-            ],
-            if (selectedSubCategory == "V") ...[
-              const SizedBox(height: 12),
-              CustomDropdownFormField<String, String>(
-                label: "Sub-category of Vêtements",
-                options: const [
-                  {"BB": "Vêtements Bébé"},
-                  {"EX": "Vêtements d'exterieur"},
-                  {"RO": "Robe"},
-                  {"CAF": "Caftan"},
-                  {"T-S": "T-Shirt"},
-                  {"PU": "Pull"},
-                  {"CH": "Chemise"},
-                  {"GI": "Gilet"},
-                  {"VE": "Veste"},
-                  {"MAN": "Manteau"},
-                  {"TR": "Trench"},
-                  {"PAN": "Pantalon"},
-                  {"PAC": "Pantacourt"},
-                  {"SH": "Short"},
-                  {"SALO": "Salopette"},
-                  {"JU": "Jupe"},
-                  {"MAI": "Maillot"},
-                  {"LIN": "Lingerie"},
-                  {"PY": "Pyjamas"},
-                  {"KIM": "Kimono"},
-                  {"COM": "Combinaison"},
-                  {"SARI": "Sari"},
-                  {"ENS": "Ensemble"},
-                  {"S-V": "sous vêtements"},
-                  {"COS": "Costumes"},
-                ],
-                onChanged: (selectedKey) {
-                  setState(() {
-                    SubSubCategoryForBackend = SubCategoryForBackend;
-                    SubSubCategoryForBackend =
-                        "$SubSubCategoryForBackend$selectedKey";
-                    print(SubSubCategoryForBackend);
-                    selectedSubSubCategory =
-                        selectedKey; // Mise à jour de la sous-catégorie
-                  });
-                },
-                selectedKey:
-                    selectedSubSubCategory, // Utiliser la sous-catégorie sélectionnée comme valeur
-              ),
-            ],
-          ],
-          if (selectedCategory == "MV" &&
-              {"S", "A", "C", "V"}.contains(selectedSubCategory) &&
-              {
-                "CH",
-                "PU",
-                "PAN",
-                "PY",
-                "MAI",
-                "CE",
-                "CHAP",
-                "ECH",
-                "LU",
-                "SM",
-                "SD",
-                "CA",
-                "BAS",
-                "BO",
-                "SA"
-              }.contains(selectedSubSubCategory)) ...[
-            const SizedBox(height: 12),
-            CustomCheckboxFormField(
-              label: "Homme",
-              initialValue: selectedCheckboxes["Men"]!,
-              onChanged: (newValue) {
-                toggleCheckbox("Men", newValue);
-              },
-            ),
-            const SizedBox(height: 12),
-            CustomCheckboxFormField(
-              label: "Femme",
-              initialValue: selectedCheckboxes["Women"]!,
-              onChanged: (newValue) {
-                toggleCheckbox("Women", newValue);
-              },
-            ),
-            const SizedBox(height: 12),
-            CustomCheckboxFormField(
-              label: "Garçon",
-              initialValue: selectedCheckboxes["Boys"]!,
-              onChanged: (newValue) {
-                toggleCheckbox("Boys", newValue);
-              },
-            ),
-            const SizedBox(height: 12),
-            CustomCheckboxFormField(
-              label: "Fille",
-              initialValue: selectedCheckboxes["Girls"]!,
-              onChanged: (newValue) {
-                toggleCheckbox("Girls", newValue);
-              },
-            ),
-          ],
-          if (selectedCategory == "MV" &&
-              {"S", "A", "C", "V"}.contains(selectedSubCategory) &&
-              {"RO", "JU", "CHE", "CO", "BALL"}
-                  .contains(selectedSubSubCategory)) ...[
-            const SizedBox(height: 12),
-            CustomCheckboxFormField(
-              label: "Femmme",
-              initialValue: selectedCheckboxes["Women"]!,
-              onChanged: (newValue) {
-                toggleCheckbox("Women", newValue);
-              },
-            ),
-            const SizedBox(height: 12),
-            CustomCheckboxFormField(
-              label: "Fille",
-              initialValue: selectedCheckboxes["Girls"]!,
-              onChanged: (newValue) {
-                toggleCheckbox("Girls", newValue);
-              },
-            ),
-          ],
-          if (selectedCategory == "MV" &&
-              {"S", "A", "C", "V"}.contains(selectedSubCategory) &&
-              {
-                "T-S",
-                "CAF",
-                "GI",
-                "VE",
-                "MAN",
-                "TR",
-                "PAC",
-                "SH",
-                "SALO",
-                "LIN",
-                "KIM",
-                "COM",
-                "SARI",
-                "ENS",
-                "CHAUSS",
-                "BONN",
-                "FOU",
-                "BAND",
-                "P",
-                "COU",
-                "PORT",
-                "PORTM",
-                "BOTI",
-                "ESC",
-                "COMP",
-                "ESP",
-                "S-O",
-                "MU",
-                "DER"
-              }.contains(selectedSubSubCategory)) ...[
-            const SizedBox(height: 12),
-            CustomCheckboxFormField(
-              label: "Femme",
-              initialValue: selectedCheckboxes["Women"]!, // Par défaut cochée
-              onChanged: (newValue) {
-                toggleCheckbox("Women", newValue);
-              }, // Désactiver l'interaction utilisateur
-            ),
-          ],
-          if (selectedCategory == "MV" &&
-              {"S", "A", "C", "V"}.contains(selectedSubCategory) &&
-              {"CR", "PAP", "COS", "SS", "MO"}
-                  .contains(selectedSubSubCategory)) ...[
-            const SizedBox(height: 12),
-            CustomCheckboxFormField(
-              label: "Garçons",
-              initialValue: selectedCheckboxes["Boys"]!,
-              onChanged: (newValue) {
-                toggleCheckbox("Boys", newValue);
-              },
-            ),
-            const SizedBox(height: 12),
-            CustomCheckboxFormField(
-              label: "Homme",
-              initialValue: selectedCheckboxes["Men"]!,
-              onChanged: (newValue) {
-                toggleCheckbox("Men", newValue);
-              },
-            ),
-          ],
-          if (selectedCategory == "MV" &&
-              {"S", "A", "C", "V"}.contains(selectedSubCategory) &&
-              {"S-V", "EC", "BB", "CHAUSS"}
-                  .contains(selectedSubSubCategory)) ...[
-            const SizedBox(height: 12),
-            CustomCheckboxFormField(
-              label: "Garçons",
-              initialValue: selectedCheckboxes["Boys"]!,
-              onChanged: (newValue) {
-                toggleCheckbox("Boys", newValue);
-              },
-            ),
-            const SizedBox(height: 12),
-            CustomCheckboxFormField(
-              label: "Fille",
-              initialValue: selectedCheckboxes["Girls"]!,
-              onChanged: (newValue) {
-                toggleCheckbox("Girls", newValue);
-              },
-            ),
-          ],
-          if (selectedCategory == "MV" &&
-              {"S", "A", "C", "V"}.contains(selectedSubCategory) &&
-              {"BI"}.contains(selectedSubSubCategory)) ...[
-            const SizedBox(height: 12),
-            CustomCheckboxFormField(
-              label: "Fille",
-              initialValue: selectedCheckboxes["Girls"]!,
-              onChanged: (newValue) {
-                toggleCheckbox("Girls", newValue);
-              },
-            ),
-          ],
-          if (selectedCategory == "MV" &&
-              {"S", "A", "C", "V"}.contains(selectedSubCategory) &&
-              {"EX"}.contains(selectedSubSubCategory)) ...[
-            const SizedBox(height: 12),
-            CustomCheckboxFormField(
-              label: "Garçons",
-              initialValue: selectedCheckboxes["Boys"]!,
-              onChanged: (newValue) {
-                toggleCheckbox("Boys", newValue);
-              },
-            ),
-            const SizedBox(height: 12),
-            CustomCheckboxFormField(
-              label: "Homme",
-              initialValue: selectedCheckboxes["Men"]!,
-              onChanged: (newValue) {
-                toggleCheckbox("Men", newValue);
-              },
-            ),
-            const SizedBox(height: 12),
-            CustomCheckboxFormField(
-              label: "Fille",
-              initialValue: selectedCheckboxes["Girls"]!,
-              onChanged: (newValue) {
-                toggleCheckbox("Girls", newValue);
-              },
-            ),
-          ],
-          if (selectedCategory == "MV" &&
-              {"B"}.contains(selectedSubCategory)) ...[
-            const SizedBox(height: 12),
-            CustomCheckboxFormField(
-              label: "Femme",
-              initialValue: true, // Par défaut cochée
-              onChanged: (newValue) {
-                toggleCheckbox("Women", newValue);
-              }, // Désactiver l'interaction utilisateur
-            ),
-          ],
-          if (selectedCategory == "MV" &&
-              {"J"}.contains(selectedSubCategory) &&
-              {"DO", "JE", "PA", "PE", "PU", "TRO", "VHE"}
-                  .contains(selectedSubSubCategory)) ...[
-            const SizedBox(height: 12),
-            CustomCheckboxFormField(
-              label: "Hommes",
-              initialValue: selectedCheckboxes["Boys"]!,
-              onChanged: (newValue) {
-                toggleCheckbox("Boys", newValue);
-              },
-            ),
-            const SizedBox(height: 12),
-            CustomCheckboxFormField(
-              label: "Fille",
-              initialValue: selectedCheckboxes["Girls"]!,
-              onChanged: (newValue) {
-                toggleCheckbox("Girls", newValue);
-              },
-            ),
-          ],
-          if (selectedCategory == "MV" &&
-              {"J"}.contains(selectedSubCategory) &&
-              {"BA"}.contains(selectedSubSubCategory)) ...[
-            const SizedBox(height: 12),
-            CustomCheckboxFormField(
-              label: "Garçons",
-              initialValue: selectedCheckboxes["Boys"]!,
-              onChanged: (newValue) {
-                toggleCheckbox("Boys", newValue);
-              },
-            ),
-          ],
-          if (selectedCategory == "MV" &&
-              {"J"}.contains(selectedSubCategory) &&
-              {"POU"}.contains(selectedSubSubCategory)) ...[
-            const SizedBox(height: 12),
-            CustomCheckboxFormField(
-              label: "Filles",
-              initialValue: selectedCheckboxes["Girls"]!,
-              onChanged: (newValue) {
-                toggleCheckbox("Girls", newValue);
-              },
-            ),
-          ],
-          if (selectedCategory == "MV" &&
-              {"P"}.contains(selectedSubCategory)) ...[
-            const SizedBox(height: 12),
-            CustomCheckboxFormField(
-              label: "Femmes",
-              initialValue: selectedCheckboxes["Women"]!, // Par défaut cochée
-              onChanged: (newValue) {
-                toggleCheckbox("Women", newValue);
-              }, // Désactiver l'interaction utilisateur
-            ),
-          ],
+
+            // Utiliser la sous-catégorie sélectionnée comme valeur
+          ),
           const SizedBox(height: 24),
           if (errorMessage != null) ...[
             Text(
@@ -827,13 +396,21 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                 : selectedCategory == null ||
                     (selectedCategory == "MV" &&
                         (selectedSubCategory == null &&
-                                selectedSubSubCategory == null ||
-                            !validateCheckboxSelection())) ||
-                    (selectedCategory == "AC" &&
-                        selectedSubCategory == "PEIN" &&
+                                selectedSubSubCategory == null 
+                            )) ||
+                    (selectedCategory == "OV" &&
+                        selectedSubCategory == "tableaux" &&
                         (selectedSubCategory == null ||
-                            selectedSubSubCategory == null &&
-                                !validateCheckboxSelection())),
+                            selectedSubSubCategory == null 
+                                )) ||  (selectedCategory == "OV" &&
+                        selectedSubCategory == "ARTGRAPH" &&
+                        (selectedSubCategory == null ||
+                            selectedSubSubCategory == null 
+                                )) ||  (selectedCategory == "OV" &&
+                        selectedSubCategory == "SCUL" &&
+                        (selectedSubCategory == null ||
+                            selectedSubSubCategory == null 
+                                ))
           ),
           SizedBox(
             width: 343,
@@ -852,8 +429,10 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                   TextSpan(
                     text:
                         "Réinitialiser", // Mot à colorier en rose et rendre interactif
-                    style:  TextStyle(
-                      color: theme? Color.fromARGB(255, 249, 217, 144) : Color(0xFFFB98B7), // Couleur rose
+                    style: TextStyle(
+                      color: theme
+                          ? Color.fromARGB(255, 249, 217, 144)
+                          : Color(0xFFFB98B7), // Couleur rose
                     ),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {

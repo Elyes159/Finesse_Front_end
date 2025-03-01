@@ -5,6 +5,7 @@ import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Provider/Stories.dart';
 import 'package:finesse_frontend/Provider/products.dart';
 import 'package:finesse_frontend/Provider/profileProvider.dart';
+import 'package:finesse_frontend/Provider/sellprovider.dart';
 import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:finesse_frontend/Screens/SplashScreen/SplashScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -28,7 +29,6 @@ Future<void> initializeNotifications() async {
   } else {
     print("Permission refusée !");
   }
-
   if(Platform.isIOS)
   String? token = await messaging.getAPNSToken();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -40,11 +40,12 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  await initializeNotifications(); // Initialiser les notifications
+  await initializeNotifications(); 
 
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => SellProductProvider()),
         ChangeNotifierProvider(create: (_) => AuthService()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => Profileprovider()),

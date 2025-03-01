@@ -308,7 +308,7 @@ class _ProfileMainState extends State<ProfileMain> {
             final product = products[index];
             final imageUrl = product['images']?.isNotEmpty == true
                 ? "${AppConfig.baseUrl}/${product['images'][0]}"
-                : 'assets/images/default.png';
+                : 'assets/images/test1.png';
 
             return GestureDetector(
               onTap: widget.id == null

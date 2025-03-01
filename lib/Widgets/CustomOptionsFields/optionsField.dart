@@ -10,7 +10,13 @@ class CustomDropdownFormField<K, V> extends StatefulWidget {
   final String? selectedValue; // Clé sélectionnée par défaut
   final ValueChanged<K?>? onChanged; // Callback pour le changement de clé
   final FormFieldValidator<K>? validator; // Validation
-  final FormFieldSetter<K>? onSaved; // Sauvegarde
+  final FormFieldSetter<K>? onSaved;
+  final bool? isButton;
+  final bool? imageMenu;
+  final bool? image;
+  final String? pathImageHorsmenu;
+  final String? pathImageForsmenu;
+  final VoidCallback? onTap; // Sauvegarde
 
   const CustomDropdownFormField({
     super.key,
@@ -21,6 +27,11 @@ class CustomDropdownFormField<K, V> extends StatefulWidget {
     this.onChanged,
     this.validator,
     this.onSaved,
+    this.isButton = false,
+    this.onTap,
+    this.imageMenu = false,
+    this.image = false,
+    this.pathImageHorsmenu, this.pathImageForsmenu, // Défaut à false pour un DropdownButton
   });
 
   @override
@@ -42,7 +53,6 @@ class _CustomDropdownFormFieldState<K, V>
         widget.options
             .any((option) => option.keys.first == widget.selectedKey)) {
       _selectedKey = widget.selectedKey;
-      
     } else {
       _selectedKey = null;
     }
@@ -59,7 +69,8 @@ class _CustomDropdownFormFieldState<K, V>
 
   @override
   Widget build(BuildContext context) {
-    final theme = Provider.of<ThemeProvider>(context,listen: false).isDarkMode;
+    final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 0.0),
       child: Column(
@@ -69,71 +80,170 @@ class _CustomDropdownFormFieldState<K, V>
             width: MediaQuery.of(context).size.width,
             height: 60,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: ShapeDecoration(
-              shape: RoundedRectangleBorder(
-                side: BorderSide(width: 1, color: theme ? Color.fromARGB(255, 249, 217, 144) :  Color(0xFF5C7CA4)),
-                borderRadius: BorderRadius.circular(8),
+            decoration: BoxDecoration(
+              color: theme ? Colors.black : Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: theme
+                  ? [
+                      BoxShadow(
+                        color: Colors.black45,
+                        offset: Offset(0, 2),
+                        blurRadius: 4,
+                      ),
+                    ]
+                  : [
+                      BoxShadow(
+                        color: Colors.grey.shade300,
+                        offset: Offset(0, 2),
+                        blurRadius: 4,
+                      ),
+                    ],
+              border: Border.all(
+                color: theme
+                    ? Color.fromARGB(255, 249, 217, 144)
+                    : Color(0xFF5C7CA4),
+                width: 1,
               ),
             ),
-            child: DropdownButton<K>(
-              isExpanded: true,
-              value: widget.options
-                      .any((option) => option.keys.first == _selectedKey)
-                  ? _selectedKey
-                  : null,
-              onChanged: _onChanged,
-              icon: SvgPicture.asset(
-                "assets/Icons/down.svg",
-                height: 24,
-                width: 24,
-              ),
-              alignment: AlignmentDirectional.centerEnd,
-              style: const TextStyle(
-                fontFamily: 'Raleway',
-              ),
-              underline: const SizedBox.shrink(),
-              items: widget.options
-                  .map(
-                    (option) => DropdownMenuItem<K>(
-                      value: option.keys.first,
-                      child: Text(
-                        option.values.first.toString(),
-                        style: const TextStyle(
-                          fontFamily: 'Raleway',
+            child: widget.isButton == true
+                ? Row(
+                    children: [
+                      if (widget.image == true)
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundImage: AssetImage(
+                            widget.pathImageHorsmenu!,
+                          ),
+                        ),
+                      const SizedBox(width: 12),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: theme ? Colors.black : Colors.blue,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            widget.label,
+                            style: TextStyle(
+                              fontFamily: 'Raleway',
+                              color: theme ? Colors.white : Colors.black,
+                            ),
+                            textAlign: TextAlign.start,
+                          ),
                         ),
                       ),
-                    ),
-                  )
-                  .toList(),
-              hint: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      widget.selectedKey == null
-                          ? widget.label
-                          : widget.options.any(
-                                  (option) => option.keys.first == _selectedKey)
-                              ? widget.options
-                                  .firstWhere(
-                                    (option) =>
-                                        option.keys.first == _selectedKey,
-                                    orElse: () => {},
-                                  )
-                                  .values
-                                  .toString()
-                              : 'please select a category', // Message alternatif
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontFamily: 'Raleway',
-                        fontWeight: FontWeight.w400,
-                        overflow: TextOverflow.ellipsis,
+                      Spacer(),
+                      GestureDetector(
+                        onTap: widget.onTap,
+                        child: Container(
+                            margin: const EdgeInsets.only(left: 8.0),
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: theme
+                                  ? Color.fromARGB(255, 249, 217, 144)
+                                  : Color(0xFFFB98B7),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.arrow_forward,
+                              color: Colors.white,
+                              size: 24,
+                            )),
                       ),
-                    ),
+                    ],
                   )
-                ],
-              ),
-            ),
+                : Row(
+                    children: [
+                      if (widget.image == true)
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundImage: AssetImage(
+                            widget.pathImageHorsmenu!,
+                          ),
+                        ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: DropdownButton<K>(
+                          borderRadius: BorderRadius.circular(16),
+                          isExpanded: true,
+                          value: widget.options.any(
+                                  (option) => option.keys.first == _selectedKey)
+                              ? _selectedKey
+                              : null,
+                          onChanged: _onChanged,
+                          icon: const SizedBox.shrink(),
+                          alignment: AlignmentDirectional.centerEnd,
+                          style: TextStyle(
+                            fontFamily: 'Raleway',
+                            color: theme ? Colors.white : Colors.black,
+                          ),
+                          underline: const SizedBox.shrink(),
+                          items: widget.options
+                              .map(
+                                (option) => DropdownMenuItem<K>(
+                                  value: option.keys.first,
+                                  child: Row(
+                                    children: [
+                                      if (widget.imageMenu == true)
+                                        CircleAvatar(
+                                          radius: 50,
+                                          backgroundImage: AssetImage(
+                                            widget.pathImageForsmenu!,
+                                          ),
+                                        ),
+                                      Expanded(
+                                        child: Text(
+                                          option.values.first.toString(),
+                                          style: TextStyle(
+                                            color: theme
+                                                ? Colors.white
+                                                : Colors.black,
+                                            fontFamily: 'Raleway',
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                          hint: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  widget.selectedKey == null
+                                      ? widget.label
+                                      : widget.options.any((option) =>
+                                              option.keys.first == _selectedKey)
+                                          ? widget.options
+                                              .firstWhere(
+                                                (option) =>
+                                                    option.keys.first ==
+                                                    _selectedKey,
+                                                orElse: () => {},
+                                              )
+                                              .values
+                                              .toString()
+                                          : 'please select a category',
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontFamily: 'Raleway',
+                                    fontWeight: FontWeight.w400,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
           ),
           if (_isTouched && _errorMessage != null && _errorMessage!.isNotEmpty)
             Padding(

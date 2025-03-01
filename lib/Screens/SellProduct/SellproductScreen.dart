@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'package:finesse_frontend/ApiServices/backend_url.dart';
 import 'package:finesse_frontend/Provider/products.dart';
+import 'package:finesse_frontend/Provider/sellprovider.dart';
 import 'package:finesse_frontend/Screens/SellProduct/Itemsubmitted.dart';
 import 'package:finesse_frontend/Screens/SellProduct/categories.dart';
 import 'package:finesse_frontend/Screens/SellProduct/itemModified.dart';
@@ -20,6 +21,7 @@ class SellProductScreen extends StatefulWidget {
   final String? category;
   final String? subcategory;
   final String? subsubcategory;
+  final String? categoryFromMv;
 
   final String? keySubCategory;
   final String? keyCategory;
@@ -31,7 +33,8 @@ class SellProductScreen extends StatefulWidget {
       this.keyCategory,
       this.subcategory,
       this.subsubcategory,
-      this.product});
+      this.product,
+      this.categoryFromMv});
 
   @override
   State<SellProductScreen> createState() => _SellProductScreenState();
@@ -52,7 +55,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
   TextEditingController _tailleController = TextEditingController();
   TextEditingController _etatController = TextEditingController();
   TextEditingController _brandController = TextEditingController();
-
+  final PageStorageBucket _bucket = PageStorageBucket();
   final _formKey = GlobalKey<FormState>();
   String? _errorMessage;
 
@@ -62,21 +65,22 @@ class _SellProductScreenState extends State<SellProductScreen> {
       source: ImageSource.gallery,
     );
     if (pickedFile != null) {
-      setState(() {
-        _images[index] =
-            File(pickedFile.path); // Met à jour l'image sélectionnée
-      });
+      final image = File(pickedFile.path);
+      Provider.of<SellProductProvider>(context, listen: false)
+          .setImage(index, image);
     }
   }
 
   @override
   void initState() {
     super.initState();
-    
-      _categoryController = TextEditingController(
+    final sellProductProvider =
+        Provider.of<SellProductProvider>(context, listen: false);
+
+    _categoryController = TextEditingController(
       text: widget.category == "MV"
           ? 'Mode and Vintage'
-          : widget.category == "AC"
+          : widget.category == "OV"
               ? "Art and creation"
               : widget.category == "D"
                   ? "Decoration"
@@ -84,8 +88,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                       ? "Livre"
                       : "",
     );
-    
-    
+
     final Map<String, String> subCategoryMapping = {
       "V": "Vêtements",
       "C": "Chaussures",
@@ -110,41 +113,49 @@ class _SellProductScreenState extends State<SellProductScreen> {
       _categoryController.text +=
           " - $subCategoryText"; // Ajouter la sous-catégorie au texte
     }
+    // Restaurer la catégorie depuis PageStorage
+    subCategoryOrSubsubcategory = widget.subcategory;
+
     _titleController = TextEditingController(
-      text: widget.product != null ? widget.product["title"] : null,
+      text: widget.product?["title"] ?? sellProductProvider.title ?? "",
     );
+
     _descriptionController = TextEditingController(
-      text: widget.product != null ? widget.product["description"] : null,
+      text: (widget.product != null ? widget.product["description"] : ""),
     );
-     _categoryController = TextEditingController(
-      text: widget.product != null ? widget.product["frontend_category"] : null,
-    );
+
     _priceController = TextEditingController(
-      text: widget.product != null ? widget.product["price"] : null,
+      text: widget.product?["price"] ??
+          (sellProductProvider.price?.toString() ?? ""),
     );
+    print("ocidshoiheozcd");
+    print(widget.categoryFromMv);
+    print(widget.category);
+
+    _categoryController = TextEditingController(
+      text: (widget.product != null
+          ? widget.product["frontend_category"]
+          : widget.categoryFromMv != null
+              ? "Mode et vintage"
+              : ""),
+    );
+
     _initializeImages();
   }
 
   void _initializeImages() {
-    if (widget.product != null && widget.product!["images"] != null) {
-      List<String> imageUrls = List<String>.from(widget.product!["images"]);
-      _networkImages = List.generate(5, (index) {
-        return index < imageUrls.length ? imageUrls[index] : "";
-      });
-    } else {
-      _networkImages = List.generate(5, (index) => "");
-    }
-    _images = List.generate(5, (index) => null);
-  }
+    final sellProductProvider =
+        Provider.of<SellProductProvider>(context, listen: false);
 
-  void _submitForm() {
-    if (_formKey.currentState?.validate() ?? false) {
-      // Si le formulaire est valide
-      print("Form submitted successfully!");
-    } else {
-      // Si le formulaire n'est pas valide
-      print("Form is not valid! Please fill all required fields.");
-    }
+    // Récupérer les images depuis le provider si elles existent
+    _images = sellProductProvider.images.isNotEmpty
+        ? List.from(sellProductProvider.images)
+        : List.generate(5, (index) => null);
+
+    // Récupérer les images réseau depuis widget.product si elles existent
+    _networkImages = widget.product != null && widget.product!["images"] != null
+        ? List<String>.from(widget.product!["images"])
+        : List.generate(5, (index) => "");
   }
 
   late String forBackend = "";
@@ -160,18 +171,23 @@ class _SellProductScreenState extends State<SellProductScreen> {
           key: _formKey, // Ajout du FormKey
           child: ListView(
             children: [
-              Text(
-                widget.product == null
-                    ? 'Vendre un article'
-                    : 'Modifier votre article',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontFamily: 'Raleway',
-                  fontWeight: FontWeight.w400,
-                  height: 1.50,
-                  letterSpacing: 0.50,
+              InkWell(
+                onTap: () {
+                  print(widget.category);
+                },
+                child: Text(
+                  widget.product == null
+                      ? 'Vendre un article'
+                      : 'Modifier votre article',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: 'Raleway',
+                    fontWeight: FontWeight.w400,
+                    height: 1.50,
+                    letterSpacing: 0.50,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
               InkWell(
                 onTap: () {
@@ -202,70 +218,84 @@ class _SellProductScreenState extends State<SellProductScreen> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: List.generate(5, (index) {
-                      return GestureDetector(
-                        onTap: () => _pickImage(index),
-                        child: Container(
-                          width: 150,
-                          height: 150,
-                          margin: const EdgeInsets.only(right: 8),
-                          decoration: ShapeDecoration(
-                            color: const Color(0xFFE5E7EB),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: _images[index] != null
-                                ? Image.file(
-                                    _images[index]!,
-                                    fit: BoxFit.cover,
-                                  )
-                                : _networkImages[index].isNotEmpty
-                                    ? Image.network(
-                                        "${AppConfig.baseUrl}${_networkImages[index]}",
+                      return Consumer<SellProductProvider>(
+                        builder: (context, sellProductProvider, child) {
+                          return GestureDetector(
+                            onTap: () => _pickImage(index),
+                            child: Container(
+                              width: 150,
+                              height: 150,
+                              margin: const EdgeInsets.only(right: 8),
+                              decoration: ShapeDecoration(
+                                color: const Color(0xFFE5E7EB),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: sellProductProvider.images.length >
+                                            index &&
+                                        sellProductProvider.images[index] !=
+                                            null
+                                    ? Image.file(
+                                        sellProductProvider.images[index]!,
                                         fit: BoxFit.cover,
                                       )
-                                    : Center(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            SvgPicture.asset(
-                                              "assets/Icons/gallery.svg",
+                                    : (_networkImages.length > index &&
+                                            _networkImages[index].isNotEmpty)
+                                        ? Image.network(
+                                            "${AppConfig.baseUrl}${_networkImages[index]}",
+                                            fit: BoxFit.cover,
+                                          )
+                                        : Center(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                SvgPicture.asset(
+                                                    "assets/Icons/gallery.svg"),
+                                                const SizedBox(height: 12),
+                                                const Text(
+                                                  'Ajouter une photo',
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 14,
+                                                    fontFamily: 'Raleway',
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            const SizedBox(height: 12),
-                                            const Text(
-                                              'Ajouter une photo',
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 14,
-                                                fontFamily: 'Raleway',
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                          ),
-                        ),
+                                          ),
+                              ),
+                            ),
+                          );
+                        },
                       );
                     }),
                   ),
                 ),
               ),
-              if(widget.product !=null)
-              const Text("Si vous souhaitez changer les images, veuillez choisir de nouvelles images dès le début, car les anciennes seront supprimées.",style:TextStyle(fontFamily: "Raleway",color: Colors.grey)),
+              if (widget.product != null)
+                const Text(
+                    "Si vous souhaitez changer les images, veuillez choisir de nouvelles images dès le début, car les anciennes seront supprimées.",
+                    style:
+                        TextStyle(fontFamily: "Raleway", color: Colors.grey)),
               const SizedBox(
                 height: 16,
               ),
               CustomTextFormField(
                   controller: _titleController,
+                  onChanged: (value) {
+                    Provider.of<SellProductProvider>(context, listen: false)
+                        .setTitle(value);
+                  },
                   label: 'Titre',
                   isPassword: false,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      _errorMessage = "osdhcoi";
+                      _errorMessage = "titre obligatoire";
                       return 'Le titre est obligatoire';
                     } else {
                       setState(() {
@@ -283,7 +313,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                   isPassword: false,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      _errorMessage = "osdhcoi";
+                      _errorMessage = "description obligatoire";
                       return 'La description est obligatoire';
                     } else {
                       setState(() {
@@ -296,65 +326,75 @@ class _SellProductScreenState extends State<SellProductScreen> {
                 height: 16,
               ),
               InkWell(
-                onTap: widget.product != null ? null : () async {
-                  // Appel à ChooseCategory et récupération des données
-                  final result = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChooseCategory(),
-                    ),
-                  );
+                onTap: widget.product != null
+                    ? null
+                    : () async {
+                        // Appel à ChooseCategory et récupération des données
+                        final result = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChooseCategory(),
+                          ),
+                        );
 
-                  // Mise à jour des champs avec les données retournées
-                  if (result != null) {
-                    final Map<String, String> subCategoryMapping = {
-                      "V": "Vêtements",
-                      "C": "Chaussures",
-                      "B": "Bijoux",
-                      "A": "Accessoires",
-                      "S": "Sacs",
-                      "P": "Produits de beauté",
-                      "J": "Jouets",
-                      "PEIN": "Peinture"
-                    };
-                    category = result['category'] ?? "";
-                    forBackend = result['forBackend'] ?? "";
-                    subcategory = result['subcategory'] ?? "";
-                    final String subsubcategory =
-                        result['subsubcategory'] ?? "";
+                        // Mise à jour des champs avec les données retournées
+                        if (result != null) {
+                          final Map<String, String> subCategoryMapping = {
+                            "V": "Vêtements",
+                            "C": "Chaussures",
+                            "B": "Bijoux",
+                            "A": "Accessoires",
+                            "S": "Sacs",
+                            "P": "Produits de beauté",
+                            "J": "Jouets",
+                            "PEIN": "Peinture"
+                          };
+                          category = result['category'] ?? "";
+                          forBackend = result['forBackend'] ?? "";
+                          subcategory = result['subcategory'] ?? "";
+                          final String subsubcategory =
+                              result['subsubcategory'] ?? "";
 
-                    if (kDebugMode) {
-                      print(forBackend);
-                      print(subcategory);
-                      print(subsubcategory);
-                    }
+                          if (kDebugMode) {
+                            print("hahom houni chouf");
+                            print(forBackend);
+                            print(subcategory);
+                            print(subsubcategory);
+                          }
 
-                    setState(() {
-                      // Mise à jour de la catégorie principale
-                      _categoryController.text = category == "MV"
-                          ? 'Mode et Vintage'
-                          : category == "AC"
-                              ? "Art et création"
-                              : category == "D"
-                                  ? "Decoration"
-                                  : category == "L"
-                                      ? "Livres"
-                                      : "";
+                          setState(() {
+                            // Mise à jour de la catégorie principale
+                            _categoryController.text = category == "MV"
+                                ? 'Mode et Vintage'
+                                : category == "OV"
+                                    ? "Art et création"
+                                    : category == "D"
+                                        ? "Decoration"
+                                        : category == "L"
+                                            ? "Livres"
+                                            : category == "CRA"
+                                                ? "Créations artisanales"
+                                                : widget.categoryFromMv != null
+                                                    ? "Mode et Vintage"
+                                                    : "";
 
-                      // Définir la sous-catégorie ou sous-sous-catégorie
-                      final String? mappedSubCategory = subcategory != null
-                          ? subCategoryMapping[subcategory]
-                          : subCategoryMapping[subsubcategory];
+                            // Définir la sous-catégorie ou sous-sous-catégorie
+                            final String? mappedSubCategory =
+                                subcategory != null
+                                    ? subCategoryMapping[subcategory]
+                                    : subCategoryMapping[subsubcategory];
 
-                      if (mappedSubCategory != null) {
-                        _categoryController.text += " - $mappedSubCategory";
-                      }
+                            if (mappedSubCategory != null) {
+                              _categoryController.text +=
+                                  " - $mappedSubCategory";
+                            }
 
-                      subCategoryOrSubsubcategory =
-                          subcategory != null ? subcategory : subsubcategory;
-                    });
-                  }
-                },
+                            subCategoryOrSubsubcategory = subcategory != null
+                                ? subcategory
+                                : subsubcategory;
+                          });
+                        }
+                      },
                 child: AbsorbPointer(
                   child: CustomTextFormField(
                     controller: _categoryController,
@@ -363,7 +403,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                     keyboardType: TextInputType.text,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        _errorMessage = "osdhcoi";
+                        _errorMessage = "categorie";
                         return 'La catégorie est obligatoire';
                       } else {
                         setState(() {
@@ -381,12 +421,16 @@ class _SellProductScreenState extends State<SellProductScreen> {
               ),
               CustomTextFormField(
                 controller: _priceController,
+                onChanged: (value) {
+                  Provider.of<SellProductProvider>(context, listen: false)
+                      .setPrice(value);
+                },
                 label: "Prix",
                 isPassword: false,
                 keyboardType: TextInputType.numberWithOptions(),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    _errorMessage = "osdhcoi";
+                    _errorMessage = "le prix obligatoire";
                     return 'le Prix et obligatoire';
                   } else {
                     setState(() {
@@ -407,7 +451,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      _errorMessage = "osdhcoi";
+                      _errorMessage = "pointure obligatoire";
                       return 'Pointure is required';
                     } else {
                       setState(() {
@@ -528,8 +572,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
               const SizedBox(
                 height: 24,
               ),
-              if(_errorMessage!=null)
-              Text("$_errorMessage"),
+              if (_errorMessage != null) Text("$_errorMessage"),
               CustomButton(
                 buttonColor:
                     _Loading ? const Color(0xffE5E7EB) : Color(0xffFB98B7),
@@ -614,10 +657,11 @@ class _SellProductScreenState extends State<SellProductScreen> {
                                   context,
                                   listen: false)
                               .updateProduct(
-                              widget.product["id"],
+                            widget.product["id"],
                             _titleController.text,
                             _descriptionController.text,
-                            widget.product["backend_category"], // Sous-catégorie obtenue depuis Navigator.push
+                            widget.product[
+                                "backend_category"], // Sous-catégorie obtenue depuis Navigator.push
                             price!,
                             _possibleDeffectsController.text,
                             _tailleController.text,
