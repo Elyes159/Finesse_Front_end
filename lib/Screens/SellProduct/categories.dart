@@ -10,7 +10,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 class ChooseCategory extends StatefulWidget {
-  const ChooseCategory({super.key});
+  final bool? isExplore;
+  const ChooseCategory({super.key, this.isExplore = false});
 
   @override
   State<ChooseCategory> createState() => _ChooseCategoryState();
@@ -108,6 +109,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
 
     print("heeeey $SubSubCategoryForBackend , $SubCategoryForBackend , ");
     Navigator.pop(context, {
+      'explore':widget.isExplore == true ? SubSubCategoryForBackend != null ? SubSubCategoryForBackend  : SubCategoryForBackend :null,
       'category': selectedCategory?.toUpperCase(),
       'subcategory': selectedSubCategory ?? "",
       'subsubcategory': selectedSubSubCategory ?? "",
@@ -166,6 +168,8 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             const SizedBox(height: 24),
             CustomDropdownFormField<String, String>(
               label: "Decoration",
+              image: true,
+              pathImageHorsmenu: "assets/images/deco.jpeg",
               options: const [
                 {"DECOMU": "Décoration murale"},
                 {"PLVA": "Plantes, vases"},
@@ -197,6 +201,8 @@ class _ChooseCategoryState extends State<ChooseCategory> {
           if ((selectedCategory == "L" || selectedCategory == null)) ...[
             const SizedBox(height: 24),
             CustomDropdownFormField<String, String>(
+              image: true,
+              pathImageHorsmenu: "assets/images/livre.jpeg",
               label: "Livres",
               options: const [
                 {"LLIT": "Littérature"},
@@ -229,6 +235,8 @@ class _ChooseCategoryState extends State<ChooseCategory> {
           if ((selectedCategory == "CRA" || selectedCategory == null)) ...[
             const SizedBox(height: 24),
             CustomDropdownFormField<String, String>(
+              image: true,
+              pathImageHorsmenu: "assets/images/cra.jpeg",
               label: "Création Artisanale",
               options: const [
                 {"TCREA": "Toutes les créations "},
@@ -256,6 +264,8 @@ class _ChooseCategoryState extends State<ChooseCategory> {
           if ((selectedCategory == "OV" || selectedCategory == null)) ...[
             const SizedBox(height: 24),
             CustomDropdownFormField<String, String>(
+              image: true,
+              pathImageHorsmenu: "assets/images/ov.jpeg",
               label: "œuvres d’art",
               options: const [
                 {"TOEU": "Toutes les œuvres "},
@@ -280,6 +290,8 @@ class _ChooseCategoryState extends State<ChooseCategory> {
           if (selectedSubCategory == "tableaux") ...[
             const SizedBox(height: 12),
             CustomDropdownFormField<String, String>(
+              image: true,
+              pathImageHorsmenu: "assets/images/tableau.jpeg",
               label: "Sub-category of TABLEAUX",
               options: const [
                 {"TPEIN": "Toutes les peintures"},
@@ -310,6 +322,8 @@ class _ChooseCategoryState extends State<ChooseCategory> {
           if (selectedSubCategory == "SCUL") ...[
             const SizedBox(height: 12),
             CustomDropdownFormField<String, String>(
+              image: true,
+              pathImageHorsmenu: "assets/images/scul.jpeg",
               label: "Sub-category of SCULPTURES",
               options: const [
                 {"SCULT": "Toutes les sculptures"},
@@ -335,6 +349,8 @@ class _ChooseCategoryState extends State<ChooseCategory> {
           if (selectedSubCategory == "ARTGRAPH") ...[
             const SizedBox(height: 12),
             CustomDropdownFormField<String, String>(
+              image: true,
+              pathImageHorsmenu: "assets/images/ag.jpeg",
               label: "Sub-category of art graphique",
               options: const [
                 {"PHOTOGRAPH": "Photographies"},
@@ -361,11 +377,13 @@ class _ChooseCategoryState extends State<ChooseCategory> {
           ),
           if(selectedCategory ==null && selectedSubCategory==null && selectedSubSubCategory==null)
           CustomDropdownFormField<String, String>(
+            image: true,
+              pathImageHorsmenu: "assets/images/mv.jpeg",
             label: "Mode et vintage",
             isButton: true,
             onTap: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Gender()));
+                  context, MaterialPageRoute(builder: (context) => Gender(isExplore : true)));
             },
             options: const [
               {"": ""},

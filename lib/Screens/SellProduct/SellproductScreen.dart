@@ -605,16 +605,16 @@ class _SellProductScreenState extends State<SellProductScreen> {
                               .sellProduct(
                             _titleController.text,
                             _descriptionController.text,
-                            forBackend.isNotEmpty
-                                ? forBackend
-                                : subcategory, // Sous-catégorie obtenue depuis Navigator.push
+                            subcategory.isNotEmpty
+                                ? subcategory
+                                : subcategory,
                             price!,
                             _possibleDeffectsController.text,
                             _tailleController.text,
                             _pointureController.text,
                             _etatController.text,
                             _brandController.text,
-                            _images,
+                            Provider.of<SellProductProvider>(context,listen: false).images,
                           );
                           if (result) {
                             setState(() {
@@ -668,7 +668,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                             _pointureController.text,
                             _etatController.text,
                             _brandController.text,
-                            _images,
+                            Provider.of<SellProductProvider>(context,listen: false).images,
                           );
                           if (result) {
                             setState(() {

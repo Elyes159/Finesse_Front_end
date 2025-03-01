@@ -4,7 +4,8 @@ import 'package:finesse_frontend/Widgets/CustomOptionsFields/optionsField.dart';
 import 'package:flutter/material.dart';
 
 class Gender extends StatefulWidget {
-  const Gender({super.key});
+  final bool? isExplore;
+  const Gender({super.key, this.isExplore});
 
   @override
   State<Gender> createState() => _GenderState();
@@ -40,7 +41,7 @@ class _GenderState extends State<Gender> {
             CustomDropdownFormField<String, String>(
               isButton: true,
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>BChoice(gender: "h")));
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>BChoice(gender: "h", isExplore : widget.isExplore)));
               },
               label: "Hommes",
               image: true,
@@ -55,7 +56,7 @@ class _GenderState extends State<Gender> {
             CustomDropdownFormField<String, String>(
               isButton: true,
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>BChoice(gender: "f")));
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>BChoice(gender: "f", isExplore : widget.isExplore)));
               },
               label: "Femmes",
               imageMenu: false,
@@ -69,7 +70,7 @@ class _GenderState extends State<Gender> {
             CustomDropdownFormField<String, String>(
               isButton: true,
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>BChoice(gender: "g")));
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>BChoice(gender: "g", isExplore : widget.isExplore)));
               },
               label: "Garçons",
               image: true,
@@ -88,7 +89,7 @@ class _GenderState extends State<Gender> {
               label: "Filles",
               image: true,
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>BChoice(gender: "p")));
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>BChoice(gender: "p" , isExplore : widget.isExplore)));
               },
               pathImageHorsmenu: "assets/images/fille.jpeg",
               options: const [

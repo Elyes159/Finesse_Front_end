@@ -1,10 +1,12 @@
+import 'package:finesse_frontend/Screens/HomeScreens/Explore.dart';
 import 'package:finesse_frontend/Screens/SellProduct/SellproductScreen.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
 import 'package:finesse_frontend/Widgets/CustomOptionsFields/optionsField.dart';
 import 'package:flutter/material.dart';
 
 class BChoice extends StatefulWidget {
-  const BChoice({super.key, required this.gender});
+  final bool? isExplore;
+  const BChoice({super.key, required this.gender, this.isExplore});
   final String gender;
   @override
   State<BChoice> createState() => _BChoiceState();
@@ -185,12 +187,21 @@ class _BChoiceState extends State<BChoice> {
                       }
                     : () {
                         print(categorieForBackend);
-                        Navigator.push(
+                        if(widget.isExplore==true) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Explore(
+                                      from_mv:categorieForBackend ,
+                                    )));
+                        } else {
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => SellProductScreen(
                                       categoryFromMv: categorieForBackend,
                                     )));
+                        }
                       })
           ],
           if (widget.gender == "f") ...[
@@ -389,12 +400,21 @@ class _BChoiceState extends State<BChoice> {
                       }
                     : () {
                         print(categorieForBackend);
-                        Navigator.push(
+                       if(widget.isExplore==true) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Explore(
+                                      from_mv:categorieForBackend ,
+                                    )));
+                        } else {
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => SellProductScreen(
                                       categoryFromMv: categorieForBackend,
                                     )));
+                        }
                       })
           ],
           if (widget.gender == "p") ...[
@@ -566,12 +586,21 @@ class _BChoiceState extends State<BChoice> {
                       }
                     : () {
                         print(categorieForBackend);
-                        Navigator.push(
+                       if(widget.isExplore==true) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Explore(
+                                      from_mv:categorieForBackend ,
+                                    )));
+                        } else {
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => SellProductScreen(
                                       categoryFromMv: categorieForBackend,
                                     )));
+                        }
                       })
           ],
           if (widget.gender == "g") ...[
@@ -743,12 +772,21 @@ class _BChoiceState extends State<BChoice> {
                       }
                     : () {
                         print(categorieForBackend);
-                        Navigator.push(
+                        if(widget.isExplore==true) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Explore(
+                                      from_mv:categorieForBackend ,
+                                    )));
+                        } else {
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => SellProductScreen(
                                       categoryFromMv: categorieForBackend,
                                     )));
+                        }
                       })
           ]
         ],

@@ -267,6 +267,44 @@ class Products extends ChangeNotifier {
       return false; // Retourner false si une exception se produit lors de l'envoi
     }
   }
+    List<Map<String, dynamic>> _members = [];
+  List<Map<String, dynamic>> get members => _members;
+
+  Future<void> fetchMembers(int userId) async {
+    final url = '${AppConfig.baseUrl}/api/auth/fatchmembers/$userId'; // Remplacez par votre URL d'API
+
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        _members = List<Map<String, dynamic>>.from(data['members']);
+        _errorMessage = '';
+      } else if (response.statusCode == 404) {
+        _errorMessage = 'Utilisateur non trouvé.';
+        _members = [];
+      } else {
+        _errorMessage = 'Une erreur est survenue. Code: ${response.statusCode}';
+        _members = [];
+      }
+    } catch (error) {
+      _errorMessage = 'Impossible de récupérer les membres: $error';
+      _members = [];
+    }
+
+    notifyListeners();
+  }
+   List<Map<String, dynamic>> _filteredMembers = [];
+  
+  List<Map<String, dynamic>> get filteredMembers => _filteredMembers;
+  void filterMembers(String searchText) {
+    _filteredMembers = _members.where((member) {
+      return member['full_name'].toLowerCase().contains(searchText.toLowerCase());
+    }).toList();
+    notifyListeners();
+  }
+
+
 
   Future<void> getProductsByUser() async {
     try {
@@ -367,6 +405,30 @@ class Products extends ChangeNotifier {
       print('Erreur rencontrée : $e');
     }
   }
+  void filterProductsByCategory(String category) {
+  print("Catégorie sélectionnée: $category");
+  print("Catégories disponibles dans les produits:");
+
+  for (var product in products) {
+    print(product['categoryForSearch']);
+  }
+
+  filteredProducts = products
+      .where((product) {
+        var categoryData = product['categoryForSearch'];
+        if (categoryData is List) {
+          return categoryData.contains(category); // Vérifie si la liste contient la catégorie
+        } else {
+          return categoryData == category; // Vérifie si c'est une simple chaîne de caractères
+        }
+      })
+      .toList();
+
+  print("Produits trouvés après filtrage: ${filteredProducts.length}");
+  notifyListeners();
+}
+
+
     Future<void> getProductsart() async {
     try {
       String? storedUserId = await storage.read(key: 'user_id');
@@ -403,7 +465,7 @@ class Products extends ChangeNotifier {
       print('Erreur rencontrée : $e');
     }
   }
-  void filterProducts(String query) {
+  void filterProducts(String query, String searchType) {
   if (query.isEmpty) {
     filteredProducts = List.from(products);
   } else {

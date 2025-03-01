@@ -4,47 +4,42 @@ class ProductCard extends StatefulWidget {
   final String imageUrl;
   final String productName;
   final String productPrice;
-
-  const ProductCard({
-    super.key,
-    required this.imageUrl,
-    required this.productName,
-    required this.productPrice,
-  });
+  const ProductCard(
+      {super.key,
+      required this.imageUrl,
+      required this.productName,
+      required this.productPrice});
 
   @override
   State<ProductCard> createState() => _ProductCardState();
 }
 
 Widget _buildImage(String imageUrl) {
-  // Vérifie si l'URL commence par "assets" pour déterminer s'il s'agit d'une image locale
-  if (imageUrl.startsWith('assets')) {
+  
     return ClipRRect(
-      borderRadius: BorderRadius.circular(8),
-      child: Image.asset(
-        imageUrl,
-        height: 120,
-        width: double.infinity,
-        fit: BoxFit.cover,
-      ),
-    );
-  } else {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(8), // Arrondi des coins
       child: Image.network(
-        imageUrl,
-        height: 120,
-        width: double.infinity,
-        fit: BoxFit.cover,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        },
-      ),
+  imageUrl,
+  height: 120,
+  width: double.infinity,
+  fit: BoxFit.cover,
+  loadingBuilder: (context, child, loadingProgress) {
+    if (loadingProgress == null) return child;
+    return Center(
+      child: CircularProgressIndicator(),
     );
-  }
+  },
+  errorBuilder: (context, error, stackTrace) {
+    return Image.asset(
+      'assets/images/test1.png', // Image de secours
+      height: 120,
+      width: double.infinity,
+      fit: BoxFit.cover,
+    );
+  },
+)
+    );
+  
 }
 
 class _ProductCardState extends State<ProductCard> {
