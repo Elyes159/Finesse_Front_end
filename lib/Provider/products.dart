@@ -310,7 +310,7 @@ class Products extends ChangeNotifier {
     try {
       String? storedUserId = await storage.read(key: 'user_id');
       final url = Uri.parse(
-          '${AppConfig.baseUrl}/api/products/getProductsByUser/${storedUserId}/');
+          '${AppConfig.baseUrl}/api/products/getProductsByUser/$storedUserId/');
       final headers = {
         'Content-Type': 'application/json',
       };
@@ -341,7 +341,7 @@ class Products extends ChangeNotifier {
   Future<void> getProductsByUserVisited(int storedUserId) async {
     try {
       final url = Uri.parse(
-          '${AppConfig.baseUrl}/api/products/getProductsByUser/${storedUserId}/');
+          '${AppConfig.baseUrl}/api/products/getProductsByUser/$storedUserId/');
       final headers = {
         'Content-Type': 'application/json',
       };

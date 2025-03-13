@@ -8,12 +8,12 @@ class BoostArticle extends StatefulWidget {
   final String price;
 
   const BoostArticle({
-    Key? key,
+    super.key,
     required this.imageUrls,
     required this.title,
     required this.price,
     required this.id,
-  }) : super(key: key);
+  });
   @override
   State<BoostArticle> createState() => _BoostArticleState();
 }

@@ -14,7 +14,7 @@ class SearchBarF extends StatefulWidget {
   final VoidCallback? onButtonPressed;
   final Color? buttonColor;
   final bool? isCommented;
-  SearchBarF({
+  const SearchBarF({
     super.key,
     required this.controller,
     required this.label,
@@ -80,7 +80,7 @@ class _SearchBarFState extends State<SearchBarF> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: ShapeDecoration(
               shape: RoundedRectangleBorder(
-                side: BorderSide(width: 1, color: theme ?Color.fromARGB(255, 249, 217, 144) : Color(0xFF5C7CA4)),
+                
                 borderRadius: BorderRadius.circular(30),
               ),
             ),
@@ -88,6 +88,7 @@ class _SearchBarFState extends State<SearchBarF> {
               children: [
                 Expanded(
                   child: TextFormField(
+                    
                     onSaved: widget.onSaved,
                     controller: widget.controller,
                     obscureText: widget.isPassword ? _obscureText : false,
@@ -100,6 +101,9 @@ class _SearchBarFState extends State<SearchBarF> {
                       });
                     },
                     decoration: InputDecoration(
+                      prefixIcon: SizedBox(
+                        height: 5,width: 5,
+                        child: SvgPicture.asset("assets/Icons/Search.svg", height: 5,width: 5,)),
                       labelText: widget.label,
                       labelStyle: const TextStyle(
                         

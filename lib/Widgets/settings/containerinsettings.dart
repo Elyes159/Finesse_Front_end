@@ -10,7 +10,7 @@ class SettingsTile extends StatelessWidget {
   final bool switchValue;
   final ValueChanged<bool>? onToggle;
 
-  SettingsTile({
+  const SettingsTile({super.key, 
     required this.iconPath,
     required this.title,
     this.hasSwitch = false,
@@ -55,7 +55,7 @@ class SettingsTile extends StatelessWidget {
               onChanged: onToggle,
             )
           else 
-           SvgPicture.asset("assets/Icons/icon-2.svg")
+           SvgPicture.asset("assets/Icons/icon-2.svg" , color: theme? Colors.white : null)
         ],
       ),
     );

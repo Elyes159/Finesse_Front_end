@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 
 class LetzGo extends StatefulWidget {
   final String parameter;
-  const LetzGo({Key? key , required this.parameter}) : super(key: key);
+  const LetzGo({super.key , required this.parameter});
 
   @override
   State<LetzGo> createState() => _LetzGoState();
@@ -210,7 +210,7 @@ class _LetzGoState extends State<LetzGo> {
                         MaterialPageRoute(builder: (context) => SignInScreen()),
                         (Route<dynamic> route) => false, 
                       );
-                    }else if(widget.parameter=="google"){
+                    }else if(widget.parameter=="google" || widget.parameter == "apple"){
                       await Provider.of<AuthService>(context, listen: false).createUsernameGoogle(
                       username: _usernameController.text,
                       isPolicy: _isCheckedPrivacy,

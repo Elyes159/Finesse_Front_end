@@ -7,7 +7,7 @@ class PaymentWebView extends StatefulWidget {
   final String successUrl;
   final String failUrl;
 
-  const PaymentWebView({
+  const PaymentWebView({super.key, 
     required this.paymentUrl,
     required this.successUrl,
     required this.failUrl,

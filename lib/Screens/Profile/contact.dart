@@ -1,3 +1,4 @@
+import 'package:finesse_frontend/Widgets/cards/contactbutton.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -29,50 +30,11 @@ class Contact extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Row(
-              children: [
-                Icon(FontAwesomeIcons.whatsapp, color: Colors.green, size: 28),
-                SizedBox(width: 15),
-                Text(
-                  "WhatsApp",
-                  style: TextStyle(
-                    fontFamily: 'Raleway',
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
+            ContactButton(text: 'Facebook', icon: Icons.facebook,),
             SizedBox(height: 24),
-            Row(
-              children: [
-                Icon(FontAwesomeIcons.facebook, color: Colors.blue, size: 28),
-                SizedBox(width: 15),
-                Text(
-                  "Facebook",
-                  style: TextStyle(
-                    fontFamily: 'Raleway',
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
+            ContactButton(text: 'Whatsapp',icon: FontAwesomeIcons.whatsapp,),
             SizedBox(height: 24),
-            Row(
-              children: [
-                Icon(FontAwesomeIcons.instagram, color: Colors.purple, size: 28),
-                SizedBox(width: 15),
-                Text(
-                  "Instagram",
-                  style: TextStyle(
-                    fontFamily: 'Raleway',
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
+            ContactButton(text: 'Instagram', icon: FontAwesomeIcons.instagram,),
           ],
         ),
       ),

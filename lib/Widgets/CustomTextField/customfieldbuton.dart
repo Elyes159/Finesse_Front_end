@@ -14,7 +14,7 @@ class CustomTextFormFieldwithButton extends StatefulWidget {
   final VoidCallback? onButtonPressed;
   final Color? buttonColor;
   final bool? isCommented;
-  CustomTextFormFieldwithButton({
+  const CustomTextFormFieldwithButton({
     super.key,
     required this.controller,
     required this.label,

@@ -11,7 +11,7 @@ class DescTextField extends StatefulWidget {
   final FormFieldValidator<String>? validator;
   final FormFieldSetter<String>? onSaved;
 
-  DescTextField({
+  const DescTextField({
     super.key,
     required this.controller,
     required this.label,

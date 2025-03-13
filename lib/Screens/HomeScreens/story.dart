@@ -5,7 +5,7 @@ import 'package:finesse_frontend/ApiServices/backend_url.dart';
 class StoryViewScreen extends StatefulWidget {
   final List<Map<String, dynamic>> stories;
 
-  const StoryViewScreen({Key? key, required this.stories}) : super(key: key);
+  const StoryViewScreen({super.key, required this.stories});
 
   @override
   _StoryViewScreenState createState() => _StoryViewScreenState();

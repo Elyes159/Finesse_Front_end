@@ -9,7 +9,7 @@ class CustomButton extends StatelessWidget {
   final Color textColor; // Variable for the text color
   final bool isDisabled; // New variable for the disabled state
 
-  const CustomButton({
+  const CustomButton({super.key, 
     required this.label,
     required this.onTap,
     this.buttonColor = const Color(0xFFFB98B7), // Default button color

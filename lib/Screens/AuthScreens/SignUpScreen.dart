@@ -143,10 +143,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                         "Le mot de passe doit contenir au moins 8 caractères.";
                                   });
                                 } else if (!_passwordController.text
-                                    .contains(RegExp(r'[A-Z].*[A-Z]'))) {
+                                    .contains(RegExp(r'[A-Z]'))) {
                                   setState(() {
                                     _errorMessage =
-                                        "Le mot de passe doit contenir au moins 2 majuscules.";
+                                        "Le mot de passe doit contenir au moins 1 majuscules.";
                                   });
                                 } else if (!_passwordController.text.contains(
                                     RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
@@ -313,7 +313,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   listen: false)
                               .signUpApple(
                             fcmToken:
-                                "await FirebaseMessaging.instance.getToken()",
+                                await FirebaseMessaging.instance.getToken(),
                           );
 
                           if (result.statusCode == 200) {

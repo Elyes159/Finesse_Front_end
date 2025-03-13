@@ -4,7 +4,7 @@ class RatingPercentageRow extends StatelessWidget {
   final double stars;
   final double percentage;
 
-  RatingPercentageRow({required this.stars, required this.percentage});
+  const RatingPercentageRow({super.key, required this.stars, required this.percentage});
 
   @override
   Widget build(BuildContext context) {

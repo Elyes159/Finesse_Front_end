@@ -14,7 +14,7 @@ class CustomTextFormField extends StatefulWidget {
   final String? defaultValue;
   final ValueChanged<String>? onChanged; // ✅ Nouveau paramètre
 
-  CustomTextFormField({
+  const CustomTextFormField({
     super.key,
     required this.controller,
     required this.label,

@@ -17,10 +17,10 @@ class AuthService with ChangeNotifier {
   bool _isAuthenticated = false;
   Users? _currentUser;
   int _userId = 0;
-  GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   String _googleAvatar = "";
-  String _fullnameGoogle = "";
+  final String _fullnameGoogle = "";
   final storage = FlutterSecureStorage();
 
   bool get isAuthenticated => _isAuthenticated;
@@ -34,9 +34,10 @@ class AuthService with ChangeNotifier {
   Future<bool> registerToken({
     required int user_id,
     required String fcmtoken,
+    required String type,
   }) async {
-    final url =
-        Uri.parse("${AppConfig.baseUrl}/api/auth/register_token/$user_id/");
+    final url = Uri.parse(
+        "${AppConfig.baseUrl}/api/auth/register_token/$user_id/$fcmtoken/$type/");
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -76,6 +77,8 @@ class AuthService with ChangeNotifier {
         'phone_number': phoneNumber,
         'first_name': firstName,
         'last_name': lastName,
+        "fcmToken": fcmToken,
+        "type": Platform.isIOS ? "ios" : "android"
       }),
     );
     if (response.statusCode == 201) {
@@ -84,7 +87,6 @@ class AuthService with ChangeNotifier {
       final data = json.decode(response.body);
       print(data);
       _userId = data["id"];
-      registerToken(user_id: _userId, fcmtoken: fcmToken!);
       notifyListeners();
       print('utilisateur creer');
     } else {
@@ -138,7 +140,7 @@ class AuthService with ChangeNotifier {
           key: 'hasStory', value: _currentUser!.hasStory.toString());
       notifyListeners();
     } else {
-      print("${response.body}");
+      print(response.body);
       throw Exception('Erreur lors de la connexion : ${response.statusCode}');
     }
   }
@@ -302,15 +304,16 @@ class AuthService with ChangeNotifier {
       throw Exception("Erreur lors de l'envoi des données : ${e.toString()}");
     }
   }
-   Future<http.Response> registerProfileApple({
+
+  Future<http.Response> registerProfileApple({
     required String full_name,
     required String phone_number,
     required String address,
     XFile? image,
     required int userId,
   }) async {
-    final url =
-        Uri.parse("${AppConfig.baseUrl}/api/auth/$userId/register_profile_apple/");
+    final url = Uri.parse(
+        "${AppConfig.baseUrl}/api/auth/$userId/register_profile_apple/");
     var request = http.MultipartRequest('POST', url)
       ..fields['full_name'] = full_name
       ..fields['phone_number'] = phone_number
@@ -380,6 +383,8 @@ class AuthService with ChangeNotifier {
     }
   }
 
+
+
   Future<http.Response> registerProfilefacebook({
     required String full_name,
     required String phone_number,
@@ -437,13 +442,13 @@ class AuthService with ChangeNotifier {
         await storage.write(key: 'email_reset', value: email);
         return response;
       } else {
-        print("${response.body}");
+        print(response.body);
         return response;
       }
     } catch (e) {
-      print("${e.toString()}");
+      print(e.toString());
 
-      throw Exception("${e.toString()}");
+      throw Exception(e.toString());
     }
   }
 
@@ -474,6 +479,7 @@ class AuthService with ChangeNotifier {
       throw Exception(errorMessage);
     }
   }
+
   Future<void> createUsernameapple({
     required String username,
     required bool isPolicy,
@@ -581,6 +587,8 @@ class AuthService with ChangeNotifier {
             'first_name': userFirstName,
             'last_name': userLastName,
             'avatar': userAvatar,
+            "fcmToken": fcmToken,
+            "type": Platform.isIOS ? "ios" : "android"
           };
 
           final response = await http.post(
@@ -589,7 +597,6 @@ class AuthService with ChangeNotifier {
             body: jsonEncode(bodyData),
           );
           _userId = jsonDecode(response.body)["user"]["id"];
-          registerToken(user_id: _userId, fcmtoken: fcmToken!);
           return response;
         } else {
           throw Exception("Google sign-in failed: ID token is null.");
@@ -646,6 +653,8 @@ class AuthService with ChangeNotifier {
           'first_name': userFirstName,
           'last_name': userLastName,
           'avatar': userAvatar,
+          "fcmToken": fcmToken,
+          "type": Platform.isIOS ? "ios" : "android"
         };
 
         print("📡 Envoi des données au serveur: $bodyData");
@@ -661,7 +670,6 @@ class AuthService with ChangeNotifier {
           final data = json.decode(response.body);
           _userId = data["user"]["id"];
           _googleAvatar = data["user"]["avatar"];
-          registerToken(user_id: _userId, fcmtoken: fcmToken!);
           print("✅ Authentification réussie, ID utilisateur: $_userId");
           notifyListeners();
         } else {
@@ -702,13 +710,15 @@ class AuthService with ChangeNotifier {
       final String? userEmail = appleCredential.email;
       final String userFirstName = appleCredential.givenName ?? "Inconnu";
       final String userLastName = appleCredential.familyName ?? "Inconnu";
-       // Apple ne fournit pas d'avatar
+      // Apple ne fournit pas d'avatar
 
       final Map<String, dynamic> bodyData = {
         'id_token': appleCredential.identityToken,
-        'email': userEmail,
+        'email': userEmail ?? "",
         'first_name': userFirstName,
         'last_name': userLastName,
+        "fcmToken": fcmToken,
+        "type": "ios",
       };
 
       print("📡 Envoi des données au serveur: $bodyData");
@@ -723,8 +733,6 @@ class AuthService with ChangeNotifier {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         _userId = data["user"]["id"];
-        _googleAvatar = data["user"]["avatar"];
-        registerToken(user_id: _userId, fcmtoken: fcmToken!);
         print("✅ Authentification réussie, ID utilisateur: $_userId");
         notifyListeners();
       } else {
@@ -840,7 +848,7 @@ class AuthService with ChangeNotifier {
       );
       print('Identifiants Apple récupérés: $credential');
       final String? idToken = credential.identityToken;
-      final String? authorizationCode = credential.authorizationCode;
+      final String authorizationCode = credential.authorizationCode;
       print('idToken: $idToken');
       print('authorizationCode: $authorizationCode');
       if (idToken == null || authorizationCode == null) {
@@ -920,7 +928,7 @@ class AuthService with ChangeNotifier {
           fields: "email,first_name,last_name,picture",
         );
 
-        final String? idToken = accessToken.tokenString;
+        final String idToken = accessToken.tokenString;
 
         final url = Uri.parse("${AppConfig.baseUrl}/api/auth/facebooklogin/");
         final response = await http.post(
@@ -1189,4 +1197,36 @@ class AuthService with ChangeNotifier {
       return false; // Vous pouvez gérer l'erreur ici ou la relancer
     }
   }
+
+
+Future<bool> sendNotif(int userId, String title, String body) async {
+  final url = '${AppConfig.baseUrl}/sendNotif/';
+  try {
+    final Map<String, dynamic> requestData = {
+      'user_id': userId,
+      'title': title,
+      'body': body,
+    };
+    final String jsonBody = json.encode(requestData);
+    final response = await http.post(
+      Uri.parse(url),
+      body: jsonBody,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+    if (response.statusCode == 200) {
+      print('Notification envoyée avec succès');
+      return true;
+    } else {
+      final errorResponse = json.decode(response.body);
+      print('Erreur: ${errorResponse['message']}');
+      return false;
+    }
+  } catch (error) {
+    print('Error: $error');
+    return false; // Vous pouvez gérer l'erreur ici ou la relancer
+  }
+}
+
 }

@@ -109,7 +109,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
 
     print("heeeey $SubSubCategoryForBackend , $SubCategoryForBackend , ");
     Navigator.pop(context, {
-      'explore':widget.isExplore == true ? SubSubCategoryForBackend != null ? SubSubCategoryForBackend  : SubCategoryForBackend :null,
+      'explore':widget.isExplore == true ? SubSubCategoryForBackend ?? SubCategoryForBackend :null,
       'category': selectedCategory?.toUpperCase(),
       'subcategory': selectedSubCategory ?? "",
       'subsubcategory': selectedSubSubCategory ?? "",
@@ -151,9 +151,10 @@ class _ChooseCategoryState extends State<ChooseCategory> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          const SizedBox(
+           SizedBox(
             width: 343,
             child: Text(
+              widget.isExplore == true ? "":
               "Sélectionnez une catégorie pour votre article dans la liste ci-dessous",
               style: TextStyle(
                 fontSize: 14,

@@ -9,7 +9,7 @@ class CustomButtonLogOut extends StatelessWidget {
   final Color textColor; // Variable for the text color
   final bool isDisabled; // New variable for the disabled state
 
-  const CustomButtonLogOut({
+  const CustomButtonLogOut({super.key, 
     required this.label,
     required this.onTap,
     this.buttonColor = const Color(0xffEA4335), // Default button color

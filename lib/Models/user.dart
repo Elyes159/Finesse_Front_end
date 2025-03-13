@@ -46,16 +46,16 @@ class Users {
     String? username
   }) {
     return Users(
-      id: this.id,
+      id: id,
       username: this.username,
-      email: this.email,
+      email: email,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       avatar: avatar ?? this.avatar,
       fullName: fullName ?? this.fullName,
       address: address ?? this.address,
-      isEmailVerified: this.isEmailVerified,
-      verificationCode: this.verificationCode,
-      hasStory: this.hasStory,
+      isEmailVerified: isEmailVerified,
+      verificationCode: verificationCode,
+      hasStory: hasStory,
     );
   }
 }

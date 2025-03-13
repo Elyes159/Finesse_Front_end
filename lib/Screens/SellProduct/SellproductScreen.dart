@@ -51,10 +51,10 @@ class _SellProductScreenState extends State<SellProductScreen> {
       TextEditingController();
   final TextEditingController _quantityController = TextEditingController();
   TextEditingController _categoryController = TextEditingController();
-  TextEditingController _pointureController = TextEditingController();
-  TextEditingController _tailleController = TextEditingController();
-  TextEditingController _etatController = TextEditingController();
-  TextEditingController _brandController = TextEditingController();
+  final TextEditingController _pointureController = TextEditingController();
+  final TextEditingController _tailleController = TextEditingController();
+  final TextEditingController _etatController = TextEditingController();
+  final TextEditingController _brandController = TextEditingController();
   final PageStorageBucket _bucket = PageStorageBucket();
   final _formKey = GlobalKey<FormState>();
   String? _errorMessage;
@@ -389,9 +389,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                                   " - $mappedSubCategory";
                             }
 
-                            subCategoryOrSubsubcategory = subcategory != null
-                                ? subcategory
-                                : subsubcategory;
+                            subCategoryOrSubsubcategory = subcategory;
                           });
                         }
                       },

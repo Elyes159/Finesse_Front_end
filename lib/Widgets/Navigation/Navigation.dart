@@ -18,11 +18,11 @@ class Navigation extends StatefulWidget {
 
 
   const Navigation({
-    Key? key,
+    super.key,
     required this.onItemSelected,
     this.currentIndex = 0,
     this.product
-  }) : super(key: key);
+  });
 
   @override
   State<Navigation> createState() => _NavigationState();
@@ -139,7 +139,7 @@ class _NavigationState extends State<Navigation> {
               child: CircleAvatar(
                 radius: 50.0,
                 backgroundImage:  (user.avatar != "" && user.avatar != null)
-                    ? NetworkImage(parametre == "normal"
+                    ? NetworkImage(parametre == "normal" || parametre=="apple"
                         ? "${AppConfig.baseUrl}${user.avatar}"
                         : user.avatar!)
                     : AssetImage('assets/images/user.png') as ImageProvider,

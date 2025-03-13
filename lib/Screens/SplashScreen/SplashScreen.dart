@@ -11,7 +11,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -137,7 +137,7 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             const SizedBox(height: 33),
             // Barre de progression animée
-            Container(
+            SizedBox(
               width: 247,
               height: 10,
               child: Stack(

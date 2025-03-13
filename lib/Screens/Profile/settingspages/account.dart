@@ -52,17 +52,16 @@ class _AccountState extends State<Account> {
       builder: (context, authService, child) {
         final user = authService.currentUser!;
 
-        TextEditingController _fullnameController =
+        TextEditingController fullnameController =
             TextEditingController(text: user.fullName);
-        TextEditingController _usernameController =
+        TextEditingController usernameController =
             TextEditingController(text: user.username);
-        TextEditingController _emailController =
+        TextEditingController emailController =
             TextEditingController(text: user.email);
-        TextEditingController _phoneController =
+        TextEditingController phoneController =
             TextEditingController(text: user.phoneNumber);
-        TextEditingController _addressController =
+        TextEditingController addressController =
             TextEditingController(text: user.address);
-
         return Scaffold(
           appBar: AppBar(
             title: Center(
@@ -102,7 +101,7 @@ class _AccountState extends State<Account> {
                               backgroundImage: _selectedImage != null
                                   ? FileImage(_selectedImage!) // Utiliser l'image sélectionnée
                                   : (user.avatar != "" && user.avatar != null)
-                                      ? NetworkImage(parametre == "normal"
+                                      ? NetworkImage(parametre == "normal" || parametre == "apple"
                                           ? "${AppConfig.baseUrl}${user.avatar}"
                                           : user.avatar!)
                                       : AssetImage('assets/images/user.png')
@@ -138,7 +137,6 @@ class _AccountState extends State<Account> {
                     style: TextStyle(color: Colors.red),
                   ),
                 ),
-              // ListView for other content
               Expanded(
                 child: ListView(
                   padding: EdgeInsets.all(16),
@@ -147,14 +145,14 @@ class _AccountState extends State<Account> {
                       height: 35,
                     ),
                     CustomTextFormField(
-                        controller: _fullnameController,
+                        controller: fullnameController,
                         label: "Nom complet",
                         isPassword: false),
                     SizedBox(
                       height: 16,
                     ),
                     CustomTextFormField(
-                        controller: _usernameController,
+                        controller: usernameController,
                         label: "Nom d'utilisateur",
                         isPassword: false),
                     SizedBox(
@@ -162,21 +160,21 @@ class _AccountState extends State<Account> {
                     ),
                     CustomTextFormField(
                       enabled: parametre == "normal",
-                        controller: _emailController,
+                        controller: emailController,
                         label: "E-mail",
                         isPassword: false),
                     SizedBox(
                       height: 16,
                     ),
                     CustomTextFormField(
-                        controller: _phoneController,
+                        controller: phoneController,
                         label: "Numéro de téléphone",
                         isPassword: false),
                     SizedBox(
                       height: 16,
                     ),
                     CustomTextFormField(
-                        controller: _addressController,
+                        controller: addressController,
                         label: "Addresse",
                         isPassword: false),
                     SizedBox(
@@ -189,10 +187,10 @@ class _AccountState extends State<Account> {
                         // Appel de la fonction updateProfile
                         int statusCode = await authService.updateProfile(
                           user.id,
-                          _fullnameController.text,
-                          _usernameController.text,
-                          _phoneController.text,
-                          _addressController.text,
+                          fullnameController.text,
+                          usernameController.text,
+                          phoneController.text,
+                          addressController.text,
                           _selectedImage, // Passer le fichier d'image sélectionné
                         );
 

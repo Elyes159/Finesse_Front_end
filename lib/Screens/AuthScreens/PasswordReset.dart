@@ -17,7 +17,7 @@ class PasswordReset extends StatefulWidget {
 }
 
 class _PasswordResetState extends State<PasswordReset> {
-  TextEditingController _emailController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   String? _emailError;
   bool isLoading = false; // To hold the email validation error message
   final storage = FlutterSecureStorage();

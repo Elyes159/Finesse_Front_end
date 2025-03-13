@@ -5,7 +5,7 @@ class CustomContainer extends StatelessWidget {
   final void Function() onTap;
   final String imagePath;
 
-  const CustomContainer({required this.onTap,required this.imagePath});
+  const CustomContainer({super.key, required this.onTap,required this.imagePath});
 
   @override
   Widget build(BuildContext context) {

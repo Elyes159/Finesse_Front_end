@@ -65,7 +65,7 @@ class _ProductCardState extends State<ProductCard> {
           height: 4,
         ),
         Text(
-          '${widget.productPrice}',
+          widget.productPrice,
           style: const TextStyle(
             fontSize: 12,
             fontFamily: 'Raleway',

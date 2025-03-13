@@ -348,7 +348,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: theme? Color.fromARGB(255, 249, 217, 144):  Color(0xFFC668AA),
-                      fontSize: 16,
+                      fontSize: 12,
                       fontFamily: 'Raleway',
                       fontWeight: FontWeight.w500,
                     ),

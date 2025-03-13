@@ -7,14 +7,11 @@ PODS:
     - AppAuth/Core
   - FBAEMKit (17.1.0):
     - FBSDKCoreKit_Basics (= 17.1.0)
-  - FBAudienceNetwork (6.15.0)
   - FBSDKCoreKit (17.1.0):
     - FBAEMKit (= 17.1.0)
     - FBSDKCoreKit_Basics (= 17.1.0)
   - FBSDKCoreKit_Basics (17.1.0)
   - FBSDKLoginKit (17.1.0):
-    - FBSDKCoreKit (= 17.1.0)
-  - FBSDKShareKit (17.1.0):
     - FBSDKCoreKit (= 17.1.0)
   - Firebase/Auth (11.8.0):
     - Firebase/CoreOnly
@@ -148,10 +145,6 @@ PODS:
     - FlutterMacOS
 
 DEPENDENCIES:
-  - FBAudienceNetwork (= 6.15.0)
-  - FBSDKCoreKit
-  - FBSDKLoginKit
-  - FBSDKShareKit
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
@@ -173,11 +166,9 @@ SPEC REPOS:
   trunk:
     - AppAuth
     - FBAEMKit
-    - FBAudienceNetwork
     - FBSDKCoreKit
     - FBSDKCoreKit_Basics
     - FBSDKLoginKit
-    - FBSDKShareKit
     - Firebase
     - FirebaseAppCheckInterop
     - FirebaseAuth
@@ -233,11 +224,9 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AppAuth: d4f13a8fe0baf391b2108511793e4b479691fb73
   FBAEMKit: cb719c53575a3be86ea873279f30d6a2c4e15881
-  FBAudienceNetwork: 80a035aa69cc3a71c99e44cb5c2874e4cef9909f
   FBSDKCoreKit: ecdb980a24633ccb012700299ceb16d0235e14d2
   FBSDKCoreKit_Basics: 045101c4a9ef10c845347424d73a29aae02c3e43
   FBSDKLoginKit: 69eb59b2f839aba635616df6e422acd0ca88030a
-  FBSDKShareKit: be9db7d121cbc3d6700c1b712a61183cac407f64
   Firebase: d80354ed7f6df5f9aca55e9eb47cc4b634735eaf
   firebase_auth: 82661cbfeb72c9050321884a5ff422412c68a4f3
   firebase_core: 6cbed78b4f298ed103a9fd034e6dbc846320480f
@@ -272,6 +261,6 @@ SPEC CHECKSUMS:
   url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
   webview_flutter_wkwebview: 1821ceac936eba6f7984d89a9f3bcb4dea99ebb2
 
-PODFILE CHECKSUM: 87fae3a18abd67fa28e80df913dc838ec2134438
+PODFILE CHECKSUM: e30f02f9d1c72c47bb6344a0a748c9d268180865
 
 COCOAPODS: 1.16.2

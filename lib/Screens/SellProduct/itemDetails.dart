@@ -52,7 +52,7 @@ class _ItemDetailsState extends State<ItemDetails> {
     isFavorite = widget.product["is_favorite"] ?? false;
   }
 
-  TextEditingController _commentController = TextEditingController();
+  final TextEditingController _commentController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {

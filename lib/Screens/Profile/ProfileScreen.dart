@@ -6,8 +6,6 @@ import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:finesse_frontend/Screens/Profile/Settings.dart';
 import 'package:finesse_frontend/Screens/SellProduct/SellproductScreen.dart';
 import 'package:finesse_frontend/Screens/SellProduct/itemDetails.dart';
-import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
-import 'package:finesse_frontend/Widgets/Navigation/Navigation.dart';
 import 'package:finesse_frontend/Widgets/cards/productCard.dart';
 import 'package:finesse_frontend/Widgets/rating/ratingpercen.dart';
 import 'package:finesse_frontend/Widgets/rating/star.dart';
@@ -16,6 +14,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class ProfileMain extends StatefulWidget {
   int? id;
   ProfileMain({super.key, this.id});
@@ -64,11 +63,12 @@ class _ProfileMainState extends State<ProfileMain> {
                   CircleAvatar(
                     radius: 50.0,
                     backgroundImage: (user.avatar != "" && user.avatar != null)
-                        ? NetworkImage(parametre == "normal"
-                            ? widget.id == null
-                                ? "${AppConfig.baseUrl}${user.avatar}"
-                                : "${user.avatar}"
-                            : user.avatar!)
+                        ? NetworkImage(
+                            parametre == "normal" || parametre == "apple"
+                                ? widget.id == null
+                                    ? "${AppConfig.baseUrl}${user.avatar}"
+                                    : "${user.avatar}"
+                                : user.avatar!)
                         : AssetImage('assets/images/user.png') as ImageProvider,
                     backgroundColor: Colors.transparent,
                     child: user.avatar == null
@@ -94,7 +94,6 @@ class _ProfileMainState extends State<ProfileMain> {
                             ? '${Provider.of<Products>(context, listen: false).nbfollowers ?? "0"} Abonnés'
                             : '${Provider.of<Products>(context, listen: false).nbfollowervisited} Abonnés',
                         style: TextStyle(
-                          //color: Color(0xFF111928),
                           fontSize: 14,
                           fontFamily: 'Raleway',
                           fontWeight: FontWeight.w400,
@@ -108,13 +107,30 @@ class _ProfileMainState extends State<ProfileMain> {
                                     context,
                                     listen: false)
                                 .followUser(
-                                    Provider.of<AuthService>(context,
-                                            listen: false)
-                                        .currentUser!
-                                        .id,
-                                    widget.id!);
+                              Provider.of<AuthService>(context, listen: false)
+                                  .currentUser!
+                                  .id,
+                              widget.id!,
+                            );
 
                             if (followed) {
+                              // Envoie de la notification après le suivi
+                              bool notifSent =
+                                  await Provider.of<AuthService>(context,
+                                          listen: false)
+                                      .sendNotif(
+                                widget.id!, // ID de l'utilisateur suivi
+                                'Nouvel Abonné', // Titre de la notification
+                                'Vous avez un nouveau abonné !', // Corps de la notification
+                              );
+
+                              if (notifSent) {
+                                print('Notification envoyée avec succès');
+                              } else {
+                                print('Échec de l\'envoi de la notification');
+                              }
+
+                              // Mise à jour de l'état pour afficher la liste des abonnés
                               setState(() {
                                 Provider.of<Products>(context, listen: false)
                                     .getFollowersVisited(widget.id!);
@@ -136,14 +152,15 @@ class _ProfileMainState extends State<ProfileMain> {
                             child: Center(
                               child: Consumer<Products>(
                                 builder: (context, productsProvider, child) {
-                                  bool isFollowing = productsProvider
-                                      .followersvisited
-                                      .any((follower) =>
-                                          follower['id'] ==
-                                          Provider.of<AuthService>(context,
-                                                  listen: false)
-                                              .currentUser!
-                                              .id);
+                                  bool isFollowing =
+                                      productsProvider.followersvisited.any(
+                                    (follower) =>
+                                        follower['id'] ==
+                                        Provider.of<AuthService>(context,
+                                                listen: false)
+                                            .currentUser!
+                                            .id,
+                                  );
 
                                   return Text(
                                     isFollowing ? 'désabonner' : "S'abonner",
@@ -529,9 +546,11 @@ class _ProfileMainState extends State<ProfileMain> {
                                                     ),
                                                     TextButton(
                                                       onPressed: () async {
-                                                      bool deleted = await  Provider.of<Products>(
-                                                                context,
-                                                                listen: false)
+                                                        bool deleted = await Provider
+                                                                .of<Products>(
+                                                                    context,
+                                                                    listen:
+                                                                        false)
                                                             .deleteProduct(
                                                                 product["id"],
                                                                 Provider.of<AuthService>(
@@ -540,12 +559,11 @@ class _ProfileMainState extends State<ProfileMain> {
                                                                             false)
                                                                     .currentUser!
                                                                     .id);
-                                                      if (deleted) {
-                                                        Navigator.pop(context);
-                                                        setState(() {
-                                                        
-                                                      });
-                                                      }
+                                                        if (deleted) {
+                                                          Navigator.pop(
+                                                              context);
+                                                          setState(() {});
+                                                        }
                                                       },
                                                       child: Container(
                                                         width: 110,
@@ -827,94 +845,99 @@ class _ProfileMainState extends State<ProfileMain> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          RatingPercentageRow(
-                              stars: 5,
-                              percentage: widget.id == null
-                                  ? Provider.of<Products>(context,
-                                          listen: false)
-                                      .ratingPercentage5
-                                  : Provider.of<Products>(context,
-                                          listen: false)
-                                      .ratingPercentage5Visited),
-                          RatingPercentageRow(
-                              stars: 4,
-                              percentage: widget.id == null
-                                  ? Provider.of<Products>(context,
-                                          listen: false)
-                                      .ratingPercentage4
-                                  : Provider.of<Products>(context,
-                                          listen: false)
-                                      .ratingPercentage4Visited),
-                          RatingPercentageRow(
-                              stars: 3,
-                              percentage: widget.id == null
-                                  ? Provider.of<Products>(context,
-                                          listen: false)
-                                      .ratingPercentage3
-                                  : Provider.of<Products>(context,
-                                          listen: false)
-                                      .ratingPercentage3Visited),
-                          RatingPercentageRow(
-                              stars: 2,
-                              percentage: widget.id == null
-                                  ? Provider.of<Products>(context,
-                                          listen: false)
-                                      .ratingPercentage2
-                                  : Provider.of<Products>(context,
-                                          listen: false)
-                                      .ratingPercentage2Visited),
-                          RatingPercentageRow(
-                              stars: 1,
-                              percentage: widget.id == null
-                                  ? Provider.of<Products>(context,
-                                          listen: false)
-                                      .ratingPercentage1
-                                  : Provider.of<Products>(context,
-                                          listen: false)
-                                      .ratingPercentage1Visited),
-                        ],
-                      ),
-                      SizedBox(width: 20),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${widget.id == null ? Provider.of<Products>(context, listen: false).avarageRate : Provider.of<Products>(context, listen: false).avarageRateVisited}',
-                            style: TextStyle(
-                              //color: Color(0xFF333333),
-                              fontSize: 40,
-                              fontFamily: 'Raleway',
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: -0.40,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            RatingPercentageRow(
+                                stars: 5,
+                                percentage: widget.id == null
+                                    ? Provider.of<Products>(context,
+                                            listen: false)
+                                        .ratingPercentage5
+                                    : Provider.of<Products>(context,
+                                            listen: false)
+                                        .ratingPercentage5Visited),
+                            RatingPercentageRow(
+                                stars: 4,
+                                percentage: widget.id == null
+                                    ? Provider.of<Products>(context,
+                                            listen: false)
+                                        .ratingPercentage4
+                                    : Provider.of<Products>(context,
+                                            listen: false)
+                                        .ratingPercentage4Visited),
+                            RatingPercentageRow(
+                                stars: 3,
+                                percentage: widget.id == null
+                                    ? Provider.of<Products>(context,
+                                            listen: false)
+                                        .ratingPercentage3
+                                    : Provider.of<Products>(context,
+                                            listen: false)
+                                        .ratingPercentage3Visited),
+                            RatingPercentageRow(
+                                stars: 2,
+                                percentage: widget.id == null
+                                    ? Provider.of<Products>(context,
+                                            listen: false)
+                                        .ratingPercentage2
+                                    : Provider.of<Products>(context,
+                                            listen: false)
+                                        .ratingPercentage2Visited),
+                            RatingPercentageRow(
+                                stars: 1,
+                                percentage: widget.id == null
+                                    ? Provider.of<Products>(context,
+                                            listen: false)
+                                        .ratingPercentage1
+                                    : Provider.of<Products>(context,
+                                            listen: false)
+                                        .ratingPercentage1Visited),
+                          ],
+                        ),
+                        SizedBox(width: 20),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${widget.id == null ? Provider.of<Products>(context, listen: false).avarageRate : Provider.of<Products>(context, listen: false).avarageRateVisited}',
+                              style: TextStyle(
+                                //color: Color(0xFF333333),
+                                fontSize: 40,
+                                fontFamily: 'Raleway',
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: -0.40,
+                              ),
                             ),
-                          ),
-                          StarRating(
-                            rating: widget.id == null
-                                ? Provider.of<Products>(context, listen: false)
-                                    .avarageRate as double
-                                : Provider.of<Products>(context, listen: false)
-                                    .avarageRateVisited as double,
-                          ),
-                          Text(
-                            '${widget.id == null ? Provider.of<Products>(context, listen: false).countRate : Provider.of<Products>(context, listen: false).countRateVisited} Reviews',
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                              //color: Color(0xFF333333),
-                              fontSize: 14,
-                              fontFamily: 'Raleway',
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: -0.14,
+                            StarRating(
+                              rating: widget.id == null
+                                  ? Provider.of<Products>(context,
+                                          listen: false)
+                                      .avarageRate as double
+                                  : Provider.of<Products>(context,
+                                          listen: false)
+                                      .avarageRateVisited as double,
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                            Text(
+                              '${widget.id == null ? Provider.of<Products>(context, listen: false).countRate : Provider.of<Products>(context, listen: false).countRateVisited} Reviews',
+                              textAlign: TextAlign.right,
+                              style: TextStyle(
+                                //color: Color(0xFF333333),
+                                fontSize: 14,
+                                fontFamily: 'Raleway',
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: -0.14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 if (widget.id != null) ...[
@@ -1193,8 +1216,14 @@ class _ProfileMainState extends State<ProfileMain> {
           ),
           Text(
             widget.id == null
-                ? "${Provider.of<AuthService>(context, listen: false).currentUser?.address ?? ''}"
-                : "${Provider.of<Profileprovider>(context, listen: false).visitedProfile?.address ?? ''}",
+                ? Provider.of<AuthService>(context, listen: false)
+                        .currentUser
+                        ?.address ??
+                    ''
+                : Provider.of<Profileprovider>(context, listen: false)
+                        .visitedProfile
+                        ?.address ??
+                    '',
             style: TextStyle(
               //color: Colors.black,
               fontSize: 13,
@@ -1225,8 +1254,14 @@ class _ProfileMainState extends State<ProfileMain> {
           ),
           Text(
             widget.id == null
-                ? "${Provider.of<AuthService>(context, listen: false).currentUser?.email ?? ''}"
-                : "${Provider.of<Profileprovider>(context, listen: false).visitedProfile?.email ?? ''}",
+                ? Provider.of<AuthService>(context, listen: false)
+                        .currentUser
+                        ?.email ??
+                    ''
+                : Provider.of<Profileprovider>(context, listen: false)
+                        .visitedProfile
+                        ?.email ??
+                    '',
             style: TextStyle(
               //color: Colors.black,
               fontSize: 13,

@@ -29,7 +29,6 @@ Future<void> initializeNotifications() async {
   } else {
     print("Permission refusée !");
   }
-  if(Platform.isIOS)
   String? token = await messaging.getAPNSToken();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 }
@@ -39,7 +38,6 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
   await initializeNotifications(); 
 
   runApp(
@@ -59,7 +57,6 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);

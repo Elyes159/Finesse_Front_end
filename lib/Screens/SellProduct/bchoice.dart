@@ -74,7 +74,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   categorieForBackend =
-                      "V${widget.gender}${selectedKey}".toUpperCase();
+                      "V${widget.gender}$selectedKey".toUpperCase();
                   print(categorieForBackend);
                 });
               },
@@ -105,7 +105,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   categorieForBackend =
-                      "C${widget.gender}${selectedKey}".toUpperCase();
+                      "C${widget.gender}$selectedKey".toUpperCase();
                   print(categorieForBackend);
                 });
               },
@@ -133,7 +133,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   categorieForBackend =
-                      "S${widget.gender}${selectedKey}".toUpperCase();
+                      "S${widget.gender}$selectedKey".toUpperCase();
                   print(categorieForBackend);
                 });
               },
@@ -166,7 +166,7 @@ class _BChoiceState extends State<BChoice> {
                   if (selectedKey != null) {
                     categorieForBackend = selectedKey == "MONTRE"
                         ? "MONTRE"
-                        : "A${widget.gender}${selectedKey}".toUpperCase();
+                        : "A${widget.gender}$selectedKey".toUpperCase();
                   }
                   print(
                       "categorieForBackend mis à jour : $categorieForBackend");
@@ -238,7 +238,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   categorieForBackend =
-                      "V${widget.gender}${selectedKey}".toUpperCase();
+                      "V${widget.gender}$selectedKey".toUpperCase();
 
                   print(categorieForBackend);
                 });
@@ -264,7 +264,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   categorieForBackend =
-                      "P${widget.gender}${selectedKey}".toUpperCase();
+                      "P${widget.gender}$selectedKey".toUpperCase();
                   print(categorieForBackend);
                 });
               },
@@ -288,7 +288,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   categorieForBackend =
-                      "B${widget.gender}${selectedKey}".toUpperCase();
+                      "B${widget.gender}$selectedKey".toUpperCase();
                   print(categorieForBackend);
                 });
               },
@@ -319,7 +319,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   categorieForBackend =
-                      "C${widget.gender}${selectedKey}".toUpperCase();
+                      "C${widget.gender}$selectedKey".toUpperCase();
                   print(categorieForBackend);
                 });
               },
@@ -347,7 +347,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   categorieForBackend =
-                      "S${widget.gender}${selectedKey}".toUpperCase();
+                      "S${widget.gender}$selectedKey".toUpperCase();
                   print(categorieForBackend);
                 });
               },
@@ -380,7 +380,7 @@ class _BChoiceState extends State<BChoice> {
                     categorieForBackend = "MONTRE";
                   } else {
                     categorieForBackend =
-                        "A${widget.gender}${selectedKey}".toUpperCase();
+                        "A${widget.gender}$selectedKey".toUpperCase();
                   }
                   print(categorieForBackend);
                 });
@@ -452,7 +452,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   categorieForBackend =
-                      "V${widget.gender}${selectedKey}".toUpperCase();
+                      "V${widget.gender}$selectedKey".toUpperCase();
                   print(categorieForBackend);
                 });
               },
@@ -482,7 +482,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   categorieForBackend =
-                      "C${widget.gender}${selectedKey}".toUpperCase();
+                      "C${widget.gender}$selectedKey".toUpperCase();
                   print(categorieForBackend);
                 });
               },
@@ -510,7 +510,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   categorieForBackend =
-                      "S${widget.gender}${selectedKey}".toUpperCase();
+                      "S${widget.gender}$selectedKey".toUpperCase();
                   print(categorieForBackend);
                 });
               },
@@ -539,9 +539,10 @@ class _BChoiceState extends State<BChoice> {
                 setState(() {
                   if (selectedKey == "MONTRE") {
                     categorieForBackend = selectedKey!;
-                  } else
+                  } else {
                     categorieForBackend =
-                        "A${widget.gender}${selectedKey}".toUpperCase();
+                        "A${widget.gender}$selectedKey".toUpperCase();
+                  }
                   print(categorieForBackend);
                 });
               },
@@ -567,7 +568,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   categorieForBackend =
-                      "J${widget.gender}${selectedKey}".toUpperCase();
+                      "J${widget.gender}$selectedKey".toUpperCase();
                   print(categorieForBackend);
                 });
               },
@@ -638,7 +639,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   categorieForBackend =
-                      "V${widget.gender}${selectedKey}".toUpperCase();
+                      "V${widget.gender}$selectedKey".toUpperCase();
                   print(categorieForBackend);
                 });
               },
@@ -668,7 +669,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   categorieForBackend =
-                      "C${widget.gender}${selectedKey}".toUpperCase();
+                      "C${widget.gender}$selectedKey".toUpperCase();
                   print(categorieForBackend);
                 });
               },
@@ -695,7 +696,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   categorieForBackend =
-                      "S${widget.gender}${selectedKey}".toUpperCase();
+                      "S${widget.gender}$selectedKey".toUpperCase();
                   print(categorieForBackend);
                 });
               },
@@ -725,9 +726,10 @@ class _BChoiceState extends State<BChoice> {
                 setState(() {
                   if (selectedKey == "MONTRE") {
                     categorieForBackend = selectedKey!;
-                  } else
+                  } else {
                     categorieForBackend =
-                        "A${widget.gender}${selectedKey}".toUpperCase();
+                        "A${widget.gender}$selectedKey".toUpperCase();
+                  }
                   print(categorieForBackend);
                 });
               },
@@ -753,7 +755,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   categorieForBackend =
-                      "J${widget.gender}${selectedKey}".toUpperCase();
+                      "J${widget.gender}$selectedKey".toUpperCase();
                   print(categorieForBackend);
                 });
               },

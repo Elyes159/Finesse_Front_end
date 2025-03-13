@@ -3,17 +3,14 @@ import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/SignIn.dart';
 import 'package:finesse_frontend/Screens/Profile/contact.dart';
 import 'package:finesse_frontend/Screens/Profile/settingspages/account.dart';
-import 'package:finesse_frontend/Screens/Profile/settingspages/boost.dart';
 import 'package:finesse_frontend/Screens/Profile/settingspages/faq.dart';
 import 'package:finesse_frontend/Screens/Profile/settingspages/orders.dart';
 import 'package:finesse_frontend/Screens/Profile/settingspages/privacupolicy.dart';
 import 'package:finesse_frontend/Screens/Profile/settingspages/settingapp.dart';
 import 'package:finesse_frontend/Screens/Profile/settingspages/viewed.dart';
-import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/logout.dart';
 import 'package:finesse_frontend/Widgets/settings/containerinsettings.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 class Parametres extends StatefulWidget {

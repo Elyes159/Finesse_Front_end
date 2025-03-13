@@ -11,6 +11,7 @@ import 'package:finesse_frontend/Screens/HomeScreens/wish.dart';
 import 'package:finesse_frontend/Screens/SellProduct/itemDetails.dart';
 import 'package:finesse_frontend/Widgets/cards/productCard.dart';
 import 'package:finesse_frontend/Widgets/categorieChip/categoryChip.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -19,7 +20,7 @@ import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   final String? parameter;
-  const HomeScreen({Key? key, required this.parameter}) : super(key: key);
+  const HomeScreen({super.key, required this.parameter});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -88,21 +89,27 @@ class _HomeScreenState extends State<HomeScreen> {
                         radius: 20,
                         backgroundImage:
                             (user.avatar != "" && user.avatar != null)
-                                ? NetworkImage(widget.parameter == "normal"
+                                ? NetworkImage(widget.parameter == "normal" || widget.parameter == "apple"
                                     ? "${AppConfig.baseUrl}${user.avatar}"
                                     : user.avatar!)
                                 : const AssetImage('assets/images/user.png')
                                     as ImageProvider,
                       ),
                       const SizedBox(width: 14),
-                      Text(
-                        user.fullName == "None None"
-                            ? "Bienvenue ${user.username}"
-                            : 'Bienvenue, ${user.fullName.split(' ')[0]}',
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w700,
-                          fontFamily: 'Raleway',
+                      GestureDetector(
+                        onTap: ()async{
+                          String? token = await FirebaseMessaging.instance.getToken();
+                          print(token);
+                        },
+                        child: Text(
+                          user.fullName == "None None"
+                              ? "Bienvenue ${user.username}"
+                              : 'Bienvenue, ${user.fullName.split(' ')[0]}',
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Raleway',
+                          ),
                         ),
                       ),
                     ],
@@ -183,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       backgroundImage: (user.avatar != "" &&
                                               user.avatar != null)
                                           ? NetworkImage(widget.parameter ==
-                                                  "normal"
+                                                  "normal" || widget.parameter == "apple"
                                               ? "${AppConfig.baseUrl}${user.avatar}"
                                               : user.avatar!)
                                           : AssetImage('assets/images/user.png')
@@ -378,6 +385,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     CategoryChip(
                       text: "Tout",
+                      iconPath: "assets/Icons/tout.jpeg",
                       isSelected: selectedCategory == "All",
                       onTap: () {
                         setState(() {

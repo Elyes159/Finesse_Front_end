@@ -17,7 +17,7 @@ import 'dart:typed_data';
 class CompleteInfo extends StatefulWidget {
   final String parameter;
 
-  const CompleteInfo({Key? key, required this.parameter}) : super(key: key);
+  const CompleteInfo({super.key, required this.parameter});
 
   @override
   State<CompleteInfo> createState() => _CompleteInfoState();
@@ -33,8 +33,8 @@ class _CompleteInfoState extends State<CompleteInfo> {
   bool isLoading = false;
 
   Future<void> _pickImage() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       setState(() {
         _imageFile = image;
@@ -98,7 +98,7 @@ class _CompleteInfoState extends State<CompleteInfo> {
                         shape: BoxShape.circle,
                       ),
                       child: _imageFile == null
-                          ? (widget.parameter == "normal"
+                          ? (widget.parameter == "normal" || widget.parameter == "apple"
                               ? const Icon(
                                   Icons.camera_alt,
                                   color: Colors.white,
@@ -325,7 +325,7 @@ class _CompleteInfoState extends State<CompleteInfo> {
                                     "Erreur survenue"; // Affichage du message d'erreur
                               });
                             }
-                          } else if (widget.parameter == "google") {
+                          } else if (widget.parameter == "google" ) {
                             try {
                               final response = await Provider.of<AuthService>(
                                       context,
@@ -378,6 +378,41 @@ class _CompleteInfoState extends State<CompleteInfo> {
                                   MaterialPageRoute(
                                     builder: (context) =>
                                         const LetzGo(parameter: "facebook"),
+                                  ),
+                                );
+                              } else {
+                                setState(() {
+                                  _errorMessage =
+                                      "${jsonDecode(response.body)["message"]}";
+                                });
+                              }
+                            } catch (e) {
+                              setState(() {
+                                _errorMessage = "Erreur dans l'application";
+                              });
+                            }
+                          }else if(widget.parameter =="apple"){
+                            try {
+                              final response = await Provider.of<AuthService>(
+                                      context,
+                                      listen: false)
+                                  .registerProfileApple(
+                                    image: _imageFile,
+                                full_name: _fullnameController.text,
+                                phone_number: _phoneController.text,
+                                address: _addressController.text,
+                                userId: Provider.of<AuthService>(context,
+                                        listen: false)
+                                    .userId,
+                                
+                              );
+
+                              if (response.statusCode == 200) {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const LetzGo(parameter: "apple"),
                                   ),
                                 );
                               } else {
