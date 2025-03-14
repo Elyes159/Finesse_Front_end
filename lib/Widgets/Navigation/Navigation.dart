@@ -15,13 +15,15 @@ class Navigation extends StatefulWidget {
   final ValueChanged<int> onItemSelected;
   final int currentIndex;
   final product;
+  final String? categoryForVm;
 
 
   const Navigation({
     super.key,
     required this.onItemSelected,
     this.currentIndex = 0,
-    this.product
+    this.product,
+    this.categoryForVm
   });
 
   @override
@@ -44,7 +46,7 @@ class _NavigationState extends State<Navigation> {
       _pages = [
         HomeScreen(parameter: parametre!),
         Explore(),
-        SellProductScreen(product: widget.product,),
+        SellProductScreen(product: widget.product,categoryFromMv : widget.categoryForVm),
         NotifScreen(),
         ProfileMain(),
       ];

@@ -1,9 +1,19 @@
 import 'package:finesse_frontend/Widgets/cards/contactbutton.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';  // Importer le package url_launcher
 
 class Contact extends StatelessWidget {
   const Contact({super.key});
+
+  // Fonction pour lancer une URL
+  Future<void> _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Impossible d\'ouvrir l\'URL $url';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +25,6 @@ class Contact extends StatelessWidget {
             child: Text(
               "Centre d'aide",
               style: TextStyle(
-                //color: Color(0xFF111928),
                 fontSize: 18,
                 fontFamily: 'Raleway',
                 fontWeight: FontWeight.w500,
@@ -30,11 +39,29 @@ class Contact extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            ContactButton(text: 'Facebook', icon: Icons.facebook,),
+            InkWell(
+              onTap: () => _launchURL('https://www.facebook.com/share/1A9MByRYXA/'),  // Lien vers Facebook
+              child: ContactButton(
+                text: 'Facebook',
+                icon: Icons.facebook,
+              ),
+            ),
             SizedBox(height: 24),
-            ContactButton(text: 'Whatsapp',icon: FontAwesomeIcons.whatsapp,),
+            InkWell(
+              onTap: () => _launchURL('https://wa.me/+21658118643'),  // Lien vers WhatsApp avec le numéro
+              child: ContactButton(
+                text: 'Whatsapp',
+                icon: FontAwesomeIcons.whatsapp,
+              ),
+            ),
             SizedBox(height: 24),
-            ContactButton(text: 'Instagram', icon: FontAwesomeIcons.instagram,),
+            InkWell(
+              onTap: () => _launchURL('https://www.instagram.com/finos.tn?igsh=MTJ3ajJ6MW1ibGFpaA=='),  // Lien vers Instagram
+              child: ContactButton(
+                text: 'Instagram',
+                icon: FontAwesomeIcons.instagram,
+              ),
+            ),
           ],
         ),
       ),

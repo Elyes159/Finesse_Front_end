@@ -128,9 +128,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
       text: widget.product?["price"] ??
           (sellProductProvider.price?.toString() ?? ""),
     );
-    print("ocidshoiheozcd");
-    print(widget.categoryFromMv);
-    print(widget.category);
+    
 
     _categoryController = TextEditingController(
       text: (widget.product != null
@@ -175,18 +173,26 @@ class _SellProductScreenState extends State<SellProductScreen> {
                 onTap: () {
                   print(widget.category);
                 },
-                child: Text(
-                  widget.product == null
-                      ? 'Vendre un article'
-                      : 'Modifier votre article',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontFamily: 'Raleway',
-                    fontWeight: FontWeight.w400,
-                    height: 1.50,
-                    letterSpacing: 0.50,
+                child: GestureDetector(
+                  onTap: () {
+                    print(subcategory);
+                    print(category);
+                    print(widget.category);
+                    print(widget.categoryFromMv);
+                  },
+                  child: Text(
+                    widget.product == null
+                        ? 'Vendre un article'
+                        : 'Modifier votre article',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'Raleway',
+                      fontWeight: FontWeight.w400,
+                      height: 1.50,
+                      letterSpacing: 0.50,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
                 ),
               ),
               InkWell(
@@ -333,7 +339,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                         final result = await Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ChooseCategory(),
+                            builder: (context) => ChooseCategory(isExplore: false,),
                           ),
                         );
 
@@ -441,7 +447,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
               const SizedBox(
                 height: 16,
               ),
-              if (subcategory == "C") ...[
+              if (subcategory.startsWith("C")) ...[
                 CustomTextFormField(
                   controller: _pointureController,
                   label: "Pointure",
@@ -463,7 +469,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                   height: 16,
                 ),
               ],
-              if (subcategory == "V") ...[
+              if (widget.categoryFromMv!=null &&  widget.categoryFromMv!.startsWith("V")) ...[
                 CustomDropdownFormField<String, String>(
                   options: const [
                     {'S': 'S'},
@@ -548,7 +554,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                     {'prada': 'Prada'},
                     {'burberry': 'Burberry'},
                   ],
-                  label: "Marque", // Changer "État" en "Marque"
+                  label: "Marque", 
                   selectedKey: null,
                   onChanged: (value) {
                     setState(() {
@@ -593,19 +599,16 @@ class _SellProductScreenState extends State<SellProductScreen> {
                               double.tryParse(_priceController.text);
                           int? quantity =
                               int.tryParse(_quantityController.text);
-
                           print("heeeeeeeeeeeeey $subCategoryOrSubsubcategory");
-
-                          // Appel de la méthode sellProduct et capture du résultat
                           final bool result = await Provider.of<Products>(
                                   context,
                                   listen: false)
                               .sellProduct(
                             _titleController.text,
                             _descriptionController.text,
-                            subcategory.isNotEmpty
+                               subcategory.isNotEmpty
                                 ? subcategory
-                                : subcategory,
+                                : widget.categoryFromMv!,
                             price!,
                             _possibleDeffectsController.text,
                             _tailleController.text,
@@ -619,7 +622,6 @@ class _SellProductScreenState extends State<SellProductScreen> {
                               _Loading = false;
                             });
                             Navigator.pushAndRemoveUntil(
-                              // ignore: use_build_context_synchronously
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ItemSubmitted(),
@@ -627,7 +629,6 @@ class _SellProductScreenState extends State<SellProductScreen> {
                               (route) => false,
                             );
                           } else {
-                            // Si une erreur survient, récupérer et afficher le message d'erreur
                             setState(() {
                               _errorMessage =
                                   Provider.of<Products>(context, listen: false)
@@ -641,16 +642,13 @@ class _SellProductScreenState extends State<SellProductScreen> {
                             _priceController.text.isNotEmpty &&
                             double.parse(_priceController.text) >= 10 &&
                             _titleController.text.isNotEmpty &&
-                            _descriptionController.text.isNotEmpty &&
-                            _categoryController.text.isNotEmpty) {
+                            _descriptionController.text.isNotEmpty 
+                            ) {
                           double? price =
                               double.tryParse(_priceController.text);
                           int? quantity =
                               int.tryParse(_quantityController.text);
-
                           print("heeeeeeeeeeeeey $subCategoryOrSubsubcategory");
-
-                          // Appel de la méthode sellProduct et capture du résultat
                           final bool result = await Provider.of<Products>(
                                   context,
                                   listen: false)

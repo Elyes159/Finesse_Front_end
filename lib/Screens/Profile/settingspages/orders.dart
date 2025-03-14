@@ -263,7 +263,7 @@ class _OrdersState extends State<Orders> {
                   Text(
                     '${order["total_price"]}',
                     style: TextStyle(
-                     // color: Colors.black,
+                      // color: Colors.black,
                       fontSize: 13,
                       fontFamily: 'Raleway',
                       fontWeight: FontWeight.w500,
@@ -282,7 +282,7 @@ class _OrdersState extends State<Orders> {
 
   @override
   Widget build(BuildContext context) {
-        final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
+    final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
 
     return Consumer<AuthService>(
       builder: (context, provider, child) {
@@ -331,7 +331,9 @@ class _OrdersState extends State<Orders> {
                               height: 2,
                               width: MediaQuery.of(context).size.width * 0.5,
                               color: _selectedIndex == 0
-                                  ? theme?Color.fromARGB(255, 249, 217, 144): Color(0xFF111928)
+                                  ? theme
+                                      ? Color.fromARGB(255, 249, 217, 144)
+                                      : Color(0xFF111928)
                                   : Color(
                                       0x26111928), // Change la couleur si sélectionné
                             ),
@@ -359,7 +361,9 @@ class _OrdersState extends State<Orders> {
                               height: 2,
                               width: MediaQuery.of(context).size.width * 0.5,
                               color: _selectedIndex == 1
-                                  ?theme?Color.fromARGB(255, 249, 217, 144):  Color(0xFF111928)
+                                  ? theme
+                                      ? Color.fromARGB(255, 249, 217, 144)
+                                      : Color(0xFF111928)
                                   : Color(
                                       0x26111928), // Change la couleur si sélectionné
                             ),
@@ -374,7 +378,17 @@ class _OrdersState extends State<Orders> {
               Expanded(
                 child: _selectedIndex == 0
                     ? orderData!.isEmpty
-                        ? const Center(child: Text('Aucune commande trouvée.'))
+                        ? const Center(
+                            child: Text(
+                            'Aucune commande trouvée.',
+                            style: TextStyle(
+                              fontSize: 40,
+                              fontFamily: 'Raleway',
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: -0.40,
+                            ),
+                            textAlign: TextAlign.center,
+                          ))
                         : _buildContentA(orderData) // Affiche le contenu A
                     : Consumer<AuthService>(
                         builder: (context, provider, child) {
@@ -383,7 +397,16 @@ class _OrdersState extends State<Orders> {
 
                           return orderSellData!.isEmpty
                               ? const Center(
-                                  child: Text('Aucune vente trouvée.'))
+                                  child: Text(
+                                  'Aucune vente trouvée.',
+                                  style: TextStyle(
+                                    fontSize: 40,
+                                    fontFamily: 'Raleway',
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: -0.40,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ))
                               : _buildContentB(
                                   orderSellData); // Affiche le contenu B
                         },

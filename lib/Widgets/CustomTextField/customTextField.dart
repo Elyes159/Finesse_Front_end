@@ -1,5 +1,6 @@
 import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
@@ -12,7 +13,8 @@ class CustomTextFormField extends StatefulWidget {
   final FormFieldValidator<String>? validator;
   final FormFieldSetter<String>? onSaved;
   final String? defaultValue;
-  final ValueChanged<String>? onChanged; // ✅ Nouveau paramètre
+  final ValueChanged<String>? onChanged;
+  final List<TextInputFormatter>? inputFormatters; // ✅ Ajout des input formatters
 
   const CustomTextFormField({
     super.key,
@@ -24,7 +26,8 @@ class CustomTextFormField extends StatefulWidget {
     this.onSaved,
     this.defaultValue,
     this.enabled,
-    this.onChanged, // ✅ Ajout de onChanged
+    this.onChanged,
+    this.inputFormatters, // ✅ Ajout du paramètre
   });
 
   @override
@@ -49,7 +52,6 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       });
     }
 
-    // ✅ Appeler onChanged si défini
     if (widget.onChanged != null) {
       widget.onChanged!(widget.controller.text);
     }
@@ -86,7 +88,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
               shape: RoundedRectangleBorder(
                 side: BorderSide(
                   width: 1,
-                  color: theme ? Color.fromARGB(255, 249, 217, 144) : Color(0xFF5C7CA4),
+                  color: theme ? const Color.fromARGB(255, 249, 217, 144) : const Color(0xFF5C7CA4),
                 ),
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -99,7 +101,8 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
               keyboardType: widget.keyboardType,
               cursorColor: Colors.grey,
               style: const TextStyle(fontFamily: 'Raleway'),
-              onChanged: (value) => _onTextChanged(), // ✅ Ajout de onChanged
+              inputFormatters: widget.inputFormatters, // ✅ Ajout des formatteurs
+              onChanged: (value) => _onTextChanged(),
               onTap: () {
                 setState(() {
                   _isTouched = true;

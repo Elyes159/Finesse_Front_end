@@ -34,7 +34,17 @@ class _ViewedState extends State<Viewed> {
             ),
           )),
           body: viewedProducts.isEmpty
-              ? const Center(child: Text('Aucun produit vu.'))
+              ? const Center(
+                  child: Text(
+                  'Aucun produit vu.',
+                  style: TextStyle(
+                    fontSize: 40,
+                    fontFamily: 'Raleway',
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.40,
+                  ),
+                  textAlign: TextAlign.center,
+                ))
               : GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2, // Deux colonnes

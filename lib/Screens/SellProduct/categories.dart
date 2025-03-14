@@ -384,7 +384,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             isButton: true,
             onTap: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Gender(isExplore : true)));
+                  context, MaterialPageRoute(builder: (context) => Gender(isExplore : widget.isExplore)));
             },
             options: const [
               {"": ""},

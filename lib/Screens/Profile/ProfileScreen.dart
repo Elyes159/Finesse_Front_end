@@ -115,14 +115,25 @@ class _ProfileMainState extends State<ProfileMain> {
 
                             if (followed) {
                               // Envoie de la notification après le suivi
-                              bool notifSent =
-                                  await Provider.of<AuthService>(context,
-                                          listen: false)
-                                      .sendNotif(
-                                widget.id!, // ID de l'utilisateur suivi
-                                'Nouvel Abonné', // Titre de la notification
-                                'Vous avez un nouveau abonné !', // Corps de la notification
-                              );
+                              bool notifSent = await Provider.of<AuthService>(
+                                      context,
+                                      listen: false)
+                                  .sendNotif(
+                                      widget.id!,
+                                      'Nouvel Abonné',
+                                      '${Provider.of<AuthService>(context, listen: false).currentUser!.fullName} à commencer à vous suivre',
+                                      parametre == "normal"
+                                          ? "${AppConfig.baseUrl}${Provider.of<AuthService>(context, listen: false).currentUser!.avatar}"
+                                          : "${Provider.of<AuthService>(context, listen: false).currentUser!.avatar}",
+                                      Provider.of<AuthService>(context,
+                                              listen: false)
+                                          .currentUser!
+                                          .id);
+
+                              print(Provider.of<AuthService>(context,
+                                      listen: false)
+                                  .currentUser!
+                                  .id);
 
                               if (notifSent) {
                                 print('Notification envoyée avec succès');

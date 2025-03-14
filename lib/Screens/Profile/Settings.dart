@@ -6,8 +6,10 @@ import 'package:finesse_frontend/Screens/Profile/settingspages/account.dart';
 import 'package:finesse_frontend/Screens/Profile/settingspages/faq.dart';
 import 'package:finesse_frontend/Screens/Profile/settingspages/orders.dart';
 import 'package:finesse_frontend/Screens/Profile/settingspages/privacupolicy.dart';
+import 'package:finesse_frontend/Screens/Profile/settingspages/remise.dart';
 import 'package:finesse_frontend/Screens/Profile/settingspages/settingapp.dart';
 import 'package:finesse_frontend/Screens/Profile/settingspages/viewed.dart';
+import 'package:finesse_frontend/Screens/Profile/settingspages/virementbANK.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/logout.dart';
 import 'package:finesse_frontend/Widgets/settings/containerinsettings.dart';
 import 'package:flutter/material.dart';
@@ -93,7 +95,16 @@ class _ParametresState extends State<Parametres> {
               themeProvider.toggleTheme();
             },
           ),
-         
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => DiscountPage()));
+            },
+            child: SettingsTile(
+              iconPath: "assets/Icons/icon-4.svg",
+              title: "Remises",
+            ),
+          ),
           
           SizedBox(height: 46),
           Padding(
@@ -142,7 +153,17 @@ class _ParametresState extends State<Parametres> {
               },
               child: SettingsTile(
                   iconPath: "assets/Icons/icon-6.svg", title: "Nous contacter")),
-          SizedBox(height: 150),
+          InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => BankTransferForm()));
+              },
+              child: SettingsTile(
+                  iconPath: "assets/Icons/icon-7.svg",
+                  title: "Recevoir par virement")),
+          SizedBox(height: 80),
         
           Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 8),

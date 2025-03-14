@@ -22,12 +22,12 @@ class FAQPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildFAQItem(
-              "Qu'est-ce que Finesse ?",
-              "Finesse est une application qui vous permet de découvrir et d'acheter des produits tendances facilement et rapidement.",
+              "Qu'est-ce que Finos ?",
+              "Finos est une application qui vous permet de découvrir et d'acheter des produits tendances facilement et rapidement.",
             ),
             _buildFAQItem(
               'Comment créer un compte ?',
-              'Vous pouvez créer un compte en vous inscrivant avec votre adresse e-mail ou votre numéro de téléphone.',
+              'Vous pouvez créer un compte en vous inscrivant avec votre adresse e-mail',
             ),
             _buildFAQItem(
               'Quels modes de paiement sont acceptés ?',
@@ -35,7 +35,7 @@ class FAQPage extends StatelessWidget {
             ),
             _buildFAQItem(
               'Comment contacter le support ?',
-              "Vous pouvez nous contacter via la section 'A propos de nous' de l'application ou par e-mail à support@finesse.com.",
+              "Vous pouvez nous contacter via la section 'A propos de nous' de l'application ou par e-mail à Finessetn1@gmail.com.",
             ),
           ],
         ),

@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:finesse_frontend/FirebaseService/firebase_options.dart';
 import 'package:finesse_frontend/Provider/AuthService.dart';
+import 'package:finesse_frontend/Provider/Notifications.dart';
 import 'package:finesse_frontend/Provider/Stories.dart';
 import 'package:finesse_frontend/Provider/products.dart';
 import 'package:finesse_frontend/Provider/profileProvider.dart';
 import 'package:finesse_frontend/Provider/sellprovider.dart';
 import 'package:finesse_frontend/Provider/theme.dart';
+import 'package:finesse_frontend/Provider/virement.dart';
 import 'package:finesse_frontend/Screens/SplashScreen/SplashScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -49,6 +51,8 @@ void main() async {
         ChangeNotifierProvider(create: (_) => Profileprovider()),
         ChangeNotifierProvider(create: (_) => Stories()),
         ChangeNotifierProvider(create: (_) => Products()),
+        ChangeNotifierProvider(create: (_) => VirementProvider()),
+        ChangeNotifierProvider(create: (_) => NotificationProvider()),
       ],
       child: const MyApp(),
     ),

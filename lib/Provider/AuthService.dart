@@ -1016,7 +1016,7 @@ class AuthService with ChangeNotifier {
         email: storedUserEmail!,
         username: storedUsername!,
         fullName: storedUserFullName!,
-        avatar: storedUserAvatar!,
+        avatar: storedUserAvatar ?? "",
         phoneNumber: storedUserPhoneNumber!,
         address: storedUserAddress!,
         hasStory: storedHasStory == "true",
@@ -1199,13 +1199,15 @@ class AuthService with ChangeNotifier {
   }
 
 
-Future<bool> sendNotif(int userId, String title, String body) async {
+Future<bool> sendNotif(int userId, String title, String body , String image , int notifierId) async {
   final url = '${AppConfig.baseUrl}/sendNotif/';
   try {
     final Map<String, dynamic> requestData = {
+      'image' : image,
       'user_id': userId,
       'title': title,
       'body': body,
+      'notifier_id' : notifierId
     };
     final String jsonBody = json.encode(requestData);
     final response = await http.post(
@@ -1228,5 +1230,34 @@ Future<bool> sendNotif(int userId, String title, String body) async {
     return false; // Vous pouvez gérer l'erreur ici ou la relancer
   }
 }
-
+Future<bool> sendNotifToAllUsers( String title, String body , String image , int notifierId) async {
+  final url = '${AppConfig.baseUrl}/sendNotifToAllUsers/';
+  try {
+    final Map<String, dynamic> requestData = {
+      'image' : image,
+      'title': title,
+      'body': body,
+      'notifier_id' : notifierId
+    };
+    final String jsonBody = json.encode(requestData);
+    final response = await http.post(
+      Uri.parse(url),
+      body: jsonBody,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+    if (response.statusCode == 200) {
+      print('Notification envoyée avec succès');
+      return true;
+    } else {
+      final errorResponse = json.decode(response.body);
+      print('Erreur: ${errorResponse['message']}');
+      return false;
+    }
+  } catch (error) {
+    print('Error: $error');
+    return false; // Vous pouvez gérer l'erreur ici ou la relancer
+  }
+}
 }

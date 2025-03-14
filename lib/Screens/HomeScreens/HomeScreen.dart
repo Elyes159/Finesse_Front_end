@@ -5,6 +5,7 @@ import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Provider/Stories.dart';
 import 'package:finesse_frontend/Provider/products.dart';
 import 'package:finesse_frontend/Provider/theme.dart';
+import 'package:finesse_frontend/Provider/virement.dart';
 import 'package:finesse_frontend/Screens/HomeScreens/cart.dart';
 import 'package:finesse_frontend/Screens/HomeScreens/story.dart';
 import 'package:finesse_frontend/Screens/HomeScreens/wish.dart';
