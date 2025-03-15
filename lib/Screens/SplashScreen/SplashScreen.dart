@@ -116,8 +116,8 @@ class _SplashScreenState extends State<SplashScreen> {
                 ],
               ),
             ),
-            SvgPicture.asset(
-              "assets/images/logoapp.svg",
+            Image.asset(
+              "assets/images/logo.png",
               width: 180.7,
               height: 180.49,
             ),

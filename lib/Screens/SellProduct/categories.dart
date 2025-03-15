@@ -165,7 +165,67 @@ class _ChooseCategoryState extends State<ChooseCategory> {
               textAlign: TextAlign.center,
             ),
           ),
-          if ((selectedCategory == "D" || selectedCategory == null)) ...[
+          if ((selectedCategory == null)) ...[
+            const SizedBox(height: 24),
+            CustomDropdownFormField<String, String>(
+              image: true,
+              pathImageHorsmenu: "assets/images/ov.jpeg",
+              label: "œuvres d’art",
+              options: const [
+                {"TOEU": "Toutes les œuvres "},
+                {"tableaux": "Tableaux "},
+                {"ARTGRAPH": "Arts graphiques"},
+                {"SCUL": "Sculptures "},
+                {"L": "Livres "},
+              ],
+              onChanged: (selectedKey) {
+                setState(() {
+                  CategoryForBackend = "OV";
+                  if(selectedKey == "L"){
+                    selectedCategory = "L";
+                  }else {
+                    selectedCategory = "OV";
+                  }
+                  SubCategoryForBackend = selectedKey;
+                  
+                  selectedSubCategory = selectedKey;
+                  errorMessage = null;
+                });
+              },
+              selectedKey:
+                  selectedSubCategory, // Assurez-vous que cette valeur est correcte
+            ),
+          ],
+          if ((selectedCategory == null)) ...[
+            const SizedBox(height: 24),
+            CustomDropdownFormField<String, String>(
+              image: true,
+              pathImageHorsmenu: "assets/images/cra.jpeg",
+              label: "Création Artisanale",
+              options: const [
+                {"TCREA": "Toutes les créations "},
+                {"CERAPO": "Céramique et poterie "},
+                {"HAUCO": "Haute couture"},
+                {"MACRA": "Macramé  "},
+                {"BIJOUX": "Bijoux  "},
+                {"SACOU": "Sacs et couffin  "},
+                {"TAPI": "Tapis  "},
+              ],
+              onChanged: (selectedKey) {
+                setState(() {
+                  CategoryForBackend = "CRA";
+                  selectedCategory = "CRA";
+                  SubCategoryForBackend = selectedKey;
+                  
+                  selectedSubCategory = selectedKey;
+                  errorMessage = null;
+                });
+              },
+              selectedKey:
+                  selectedSubCategory, // Assurez-vous que cette valeur est correcte
+            ),
+          ],
+          if ((selectedCategory == null)) ...[
             const SizedBox(height: 24),
             CustomDropdownFormField<String, String>(
               label: "Decoration",
@@ -199,7 +259,8 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                   selectedSubCategory, // Utiliser la sous-catégorie sélectionnée comme valeur
             ),
           ],
-          if ((selectedCategory == "L" || selectedCategory == null)) ...[
+          
+          if (( selectedCategory == "L")) ...[
             const SizedBox(height: 24),
             CustomDropdownFormField<String, String>(
               image: true,
@@ -221,7 +282,6 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                   selectedCategory = "L";
                   CategoryForBackend = "L";
                   SubCategoryForBackend = selectedKey;
-
                   print("$CategoryForBackend $SubCategoryForBackend");
                   // Mettre la catégorie principale sur "Mode et Vintage"
                   selectedSubCategory =
@@ -233,67 +293,14 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                   selectedSubCategory, // Utiliser la sous-catégorie sélectionnée comme valeur
             ),
           ],
-          if ((selectedCategory == "CRA" || selectedCategory == null)) ...[
-            const SizedBox(height: 24),
-            CustomDropdownFormField<String, String>(
-              image: true,
-              pathImageHorsmenu: "assets/images/cra.jpeg",
-              label: "Création Artisanale",
-              options: const [
-                {"TCREA": "Toutes les créations "},
-                {"CERAPO": "Céramique et poterie "},
-                {"HAUCO": "Haute couture"},
-                {"MACRA": "Macramé  "},
-                {"BIJOUX": "Bijoux  "},
-                {"SACOU": "Sacs et couffin  "},
-                {"TAPI": "Tapis  "},
-              ],
-              onChanged: (selectedKey) {
-                setState(() {
-                  CategoryForBackend = "CRA";
-                  selectedCategory = "CRA";
-                  SubCategoryForBackend = selectedKey;
-                  
-                  selectedSubCategory = selectedKey;
-                  errorMessage = null;
-                });
-              },
-              selectedKey:
-                  selectedSubCategory, // Assurez-vous que cette valeur est correcte
-            ),
-          ],
-          if ((selectedCategory == "OV" || selectedCategory == null)) ...[
-            const SizedBox(height: 24),
-            CustomDropdownFormField<String, String>(
-              image: true,
-              pathImageHorsmenu: "assets/images/ov.jpeg",
-              label: "œuvres d’art",
-              options: const [
-                {"TOEU": "Toutes les œuvres "},
-                {"tableaux": "Tableaux "},
-                {"ARTGRAPH": "Arts graphiques"},
-                {"SCUL": "Sculptures "},
-              ],
-              onChanged: (selectedKey) {
-                setState(() {
-                  CategoryForBackend = "OV";
-                  selectedCategory = "OV";
-                  SubCategoryForBackend = selectedKey;
-                  
-                  selectedSubCategory = selectedKey;
-                  errorMessage = null;
-                });
-              },
-              selectedKey:
-                  selectedSubCategory, // Assurez-vous que cette valeur est correcte
-            ),
-          ],
+          
+          
           if (selectedSubCategory == "tableaux") ...[
             const SizedBox(height: 12),
             CustomDropdownFormField<String, String>(
               image: true,
               pathImageHorsmenu: "assets/images/tableau.jpeg",
-              label: "Sub-category of TABLEAUX",
+              label: "Sous catégorie de TABLEAUX",
               options: const [
                 {"TPEIN": "Toutes les peintures"},
                 {"PH": "Peinture acrylique"},
@@ -325,7 +332,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             CustomDropdownFormField<String, String>(
               image: true,
               pathImageHorsmenu: "assets/images/scul.jpeg",
-              label: "Sub-category of SCULPTURES",
+              label: "Sous catégorie de SCULPTURES",
               options: const [
                 {"SCULT": "Toutes les sculptures"},
                 {"SCULBR": "Bronzes"},
@@ -352,7 +359,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             CustomDropdownFormField<String, String>(
               image: true,
               pathImageHorsmenu: "assets/images/ag.jpeg",
-              label: "Sub-category of art graphique",
+              label: "Sous catégorie de art graphique",
               options: const [
                 {"PHOTOGRAPH": "Photographies"},
                 {"AFFICH": "Affiches"},
@@ -406,7 +413,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             const SizedBox(height: 12),
           ],
           CustomButton(
-            label: "Choisir une catégorie",
+            label: "Valider votre choix",
             onTap: () {
               handleSubmit(selectedSubCategory == "MONTRE");
             },
@@ -421,7 +428,9 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                         selectedSubCategory == "tableaux" &&
                         (selectedSubCategory == null ||
                             selectedSubSubCategory == null 
-                                )) ||  (selectedCategory == "OV" &&
+                                ))||(selectedCategory == "L" &&
+                        selectedSubCategory == null 
+                        ) ||  (selectedCategory == "OV" &&
                         selectedSubCategory == "ARTGRAPH" &&
                         (selectedSubCategory == null ||
                             selectedSubSubCategory == null 
