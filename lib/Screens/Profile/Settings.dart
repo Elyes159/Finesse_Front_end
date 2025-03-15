@@ -9,6 +9,7 @@ import 'package:finesse_frontend/Screens/Profile/settingspages/orders.dart';
 import 'package:finesse_frontend/Screens/Profile/settingspages/privacupolicy.dart';
 import 'package:finesse_frontend/Screens/Profile/settingspages/remise.dart';
 import 'package:finesse_frontend/Screens/Profile/settingspages/settingapp.dart';
+import 'package:finesse_frontend/Screens/Profile/settingspages/vancance.dart';
 import 'package:finesse_frontend/Screens/Profile/settingspages/viewed.dart';
 import 'package:finesse_frontend/Screens/Profile/settingspages/virementbANK.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/logout.dart';
@@ -70,6 +71,16 @@ class _ParametresState extends State<Parametres> {
                 iconPath: "assets/Icons/icon-3.svg", title: "Compte"),
           ),
           InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => BankTransferForm()));
+              },
+              child: SettingsTile(
+                  iconPath: "assets/Icons/icon-7.svg",
+                  title: "Recevoir par virement")),
+          InkWell(
             onTap: () {
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Orders()));
@@ -108,8 +119,8 @@ class _ParametresState extends State<Parametres> {
           ),
           InkWell(
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => Annonce()));
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Annonce()));
             },
             child: SettingsTile(
               height: 25,
@@ -117,6 +128,18 @@ class _ParametresState extends State<Parametres> {
               title: "Annonce",
             ),
           ),
+          InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Vacance()));
+              },
+              child: SettingsTile(
+                  iconPath: "assets/Icons/holiday.svg",
+                  height: 25,
+
+                  title: "Mode vancance")),
           SizedBox(height: 46),
           Padding(
             padding: const EdgeInsets.only(left: 16.0),
@@ -166,16 +189,6 @@ class _ParametresState extends State<Parametres> {
               child: SettingsTile(
                   iconPath: "assets/Icons/icon-6.svg",
                   title: "Nous contacter")),
-          InkWell(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => BankTransferForm()));
-              },
-              child: SettingsTile(
-                  iconPath: "assets/Icons/icon-7.svg",
-                  title: "Recevoir par virement")),
           SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 8),
