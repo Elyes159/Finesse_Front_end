@@ -310,7 +310,7 @@ class _ExploreState extends State<Explore> {
                           style: TextStyle(fontFamily: "Raleway"),
                         ),
                         subtitle: Text(
-                          'Rating: ${member['average_rating'] != null ? '${(member['average_rating'] as double).toStringAsFixed(2)} ★' : 'N/A'}',
+                          'Rating: ${member['average_rating'] != null ? '${(member['average_rating'] as double).toStringAsFixed(2)} ⭐' : 'N/A'}',
                           style: TextStyle(fontFamily: "Raleway"),
                         ),
                         onTap: () async {

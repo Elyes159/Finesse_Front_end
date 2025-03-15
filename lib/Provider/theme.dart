@@ -3,7 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ThemeProvider with ChangeNotifier {
   final FlutterSecureStorage _storage = FlutterSecureStorage();
-  bool _isDarkMode = true;
+  bool _isDarkMode = false;
 
   ThemeProvider() {
     _loadThemePreference();

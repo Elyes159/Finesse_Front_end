@@ -26,7 +26,7 @@ Widget _buildImage(String imageUrl) {
   loadingBuilder: (context, child, loadingProgress) {
     if (loadingProgress == null) return child;
     return Center(
-      child: CircularProgressIndicator(),
+      child: CircularProgressIndicator(color: Colors.grey,),
     );
   },
   errorBuilder: (context, error, stackTrace) {

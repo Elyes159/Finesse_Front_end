@@ -17,7 +17,7 @@ class Vacance extends StatefulWidget {
 class _VacanceState extends State<Vacance> {
   TextEditingController _startDateController = TextEditingController();
   TextEditingController _endDateController = TextEditingController();
-  
+
   DateTime? _startDate;
   DateTime? _endDate;
   String? _errorMessage; // Variable pour stocker les messages d'erreur
@@ -85,15 +85,21 @@ class _VacanceState extends State<Vacance> {
         _errorMessage = null; // Réinitialiser le message d'erreur
       });
 
-      final url = '${AppConfig.baseUrl}/api/auth/set_vacation/'; // Remplacez par l'URL de votre API Django
-      String userId = Provider.of<AuthService>(context, listen: false).currentUser!.id.toString(); // Remplacez par l'ID de l'utilisateur actuellement connecté
+      final url =
+          '${AppConfig.baseUrl}/api/auth/set_vacation/'; // Remplacez par l'URL de votre API Django
+      String userId = Provider.of<AuthService>(context, listen: false)
+          .currentUser!
+          .id
+          .toString(); // Remplacez par l'ID de l'utilisateur actuellement connecté
 
       final response = await http.post(
         Uri.parse(url),
         body: {
           'user_id': userId,
-          'vacation_start_date': _startDate!.toIso8601String().split('T')[0], // format YYYY-MM-DD
-          'vacation_end_date': _endDate!.toIso8601String().split('T')[0], // format YYYY-MM-DD
+          'vacation_start_date':
+              _startDate!.toIso8601String().split('T')[0], // format YYYY-MM-DD
+          'vacation_end_date':
+              _endDate!.toIso8601String().split('T')[0], // format YYYY-MM-DD
         },
       );
 
@@ -132,16 +138,21 @@ class _VacanceState extends State<Vacance> {
               "Mode Vacances :\n"
               "Lorsque vous activez ce mode, vous ne serez pas notifié et certaines personnes "
               "ne pourront pas commander vos produits.",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Raleway'),
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Raleway'),
             ),
             const SizedBox(height: 20),
 
             // Sélection de la date de début
-            const Text("Date de début des vacances", style: TextStyle(fontSize: 16, fontFamily: 'Raleway')),
+            const Text("Date de début des vacances",
+                style: TextStyle(fontSize: 16, fontFamily: 'Raleway')),
             TextFormField(
               controller: _startDateController,
               decoration: const InputDecoration(
                 hintText: "Choisissez une date",
+                hintStyle: TextStyle(fontFamily: 'Raleway'),
                 suffixIcon: Icon(Icons.calendar_today),
               ),
               readOnly: true,
@@ -150,11 +161,13 @@ class _VacanceState extends State<Vacance> {
             const SizedBox(height: 20),
 
             // Sélection de la date de fin
-            const Text("Date de fin des vacances", style: TextStyle(fontSize: 16, fontFamily: 'Raleway')),
+            const Text("Date de fin des vacances",
+                style: TextStyle(fontSize: 16, fontFamily: 'Raleway')),
             TextFormField(
               controller: _endDateController,
               decoration: const InputDecoration(
                 hintText: "Choisissez une date",
+                hintStyle: TextStyle(fontFamily: 'Raleway'),
                 suffixIcon: Icon(Icons.calendar_today),
               ),
               readOnly: true,
@@ -164,7 +177,7 @@ class _VacanceState extends State<Vacance> {
 
             // Bouton pour activer le mode vacances
             CustomButton(
-              onTap: _isLoading ? (){} : _activateVacationMode,
+              onTap: _isLoading ? () {} : _activateVacationMode,
               label: _isLoading
                   ? "Chargement..."
                   : _isSuccess
