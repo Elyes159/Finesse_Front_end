@@ -3,6 +3,7 @@ import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/SignIn.dart';
 import 'package:finesse_frontend/Screens/Profile/contact.dart';
 import 'package:finesse_frontend/Screens/Profile/settingspages/account.dart';
+import 'package:finesse_frontend/Screens/Profile/settingspages/annonce.dart';
 import 'package:finesse_frontend/Screens/Profile/settingspages/faq.dart';
 import 'package:finesse_frontend/Screens/Profile/settingspages/orders.dart';
 import 'package:finesse_frontend/Screens/Profile/settingspages/privacupolicy.dart';
@@ -97,15 +98,25 @@ class _ParametresState extends State<Parametres> {
           ),
           InkWell(
             onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => DiscountPage()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => DiscountPage()));
             },
             child: SettingsTile(
               iconPath: "assets/Icons/icon-4.svg",
               title: "Remises",
             ),
           ),
-          
+          InkWell(
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => Annonce()));
+            },
+            child: SettingsTile(
+              height: 25,
+              iconPath: "assets/Icons/annonce.svg",
+              title: "Annonce",
+            ),
+          ),
           SizedBox(height: 46),
           Padding(
             padding: const EdgeInsets.only(left: 16.0),
@@ -128,7 +139,8 @@ class _ParametresState extends State<Parametres> {
                     MaterialPageRoute(builder: (context) => AppSetting()));
               },
               child: SettingsTile(
-                  iconPath: "assets/Icons/icon-5.svg", title: "Paramètres de l'App")),
+                  iconPath: "assets/Icons/icon-5.svg",
+                  title: "Paramètres de l'App")),
           InkWell(
               onTap: () {
                 Navigator.push(context,
@@ -152,7 +164,8 @@ class _ParametresState extends State<Parametres> {
                     MaterialPageRoute(builder: (context) => Contact()));
               },
               child: SettingsTile(
-                  iconPath: "assets/Icons/icon-6.svg", title: "Nous contacter")),
+                  iconPath: "assets/Icons/icon-6.svg",
+                  title: "Nous contacter")),
           InkWell(
               onTap: () {
                 Navigator.push(
@@ -163,17 +176,18 @@ class _ParametresState extends State<Parametres> {
               child: SettingsTile(
                   iconPath: "assets/Icons/icon-7.svg",
                   title: "Recevoir par virement")),
-          SizedBox(height: 80),
-        
+          SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 8),
             child: CustomButtonLogOut(
               label: "Déconnexion",
               onTap: () {
                 Provider.of<AuthService>(context, listen: false).signOut();
-                Navigator.push(
+                Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (context) => SignInScreen()),
+                  (Route<dynamic> route) =>
+                      false, // Supprime toutes les routes précédentes
                 );
               },
               buttonColor: Color(0xffEA4335),

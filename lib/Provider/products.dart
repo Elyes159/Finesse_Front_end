@@ -319,11 +319,15 @@ class Products extends ChangeNotifier {
         final data = json.decode(response.body);
         if (data['products'] != null) {
           productsByUser = data['products'];
+          print(productsByUser);
+          print("OIHAEFOHAOFHPDJZAPOJZPOADJZOPJDZPAOJDZAPOJDPZAOJDPZAOJDPOZAJDPZOAJDPZOAJDPZOAJDZOPAJDOZPAJDOZAPJDOPZAJDZA");
           for (var product in products) {
             print('Produit : ${product['title']}');
             print('Description : ${product['description']}');
             print('Prix : ${product['price']}');
             print('Images : ${product['images']}');
+            print(product["is_refused"]);
+            print(product["validated"]);
           }
           notifyListeners();
         } else {

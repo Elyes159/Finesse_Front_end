@@ -7,15 +7,20 @@ class SettingsTile extends StatelessWidget {
   final String iconPath;
   final String title;
   final bool hasSwitch;
+  final double? width;
+  final double? height;
   final bool switchValue;
   final ValueChanged<bool>? onToggle;
 
-  const SettingsTile({super.key, 
+  const SettingsTile({
+    super.key,
     required this.iconPath,
     required this.title,
     this.hasSwitch = false,
     this.switchValue = false,
     this.onToggle,
+    this.height,
+    this.width,
   });
 
   @override
@@ -33,7 +38,12 @@ class SettingsTile extends StatelessWidget {
           Expanded(
             child: Row(
               children: [
-                SvgPicture.asset(iconPath,color: theme? Colors.white : null,),
+                SvgPicture.asset(
+                  iconPath,
+                  color: theme ? Colors.white : null,
+                  height: height ?? null,
+                  width: width ?? null,
+                ),
                 SizedBox(width: 12),
                 Text(
                   title,
@@ -54,8 +64,9 @@ class SettingsTile extends StatelessWidget {
               value: switchValue,
               onChanged: onToggle,
             )
-          else 
-           SvgPicture.asset("assets/Icons/icon-2.svg" , color: theme? Colors.white : null)
+          else
+            SvgPicture.asset("assets/Icons/icon-2.svg",
+                color: theme ? Colors.white : null)
         ],
       ),
     );

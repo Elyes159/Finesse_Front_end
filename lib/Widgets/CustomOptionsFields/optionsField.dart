@@ -31,7 +31,8 @@ class CustomDropdownFormField<K, V> extends StatefulWidget {
     this.onTap,
     this.imageMenu = false,
     this.image = false,
-    this.pathImageHorsmenu, this.pathImageForsmenu, // Défaut à false pour un DropdownButton
+    this.pathImageHorsmenu,
+    this.pathImageForsmenu, // Défaut à false pour un DropdownButton
   });
 
   @override
@@ -78,7 +79,7 @@ class _CustomDropdownFormFieldState<K, V>
         children: [
           Container(
             width: MediaQuery.of(context).size.width,
-            height: 60,
+            height: 80,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
               color: theme ? Colors.black : Colors.white,
@@ -109,10 +110,21 @@ class _CustomDropdownFormFieldState<K, V>
                 ? Row(
                     children: [
                       if (widget.image == true)
-                        CircleAvatar(
-                          radius: 20,
-                          backgroundImage: AssetImage(
-                            widget.pathImageHorsmenu!,
+                        Container(
+                          width:
+                              50, // Augmente la largeur pour agrandir l'image
+                          height:
+                              50, // Assure-toi que la hauteur est identique à la largeur pour le carré
+                          decoration: BoxDecoration(
+                            shape: BoxShape
+                                .rectangle, // Pour obtenir une forme carrée
+                            borderRadius: BorderRadius.circular(
+                                0), // Pour arrondir les coins si tu veux
+                            image: DecorationImage(
+                              image: AssetImage(widget.pathImageHorsmenu!),
+                              fit: BoxFit
+                                  .cover, // Assure-toi que l'image remplit l'espace
+                            ),
                           ),
                         ),
                       const SizedBox(width: 12),
@@ -120,7 +132,6 @@ class _CustomDropdownFormFieldState<K, V>
                         padding: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 8),
                         decoration: BoxDecoration(
-                          color: theme ? Colors.black : Colors.blue,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Align(
@@ -159,10 +170,18 @@ class _CustomDropdownFormFieldState<K, V>
                 : Row(
                     children: [
                       if (widget.image == true)
-                        CircleAvatar(
-                          radius: 20,
-                          backgroundImage: AssetImage(
-                            widget.pathImageHorsmenu!,
+                        Container(
+                          width: 50, // Définir la largeur du carré
+                          height:
+                              50, // Définir la hauteur du carré (doit être égal à la largeur pour un carré)
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage(widget.pathImageHorsmenu!),
+                              fit: BoxFit
+                                  .cover, // Pour ajuster l'image à l'intérieur du carré
+                            ),
+                            borderRadius: BorderRadius
+                                .zero, // Pas de bordure arrondie, c'est un carré
                           ),
                         ),
                       const SizedBox(width: 12),

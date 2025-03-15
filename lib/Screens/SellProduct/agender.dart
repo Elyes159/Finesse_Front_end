@@ -34,71 +34,74 @@ class _GenderState extends State<Gender> {
           ),
         ),
       ),
-      body: Center(
-        child: Column(
-          children: [
-            SizedBox(height: 50,),
-            CustomDropdownFormField<String, String>(
-              isButton: true,
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>BChoice(gender: "h", isExplore : widget.isExplore)));
-              },
-              label: "Hommes",
-              image: true,
-              pathImageHorsmenu: "assets/images/homme.jpeg",
-              options: const [
-                {"unkown": "unkown"},
-              ],
-              
-              selectedKey: null,
-            ),
-            SizedBox(height: 16,),
-            CustomDropdownFormField<String, String>(
-              isButton: true,
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>BChoice(gender: "f", isExplore : widget.isExplore)));
-              },
-              label: "Femmes",
-              imageMenu: false,
-              image: true,
-              pathImageHorsmenu: "assets/images/femme.jpeg",
-              options: const [
-                {"unkown": "unkown"},
-              ],
-            ),
-            SizedBox(height: 16,),
-            CustomDropdownFormField<String, String>(
-              isButton: true,
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>BChoice(gender: "g", isExplore : widget.isExplore)));
-              },
-              label: "Garçons",
-              image: true,
-               onChanged: (value) {
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(
+          child: Column(
+            children: [
+              SizedBox(height: 50,),
+              CustomDropdownFormField<String, String>(
+                isButton: true,
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>BChoice(gender: "h", isExplore : widget.isExplore)));
+                },
+                label: "Hommes",
+                image: true,
+                pathImageHorsmenu: "assets/images/homme.jpeg",
+                options: const [
+                  {"unkown": "unkown"},
+                ],
                 
-              },
-              pathImageHorsmenu: "assets/images/garcon.jpeg",
-              options: const [
-                {"unkown": "unkown"},
-              ],
-            ),
-            SizedBox(height: 16,),
-            CustomDropdownFormField<String, String>(
-              isButton: true,
-              
-              label: "Filles",
-              image: true,
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>BChoice(gender: "p" , isExplore : widget.isExplore)));
-              },
-              pathImageHorsmenu: "assets/images/fille.jpeg",
-              options: const [
-                {"unkown": "unkown"},
-              ],
-            ),
-            SizedBox(height: 24,),
-            CustomButton(label: "choisir le sexe", onTap: (){})
-          ],
+                selectedKey: null,
+              ),
+              SizedBox(height: 16,),
+              CustomDropdownFormField<String, String>(
+                isButton: true,
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>BChoice(gender: "f", isExplore : widget.isExplore)));
+                },
+                label: "Femmes",
+                imageMenu: false,
+                image: true,
+                pathImageHorsmenu: "assets/images/femme.jpeg",
+                options: const [
+                  {"unkown": "unkown"},
+                ],
+              ),
+              SizedBox(height: 16,),
+              CustomDropdownFormField<String, String>(
+                isButton: true,
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>BChoice(gender: "g", isExplore : widget.isExplore)));
+                },
+                label: "Garçons",
+                image: true,
+                 onChanged: (value) {
+                  
+                },
+                pathImageHorsmenu: "assets/images/garcon.jpeg",
+                options: const [
+                  {"unkown": "unkown"},
+                ],
+              ),
+              SizedBox(height: 16,),
+              CustomDropdownFormField<String, String>(
+                isButton: true,
+                
+                label: "Filles",
+                image: true,
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>BChoice(gender: "p" , isExplore : widget.isExplore)));
+                },
+                pathImageHorsmenu: "assets/images/fille.jpeg",
+                options: const [
+                  {"unkown": "unkown"},
+                ],
+              ),
+              SizedBox(height: 24,),
+              CustomButton(label: "choisir le sexe", onTap: (){})
+            ],
+          ),
         ),
       ),
     );

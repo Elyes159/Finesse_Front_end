@@ -10,6 +10,8 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 class BankTransferForm extends StatefulWidget {
+  const BankTransferForm({super.key});
+
   @override
   _BankTransferFormState createState() => _BankTransferFormState();
 }

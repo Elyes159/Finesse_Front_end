@@ -36,7 +36,7 @@ class VirementProvider with ChangeNotifier {
         throw Exception('Erreur lors de la récupération des virements');
       }
     } catch (error) {
-      throw error;
+      rethrow;
     } finally {
       _isLoading = false;
       notifyListeners();

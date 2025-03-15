@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class NotifScreen extends StatefulWidget {
+  const NotifScreen({super.key});
+
   @override
   _NotifScreenState createState() => _NotifScreenState();
 }

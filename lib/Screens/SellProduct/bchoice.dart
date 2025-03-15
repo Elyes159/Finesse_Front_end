@@ -1,8 +1,10 @@
+import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:finesse_frontend/Screens/HomeScreens/Explore.dart';
 import 'package:finesse_frontend/Screens/SellProduct/SellproductScreen.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
 import 'package:finesse_frontend/Widgets/CustomOptionsFields/optionsField.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class BChoice extends StatefulWidget {
   final bool? isExplore;
@@ -16,6 +18,7 @@ class _BChoiceState extends State<BChoice> {
   String? categorieForBackend;
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeProvider>(context,listen:false).isDarkMode;
     String? SubCategoryForBackend;
     return Scaffold(
       appBar: AppBar(
@@ -179,7 +182,7 @@ class _BChoiceState extends State<BChoice> {
             CustomButton(
                 buttonColor: categorieForBackend == null
                     ? Colors.grey
-                    : Color.fromARGB(255, 249, 217, 144),
+                    : theme  ? Color.fromARGB(255, 249, 217, 144): Color(0xFFFB98B7) ,
                 label: "choisir",
                 onTap: categorieForBackend == null
                     ? () {
@@ -392,7 +395,7 @@ class _BChoiceState extends State<BChoice> {
             CustomButton(
                 buttonColor: categorieForBackend == null
                     ? Colors.grey
-                    : Color.fromARGB(255, 249, 217, 144),
+                    : theme  ? Color.fromARGB(255, 249, 217, 144): Color(0xFFFB98B7) ,
                 label: "choisir",
                 onTap: categorieForBackend == null
                     ? () {
@@ -579,7 +582,7 @@ class _BChoiceState extends State<BChoice> {
             CustomButton(
                 buttonColor: categorieForBackend == null
                     ? Colors.grey
-                    : Color.fromARGB(255, 249, 217, 144),
+                    : theme  ? Color.fromARGB(255, 249, 217, 144): Color(0xFFFB98B7) ,
                 label: "choisir",
                 onTap: categorieForBackend == null
                     ? () {
@@ -766,7 +769,7 @@ class _BChoiceState extends State<BChoice> {
             CustomButton(
                 buttonColor: categorieForBackend == null
                     ? Colors.grey
-                    : Color.fromARGB(255, 249, 217, 144),
+                    : theme  ? Color.fromARGB(255, 249, 217, 144): Color(0xFFFB98B7) ,
                 label: "choisir",
                 onTap: categorieForBackend == null
                     ? () {

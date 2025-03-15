@@ -10,6 +10,8 @@ import 'dart:convert';
 import 'package:provider/provider.dart';
 
 class DiscountPage extends StatefulWidget {
+  const DiscountPage({super.key});
+
   @override
   _DiscountPageState createState() => _DiscountPageState();
 }

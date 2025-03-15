@@ -54,6 +54,7 @@ dependencies:
   flutter_local_notifications: ^18.0.1
   font_awesome_flutter: ^10.8.0
   sign_in_with_apple: ^6.1.4
+  flutter_launcher_icons: ^0.14.3
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +72,11 @@ dev_dependencies:
 module:
   androidX: true
 # The following section is specific to Flutter packages.
+flutter_launcher_icons:
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/images/logofinos.png"
 flutter:
 
   # The following line ensures that the Material Icons font is
