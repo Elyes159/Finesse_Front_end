@@ -16,19 +16,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 class SellProductScreen extends StatefulWidget {
   final String? category;
   final String? subcategory;
   final String? subsubcategory;
-  final String? categoryFromMv;
-
+  String? categoryFromMv;
+  final String? category_for_field;
   final String? keySubCategory;
   final String? keyCategory;
   final product;
-  const SellProductScreen(
+   SellProductScreen(
       {super.key,
       this.category,
+      this.category_for_field,
       this.keySubCategory,
       this.keyCategory,
       this.subcategory,
@@ -128,7 +130,6 @@ class _SellProductScreenState extends State<SellProductScreen> {
       text: widget.product?["price"] ??
           (sellProductProvider.price?.toString() ?? ""),
     );
-    
 
     _categoryController = TextEditingController(
       text: (widget.product != null
@@ -335,11 +336,14 @@ class _SellProductScreenState extends State<SellProductScreen> {
                 onTap: widget.product != null
                     ? null
                     : () async {
+                      widget.categoryFromMv = null;
                         // Appel à ChooseCategory et récupération des données
                         final result = await Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ChooseCategory(isExplore: false,),
+                            builder: (context) => ChooseCategory(
+                              isExplore: false,
+                            ),
                           ),
                         );
 
@@ -469,7 +473,8 @@ class _SellProductScreenState extends State<SellProductScreen> {
                   height: 16,
                 ),
               ],
-              if (widget.categoryFromMv!=null &&  widget.categoryFromMv!.startsWith("V")) ...[
+              if (widget.categoryFromMv != null &&
+                  widget.categoryFromMv!.startsWith("V")) ...[
                 CustomDropdownFormField<String, String>(
                   options: const [
                     {'S': 'S'},
@@ -554,7 +559,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                     {'prada': 'Prada'},
                     {'burberry': 'Burberry'},
                   ],
-                  label: "Marque", 
+                  label: "Marque",
                   selectedKey: null,
                   onChanged: (value) {
                     setState(() {
@@ -573,10 +578,43 @@ class _SellProductScreenState extends State<SellProductScreen> {
                   },
                 )
               ],
+              if (widget.categoryFromMv != null &&
+                  !widget.categoryFromMv!.startsWith("V")) ...[
+                CustomDropdownFormField<String, String>(
+                  options: const [
+                    {'neuf_avec_etiquette': 'Neuf avec étiquette'},
+                    {'neuf_sans_etiquette': 'Neuf sans étiquette'},
+                    {'tres_bon_etat': 'Très bon état'},
+                    {'bon_etat': 'Bon état'},
+                    {'satisfaisant': 'Satisfaisant'},
+                  ],
+                  label: "État",
+                  selectedKey: null,
+                  onChanged: (value) {
+                    setState(() {
+                      _etatController.text = value ?? '';
+                      print(value);
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'État est obligatoire';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    _etatController.text = value ?? '';
+                  },
+                ),
+              ],
               const SizedBox(
                 height: 24,
               ),
-              if (_errorMessage != null) Text("$_errorMessage"),
+              if (_errorMessage != null)
+                Text(
+                  "$_errorMessage",
+                  style: TextStyle(color: Colors.red, fontFamily: "Raleway"),
+                ),
               CustomButton(
                 buttonColor:
                     _Loading ? const Color(0xffE5E7EB) : Color(0xffFB98B7),
@@ -591,6 +629,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                         if (widget.product == null &&
                             _images != null &&
                             _priceController.text.isNotEmpty &&
+                            int.tryParse(_priceController.text) != null &&
                             int.parse(_priceController.text) >= 10 &&
                             _titleController.text.isNotEmpty &&
                             _descriptionController.text.isNotEmpty &&
@@ -606,7 +645,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                               .sellProduct(
                             _titleController.text,
                             _descriptionController.text,
-                               subcategory.isNotEmpty
+                            subcategory.isNotEmpty
                                 ? subcategory
                                 : widget.categoryFromMv!,
                             price!,
@@ -615,7 +654,9 @@ class _SellProductScreenState extends State<SellProductScreen> {
                             _pointureController.text,
                             _etatController.text,
                             _brandController.text,
-                            Provider.of<SellProductProvider>(context,listen: false).images,
+                            Provider.of<SellProductProvider>(context,
+                                    listen: false)
+                                .images,
                           );
                           if (result) {
                             setState(() {
@@ -642,17 +683,16 @@ class _SellProductScreenState extends State<SellProductScreen> {
                             _priceController.text.isNotEmpty &&
                             double.parse(_priceController.text) >= 10 &&
                             _titleController.text.isNotEmpty &&
-                            _descriptionController.text.isNotEmpty 
-                            ) {
+                            _descriptionController.text.isNotEmpty) {
                           double? price =
                               double.tryParse(_priceController.text);
                           int? quantity =
                               int.tryParse(_quantityController.text);
                           print("heeeeeeeeeeeeey $subCategoryOrSubsubcategory");
-                          final bool result = await Provider.of<Products>(
-                                  context,
-                                  listen: false)
-                              .updateProduct(
+                          final http.StreamedResponse result =
+                              await Provider.of<Products>(context,
+                                      listen: false)
+                                  .updateProduct(
                             widget.product["id"],
                             _titleController.text,
                             _descriptionController.text,
@@ -664,9 +704,11 @@ class _SellProductScreenState extends State<SellProductScreen> {
                             _pointureController.text,
                             _etatController.text,
                             _brandController.text,
-                            Provider.of<SellProductProvider>(context,listen: false).images,
+                            Provider.of<SellProductProvider>(context,
+                                    listen: false)
+                                .images,
                           );
-                          if (result) {
+                          if (result.statusCode == 200) {
                             setState(() {
                               _Loading = false;
                             });
@@ -678,8 +720,16 @@ class _SellProductScreenState extends State<SellProductScreen> {
                               ),
                               (route) => false,
                             );
-                          } else {
+                          } else if (result.statusCode == 488) {
                             // Si une erreur survient, récupérer et afficher le message d'erreur
+                            setState(() {
+                              _errorMessage =
+                                  "vous ne pouvez pas augmenter le prix";
+                            });
+                            setState(() {
+                              _Loading = false;
+                            });
+                          } else {
                             setState(() {
                               _errorMessage =
                                   Provider.of<Products>(context, listen: false)

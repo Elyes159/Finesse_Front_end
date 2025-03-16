@@ -384,16 +384,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    CategoryChip(
-                      text: "Tout",
-                      iconPath: "assets/Icons/tout.jpeg",
-                      isSelected: selectedCategory == "All",
-                      onTap: () {
-                        setState(() {
-                          selectedCategory = "All";
-                        });
-                      },
-                    ),
+                   
                     CategoryChip(
                       iconPath: "assets/images/tableau.jpeg",
                       text: "Tableaux",
@@ -415,7 +406,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     CategoryChip(
-                      iconPath: "assets/images/deco.jpeg",
+                      iconPath: "assets/images/d.jpg",
                       text: "Decoration",
                       isSelected: selectedCategory == "D",
                       onTap: () {
@@ -455,7 +446,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     CategoryChip(
-                      iconPath: "assets/images/at.jpeg",
+                      iconPath: "assets/images/att.jpg",
                       text: "Arts de la table",
                       isSelected: selectedCategory == "Arts de la table",
                       onTap: () {

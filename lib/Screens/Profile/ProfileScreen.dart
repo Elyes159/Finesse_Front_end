@@ -49,6 +49,7 @@ class _ProfileMainState extends State<ProfileMain> {
         ? Provider.of<AuthService>(context, listen: false).currentUser!
         : Provider.of<Profileprovider>(context, listen: false).visitedProfile!;
     return Scaffold(
+      appBar: widget.id == null ? null : AppBar(),
       body: SafeArea(
         child: Column(
           children: [
@@ -80,7 +81,7 @@ class _ProfileMainState extends State<ProfileMain> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.id == null ? user.fullName : user.username,
+                        widget.id == null ? user.fullName : user.fullName,
                         style: TextStyle(
                           //color: Color(0xFF111928),
                           fontSize: 20,

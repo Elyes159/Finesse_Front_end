@@ -128,7 +128,18 @@ class _VacanceState extends State<Vacance> {
     final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Mode Vacances")),
+      appBar: AppBar(
+          title: const Text(
+        "Mode Vacances",
+        style: TextStyle(
+          //color: Color(0xFF111928),
+          fontSize: 16,
+          fontFamily: 'Raleway',
+          fontWeight: FontWeight.w400,
+          height: 1.25,
+          letterSpacing: 0.50,
+        ),
+      )),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

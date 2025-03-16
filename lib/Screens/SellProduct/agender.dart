@@ -12,6 +12,7 @@ class Gender extends StatefulWidget {
 }
 
 class _GenderState extends State<Gender> {
+  String gender = "";
   @override
   Widget build(BuildContext context) {
     String gender;
@@ -39,11 +40,19 @@ class _GenderState extends State<Gender> {
         child: Center(
           child: Column(
             children: [
-              SizedBox(height: 50,),
+              SizedBox(
+                height: 50,
+              ),
               CustomDropdownFormField<String, String>(
                 isButton: true,
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>BChoice(gender: "h", isExplore : widget.isExplore)));
+                  gender = "homme";
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => BChoice(
+                            genderForFiled: gender,
+                              gender: "h", isExplore: widget.isExplore)));
                 },
                 label: "Hommes",
                 image: true,
@@ -51,14 +60,21 @@ class _GenderState extends State<Gender> {
                 options: const [
                   {"unkown": "unkown"},
                 ],
-                
                 selectedKey: null,
               ),
-              SizedBox(height: 16,),
+              SizedBox(
+                height: 16,
+              ),
               CustomDropdownFormField<String, String>(
                 isButton: true,
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>BChoice(gender: "f", isExplore : widget.isExplore)));
+                  
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => BChoice(
+                            genderForFiled: "femme",
+                              gender: "f", isExplore: widget.isExplore)));
                 },
                 label: "Femmes",
                 imageMenu: false,
@@ -68,38 +84,50 @@ class _GenderState extends State<Gender> {
                   {"unkown": "unkown"},
                 ],
               ),
-              SizedBox(height: 16,),
+              SizedBox(
+                height: 16,
+              ),
               CustomDropdownFormField<String, String>(
                 isButton: true,
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>BChoice(gender: "g", isExplore : widget.isExplore)));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => BChoice(
+                            genderForFiled: "garçon",
+                              gender: "g", isExplore: widget.isExplore)));
                 },
                 label: "Garçons",
                 image: true,
-                 onChanged: (value) {
-                  
-                },
+                onChanged: (value) {},
                 pathImageHorsmenu: "assets/images/garcon.jpeg",
                 options: const [
                   {"unkown": "unkown"},
                 ],
               ),
-              SizedBox(height: 16,),
+              SizedBox(
+                height: 16,
+              ),
               CustomDropdownFormField<String, String>(
                 isButton: true,
-                
                 label: "Filles",
                 image: true,
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>BChoice(gender: "p" , isExplore : widget.isExplore)));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => BChoice(
+                            genderForFiled: "petite fille",
+                              gender: "p", isExplore: widget.isExplore)));
                 },
                 pathImageHorsmenu: "assets/images/fille.jpeg",
                 options: const [
                   {"unkown": "unkown"},
                 ],
               ),
-              SizedBox(height: 24,),
-              CustomButton(label: "choisir le sexe", onTap: (){})
+              SizedBox(
+                height: 24,
+              ),
             ],
           ),
         ),

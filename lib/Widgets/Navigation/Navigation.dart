@@ -14,30 +14,37 @@ import 'package:provider/provider.dart';
 class Navigation extends StatefulWidget {
   final ValueChanged<int> onItemSelected;
   final int currentIndex;
-  final product;
+  final dynamic product;
+  final String? category_for_field;
+  final String? from_mv;
   final String? categoryForVm;
-
-
+  final Function({String? categoryForField, String? fromMv})?
+      onNavigateToExplore;
   const Navigation({
     super.key,
     required this.onItemSelected,
     this.currentIndex = 0,
     this.product,
-    this.categoryForVm
+    this.onNavigateToExplore,
+    this.categoryForVm,
+    this.category_for_field,
+    this.from_mv,
   });
 
   @override
-  State<Navigation> createState() => _NavigationState();
+  State<Navigation> createState() => NavigationState();
 }
 
-class _NavigationState extends State<Navigation> {
+class NavigationState extends State<Navigation> {
   String? parametre = "";
   int _selectedIndex = 0;
   List<Widget> _pages = [];
+
   @override
   void initState() {
     super.initState();
     _loadParameter();
+    _selectedIndex = widget.currentIndex;
   }
 
   Future<void> _loadParameter() async {
@@ -45,8 +52,13 @@ class _NavigationState extends State<Navigation> {
     setState(() {
       _pages = [
         HomeScreen(parameter: parametre!),
-        Explore(),
-        SellProductScreen(product: widget.product,categoryFromMv : widget.categoryForVm),
+        Explore(
+            category_for_field: widget.category_for_field,
+            from_mv: widget.from_mv),
+        SellProductScreen(
+            category_for_field: widget.category_for_field,
+            product: widget.product,
+            categoryFromMv: widget.from_mv),
         NotifScreen(),
         ProfileMain(),
       ];
@@ -75,7 +87,7 @@ class _NavigationState extends State<Navigation> {
               "assets/Icons/home.svg",
               color: _selectedIndex == 0
                   ? theme
-                      ?  Color.fromARGB(255, 249, 217, 144)
+                      ? Color.fromARGB(255, 249, 217, 144)
                       : Color(0xFFFB98B7)
                   : theme
                       ? Colors.white
@@ -92,7 +104,7 @@ class _NavigationState extends State<Navigation> {
               "assets/Icons/explore.svg",
               color: _selectedIndex == 1
                   ? theme
-                      ?  Color.fromARGB(255, 249, 217, 144)
+                      ? Color.fromARGB(255, 249, 217, 144)
                       : Color(0xFFFB98B7)
                   : theme
                       ? Colors.white
@@ -105,7 +117,7 @@ class _NavigationState extends State<Navigation> {
               Icons.add,
               color: _selectedIndex == 2
                   ? theme
-                      ?  Color.fromARGB(255, 249, 217, 144)
+                      ? Color.fromARGB(255, 249, 217, 144)
                       : Color(0xFFFB98B7)
                   : theme
                       ? Colors.white
@@ -119,7 +131,7 @@ class _NavigationState extends State<Navigation> {
               "assets/Icons/notification.svg",
               color: _selectedIndex == 3
                   ? theme
-                      ?  Color.fromARGB(255, 249, 217, 144)
+                      ? Color.fromARGB(255, 249, 217, 144)
                       : Color(0xFFFB98B7)
                   : theme
                       ? Colors.white
@@ -135,13 +147,15 @@ class _NavigationState extends State<Navigation> {
                   shape: BoxShape.circle,
                   border: _selectedIndex == 4
                       ? (theme
-                          ? Border.all(color:  Color.fromARGB(255, 249, 217, 144), width: 2)
+                          ? Border.all(
+                              color: Color.fromARGB(255, 249, 217, 144),
+                              width: 2)
                           : Border.all(color: Color(0xFFFB98B7), width: 2))
                       : null),
               child: CircleAvatar(
                 radius: 50.0,
-                backgroundImage:  (user.avatar != "" && user.avatar != null)
-                    ? NetworkImage(parametre == "normal" || parametre=="apple"
+                backgroundImage: (user.avatar != "" && user.avatar != null)
+                    ? NetworkImage(parametre == "normal" || parametre == "apple"
                         ? "${AppConfig.baseUrl}${user.avatar}"
                         : user.avatar!)
                     : AssetImage('assets/images/user.png') as ImageProvider,
@@ -155,15 +169,16 @@ class _NavigationState extends State<Navigation> {
         selectedLabelStyle: TextStyle(
           fontFamily: "Raleway",
           fontSize: 12,
-          color: theme ?  Color.fromARGB(255, 249, 217, 144) : Color(0xFFFB98B7),
+          color: theme ? Color.fromARGB(255, 249, 217, 144) : Color(0xFFFB98B7),
         ),
         unselectedLabelStyle: TextStyle(
           fontFamily: "Raleway",
           fontSize: 12,
-          color: theme ? Colors.white  :Colors.black,
+          color: theme ? Colors.white : Colors.black,
         ),
-        selectedItemColor: theme ?  Color.fromARGB(255, 249, 217, 144) :  Color(0xFFFB98B7),
-        unselectedItemColor:theme ? Colors.white : Colors.black,
+        selectedItemColor:
+            theme ? Color.fromARGB(255, 249, 217, 144) : Color(0xFFFB98B7),
+        unselectedItemColor: theme ? Colors.white : Colors.black,
         type: BottomNavigationBarType.fixed,
       ),
     );

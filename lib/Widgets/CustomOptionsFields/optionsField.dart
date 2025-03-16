@@ -107,66 +107,69 @@ class _CustomDropdownFormFieldState<K, V>
               ),
             ),
             child: widget.isButton == true
-                ? Row(
-                    children: [
-                      if (widget.image == true)
-                        Container(
-                          width:
-                              50, // Augmente la largeur pour agrandir l'image
-                          height:
-                              50, // Assure-toi que la hauteur est identique à la largeur pour le carré
-                          decoration: BoxDecoration(
-                            shape: BoxShape
-                                .rectangle, // Pour obtenir une forme carrée
-                            borderRadius: BorderRadius.circular(
-                                0), // Pour arrondir les coins si tu veux
-                            image: DecorationImage(
-                              image: AssetImage(widget.pathImageHorsmenu!),
-                              fit: BoxFit
-                                  .cover, // Assure-toi que l'image remplit l'espace
-                            ),
-                          ),
-                        ),
-                      const SizedBox(width: 12),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            widget.label,
-                            style: TextStyle(
-                              fontFamily: 'Raleway',
-                              color: theme ? Colors.white : Colors.black,
-                            ),
-                            textAlign: TextAlign.start,
-                          ),
-                        ),
-                      ),
-                      Spacer(),
-                      GestureDetector(
-                        onTap: widget.onTap,
-                        child: Container(
-                            margin: const EdgeInsets.only(left: 8.0),
-                            width: 40,
-                            height: 40,
+                ? GestureDetector(
+                  onTap: widget.onTap,
+                  child: Row(
+                      children: [
+                        if (widget.image == true)
+                          Container(
+                            width:
+                                50, // Augmente la largeur pour agrandir l'image
+                            height:
+                                50, // Assure-toi que la hauteur est identique à la largeur pour le carré
                             decoration: BoxDecoration(
-                              color: theme
-                                  ? Color.fromARGB(255, 249, 217, 144)
-                                  : Color(0xFFFB98B7),
-                              shape: BoxShape.circle,
+                              shape: BoxShape
+                                  .rectangle, // Pour obtenir une forme carrée
+                              borderRadius: BorderRadius.circular(
+                                  0), // Pour arrondir les coins si tu veux
+                              image: DecorationImage(
+                                image: AssetImage(widget.pathImageHorsmenu!),
+                                fit: BoxFit
+                                    .cover, // Assure-toi que l'image remplit l'espace
+                              ),
                             ),
-                            child: const Icon(
-                              Icons.arrow_forward,
-                              color: Colors.white,
-                              size: 24,
-                            )),
-                      ),
-                    ],
-                  )
+                          ),
+                        const SizedBox(width: 12),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              widget.label,
+                              style: TextStyle(
+                                fontFamily: 'Raleway',
+                                color: theme ? Colors.white : Colors.black,
+                              ),
+                              textAlign: TextAlign.start,
+                            ),
+                          ),
+                        ),
+                        Spacer(),
+                        // GestureDetector(
+                        //   onTap: widget.onTap,
+                        //   child: Container(
+                        //       margin: const EdgeInsets.only(left: 8.0),
+                        //       width: 40,
+                        //       height: 40,
+                        //       decoration: BoxDecoration(
+                        //         color: theme
+                        //             ? Color.fromARGB(255, 249, 217, 144)
+                        //             : Color(0xFFFB98B7),
+                        //         shape: BoxShape.circle,
+                        //       ),
+                        //       child: const Icon(
+                        //         Icons.arrow_forward,
+                        //         color: Colors.white,
+                        //         size: 24,
+                        //       )),
+                        // ),
+                      ],
+                    ),
+                )
                 : Row(
                     children: [
                       if (widget.image == true)

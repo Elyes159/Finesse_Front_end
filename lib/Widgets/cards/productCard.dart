@@ -15,31 +15,30 @@ class ProductCard extends StatefulWidget {
 }
 
 Widget _buildImage(String imageUrl) {
-  
-    return ClipRRect(
+  return ClipRRect(
       borderRadius: BorderRadius.circular(8), // Arrondi des coins
       child: Image.network(
-  imageUrl,
-  height: 120,
-  width: double.infinity,
-  fit: BoxFit.cover,
-  loadingBuilder: (context, child, loadingProgress) {
-    if (loadingProgress == null) return child;
-    return Center(
-      child: CircularProgressIndicator(color: Colors.grey,),
-    );
-  },
-  errorBuilder: (context, error, stackTrace) {
-    return Image.asset(
-      'assets/images/test1.png', // Image de secours
-      height: 120,
-      width: double.infinity,
-      fit: BoxFit.cover,
-    );
-  },
-)
-    );
-  
+        imageUrl,
+        height: 120,
+        width: double.infinity,
+        fit: BoxFit.cover,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Center(
+            child: CircularProgressIndicator(
+              color: Colors.grey,
+            ),
+          );
+        },
+        errorBuilder: (context, error, stackTrace) {
+          return Image.asset(
+            'assets/images/test1.png', // Image de secours
+            height: 120,
+            width: double.infinity,
+            fit: BoxFit.cover,
+          );
+        },
+      ));
 }
 
 class _ProductCardState extends State<ProductCard> {

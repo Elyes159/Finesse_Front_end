@@ -10,6 +10,7 @@ import 'package:finesse_frontend/Provider/sellprovider.dart';
 import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:finesse_frontend/Provider/virement.dart';
 import 'package:finesse_frontend/Screens/SplashScreen/SplashScreen.dart';
+import 'package:finesse_frontend/Widgets/Navigation/Navigation.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -58,6 +59,7 @@ void main() async {
     ),
   );
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

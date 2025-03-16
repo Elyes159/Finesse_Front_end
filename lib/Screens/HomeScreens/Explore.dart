@@ -14,9 +14,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 class Explore extends StatefulWidget {
-  // ignore: non_constant_identifier_names
   final String? from_mv;
-  const Explore({super.key, this.from_mv});
+  final String? category_for_field;
+  const Explore({super.key, this.from_mv , this.category_for_field, this.bottomNavigationBar,});
+  final Widget? bottomNavigationBar;
 
   @override
   State<Explore> createState() => _ExploreState();
@@ -42,7 +43,7 @@ class _ExploreState extends State<Explore> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (widget.from_mv != null && widget.from_mv!.isNotEmpty) {
         final productsProvider = Provider.of<Products>(context, listen: false);
-        _categoryController.text = widget.from_mv!;
+        _categoryController.text = widget.category_for_field!;
         productsProvider.filterProductsByCategory(widget.from_mv!);
       }
     });
@@ -188,7 +189,7 @@ class _ExploreState extends State<Explore> {
                               selectedCategory['explore'] != null) {
                             setState(() {
                               _categoryController.text =
-                                  selectedCategory['explore'];
+                                  selectedCategory['for_field'] ?? "";
                             });
 
                             productsProvider.filterProductsByCategory(
@@ -301,9 +302,11 @@ class _ExploreState extends State<Explore> {
                       return ListTile(
                         leading: CircleAvatar(
                           backgroundImage: NetworkImage(
-                              member["image_type"] == "normal"
-                                  ? "${AppConfig.baseUrl}${member['avatar']}"
-                                  : member["avatar"]),
+                            member["image_type"] == "normal"
+                                ? "${AppConfig.baseUrl}${member['avatar'] ?? ''}" // Si avatar est null, on met une chaîne vide
+                                : (member["avatar"] ??
+                                    ''), // Assure que l'URL ne soit pas null
+                          ),
                         ),
                         title: Text(
                           member['full_name'] ?? 'Nom Inconnu',
@@ -350,6 +353,7 @@ class _ExploreState extends State<Explore> {
           ),
         ],
       ),
+      bottomNavigationBar: widget.bottomNavigationBar,
     );
   }
 }

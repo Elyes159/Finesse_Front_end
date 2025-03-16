@@ -3,12 +3,18 @@ import 'package:finesse_frontend/Screens/HomeScreens/Explore.dart';
 import 'package:finesse_frontend/Screens/SellProduct/SellproductScreen.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
 import 'package:finesse_frontend/Widgets/CustomOptionsFields/optionsField.dart';
+import 'package:finesse_frontend/Widgets/Navigation/Navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class BChoice extends StatefulWidget {
   final bool? isExplore;
-  const BChoice({super.key, required this.gender, this.isExplore});
+  const BChoice(
+      {super.key,
+      required this.gender,
+      this.isExplore,
+      required this.genderForFiled});
+  final String genderForFiled;
   final String gender;
   @override
   State<BChoice> createState() => _BChoiceState();
@@ -16,9 +22,21 @@ class BChoice extends StatefulWidget {
 
 class _BChoiceState extends State<BChoice> {
   String? categorieForBackend;
+  String for_field = "";
+  String? getSelectedValue(List<Map<String, String>> options, String? key) {
+    for (var option in options) {
+      if (option.containsKey(key)) {
+        return option[key];
+      }
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final theme = Provider.of<ThemeProvider>(context,listen:false).isDarkMode;
+    final navigationState = context.findAncestorStateOfType<NavigationState>();
+
+    final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
     String? SubCategoryForBackend;
     return Scaffold(
       appBar: AppBar(
@@ -48,6 +66,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/vt.jpeg",
               options: const [
+                {"TOUTV": "Tout les vétements"},
                 //{"BB": "Vêtements Bébé"},
                 {"EX": "Vêtements d'exterieur"},
                 //{"RO": "Robe"},
@@ -76,6 +95,34 @@ class _BChoiceState extends State<BChoice> {
               ],
               onChanged: (selectedKey) {
                 setState(() {
+                  for_field = getSelectedValue([
+                    {"TOUTV": "Tout les vétements"},
+                    //{"BB": "Vêtements Bébé"},
+                    {"EX": "Vêtements d'exterieur"},
+                    //{"RO": "Robe"},
+                    //{"CAF": "Caftan"},
+                    {"T-S": "T-Shirt"},
+                    {"PU": "Pull"},
+                    {"CH": "Chemise"},
+                    {"GI": "Gilet"},
+                    {"VE": "Veste"},
+                    {"MAN": "Manteau"},
+                    //{"TR": "Trench"},
+                    {"PAN": "Pantalon"},
+                    {"PAC": "Pantacourt"},
+                    {"SH": "Short"},
+                    //{"SALO": "Salopette"},
+                    // {"JU": "Jupe"},
+                    {"MAI": "Maillot"},
+                    //{"LIN": "Lingerie"},
+                    {"PY": "Pyjamas"},
+                    //{"KIM": "Kimono"},
+                    //{"COM": "Combinaison"},
+                    //{"SARI": "Sari"},
+                    {"ENS": "Ensemble"},
+                    {"S-V": "sous vêtements"},
+                    {"COS": "Costumes"},
+                  ], selectedKey)!;
                   categorieForBackend =
                       "V${widget.gender}$selectedKey".toUpperCase();
                   print(categorieForBackend);
@@ -90,6 +137,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/ch.jpeg",
               options: const [
+                {"TOUTC": "Tout les chaussures"},
                 {"BO": "Bottes"},
                 //{"BOTI": "Bottines"},
                 //{"ESC": "Escarpins"},
@@ -107,6 +155,23 @@ class _BChoiceState extends State<BChoice> {
               ],
               onChanged: (selectedKey) {
                 setState(() {
+                  for_field = getSelectedValue([
+                    {"TOUTC": "Tout les chaussures"},
+                    {"BO": "Bottes"},
+                    //{"BOTI": "Bottines"},
+                    //{"ESC": "Escarpins"},
+                    {"COMP": "Compensés"},
+                    {"SA": "Sandales"},
+                    {"BAS": "Baskets"},
+                    {"ESP": "Espadrilles"},
+                    //{"S-O": "Slip-on"},
+                    //{"BALL": "Ballerines"},
+                    //{"MU": "Mules"},
+                    //{"DER": "Derbies"},
+                    //{"BB": "Bébé"},
+                    {"CHAUSS": "Chaussons"},
+                    {"MO": "Mocassins"},
+                  ], selectedKey)!;
                   categorieForBackend =
                       "C${widget.gender}$selectedKey".toUpperCase();
                   print(categorieForBackend);
@@ -121,6 +186,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/sacs.jpeg",
               options: const [
+                {"TOUTS": "Tout les sacs"},
                 //{"SM": "Sac à main"},
                 //{"BAND": "Sac à bandoulière"},
                 //{"P": "Pochette"},
@@ -135,6 +201,20 @@ class _BChoiceState extends State<BChoice> {
               ],
               onChanged: (selectedKey) {
                 setState(() {
+                  for_field = getSelectedValue([
+                    {"TOUTS": "Tout les sacs"},
+                    //{"SM": "Sac à main"},
+                    //{"BAND": "Sac à bandoulière"},
+                    //{"P": "Pochette"},
+                    {"SD": "Sac à dos"},
+                    //{"COU": "Couffin"},
+                    {"PORT": "Portefeuille"},
+                    {"PORTM": "Porte-monnaie"},
+                    {"CA": "Cartable"},
+                    //{"BB": "Sac bébé"},
+                    //{"EC": "Étui à crayon"},
+                    {"SS": "Sac de sport"},
+                  ], selectedKey)!;
                   categorieForBackend =
                       "S${widget.gender}$selectedKey".toUpperCase();
                   print(categorieForBackend);
@@ -149,6 +229,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/acc.jpeg",
               options: const [
+                {"TOUTA": "Tout les accessoires"},
                 {"LU": "Lunette"},
                 {"CE": "Ceinture"},
                 //{"CHE": "Accessoires pour cheveux"},
@@ -166,6 +247,22 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 print("onChanged déclenché avec : $selectedKey");
                 setState(() {
+                  for_field = getSelectedValue([
+                    {"TOUTA": "Tout les accessoires"},
+                    {"LU": "Lunette"},
+                    {"CE": "Ceinture"},
+                    //{"CHE": "Accessoires pour cheveux"},
+                    //{"CO": "Collant"},
+                    //{"CHAUSS": "Chaussette"},
+                    {"CHAP": "Chapeau"},
+                    {"BONN": "Bonnet"},
+                    {"ECH": "Écharpe"},
+                    //{"FOU": "Foulard"},
+                    //{"BI": "Bijoux"},
+                    {"CR": "Cravate"},
+                    {"PAP": "Nœud de papillon"},
+                    {"MONTRE": "MONTRE"}
+                  ], selectedKey)!;
                   if (selectedKey != null) {
                     categorieForBackend = selectedKey == "MONTRE"
                         ? "MONTRE"
@@ -182,7 +279,9 @@ class _BChoiceState extends State<BChoice> {
             CustomButton(
                 buttonColor: categorieForBackend == null
                     ? Colors.grey
-                    : theme  ? Color.fromARGB(255, 249, 217, 144): Color(0xFFFB98B7) ,
+                    : theme
+                        ? Color.fromARGB(255, 249, 217, 144)
+                        : Color(0xFFFB98B7),
                 label: "choisir",
                 onTap: categorieForBackend == null
                     ? () {
@@ -190,20 +289,22 @@ class _BChoiceState extends State<BChoice> {
                       }
                     : () {
                         print(categorieForBackend);
-                        if(widget.isExplore==true) {
+                        if (widget.isExplore == true) {
                           Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Explore(
-                                      from_mv:categorieForBackend ,
-                                    )));
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Explore(
+                                        category_for_field:
+                                            "${widget.genderForFiled} - $for_field",
+                                        from_mv: categorieForBackend,
+                                      )));
                         } else {
                           Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SellProductScreen(
-                                      categoryFromMv: categorieForBackend,
-                                    )));
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SellProductScreen(
+                                        categoryFromMv: categorieForBackend,
+                                      )));
                         }
                       })
           ],
@@ -213,6 +314,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/vt.jpeg",
               options: const [
+                {"TOUTV": "Tout les vétements"},
                 {"EX": "Vêtements d'exterieur"},
                 {"RO": "Robe"},
                 {"CAF": "Caftan"},
@@ -240,6 +342,33 @@ class _BChoiceState extends State<BChoice> {
               ],
               onChanged: (selectedKey) {
                 setState(() {
+                  for_field = getSelectedValue([
+                    {"TOUTV": "Tout les vétements"},
+                    {"EX": "Vêtements d'exterieur"},
+                    {"RO": "Robe"},
+                    {"CAF": "Caftan"},
+                    {"T-S": "T-Shirt"},
+                    {"PU": "Pull"},
+                    {"CH": "Chemise"},
+                    {"GI": "Gilet"},
+                    {"VE": "Veste"},
+                    {"MAN": "Manteau"},
+                    {"TR": "Trench"},
+                    {"PAN": "Pantalon"},
+                    {"PAC": "Pantacourt"},
+                    {"SH": "Short"},
+                    {"SALO": "Salopette"},
+                    {"JU": "Jupe"},
+                    {"MAI": "Maillot"},
+                    {"LIN": "Lingerie"},
+                    {"PY": "Pyjamas"},
+                    {"KIM": "Kimono"},
+                    {"COM": "Combinaison"},
+                    {"SARI": "Sari"},
+                    {"ENS": "Ensemble"},
+                    {"S-V": "sous vêtements"},
+                    {"COS": "Costumes"},
+                  ], selectedKey)!;
                   categorieForBackend =
                       "V${widget.gender}$selectedKey".toUpperCase();
 
@@ -255,6 +384,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/pb.jpeg",
               options: const [
+                {"TOUTPB": "Tout les produits de beauté"},
                 {"PF": "Parfum"},
                 {"SV": "Soins visage"},
                 {"SC": "Soins corps"},
@@ -266,6 +396,17 @@ class _BChoiceState extends State<BChoice> {
               ],
               onChanged: (selectedKey) {
                 setState(() {
+                  for_field = getSelectedValue([
+                    {"TOUTPB": "Tout les produits de beauté"},
+                    {"PF": "Parfum"},
+                    {"SV": "Soins visage"},
+                    {"SC": "Soins corps"},
+                    {"SCH": "Soins cheveux"},
+                    {"SM": "Soins mains"},
+                    {"DOU": "Douche"},
+                    {"MAQUI": "Maquillage"},
+                    {"VER": "Vernis"},
+                  ], selectedKey)!;
                   categorieForBackend =
                       "P${widget.gender}$selectedKey".toUpperCase();
                   print(categorieForBackend);
@@ -280,6 +421,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/bj.jpeg",
               options: const [
+                {"TOUTB": "Tout les bijoux"},
                 {"C": "Collier"},
                 {"B": "Bracelet"},
                 {"BO": "Boucles d'oreilles"},
@@ -290,6 +432,16 @@ class _BChoiceState extends State<BChoice> {
               ],
               onChanged: (selectedKey) {
                 setState(() {
+                  for_field = getSelectedValue([
+                    {"TOUTB": "Tout les bijoux"},
+                    {"C": "Collier"},
+                    {"B": "Bracelet"},
+                    {"BO": "Boucles d'oreilles"},
+                    {"BAG": "Bague"},
+                    {"MO": "Montre"},
+                    {"PAR": "Parure"},
+                    {"PIER": "Piercing"},
+                  ], selectedKey)!;
                   categorieForBackend =
                       "B${widget.gender}$selectedKey".toUpperCase();
                   print(categorieForBackend);
@@ -304,6 +456,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/ch.jpeg",
               options: const [
+                {"TOUTC": "Tout les chaussures"},
                 {"BO": "Bottes"},
                 {"BOTI": "Bottines"},
                 {"ESC": "Escarpins"},
@@ -321,6 +474,23 @@ class _BChoiceState extends State<BChoice> {
               ],
               onChanged: (selectedKey) {
                 setState(() {
+                  for_field = getSelectedValue([
+                    {"TOUTC": "Tout les chaussures"},
+                    {"BO": "Bottes"},
+                    {"BOTI": "Bottines"},
+                    {"ESC": "Escarpins"},
+                    {"COMP": "Compensés"},
+                    {"SA": "Sandales"},
+                    {"BAS": "Baskets"},
+                    {"ESP": "Espadrilles"},
+                    {"S-O": "Slip-on"},
+                    {"BALL": "Ballerines"},
+                    {"MU": "Mules"},
+                    {"DER": "Derbies"},
+                    //{"BB": "Bébé"},
+                    {"CHAUSS": "Chaussons"},
+                    //{"MO": "Mocassins"},
+                  ], selectedKey)!;
                   categorieForBackend =
                       "C${widget.gender}$selectedKey".toUpperCase();
                   print(categorieForBackend);
@@ -335,6 +505,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/sacs.jpeg",
               options: const [
+                {"TOUTS": "Tout les sacs"},
                 {"SM": "Sac à main"},
                 {"BAND": "Sac à bandoulière"},
                 {"P": "Pochette"},
@@ -349,6 +520,18 @@ class _BChoiceState extends State<BChoice> {
               ],
               onChanged: (selectedKey) {
                 setState(() {
+                  for_field = getSelectedValue([
+                    {"TOUTS": "Tout les sacs"},
+                    {"SM": "Sac à main"},
+                    {"BAND": "Sac à bandoulière"},
+                    {"P": "Pochette"},
+                    {"SD": "Sac à dos"},
+                    {"COU": "Couffin"},
+                    {"PORT": "Portefeuille"},
+                    {"PORTM": "Porte-monnaie"},
+                    {"CA": "Cartable"},
+                    {"SS": "Sac de sport"},
+                  ], selectedKey)!;
                   categorieForBackend =
                       "S${widget.gender}$selectedKey".toUpperCase();
                   print(categorieForBackend);
@@ -363,6 +546,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/acc.jpeg",
               options: const [
+                {"TOUTA": "Tout les accesoires"},
                 {"LU": "Lunette"},
                 {"CE": "Ceinture"},
                 {"CHE": "Accessoires pour cheveux"},
@@ -379,6 +563,20 @@ class _BChoiceState extends State<BChoice> {
               ],
               onChanged: (selectedKey) {
                 setState(() {
+                  for_field = getSelectedValue([
+                    {"TOUTA": "Tout les accesoires"},
+                    {"LU": "Lunette"},
+                    {"CE": "Ceinture"},
+                    {"CHE": "Accessoires pour cheveux"},
+                    {"CO": "Collant"},
+                    {"CHAUSS": "Chaussette"},
+                    {"CHAP": "Chapeau"},
+                    {"BONN": "Bonnet"},
+                    {"ECH": "Écharpe"},
+                    {"FOU": "Foulard"},
+                    {"BI": "Bijoux"},
+                    {"MONTRE": "MONTRE"}
+                  ], selectedKey)!;
                   if (selectedKey == "MONTRE") {
                     categorieForBackend = "MONTRE";
                   } else {
@@ -395,7 +593,9 @@ class _BChoiceState extends State<BChoice> {
             CustomButton(
                 buttonColor: categorieForBackend == null
                     ? Colors.grey
-                    : theme  ? Color.fromARGB(255, 249, 217, 144): Color(0xFFFB98B7) ,
+                    : theme
+                        ? Color.fromARGB(255, 249, 217, 144)
+                        : Color(0xFFFB98B7),
                 label: "choisir",
                 onTap: categorieForBackend == null
                     ? () {
@@ -403,20 +603,22 @@ class _BChoiceState extends State<BChoice> {
                       }
                     : () {
                         print(categorieForBackend);
-                       if(widget.isExplore==true) {
+                        if (widget.isExplore == true) {
                           Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Explore(
-                                      from_mv:categorieForBackend ,
-                                    )));
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Explore(
+                                        category_for_field:
+                                            "${widget.genderForFiled} - $for_field",
+                                        from_mv: categorieForBackend,
+                                      )));
                         } else {
                           Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SellProductScreen(
-                                      categoryFromMv: categorieForBackend,
-                                    )));
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SellProductScreen(
+                                        categoryFromMv: categorieForBackend,
+                                      )));
                         }
                       })
           ],
@@ -426,6 +628,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/vt.jpeg",
               options: const [
+                {"TOUTV": "Tout les vétements"},
                 {"BB": "Vêtements Bébé"},
                 {"EX": "Vêtements d'exterieur"},
                 {"RO": "Robe"},
@@ -454,6 +657,33 @@ class _BChoiceState extends State<BChoice> {
               ],
               onChanged: (selectedKey) {
                 setState(() {
+                  for_field = getSelectedValue([
+                    {"TOUTV": "Tout les vétements"},
+                    {"BB": "Vêtements Bébé"},
+                    {"EX": "Vêtements d'exterieur"},
+                    {"RO": "Robe"},
+                    {"CAF": "Caftan"},
+                    {"T-S": "T-Shirt"},
+                    {"PU": "Pull"},
+                    //{"CH": "Chemise"},
+                    {"GI": "Gilet"},
+                    {"VE": "Veste"},
+                    {"MAN": "Manteau"},
+                    {"TR": "Trench"},
+                    {"PAN": "Pantalon"},
+                    {"PAC": "Pantacourt"},
+                    {"SH": "Short"},
+                    {"SALO": "Salopette"},
+                    {"JU": "Jupe"},
+                    {"MAI": "Maillot"},
+                    {"LIN": "Lingerie"},
+                    {"PY": "Pyjamas"},
+                    {"KIM": "Kimono"},
+                    {"COM": "Combinaison"},
+                    {"SARI": "Sari"},
+                    {"ENS": "Ensemble"},
+                    {"S-V": "sous vêtements"},
+                  ], selectedKey)!;
                   categorieForBackend =
                       "V${widget.gender}$selectedKey".toUpperCase();
                   print(categorieForBackend);
@@ -468,6 +698,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/ch.jpeg",
               options: const [
+                {"TOUTC": "Tout les chaussures"},
                 {"BO": "Bottes"},
                 {"BOTI": "Bottines"},
                 //{"ESC": "Escarpins"},
@@ -484,6 +715,22 @@ class _BChoiceState extends State<BChoice> {
               ],
               onChanged: (selectedKey) {
                 setState(() {
+                  for_field = getSelectedValue([
+                    {"TOUTC": "Tout les chaussures"},
+                    {"BO": "Bottes"},
+                    {"BOTI": "Bottines"},
+                    //{"ESC": "Escarpins"},
+                    {"COMP": "Compensés"},
+                    {"SA": "Sandales"},
+                    {"BAS": "Baskets"},
+                    {"ESP": "Espadrilles"},
+                    {"S-O": "Slip-on"},
+                    {"BALL": "Ballerines"},
+                    {"MU": "Mules"},
+                    {"DER": "Derbies"},
+                    {"BB": "Bébé"},
+                    {"CHAUSS": "Chaussons"},
+                  ], selectedKey)!;
                   categorieForBackend =
                       "C${widget.gender}$selectedKey".toUpperCase();
                   print(categorieForBackend);
@@ -498,6 +745,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/sacs.jpeg",
               options: const [
+                {"TOUTS": "Tout les sacs"},
                 {"SM": "Sac à main"},
                 //{"BAND": "Sac à bandoulière"},
                 //{"P": "Pochette"},
@@ -512,6 +760,19 @@ class _BChoiceState extends State<BChoice> {
               ],
               onChanged: (selectedKey) {
                 setState(() {
+                  for_field = getSelectedValue([
+                    {"TOUTS": "Tout les sacs"},
+                    {"SM": "Sac à main"},
+                    //{"BAND": "Sac à bandoulière"},
+                    //{"P": "Pochette"},
+                    {"SD": "Sac à dos"},
+                    //{"COU": "Couffin"},
+                    //{"PORT": "Portefeuille"},
+                    //{"PORTM": "Porte-monnaie"},
+                    {"CA": "Cartable"},
+                    {"BB": "Sac bébé"},
+                    {"EC": "Étui à crayon"},
+                  ], selectedKey)!;
                   categorieForBackend =
                       "S${widget.gender}$selectedKey".toUpperCase();
                   print(categorieForBackend);
@@ -526,6 +787,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/acc.jpeg",
               options: const [
+                {"TOUTA": "Tout les accessoires"},
                 {"LU": "Lunette"},
                 //{"CE": "Ceinture"},
                 {"CHE": "Accessoires pour cheveux"},
@@ -540,6 +802,18 @@ class _BChoiceState extends State<BChoice> {
               ],
               onChanged: (selectedKey) {
                 setState(() {
+                  for_field = getSelectedValue([
+                    {"TOUTA": "Tout les accessoires"},
+                    {"LU": "Lunette"},
+                    //{"CE": "Ceinture"},
+                    {"CHE": "Accessoires pour cheveux"},
+                    {"CO": "Collant"},
+                    {"CHAUSS": "Chaussette"},
+                    {"CHAP": "Chapeau"},
+                    {"ECH": "Écharpe"},
+                    //{"FOU": "Foulard"},
+                    {"BI": "Bijoux"},
+                  ], selectedKey)!;
                   if (selectedKey == "MONTRE") {
                     categorieForBackend = selectedKey!;
                   } else {
@@ -558,6 +832,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/jouets.jpeg",
               options: const [
+                {"TOUTJ": "Tout les jouets"},
                 {"BA": "Ballons"},
                 {"DO": "Dominos"},
                 {"JE": "Jeux éducatifs"},
@@ -570,6 +845,18 @@ class _BChoiceState extends State<BChoice> {
               ],
               onChanged: (selectedKey) {
                 setState(() {
+                  for_field = getSelectedValue([
+                    {"TOUTJ": "Tout les jouets"},
+                    {"BA": "Ballons"},
+                    {"DO": "Dominos"},
+                    {"JE": "Jeux éducatifs"},
+                    {"PA": "Patins"},
+                    {"PE": "Peluches"},
+                    {"PU": "Puzzles"},
+                    {"TRO": "Trottinettes"},
+                    {"VHE": "Véhicules"},
+                    {"POU": "Poupées"},
+                  ], selectedKey)!;
                   categorieForBackend =
                       "J${widget.gender}$selectedKey".toUpperCase();
                   print(categorieForBackend);
@@ -582,7 +869,9 @@ class _BChoiceState extends State<BChoice> {
             CustomButton(
                 buttonColor: categorieForBackend == null
                     ? Colors.grey
-                    : theme  ? Color.fromARGB(255, 249, 217, 144): Color(0xFFFB98B7) ,
+                    : theme
+                        ? Color.fromARGB(255, 249, 217, 144)
+                        : Color(0xFFFB98B7),
                 label: "choisir",
                 onTap: categorieForBackend == null
                     ? () {
@@ -590,20 +879,22 @@ class _BChoiceState extends State<BChoice> {
                       }
                     : () {
                         print(categorieForBackend);
-                       if(widget.isExplore==true) {
+                        if (widget.isExplore == true) {
                           Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Explore(
-                                      from_mv:categorieForBackend ,
-                                    )));
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Explore(
+                                        category_for_field:
+                                            "${widget.genderForFiled} - $for_field",
+                                        from_mv: categorieForBackend,
+                                      )));
                         } else {
                           Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SellProductScreen(
-                                      categoryFromMv: categorieForBackend,
-                                    )));
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SellProductScreen(
+                                        categoryFromMv: categorieForBackend,
+                                      )));
                         }
                       })
           ],
@@ -613,6 +904,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/vt.jpeg",
               options: const [
+                {"TOUTV": "Tout les vétements"},
                 {"BB": "Vêtements Bébé"},
                 {"EX": "Vêtements d'exterieur"},
                 //{"RO": "Robe"},
@@ -641,6 +933,34 @@ class _BChoiceState extends State<BChoice> {
               ],
               onChanged: (selectedKey) {
                 setState(() {
+                  for_field = getSelectedValue([
+                    {"TOUTV": "Tout les vétements"},
+                    {"BB": "Vêtements Bébé"},
+                    {"EX": "Vêtements d'exterieur"},
+                    //{"RO": "Robe"},
+                    //{"CAF": "Caftan"},
+                    {"T-S": "T-Shirt"},
+                    {"PU": "Pull"},
+                    {"CH": "Chemise"},
+                    {"GI": "Gilet"},
+                    {"VE": "Veste"},
+                    {"MAN": "Manteau"},
+                    //{"TR": "Trench"},
+                    {"PAN": "Pantalon"},
+                    {"PAC": "Pantacourt"},
+                    {"SH": "Short"},
+                    //{"SALO": "Salopette"},
+                    // {"JU": "Jupe"},
+                    {"MAI": "Maillot"},
+                    //{"LIN": "Lingerie"},
+                    {"PY": "Pyjamas"},
+                    //{"KIM": "Kimono"},
+                    //{"COM": "Combinaison"},
+                    //{"SARI": "Sari"},
+                    {"ENS": "Ensemble"},
+                    {"S-V": "sous vêtements"},
+                    {"COS": "Costumes"},
+                  ], selectedKey)!;
                   categorieForBackend =
                       "V${widget.gender}$selectedKey".toUpperCase();
                   print(categorieForBackend);
@@ -655,6 +975,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/ch.jpeg",
               options: const [
+                {"TOUTC": "Tout les chaussures"},
                 {"BO": "Bottes"},
                 //{"BOTI": "Bottines"},
                 //{"ESC": "Escarpins"},
@@ -671,6 +992,22 @@ class _BChoiceState extends State<BChoice> {
               ],
               onChanged: (selectedKey) {
                 setState(() {
+                  for_field = getSelectedValue([
+                    {"TOUTC": "Tout les chaussures"},
+                    {"BO": "Bottes"},
+                    //{"BOTI": "Bottines"},
+                    //{"ESC": "Escarpins"},
+                    {"COMP": "Compensés"},
+                    {"SA": "Sandales"},
+                    {"BAS": "Baskets"},
+                    {"ESP": "Espadrilles"},
+                    //{"S-O": "Slip-on"},
+                    //{"BALL": "Ballerines"},
+                    //{"MU": "Mules"},
+                    //{"DER": "Derbies"},
+                    {"BB": "Bébé"},
+                    {"CHAUSS": "Chaussons"},
+                  ], selectedKey)!;
                   categorieForBackend =
                       "C${widget.gender}$selectedKey".toUpperCase();
                   print(categorieForBackend);
@@ -685,6 +1022,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/sacs.jpeg",
               options: const [
+                {"TOUTS": "Tout les sacs"},
                 {"SM": "Sac à main"},
                 //{"BAND": "Sac à bandoulière"},
                 //{"P": "Pochette"},
@@ -698,6 +1036,19 @@ class _BChoiceState extends State<BChoice> {
               ],
               onChanged: (selectedKey) {
                 setState(() {
+                  for_field = getSelectedValue([
+                    {"TOUTS": "Tout les sacs"},
+                    {"SM": "Sac à main"},
+                    //{"BAND": "Sac à bandoulière"},
+                    //{"P": "Pochette"},
+                    {"SD": "Sac à dos"},
+                    //{"COU": "Couffin"},
+                    //{"PORT": "Portefeuille"},
+                    //{"PORTM": "Porte-monnaie"},
+                    {"CA": "Cartable"},
+                    {"BB": "Sac bébé"},
+                    {"EC": "Étui à crayon"},
+                  ], selectedKey)!;
                   categorieForBackend =
                       "S${widget.gender}$selectedKey".toUpperCase();
                   print(categorieForBackend);
@@ -712,6 +1063,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/acc.jpeg",
               options: const [
+                {"TOUTA": "Tout les accessoires"},
                 {"LU": "Lunette"},
                 {"CE": "Ceinture"},
                 //{"CHE": "Accessoires pour cheveux"},
@@ -727,6 +1079,21 @@ class _BChoiceState extends State<BChoice> {
               ],
               onChanged: (selectedKey) {
                 setState(() {
+                  for_field = getSelectedValue([
+                    {"TOUTA": "Tout les accessoires"},
+                    {"LU": "Lunette"},
+                    {"CE": "Ceinture"},
+                    //{"CHE": "Accessoires pour cheveux"},
+                    {"CO": "Collant"},
+                    {"CHAUSS": "Chaussette"},
+                    {"CHAP": "Chapeau"},
+                    {"ECH": "Écharpe"},
+                    //{"FOU": "Foulard"},
+                    //{"BI": "Bijoux"},
+                    {"CR": "Cravate"},
+                    {"PAP": "Nœud de papillon"},
+                    {"MONTRE": "Montres"},
+                  ], selectedKey)!;
                   if (selectedKey == "MONTRE") {
                     categorieForBackend = selectedKey!;
                   } else {
@@ -745,6 +1112,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/jouets.jpeg",
               options: const [
+                {"TOUTJ": "Tout les jouets"},
                 {"BA": "Ballons"},
                 {"DO": "Dominos"},
                 {"JE": "Jeux éducatifs"},
@@ -757,6 +1125,17 @@ class _BChoiceState extends State<BChoice> {
               ],
               onChanged: (selectedKey) {
                 setState(() {
+                  for_field = getSelectedValue([
+                    {"TOUTJ": "Tout les jouets"},
+                    {"BA": "Ballons"},
+                    {"DO": "Dominos"},
+                    {"JE": "Jeux éducatifs"},
+                    //{"PA": "Patins"},
+                    //{"PE": "Peluches"},
+                    {"PU": "Puzzles"},
+                    {"TRO": "Trottinettes"},
+                    {"VHE": "Véhicules"},
+                  ], selectedKey)!;
                   categorieForBackend =
                       "J${widget.gender}$selectedKey".toUpperCase();
                   print(categorieForBackend);
@@ -769,7 +1148,9 @@ class _BChoiceState extends State<BChoice> {
             CustomButton(
                 buttonColor: categorieForBackend == null
                     ? Colors.grey
-                    : theme  ? Color.fromARGB(255, 249, 217, 144): Color(0xFFFB98B7) ,
+                    : theme
+                        ? Color.fromARGB(255, 249, 217, 144)
+                        : Color(0xFFFB98B7),
                 label: "choisir",
                 onTap: categorieForBackend == null
                     ? () {
@@ -777,20 +1158,36 @@ class _BChoiceState extends State<BChoice> {
                       }
                     : () {
                         print(categorieForBackend);
-                        if(widget.isExplore==true) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Explore(
-                                      from_mv:categorieForBackend ,
-                                    )));
+                        if (widget.isExplore == true) {
+                         
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Navigation(
+                                        category_for_field : "${widget.genderForFiled} - $for_field",
+                                         from_mv: categorieForBackend,
+                                        onItemSelected: (int value) {},
+                                        currentIndex: 1,
+                                      )));
                         } else {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SellProductScreen(
-                                      categoryFromMv: categorieForBackend,
-                                    )));
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => SellProductScreen(
+                          //               category_for_field:
+                          //                   "${widget.genderForFiled} $for_field",
+                          //               categoryFromMv: categorieForBackend,
+                          //             )));
+
+                           Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Navigation(
+                                        category_for_field : "${widget.genderForFiled} - $for_field",
+                                         from_mv: categorieForBackend,
+                                        onItemSelected: (int value) {},
+                                        currentIndex: 2,
+                                      )));
                         }
                       })
           ]

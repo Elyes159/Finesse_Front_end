@@ -28,6 +28,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
   String? CategoryForBackend;
   String? SubCategoryForBackend;
   String? SubSubCategoryForBackend;
+  String? for_field;
   Map<String, bool> selectedCheckboxes = {
     "Men": false,
     "Women": false,
@@ -35,6 +36,14 @@ class _ChooseCategoryState extends State<ChooseCategory> {
     "Girls": false,
   };
   String? errorMessage;
+  String? getSelectedValue(List<Map<String, String>> options, String? key) {
+    for (var option in options) {
+      if (option.containsKey(key)) {
+        return option[key];
+      }
+    }
+    return null; // Retourne null si la clé n'existe pas
+  }
 
   void toggleCheckbox(String key, bool value) {
     setState(() {
@@ -86,8 +95,6 @@ class _ChooseCategoryState extends State<ChooseCategory> {
     print(SubSubCategoryForBackend);
   }
 
-  
-
   void handleSubmit(bool ismontre) {
     if (selectedCategory == null) {
       setState(() {
@@ -103,19 +110,20 @@ class _ChooseCategoryState extends State<ChooseCategory> {
         });
         return;
       }
-
-     
     }
 
     print("heeeey $SubSubCategoryForBackend , $SubCategoryForBackend , ");
     Navigator.pop(context, {
-      'explore':widget.isExplore == true ? SubSubCategoryForBackend ?? SubCategoryForBackend :null,
+      'explore': widget.isExplore == true
+          ? SubSubCategoryForBackend ?? SubCategoryForBackend
+          : null,
       'category': selectedCategory?.toUpperCase(),
       'subcategory': selectedSubCategory ?? "",
       'subsubcategory': selectedSubSubCategory ?? "",
       'keyCategory':
           (SubSubCategoryForBackend ?? SubCategoryForBackend)?.toUpperCase(),
       'forBackend': SubSubCategoryForBackend?.toUpperCase(),
+      'for_field': for_field,
     });
 
     setState(() {
@@ -126,11 +134,37 @@ class _ChooseCategoryState extends State<ChooseCategory> {
     print("Sub-sub-category chosen: $selectedSubSubCategory");
     print("Checkbox states: $selectedCheckboxes");
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            if (selectedCategory == null) {
+              Navigator.pop(context);
+            } else {
+              setState(() {
+                selectedCategory = null;
+                selectedSubCategory = null;
+                selectedSubSubCategory = null;
+                CategoryForEnd = null;
+                CategoryForBackend = null;
+                SubCategoryForBackend = null;
+                SubSubCategoryForBackend = null;
+                selectedCheckboxes = {
+                  "Men": false,
+                  "Women": false,
+                  "Boys": false,
+                  "Girls": false,
+                };
+              });
+              print("Reset clicked");
+            }
+          },
+        ),
         title: const Center(
           child: Padding(
             padding: EdgeInsets.only(right: 30.0),
@@ -151,11 +185,12 @@ class _ChooseCategoryState extends State<ChooseCategory> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-           SizedBox(
+          SizedBox(
             width: 343,
             child: Text(
-              widget.isExplore == true ? "":
-              "Sélectionnez une catégorie pour votre article dans la liste ci-dessous",
+              widget.isExplore == true
+                  ? ""
+                  : "Sélectionnez une catégorie pour votre article dans la liste ci-dessous",
               style: TextStyle(
                 fontSize: 14,
                 fontFamily: 'Raleway',
@@ -181,13 +216,19 @@ class _ChooseCategoryState extends State<ChooseCategory> {
               onChanged: (selectedKey) {
                 setState(() {
                   CategoryForBackend = "OV";
-                  if(selectedKey == "L"){
+                  if (selectedKey == "L") {
                     selectedCategory = "L";
-                  }else {
+                  } else {
                     selectedCategory = "OV";
                   }
                   SubCategoryForBackend = selectedKey;
-                  
+                  for_field = getSelectedValue([
+                    {"TOEU": "Toutes les œuvres "},
+                    {"tableaux": "Tableaux "},
+                    {"ARTGRAPH": "Arts graphiques"},
+                    {"SCUL": "Sculptures "},
+                    {"L": "Livres "},
+                  ], selectedKey);
                   selectedSubCategory = selectedKey;
                   errorMessage = null;
                 });
@@ -216,7 +257,15 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                   CategoryForBackend = "CRA";
                   selectedCategory = "CRA";
                   SubCategoryForBackend = selectedKey;
-                  
+                  for_field = getSelectedValue([
+                    {"TCREA": "Toutes les créations "},
+                    {"CERAPO": "Céramique et poterie "},
+                    {"HAUCO": "Haute couture"},
+                    {"MACRA": "Macramé  "},
+                    {"BIJOUX": "Bijoux  "},
+                    {"SACOU": "Sacs et couffin  "},
+                    {"TAPI": "Tapis  "},
+                  ], selectedKey);
                   selectedSubCategory = selectedKey;
                   errorMessage = null;
                 });
@@ -232,6 +281,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
               image: true,
               pathImageHorsmenu: "assets/images/deco.jpeg",
               options: const [
+                {"TOUTD": "Toutes Decoration"},
                 {"DECOMU": "Décoration murale"},
                 {"PLVA": "Plantes, vases"},
                 {"LUMI": "Luminaires"},
@@ -240,14 +290,34 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                 {"BGS": "Bougies,senteurs"},
                 {"TAP": "Tapis"},
                 {"LINM": "Linge de maison"},
-                {"DECOAUT": "Autres"},
               ],
               onChanged: (selectedKey) {
                 setState(() {
+                  for_field = getSelectedValue([
+                    {"TOUTD": "Toutes Decoration"},
+                    {"DECOMU": "Décoration murale"},
+                    {"PLVA": "Plantes, vases"},
+                    {"LUMI": "Luminaires"},
+                    {"OBDEC": "Objets déco "},
+                    {"RAN": "Rangements"},
+                    {"BGS": "Bougies,senteurs"},
+                    {"TAP": "Tapis"},
+                    {"LINM": "Linge de maison"},
+                  ], selectedKey);
+                  print(for_field);
                   selectedCategory = "D";
                   CategoryForBackend = "D";
                   SubCategoryForBackend = selectedKey;
-
+                  for_field = getSelectedValue([
+                    {"DECOMU": "Décoration murale"},
+                    {"PLVA": "Plantes, vases"},
+                    {"LUMI": "Luminaires"},
+                    {"OBDEC": "Objets déco "},
+                    {"RAN": "Rangements"},
+                    {"BGS": "Bougies,senteurs"},
+                    {"TAP": "Tapis"},
+                    {"LINM": "Linge de maison"},
+                  ], selectedKey);
                   print("$CategoryForBackend $SubCategoryForBackend");
                   // Mettre la catégorie principale sur "Mode et Vintage"
                   selectedSubCategory =
@@ -259,15 +329,17 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                   selectedSubCategory, // Utiliser la sous-catégorie sélectionnée comme valeur
             ),
           ],
-          
-          if (( selectedCategory == "L")) ...[
+          if ((selectedCategory == "L")) ...[
             const SizedBox(height: 24),
             CustomDropdownFormField<String, String>(
               image: true,
               pathImageHorsmenu: "assets/images/livre.jpeg",
               label: "Livres",
-              options: const [
+             
+              options: widget.isExplore !=null && widget.isExplore ==true ? const [
+                 {"TOUTL": "Tout les livres"},
                 {"LLIT": "Littérature"},
+                {"LROM": "Romans"},
                 {"LPH": "Philosophie"},
                 {"LAL": "Arts et loisirs "},
                 {"LD": "Droit"},
@@ -275,10 +347,33 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                 {"LDO": "Documentaire"},
                 {"LED": "Éducation"},
                 {"LBD": "Bande dessinée"},
+              ] :const [
+                {"LLIT": "Littérature"},
+                {"LROM": "Romans"},
+                {"LPH": "Philosophie"},
+                {"LAL": "Arts et loisirs "},
+                {"LD": "Droit"},
+                {"LC": "conte"},
+                {"LDO": "Documentaire"},
+                {"LED": "Éducation"},
+                {"LBD": "Bande dessinée"},
+                {"autres": "autres"},
               ],
 
               onChanged: (selectedKey) {
                 setState(() {
+                  for_field = getSelectedValue([
+                    {"TOUTL": "Tout les livres"},
+                    {"LLIT": "Littérature"},
+                    {"LROM": "Romans"},
+                    {"LPH": "Philosophie"},
+                    {"LAL": "Arts et loisirs "},
+                    {"LD": "Droit"},
+                    {"LC": "conte"},
+                    {"LDO": "Documentaire"},
+                    {"LED": "Éducation"},
+                    {"LBD": "Bande dessinée"},
+                  ], selectedKey);
                   selectedCategory = "L";
                   CategoryForBackend = "L";
                   SubCategoryForBackend = selectedKey;
@@ -293,8 +388,6 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                   selectedSubCategory, // Utiliser la sous-catégorie sélectionnée comme valeur
             ),
           ],
-          
-          
           if (selectedSubCategory == "tableaux") ...[
             const SizedBox(height: 12),
             CustomDropdownFormField<String, String>(
@@ -316,6 +409,19 @@ class _ChooseCategoryState extends State<ChooseCategory> {
               ],
               onChanged: (selectedKey) {
                 setState(() {
+                  for_field = getSelectedValue([
+                    {"TPEIN": "Toutes les peintures"},
+                    {"PH": "Peinture acrylique"},
+                    {"AQ": "Aquarelles"},
+                    {"CUB": "Cubisme"},
+                    {"ARTEXPR": "Expressionnisme"},
+                    {"REAL": "Réalisme"},
+                    {"ARTABS": "Art abstrait "},
+                    {"ARTPOP": "Pop art"},
+                    {"ARTPORT": "Portrait "},
+                    {"ARTIMPR": "impressionnisme "},
+                    {"ARTURB": "Art urban "},
+                  ], selectedKey);
                   SubSubCategoryForBackend = SubCategoryForBackend;
                   SubSubCategoryForBackend =
                       "$SubCategoryForBackend$selectedKey";
@@ -343,6 +449,14 @@ class _ChooseCategoryState extends State<ChooseCategory> {
               ],
               onChanged: (selectedKey) {
                 setState(() {
+                  for_field = getSelectedValue([
+                    {"SCULT": "Toutes les sculptures"},
+                    {"SCULBR": "Bronzes"},
+                    {"SCULMAR": "Sculptures en marbre"},
+                    {"SCULPLA": "Sculptures en plâtre"},
+                    {"SCULBOI": "Sculptures en bois"},
+                    {"SCULTERRE": "Sculptures en terre cuite "},
+                  ], selectedKey);
                   SubSubCategoryForBackend = SubCategoryForBackend;
                   SubSubCategoryForBackend =
                       "$SubCategoryForBackend$selectedKey";
@@ -369,6 +483,13 @@ class _ChooseCategoryState extends State<ChooseCategory> {
               ],
               onChanged: (selectedKey) {
                 setState(() {
+                  for_field = getSelectedValue([
+                    {"PHOTOGRAPH": "Photographies"},
+                    {"AFFICH": "Affiches"},
+                    {"STREET": "Street art, graffiti"},
+                    {"AQUA": "Aquarelles"},
+                    {"OEUPAP": "Œuvres sur papier"},
+                  ], selectedKey);
                   SubSubCategoryForBackend = SubCategoryForBackend;
                   SubSubCategoryForBackend =
                       "$SubCategoryForBackend$selectedKey";
@@ -383,22 +504,27 @@ class _ChooseCategoryState extends State<ChooseCategory> {
           SizedBox(
             height: 16,
           ),
-          if(selectedCategory ==null && selectedSubCategory==null && selectedSubSubCategory==null)
-          CustomDropdownFormField<String, String>(
-            image: true,
+          if (selectedCategory == null &&
+              selectedSubCategory == null &&
+              selectedSubSubCategory == null)
+            CustomDropdownFormField<String, String>(
+              image: true,
               pathImageHorsmenu: "assets/images/mv.jpeg",
-            label: "Mode et vintage",
-            isButton: true,
-            onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Gender(isExplore : widget.isExplore)));
-            },
-            options: const [
-              {"": ""},
-            ],
+              label: "Mode et vintage",
+              isButton: true,
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            Gender(isExplore: widget.isExplore)));
+              },
+              options: const [
+                {"": ""},
+              ],
 
-            // Utiliser la sous-catégorie sélectionnée comme valeur
-          ),
+              // Utiliser la sous-catégorie sélectionnée comme valeur
+            ),
           const SizedBox(height: 24),
           if (errorMessage != null) ...[
             Text(
@@ -413,33 +539,30 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             const SizedBox(height: 12),
           ],
           CustomButton(
-            label: "Valider votre choix",
-            onTap: () {
-              handleSubmit(selectedSubCategory == "MONTRE");
-            },
-            isDisabled: selectedSubCategory == "MONTRE"
-                ? false
-                : selectedCategory == null ||
-                    (selectedCategory == "MV" &&
-                        (selectedSubCategory == null &&
-                                selectedSubSubCategory == null 
-                            )) ||
-                    (selectedCategory == "OV" &&
-                        selectedSubCategory == "tableaux" &&
-                        (selectedSubCategory == null ||
-                            selectedSubSubCategory == null 
-                                ))||(selectedCategory == "L" &&
-                        selectedSubCategory == null 
-                        ) ||  (selectedCategory == "OV" &&
-                        selectedSubCategory == "ARTGRAPH" &&
-                        (selectedSubCategory == null ||
-                            selectedSubSubCategory == null 
-                                )) ||  (selectedCategory == "OV" &&
-                        selectedSubCategory == "SCUL" &&
-                        (selectedSubCategory == null ||
-                            selectedSubSubCategory == null 
-                                ))
-          ),
+              label: "Valider votre choix",
+              onTap: () {
+                handleSubmit(selectedSubCategory == "MONTRE");
+              },
+              isDisabled: selectedSubCategory == "MONTRE"
+                  ? false
+                  : selectedCategory == null ||
+                      (selectedCategory == "MV" &&
+                          (selectedSubCategory == null &&
+                              selectedSubSubCategory == null)) ||
+                      (selectedCategory == "OV" &&
+                          selectedSubCategory == "tableaux" &&
+                          (selectedSubCategory == null ||
+                              selectedSubSubCategory == null)) ||
+                      (selectedCategory == "L" &&
+                          selectedSubCategory == null) ||
+                      (selectedCategory == "OV" &&
+                          selectedSubCategory == "ARTGRAPH" &&
+                          (selectedSubCategory == null ||
+                              selectedSubSubCategory == null)) ||
+                      (selectedCategory == "OV" &&
+                          selectedSubCategory == "SCUL" &&
+                          (selectedSubCategory == null ||
+                              selectedSubSubCategory == null))),
           SizedBox(
             width: 343,
             child: RichText(
@@ -452,6 +575,8 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                 ),
                 children: <TextSpan>[
                   TextSpan(
+                    style:
+                        TextStyle(color: theme ? Colors.white : Colors.black),
                     text: "Ou vous pouvez ", // Partie du texte non stylisée
                   ),
                   TextSpan(
@@ -483,6 +608,8 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                       },
                   ),
                   TextSpan(
+                    style:
+                        TextStyle(color: theme ? Colors.white : Colors.black),
                     text: ' votre choix', // Partie du texte non stylisée
                   ),
                 ],

@@ -40,7 +40,7 @@ class Products extends ChangeNotifier {
   List<dynamic> wishProducts = [];
   bool? canRate;
   List filteredProducts = [];
-   String? _promoCode;
+  String? _promoCode;
   double? _discount;
   String? _errorMessage;
 
@@ -48,7 +48,8 @@ class Products extends ChangeNotifier {
   double? get discount => _discount;
 
   Future<bool> checkPromoCode(String code) async {
-    final url = Uri.parse("${AppConfig.baseUrl}/api/products/check_promo_code/$code/");
+    final url =
+        Uri.parse("${AppConfig.baseUrl}/api/products/check_promo_code/$code/");
     try {
       final response = await http.get(url);
 
@@ -64,8 +65,6 @@ class Products extends ChangeNotifier {
         _discount = null;
         return false;
       }
-
-     
     } catch (error) {
       _errorMessage = "Erreur de connexion.";
       _promoCode = null;
@@ -170,11 +169,12 @@ class Products extends ChangeNotifier {
       return false; // Retourner false si une exception se produit lors de l'envoi
     }
   }
-    Future<bool> updateProduct(
+
+  Future<http.StreamedResponse> updateProduct(
       String productId,
       String title,
       String description,
-      String subCatgory,
+      String subCategory,
       double price,
       String possibleDeff,
       String? taille,
@@ -185,8 +185,7 @@ class Products extends ChangeNotifier {
     // Vérification de la validité de l'ID utilisateur
     String? storedUserId = await storage.read(key: 'user_id');
     if (storedUserId == null || storedUserId.isEmpty) {
-      print("Erreur: L'ID utilisateur est manquant.");
-      return false;
+      throw Exception("Erreur: L'ID utilisateur est manquant.");
     }
 
     final url = Uri.parse("${AppConfig.baseUrl}/api/products/updateProduct/");
@@ -194,7 +193,7 @@ class Products extends ChangeNotifier {
 
     request.fields['owner_id'] = storedUserId;
     request.fields['product_id'] = productId;
-    request.fields['category_id'] = subCatgory;
+    request.fields['category_id'] = subCategory;
     request.fields['title'] = title;
     request.fields['description'] = description;
     request.fields['price'] = price.toString();
@@ -208,17 +207,13 @@ class Products extends ChangeNotifier {
     for (var image in images) {
       if (image != null) {
         try {
-          // Vérification que l'image existe bien et est lisible
           if (!await image.exists()) {
-            print("Erreur: L'image ${image.uri.path} n'existe pas.");
-            continue;
+            throw Exception("Erreur: L'image ${image.uri.path} n'existe pas.");
           }
 
-          // Détecter le type MIME de l'image
           String? mimeType = lookupMimeType(image.uri.path);
           String mimeTypePart =
-              mimeType?.split('/')[1] ?? 'jpeg'; // Type MIME par défaut
-          print("Type MIME détecté : $mimeTypePart");
+              mimeType?.split('/')[1] ?? 'jpeg'; // Par défaut : jpeg
 
           var imageStream = http.ByteStream(image.openRead());
           var imageLength = await image.length();
@@ -231,47 +226,25 @@ class Products extends ChangeNotifier {
           );
           request.files.add(multipartFile);
         } catch (e) {
-          print("Erreur lors de l'ajout de l'image : $e");
-          return false;
+          throw Exception("Erreur lors de l'ajout de l'image : $e");
         }
       }
     }
 
-    print("Données envoyées : ");
-    print("Owner ID: $storedUserId");
-    print("Category ID: $subCatgory");
-    print("Title: $title");
-    print("Description: $description");
-    print("Price: $price");
-    print("Taille: $taille");
-    print("Pointure: $pointure");
-
     try {
       var response = await request.send();
-      final responseString = await response.stream.bytesToString();
-      print("Réponse du serveur : $responseString");
-
-      // Vérifier le code de statut de la réponse
-      if (response.statusCode == 200) {
-        notifyListeners(); // Notifier les auditeurs
-        return true;
-      } else {
-        final Map<String, dynamic> responseJson = json.decode(responseString);
-
-        errorMessage = responseJson["message"];
-        print("Erreur serveur: ${response.statusCode}");
-        return false;
-      }
+      return response; // Retourne directement la réponse HTTP
     } catch (e) {
-      print("Erreur lors de l'envoi de la requête : $e");
-      return false; // Retourner false si une exception se produit lors de l'envoi
+      throw Exception("Erreur lors de l'envoi de la requête : $e");
     }
   }
-    List<Map<String, dynamic>> _members = [];
+
+  List<Map<String, dynamic>> _members = [];
   List<Map<String, dynamic>> get members => _members;
 
   Future<void> fetchMembers(int userId) async {
-    final url = '${AppConfig.baseUrl}/api/auth/fatchmembers/$userId'; // Remplacez par votre URL d'API
+    final url =
+        '${AppConfig.baseUrl}/api/auth/fatchmembers/$userId'; // Remplacez par votre URL d'API
 
     try {
       final response = await http.get(Uri.parse(url));
@@ -294,17 +267,21 @@ class Products extends ChangeNotifier {
 
     notifyListeners();
   }
-   List<Map<String, dynamic>> _filteredMembers = [];
-  
+
+  List<Map<String, dynamic>> _filteredMembers = [];
+
   List<Map<String, dynamic>> get filteredMembers => _filteredMembers;
   void filterMembers(String searchText) {
     _filteredMembers = _members.where((member) {
-      return member['full_name'].toLowerCase().contains(searchText.toLowerCase());
+      String fullName =
+          member['full_name'] ?? ''; // Remplace null par une chaîne vide
+      String query = searchText ?? ''; // Assure que searchText n'est pas null
+
+      return fullName.toLowerCase().contains(query.toLowerCase());
     }).toList();
+
     notifyListeners();
   }
-
-
 
   Future<void> getProductsByUser() async {
     try {
@@ -320,7 +297,8 @@ class Products extends ChangeNotifier {
         if (data['products'] != null) {
           productsByUser = data['products'];
           print(productsByUser);
-          print("OIHAEFOHAOFHPDJZAPOJZPOADJZOPJDZPAOJDZAPOJDPZAOJDPZAOJDPOZAJDPZOAJDPZOAJDPZOAJDZOPAJDOZPAJDOZAPJDOPZAJDZA");
+          print(
+              "OIHAEFOHAOFHPDJZAPOJZPOADJZOPJDZPAOJDZAPOJDPZAOJDPZAOJDPOZAJDPZOAJDPZOAJDPZOAJDZOPAJDOZPAJDOZAPJDOPZAJDZA");
           for (var product in products) {
             print('Produit : ${product['title']}');
             print('Description : ${product['description']}');
@@ -409,34 +387,35 @@ class Products extends ChangeNotifier {
       print('Erreur rencontrée : $e');
     }
   }
-  void filterProductsByCategory(String category) {
-  print("Catégorie sélectionnée: $category");
-  print("Catégories disponibles dans les produits:");
 
-  for (var product in products) {
-    print(product['categoryForSearch']);
+  void filterProductsByCategory(String category) {
+    print("Catégorie sélectionnée: $category");
+    print("Catégories disponibles dans les produits:");
+
+    for (var product in products) {
+      print(product['categoryForSearch']);
+    }
+
+    filteredProducts = products.where((product) {
+      var categoryData = product['categoryForSearch'];
+      if (categoryData is List) {
+        return categoryData
+            .contains(category); // Vérifie si la liste contient la catégorie
+      } else {
+        return categoryData ==
+            category; // Vérifie si c'est une simple chaîne de caractères
+      }
+    }).toList();
+
+    print("Produits trouvés après filtrage: ${filteredProducts.length}");
+    notifyListeners();
   }
 
-  filteredProducts = products
-      .where((product) {
-        var categoryData = product['categoryForSearch'];
-        if (categoryData is List) {
-          return categoryData.contains(category); // Vérifie si la liste contient la catégorie
-        } else {
-          return categoryData == category; // Vérifie si c'est une simple chaîne de caractères
-        }
-      })
-      .toList();
-
-  print("Produits trouvés après filtrage: ${filteredProducts.length}");
-  notifyListeners();
-}
-
-
-    Future<void> getProductsart() async {
+  Future<void> getProductsart() async {
     try {
       String? storedUserId = await storage.read(key: 'user_id');
-      final url = Uri.parse('${AppConfig.baseUrl}/api/products/getProductsart/');
+      final url =
+          Uri.parse('${AppConfig.baseUrl}/api/products/getProductsart/');
       final headers = {
         'Content-Type': 'application/json',
       };
@@ -469,20 +448,22 @@ class Products extends ChangeNotifier {
       print('Erreur rencontrée : $e');
     }
   }
+
   void filterProducts(String query, String searchType) {
-  if (query.isEmpty) {
-    filteredProducts = List.from(products);
-  } else {
-    filteredProducts = products
-        .where((product) => product['title']
-            .toString()
-            .toLowerCase()
-            .contains(query.toLowerCase()))
-        .toList();
+    if (query.isEmpty) {
+      filteredProducts = List.from(products);
+    } else {
+      filteredProducts = products
+          .where((product) => product['title']
+              .toString()
+              .toLowerCase()
+              .contains(query.toLowerCase()))
+          .toList();
+    }
+    print(
+        "Produits filtrés : ${filteredProducts.length}"); // Ajout de cette ligne
+    notifyListeners();
   }
-  print("Produits filtrés : ${filteredProducts.length}"); // Ajout de cette ligne
-  notifyListeners();
-}
 
   Future<void> getProductsViewed() async {
     try {
@@ -865,10 +846,11 @@ class Products extends ChangeNotifier {
       print('Erreur rencontrée : $e');
     }
   }
-  Future<bool> deleteProduct(String productId ,int userId ) async {
+
+  Future<bool> deleteProduct(String productId, int userId) async {
     try {
-      final url =
-          Uri.parse('${AppConfig.baseUrl}/api/products/delete_product/$productId/$userId/');
+      final url = Uri.parse(
+          '${AppConfig.baseUrl}/api/products/delete_product/$productId/$userId/');
       final headers = {
         'Content-Type': 'application/json',
         // 'Authorization': 'Bearer votre_token', // Ajoutez l'en-tête d'autorisation si nécessaire
@@ -878,8 +860,7 @@ class Products extends ChangeNotifier {
 
       if (response.statusCode == 204) {
         // Si la suppression a réussi, retirez le produit de la liste locale
-        products
-            .removeWhere((product) => product['id'] == productId);
+        products.removeWhere((product) => product['id'] == productId);
         notifyListeners(); // Notifiez les auditeurs de la mise à jour
         print('Produit favori supprimé avec succès.');
         return true;
