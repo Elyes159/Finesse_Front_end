@@ -80,7 +80,6 @@ class _SearchBarFState extends State<SearchBarF> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: ShapeDecoration(
               shape: RoundedRectangleBorder(
-                
                 borderRadius: BorderRadius.circular(30),
               ),
             ),

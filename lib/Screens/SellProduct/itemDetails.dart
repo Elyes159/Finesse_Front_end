@@ -3,6 +3,7 @@ import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Provider/products.dart';
 import 'package:finesse_frontend/Provider/profileProvider.dart';
 import 'package:finesse_frontend/Provider/theme.dart';
+import 'package:finesse_frontend/Screens/HomeScreens/checkout.dart';
 import 'package:finesse_frontend/Screens/Profile/ProfileScreen.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
 import 'package:finesse_frontend/Widgets/CustomTextField/customfieldbuton.dart';
@@ -185,7 +186,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                               ),
                             ),
                             Text(
-                              "${widget.product["productPrice"]}",
+                              "${widget.product["productPrice"]} TND",
                               style: TextStyle(
                                 //color: Color(0xFF111928),
                                 fontSize: 16,
@@ -519,24 +520,20 @@ class _ItemDetailsState extends State<ItemDetails> {
                 width: MediaQuery.of(context).size.width,
                 color: theme ? Color(0XFF1C1C1C) : Color(0XFFf5fafb),
                 child: CustomButton(
-                  buttonColor: isFavorite ? Colors.grey : Color(0xFFFB98B7),
-                  label: !isFavorite ? "Ajouter au panier" : "Ajouté",
+                  label: "Acheter",
                   onTap: () async {
-                    bool? favorite =
-                        await Provider.of<Products>(context, listen: false)
-                            .createFavorite(
-                                productId: widget.product["product_id"]);
-
-                    if (favorite != false) {
-                      setState(() {
-                        Provider.of<Products>(context, listen: false)
-                            .getFavourite(
-                                Provider.of<AuthService>(context, listen: false)
-                                    .currentUser!
-                                    .id);
-                        isFavorite = favorite; // Met à jour l'état local
-                      });
-                    }
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CheckoutPage(
+                                  productIds: [widget.product["product_id"]],
+                                  subtotal: double.tryParse(
+                                          widget.product["productPrice"]) ??
+                                      99.0,
+                                  total: double.tryParse(
+                                          widget.product["productPrice"])! +7
+                                      
+                                )));
                   },
                 ),
               ),

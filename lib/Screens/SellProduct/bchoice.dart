@@ -67,7 +67,7 @@ class _BChoiceState extends State<BChoice> {
               pathImageHorsmenu: "assets/images/vt.jpeg",
               options: widget.isExplore == true
                   ? const [
-                      {"TOUTV": "Tout les vétements"},
+                      {"TOUTV": "Tous les vêtements"},
                       //{"BB": "Vêtements Bébé"},
                       {"EX": "Vêtements d'exterieur"},
                       //{"RO": "Robe"},
@@ -125,7 +125,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   for_field = getSelectedValue([
-                    {"TOUTV": "Tout les vétements"},
+                    {"TOUTV": "Tous les vétements"},
                     //{"BB": "Vêtements Bébé"},
                     {"EX": "Vêtements d'exterieur"},
                     //{"RO": "Robe"},
@@ -167,7 +167,7 @@ class _BChoiceState extends State<BChoice> {
               pathImageHorsmenu: "assets/images/ch.jpeg",
               options: widget.isExplore == true
                   ? const [
-                      {"TOUTC": "Tout les chaussures"},
+                      {"TOUTC": "Toutes les chaussures"},
                       {"BO": "Bottes"},
                       //{"BOTI": "Bottines"},
                       //{"ESC": "Escarpins"},
@@ -203,7 +203,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   for_field = getSelectedValue([
-                    {"TOUTC": "Tout les chaussures"},
+                    {"TOUTC": "Toutes les chaussures"},
                     {"BO": "Bottes"},
                     //{"BOTI": "Bottines"},
                     //{"ESC": "Escarpins"},
@@ -234,7 +234,7 @@ class _BChoiceState extends State<BChoice> {
               pathImageHorsmenu: "assets/images/sacs.jpeg",
               options: widget.isExplore == true
                   ? const [
-                      {"TOUTS": "Tout les sacs"},
+                      {"TOUTS": "Tous les sacs"},
                       //{"SM": "Sac à main"},
                       //{"BAND": "Sac à bandoulière"},
                       //{"P": "Pochette"},
@@ -292,7 +292,7 @@ class _BChoiceState extends State<BChoice> {
               pathImageHorsmenu: "assets/images/acc.jpeg",
               options: widget.isExplore == true
                   ? const [
-                      {"TOUTA": "Tout les accessoires"},
+                      {"TOUTA": "Tous les accessoires"},
                       {"LU": "Lunette"},
                       {"CE": "Ceinture"},
                       //{"CHE": "Accessoires pour cheveux"},
@@ -327,7 +327,7 @@ class _BChoiceState extends State<BChoice> {
                 print("onChanged déclenché avec : $selectedKey");
                 setState(() {
                   for_field = getSelectedValue([
-                    {"TOUTA": "Tout les accessoires"},
+                    {"TOUTA": "Tous les accessoires"},
                     {"LU": "Lunette"},
                     {"CE": "Ceinture"},
                     //{"CHE": "Accessoires pour cheveux"},
@@ -394,7 +394,7 @@ class _BChoiceState extends State<BChoice> {
               pathImageHorsmenu: "assets/images/vt.jpeg",
               options: widget.isExplore == true
                   ? const [
-                      {"TOUTV": "Tout les vétements"},
+                      {"TOUTV": "Tous les vêtements"},
                       {"EX": "Vêtements d'exterieur"},
                       {"RO": "Robe"},
                       {"CAF": "Caftan"},
@@ -450,7 +450,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   for_field = getSelectedValue([
-                    {"TOUTV": "Tout les vétements"},
+                    {"TOUTV": "Tous les vêtements"},
                     {"EX": "Vêtements d'exterieur"},
                     {"RO": "Robe"},
                     {"CAF": "Caftan"},
@@ -492,7 +492,7 @@ class _BChoiceState extends State<BChoice> {
               pathImageHorsmenu: "assets/images/pb.jpeg",
               options: widget.isExplore == true
                   ? const [
-                      {"TOUTPB": "Tout les produits de beauté"},
+                      {"TOUTPB": "Tous les produits de beauté"},
                       {"PF": "Parfum"},
                       {"SV": "Soins visage"},
                       {"SC": "Soins corps"},
@@ -516,7 +516,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   for_field = getSelectedValue([
-                    {"TOUTPB": "Tout les produits de beauté"},
+                    {"TOUTPB": "Tous les produits de beauté"},
                     {"PF": "Parfum"},
                     {"SV": "Soins visage"},
                     {"SC": "Soins corps"},
@@ -540,7 +540,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/bj.jpeg",
               options: widget.isExplore ==true ? const [
-                {"TOUTB": "Tout les bijoux"},
+                {"TOUTB": "Tous les bijoux"},
                 {"C": "Collier"},
                 {"B": "Bracelet"},
                 {"BO": "Boucles d'oreilles"},
@@ -562,7 +562,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   for_field = getSelectedValue([
-                    {"TOUTB": "Tout les bijoux"},
+                    {"TOUTB": "Tous les bijoux"},
                     {"C": "Collier"},
                     {"B": "Bracelet"},
                     {"BO": "Boucles d'oreilles"},
@@ -585,7 +585,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/ch.jpeg",
               options: widget.isExplore ==true ? const [
-                {"TOUTC": "Tout les chaussures"},
+                {"TOUTC": "Toutes les chaussures"},
                 {"BO": "Bottes"},
                 {"BOTI": "Bottines"},
                 {"ESC": "Escarpins"},
@@ -621,7 +621,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   for_field = getSelectedValue([
-                    {"TOUTC": "Tout les chaussures"},
+                    {"TOUTC": "Toutes les chaussures"},
                     {"BO": "Bottes"},
                     {"BOTI": "Bottines"},
                     {"ESC": "Escarpins"},
@@ -651,7 +651,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/sacs.jpeg",
               options: widget.isExplore ==true ? const [
-                {"TOUTS": "Tout les sacs"},
+                {"TOUTS": "Tous les sacs"},
                 {"SM": "Sac à main"},
                 {"BAND": "Sac à bandoulière"},
                 {"P": "Pochette"},
@@ -681,7 +681,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   for_field = getSelectedValue([
-                    {"TOUTS": "Tout les sacs"},
+                    {"TOUTS": "Tous les sacs"},
                     {"SM": "Sac à main"},
                     {"BAND": "Sac à bandoulière"},
                     {"P": "Pochette"},
@@ -706,7 +706,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/acc.jpeg",
               options: widget.isExplore==true? const [
-                {"TOUTA": "Tout les accesoires"},
+                {"TOUTA": "Tous les accesoires"},
                 {"LU": "Lunette"},
                 {"CE": "Ceinture"},
                 {"CHE": "Accessoires pour cheveux"},
@@ -739,7 +739,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   for_field = getSelectedValue([
-                    {"TOUTA": "Tout les accesoires"},
+                    {"TOUTA": "Tous les accesoires"},
                     {"LU": "Lunette"},
                     {"CE": "Ceinture"},
                     {"CHE": "Accessoires pour cheveux"},
@@ -803,7 +803,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/vt.jpeg",
               options: widget.isExplore ==true ? const [
-                {"TOUTV": "Tout les vétements"},
+                {"TOUTV": "Tous les vêtements"},
                 {"BB": "Vêtements Bébé"},
                 {"EX": "Vêtements d'exterieur"},
                 {"RO": "Robe"},
@@ -861,7 +861,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   for_field = getSelectedValue([
-                    {"TOUTV": "Tout les vétements"},
+                    {"TOUTV": "Tous les vêtements"},
                     {"BB": "Vêtements Bébé"},
                     {"EX": "Vêtements d'exterieur"},
                     {"RO": "Robe"},
@@ -901,7 +901,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/ch.jpeg",
               options: widget.isExplore ==true ? const [
-                {"TOUTC": "Tout les chaussures"},
+                {"TOUTC": "Toutes les chaussures"},
                 {"BO": "Bottes"},
                 {"BOTI": "Bottines"},
                 //{"ESC": "Escarpins"},
@@ -935,7 +935,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   for_field = getSelectedValue([
-                    {"TOUTC": "Tout les chaussures"},
+                    {"TOUTC": "Toutes les chaussures"},
                     {"BO": "Bottes"},
                     {"BOTI": "Bottines"},
                     //{"ESC": "Escarpins"},
@@ -994,7 +994,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   for_field = getSelectedValue([
-                    {"TOUTS": "Tout les sacs"},
+                    {"TOUTS": "Tous les sacs"},
                     {"SM": "Sac à main"},
                     //{"BAND": "Sac à bandoulière"},
                     //{"P": "Pochette"},
@@ -1020,7 +1020,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/acc.jpeg",
               options: widget.isExplore ==true? const [
-                {"TOUTA": "Tout les accessoires"},
+                {"TOUTA": "Tous les accessoires"},
                 {"LU": "Lunette"},
                 //{"CE": "Ceinture"},
                 {"CHE": "Accessoires pour cheveux"},
@@ -1050,7 +1050,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   for_field = getSelectedValue([
-                    {"TOUTA": "Tout les accessoires"},
+                    {"TOUTA": "Tous les accessoires"},
                     {"LU": "Lunette"},
                     //{"CE": "Ceinture"},
                     {"CHE": "Accessoires pour cheveux"},
@@ -1079,7 +1079,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/jouets.jpeg",
               options: widget.isExplore == true ? const [
-                {"TOUTJ": "Tout les jouets"},
+                {"TOUTJ": "Tous les jouets"},
                 {"BA": "Ballons"},
                 {"DO": "Dominos"},
                 {"JE": "Jeux éducatifs"},
@@ -1105,7 +1105,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   for_field = getSelectedValue([
-                    {"TOUTJ": "Tout les jouets"},
+                    {"TOUTJ": "Tous les jouets"},
                     {"BA": "Ballons"},
                     {"DO": "Dominos"},
                     {"JE": "Jeux éducatifs"},
@@ -1163,7 +1163,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/vt.jpeg",
               options: widget.isExplore == true ? const [
-                {"TOUTV": "Tout les vétements"},
+                {"TOUTV": "Tous les vêtements"},
                 {"BB": "Vêtements Bébé"},
                 {"EX": "Vêtements d'exterieur"},
                 //{"RO": "Robe"},
@@ -1221,7 +1221,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   for_field = getSelectedValue([
-                    {"TOUTV": "Tout les vétements"},
+                    {"TOUTV": "Tous les vêtements"},
                     {"BB": "Vêtements Bébé"},
                     {"EX": "Vêtements d'exterieur"},
                     //{"RO": "Robe"},
@@ -1262,7 +1262,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/ch.jpeg",
               options: widget.isExplore ==true ? const [
-                {"TOUTC": "Tout les chaussures"},
+                {"TOUTC": "Toutes les chaussures"},
                 {"BO": "Bottes"},
                 //{"BOTI": "Bottines"},
                 //{"ESC": "Escarpins"},
@@ -1277,7 +1277,6 @@ class _BChoiceState extends State<BChoice> {
                 {"BB": "Bébé"},
                 {"CHAUSS": "Chaussons"},
               ] : const [
-                
                 {"BO": "Bottes"},
                 //{"BOTI": "Bottines"},
                 //{"ESC": "Escarpins"},
@@ -1296,7 +1295,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   for_field = getSelectedValue([
-                    {"TOUTC": "Tout les chaussures"},
+                    {"TOUTC": "Toutes les chaussures"},
                     {"BO": "Bottes"},
                     //{"BOTI": "Bottines"},
                     //{"ESC": "Escarpins"},
@@ -1325,7 +1324,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/sacs.jpeg",
               options: widget.isExplore ==true ? const [
-                {"TOUTS": "Tout les sacs"},
+                {"TOUTS": "Tous les sacs"},
                 {"SM": "Sac à main"},
                 //{"BAND": "Sac à bandoulière"},
                 //{"P": "Pochette"},
@@ -1353,7 +1352,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   for_field = getSelectedValue([
-                    {"TOUTS": "Tout les sacs"},
+                    {"TOUTS": "Tous les sacs"},
                     {"SM": "Sac à main"},
                     //{"BAND": "Sac à bandoulière"},
                     //{"P": "Pochette"},
@@ -1379,7 +1378,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/acc.jpeg",
               options: widget.isExplore ==true? const [
-                {"TOUTA": "Tout les accessoires"},
+                {"TOUTA": "Tous les accessoires"},
                 {"LU": "Lunette"},
                 {"CE": "Ceinture"},
                 //{"CHE": "Accessoires pour cheveux"},
@@ -1411,7 +1410,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   for_field = getSelectedValue([
-                    {"TOUTA": "Tout les accessoires"},
+                    {"TOUTA": "Tous les accessoires"},
                     {"LU": "Lunette"},
                     {"CE": "Ceinture"},
                     //{"CHE": "Accessoires pour cheveux"},
@@ -1443,7 +1442,7 @@ class _BChoiceState extends State<BChoice> {
               image: true,
               pathImageHorsmenu: "assets/images/jouets.jpeg",
               options: widget.isExplore ==true? const [
-                {"TOUTJ": "Tout les jouets"},
+                {"TOUTJ": "Tous les jouets"},
                 {"BA": "Ballons"},
                 {"DO": "Dominos"},
                 {"JE": "Jeux éducatifs"},
@@ -1469,7 +1468,7 @@ class _BChoiceState extends State<BChoice> {
               onChanged: (selectedKey) {
                 setState(() {
                   for_field = getSelectedValue([
-                    {"TOUTJ": "Tout les jouets"},
+                    {"TOUTJ": "Tous les jouets"},
                     {"BA": "Ballons"},
                     {"DO": "Dominos"},
                     {"JE": "Jeux éducatifs"},

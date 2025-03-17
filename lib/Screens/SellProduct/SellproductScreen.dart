@@ -27,7 +27,7 @@ class SellProductScreen extends StatefulWidget {
   final String? keySubCategory;
   final String? keyCategory;
   final product;
-   SellProductScreen(
+  SellProductScreen(
       {super.key,
       this.category,
       this.category_for_field,
@@ -57,8 +57,10 @@ class _SellProductScreenState extends State<SellProductScreen> {
   final TextEditingController _tailleController = TextEditingController();
   final TextEditingController _etatController = TextEditingController();
   final TextEditingController _brandController = TextEditingController();
-    final TextEditingController _dimensionController = TextEditingController();
-
+  final TextEditingController _dimensionController = TextEditingController();
+  final TextEditingController _longeurController = TextEditingController();
+  final TextEditingController _largeurController = TextEditingController();
+  final TextEditingController _hauteurController = TextEditingController();
   final PageStorageBucket _bucket = PageStorageBucket();
   final _formKey = GlobalKey<FormState>();
   String? _errorMessage;
@@ -338,7 +340,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                 onTap: widget.product != null
                     ? null
                     : () async {
-                      widget.categoryFromMv = null;
+                        widget.categoryFromMv = null;
                         // Appel à ChooseCategory et récupération des données
                         final result = await Navigator.push(
                           context,
@@ -440,8 +442,8 @@ class _SellProductScreenState extends State<SellProductScreen> {
                 keyboardType: TextInputType.numberWithOptions(),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    _errorMessage = "le prix obligatoire";
-                    return 'le Prix et obligatoire';
+                    _errorMessage = "le prix minimum est de 10 dinars";
+                    return 'le prix minimum est de 10 dinars';
                   } else {
                     setState(() {
                       _errorMessage = null;
@@ -453,7 +455,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
               const SizedBox(
                 height: 16,
               ),
-              if (subcategory.startsWith("C") && category!="CRA") ...[
+              if (subcategory.startsWith("C") && category != "CRA") ...[
                 CustomTextFormField(
                   controller: _pointureController,
                   label: "Pointure",
@@ -475,7 +477,8 @@ class _SellProductScreenState extends State<SellProductScreen> {
                   height: 16,
                 ),
               ],
-              if (widget.categoryFromMv != null &&widget.categoryFromMv!.startsWith("V")) ...[
+              if (widget.categoryFromMv != null &&
+                  widget.categoryFromMv!.startsWith("V")) ...[
                 CustomDropdownFormField<String, String>(
                   options: const [
                     {'S': 'S'},
@@ -579,22 +582,77 @@ class _SellProductScreenState extends State<SellProductScreen> {
                   },
                 )
               ],
-              if(category =="D" || category == "OV" || category=="CRA")...[
+              if (category == "D" ||
+                  category == "OV" ||
+                  (category == "CRA" && subcategory != "HAUCO")) ...[
                 CustomTextFormField(
-                  controller: _dimensionController,
-                  label: 'Dimension',
-                  isPassword: false,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      _errorMessage = "dimension obligatoire";
-                      return 'la dimension est obligatoire';
-                    } else {
-                      setState(() {
-                        _errorMessage = null;
-                      });
-                      return null;
-                    }
-                  }),
+                    controller: _longeurController,
+                    label: 'Longeur en cm',
+                    isPassword: false,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        _errorMessage = "Longeur obligatoire";
+                        return 'la Longeur est obligatoire';
+                      } else {
+                        setState(() {
+                          _errorMessage = null;
+                        });
+                        return null;
+                      }
+                    }),
+                const SizedBox(
+                  height: 16,
+                ),
+                CustomTextFormField(
+                    controller: _largeurController,
+                    label: 'Largeur en cm',
+                    isPassword: false,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        _errorMessage = "Largeur obligatoire";
+                        return 'la Largeur est obligatoire';
+                      } else {
+                        setState(() {
+                          _errorMessage = null;
+                        });
+                        return null;
+                      }
+                    }),
+                const SizedBox(
+                  height: 16,
+                ),
+                CustomTextFormField(
+                    controller: _hauteurController,
+                    label: 'Hauteur en cm',
+                    isPassword: false,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        _errorMessage = "Hauteur obligatoire";
+                        return 'la Hauteur est obligatoire';
+                      } else {
+                        setState(() {
+                          _errorMessage = null;
+                        });
+                        return null;
+                      }
+                    }),
+              ],
+              if (category == "CRA" && subcategory == "HAUCO") ...[
+                CustomTextFormField(
+                    controller: _tailleController,
+                    label: 'taille',
+                    isPassword: false,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        _errorMessage = "taille obligatoire";
+                        return 'la taille est obligatoire';
+                      } else {
+                        setState(() {
+                          _errorMessage = null;
+                        });
+                        return null;
+                      }
+                    }),
               ],
               if (widget.categoryFromMv != null &&
                   !widget.categoryFromMv!.startsWith("V")) ...[
@@ -628,11 +686,11 @@ class _SellProductScreenState extends State<SellProductScreen> {
               const SizedBox(
                 height: 24,
               ),
-              if (_errorMessage != null)
-                Text(
-                  "$_errorMessage",
-                  style: TextStyle(color: Colors.red, fontFamily: "Raleway"),
-                ),
+              // if (_errorMessage != null)
+              //   Text(
+              //     "$_errorMessage",
+              //     style: TextStyle(color: Colors.red, fontFamily: "Raleway"),
+              //   ),
               CustomButton(
                 buttonColor:
                     _Loading ? const Color(0xffE5E7EB) : Color(0xffFB98B7),
@@ -676,6 +734,9 @@ class _SellProductScreenState extends State<SellProductScreen> {
                             Provider.of<SellProductProvider>(context,
                                     listen: false)
                                 .images,
+                            _hauteurController.text,
+                            _largeurController.text,
+                            _longeurController.text,
                           );
                           if (result) {
                             setState(() {

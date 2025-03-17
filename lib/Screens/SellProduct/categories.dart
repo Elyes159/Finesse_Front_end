@@ -305,8 +305,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                 {"BGS": "Bougies,senteurs"},
                 {"TAP": "Tapis"},
                 {"LINM": "Linge de maison"},
-              ] : const [
-                
+              ] : const [ 
                 {"DECOMU": "Décoration murale"},
                 {"PLVA": "Plantes, vases"},
                 {"LUMI": "Luminaires"},
@@ -421,7 +420,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
               pathImageHorsmenu: "assets/images/tableau.jpeg",
               label: "Sous catégorie de TABLEAUX",
               options: widget.isExplore ==true? const [
-                {"TPEIN": "Toutes les peintures"},
+                {"TPEIN": "Touts les tableaux"},
                 {"PH": "Peinture acrylique"},
                 {"AQ": "Aquarelles"},
                 {"CUB": "Cubisme"},
@@ -433,7 +432,6 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                 {"ARTIMPR": "impressionnisme "},
                 {"ARTURB": "Art urban "},
               ]:const [
-               
                 {"PH": "Peinture acrylique"},
                 {"AQ": "Aquarelles"},
                 {"CUB": "Cubisme"},
@@ -444,7 +442,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                 {"ARTPORT": "Portrait "},
                 {"ARTIMPR": "impressionnisme "},
                 {"ARTURB": "Art urban "},
-                 {"TPEIN": "autres"},
+                {"TPEIN": "autres"},
               ],
               onChanged: (selectedKey) {
                 setState(() {

@@ -88,7 +88,10 @@ class Products extends ChangeNotifier {
       String? etat,
       String? brand,
       String? dimension,
-      List<File?> images) async {
+      List<File?> images,
+      String? hauteur,
+      String? largeur,
+      String? longeur,) async {
     // Vérification de la validité de l'ID utilisateur
     String? storedUserId = await storage.read(key: 'user_id');
     if (storedUserId == null || storedUserId.isEmpty) {
@@ -108,7 +111,9 @@ class Products extends ChangeNotifier {
     request.fields['pointure'] = pointure ?? "0";
     request.fields['etat'] = etat ?? "";
     request.fields['brand'] = brand ?? "";
-    request.fields['dimension'] = dimension ?? "";
+    request.fields['longeur'] = longeur ?? "";
+    request.fields['largeur'] = largeur ?? "";
+    request.fields['hauteur'] = hauteur ?? "";
     request.fields['is_available'] = "true"; // Défini comme "true"
 
     // Ajouter les images à la requête
@@ -280,7 +285,7 @@ class Products extends ChangeNotifier {
     _filteredMembers = _members.where((member) {
       String fullName =
           member['full_name'] ?? ''; // Remplace null par une chaîne vide
-      String query = searchText ?? ''; // Assure que searchText n'est pas null
+      String query = searchText; // Assure que searchText n'est pas null
 
       return fullName.toLowerCase().contains(query.toLowerCase());
     }).toList();

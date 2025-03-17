@@ -86,9 +86,9 @@ class _CustomTextFormFieldState extends State<CustomTextFormFieldC> {
               shape: RoundedRectangleBorder(
                 side: BorderSide(
                   width: 1,
-                  color: theme ? Color.fromARGB(255, 249, 217, 144) : Color(0xFF5C7CA4),
+                  color: theme ? Color.fromARGB(255, 249, 217, 144) : Colors.grey,
                 ),
-                borderRadius: BorderRadius.circular(30), // Augmenter le rayon pour arrondir davantage
+                borderRadius: BorderRadius.circular(30),
               ),
             ),
             child: TextFormField(

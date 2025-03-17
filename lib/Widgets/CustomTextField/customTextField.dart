@@ -140,6 +140,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
               child: Text(
                 _errorMessage!,
                 style: const TextStyle(
+                  fontFamily: "Raleway",
                   color: Colors.red,
                   fontSize: 12,
                 ),

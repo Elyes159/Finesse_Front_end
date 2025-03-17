@@ -13,11 +13,14 @@ import 'package:finesse_frontend/Screens/SellProduct/itemDetails.dart';
 import 'package:finesse_frontend/Widgets/cards/productCard.dart';
 import 'package:finesse_frontend/Widgets/categorieChip/categoryChip.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+// ignore: depend_on_referenced_packages
+import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
   final String? parameter;
@@ -50,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
         userId:
             Provider.of<AuthService>(context, listen: false).currentUser!.id);
     Provider.of<Products>(context, listen: false).getProductsByUser();
-     Provider.of<Products>(context, listen: false).getProductsSelledByUser();
+    Provider.of<Products>(context, listen: false).getProductsSelledByUser();
     Provider.of<Products>(context, listen: false).getFavourite(
         Provider.of<AuthService>(context, listen: false).currentUser!.id);
     Provider.of<Products>(context, listen: false).getFollowers(
@@ -91,7 +94,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         radius: 20,
                         backgroundImage:
                             (user.avatar != "" && user.avatar != null)
-                                ? NetworkImage(widget.parameter == "normal" || widget.parameter == "apple"
+                                ? NetworkImage(widget.parameter == "normal" ||
+                                        widget.parameter == "apple"
                                     ? "${AppConfig.baseUrl}${user.avatar}"
                                     : user.avatar!)
                                 : const AssetImage('assets/images/user.png')
@@ -99,8 +103,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(width: 14),
                       GestureDetector(
-                        onTap: ()async{
-                          String? token = await FirebaseMessaging.instance.getToken();
+                        onTap: () async {
+                          String? token =
+                              await FirebaseMessaging.instance.getToken();
                           print(token);
                         },
                         child: Text(
@@ -133,15 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       const SizedBox(width: 20),
-                      InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Cart()));
-                          },
-                          child: SvgPicture.asset("assets/Icons/favv.svg",
-                              color: theme ? Colors.white : null)),
+                      
                     ],
                   ),
                 ],
@@ -192,7 +189,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       backgroundImage: (user.avatar != "" &&
                                               user.avatar != null)
                                           ? NetworkImage(widget.parameter ==
-                                                  "normal" || widget.parameter == "apple"
+                                                      "normal" ||
+                                                  widget.parameter == "apple"
                                               ? "${AppConfig.baseUrl}${user.avatar}"
                                               : user.avatar!)
                                           : AssetImage('assets/images/user.png')
@@ -385,7 +383,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                   
                     CategoryChip(
                       iconPath: "assets/images/tableau.jpeg",
                       text: "Tableaux",
@@ -483,7 +480,100 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 10),
             Consumer<Products>(
               builder: (context, productsProvider, child) {
+                /// Fonction pour convertir la date envoyée par Django en `DateTime` Dart
+                /// Fonction pour convertir la date ISO 8601 envoyée par Django en `DateTime`
+                DateTime? parseDjangoDate(String? djangoDate) {
+                  if (djangoDate == null || djangoDate.isEmpty) return null;
+                  try {
+                    // Assurez-vous que la date est dans un format compatible.
+                    return DateTime.parse(djangoDate).toLocal();
+                  } catch (e) {
+                    print(
+                        "❌ Erreur lors de la conversion de la date : $djangoDate");
+                    return null;
+                  }
+                }
+
+                final now = DateTime.now();
+                final sixDaysAgo =
+                    now.subtract(Duration(days: 6)); // 6 derniers jours
+
+// Affichage de la date actuelle et celle de 6 jours en arrière
+                print("📅 Date actuelle: $now");
+                print("📅 Date il y a 6 jours: $sixDaysAgo");
+
+                final thisWeekProducts = [
+                  ...productsProvider.products.where((product) {
+                    final productDate = parseDjangoDate(product['date']);
+                    if (productDate == null) {
+                      print(
+                          "🔴 Date invalide pour le produit: ${product['title']}");
+                      return false;
+                    }
+
+                    print(
+                        "✅ Produit trouvé : ${product['title']} avec la date $productDate");
+
+                    final productDateOnly = DateTime(
+                        productDate.year, productDate.month, productDate.day);
+                    print(
+                        "🕒 Comparaison de la date du produit: $productDateOnly");
+
+                    // Vérification si la date du produit est dans les 6 derniers jours
+                    if (productDateOnly.isAfter(sixDaysAgo) &&
+                        productDateOnly.isBefore(now)) {
+                      print("✅ Ce produit est dans les 6 derniers jours !");
+                      return true;
+                    } else {
+                      print(
+                          "❌ Ce produit n'est pas dans les 6 derniers jours.");
+                      return false;
+                    }
+                  }).map((product) => {
+                        'type': "Nouveauté",
+                        'subcategory': product['subcategory'] ?? 'Unknown',
+                        'imageUrl': (product['images'] != null &&
+                                product['images'].isNotEmpty)
+                            ? "${AppConfig.baseUrl}${product['images'][0]}"
+                            : 'assets/images/test1.png',
+                        'images': product['images'] ?? [],
+                        'productName': product['title'] ?? 'Unknown Product',
+                        'productPrice': "${product['price']}",
+                        'product_id': "${product['id']}",
+                        'description': product['description'] ?? '',
+                        'is_available': product['is_available'] ?? false,
+                        'category': product['category'] ?? 'Unknown',
+                        'taille': product['taille'],
+                        'pointure': product['pointure'],
+                        'brand': product['brand'],
+                        'selled': product["selled"],
+                        'type_pdp': product["type"],
+                        'owner_id': product["owner"]["id"],
+                        'is_favorite': product['is_favorite'],
+                        'owner_profile_pic':
+                            product["owner"]["profile_pic"] ?? "",
+                        'owner_username': product["owner"]["username"] ?? "",
+                        'owner_ratings': product["owner"]["ratings"] ?? "",
+                        'comments': (product['comments'] as List?)
+                                ?.map((comment) => {
+                                      'username':
+                                          comment['username'] ?? 'Unknown',
+                                      'avatar': comment['avatar'] ?? '',
+                                      'content': comment['content'] ?? '',
+                                      'created_at': comment['created_at'] ?? '',
+                                    })
+                                .toList() ??
+                            [],
+                      }),
+                ];
+
+                if (kDebugMode) {
+                  print(
+                    "📦 Produits filtrés pour les 6 derniers jours: ${thisWeekProducts.length}");
+                }
+
                 final allProducts = [
+                  ...thisWeekProducts,
                   ...productsProvider.productsView.map(
                     (product) => {
                       'type': "Récemment consulté",
@@ -495,7 +585,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       'images':
                           product['images'] ?? [], // Liste complète des images
                       'productName': product['title'] ?? 'Unknown Product',
-                      'productPrice': "${product['price']} TND".toString(),
+                      'productPrice': "${product['price']}".toString(),
                       'product_id': "${product['id']}",
                       'description': product['description'] ?? '',
                       'is_available': product['is_available'] ?? false,
@@ -534,7 +624,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       'images':
                           product['images'] ?? [], // Liste complète des images
                       'productName': product['title'] ?? 'Unknown Product',
-                      'productPrice': "${product['price']} TND".toString(),
+                      'productPrice': "${product['price']}".toString(),
                       'product_id': "${product['id']}",
                       'description': product['description'] ?? '',
                       'is_available': product['is_available'] ?? false,
@@ -574,7 +664,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       'images':
                           product['images'] ?? [], // Liste complète des images
                       'productName': product['title'] ?? 'Unknown Product',
-                      'productPrice': "${product['price']} TND".toString(),
+                      'productPrice': "${product['price']}".toString(),
                       'product_id': "${product['id']}",
                       'description': product['description'] ?? '',
                       'is_available': product['is_available'] ?? false,
