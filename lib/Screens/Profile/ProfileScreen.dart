@@ -219,7 +219,7 @@ class _ProfileMainState extends State<ProfileMain> {
                 _buildTab("Articles", index: 0, icon: "assets/Icons/item.svg"),
                 _buildTab("Évaluations",
                     index: 1, icon: "assets/Icons/rating.svg"),
-                _buildTab("À propos", index: 2, icon: "assets/Icons/about.svg"),
+                _buildTab("Vendu", index: 2, icon: "assets/Icons/selled.svg"),
               ],
             ),
             const SizedBox(height: 8),
@@ -1204,87 +1204,387 @@ class _ProfileMainState extends State<ProfileMain> {
 
   // Contenu pour l'onglet "About"
   Widget _buildAboutTab() {
-    return Align(
-      alignment: Alignment.topLeft, // Aligner le contenu en haut à gauche
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: 16,
-          ),
-          Text(
-            'Contacts',
-            style: TextStyle(
-              //color: Colors.black,
-              fontSize: 14,
-              fontFamily: 'Raleway',
-              fontWeight: FontWeight.w500,
-              letterSpacing: -0.14,
+    final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
+    return Consumer<Products>(
+      builder: (context, provider, child) {
+        final products = widget.id == null
+            ? provider.productsSelledByUser
+            : provider.productsSelledByUserVisited;
+
+        if (products.isEmpty) {
+          return Center(
+            child: Text(
+              'Aucun produit disponible.',
+              style: TextStyle(
+                fontSize: 30,
+                fontFamily: 'Raleway',
+                fontWeight: FontWeight.w500,
+              ),
             ),
+          );
+        }
+
+        return GridView.builder(
+          itemCount: products.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 8,
+            mainAxisSpacing: 8,
+            childAspectRatio: 0.8,
           ),
-          SizedBox(
-            height: 8,
-          ),
-          Text(
-            widget.id == null
-                ? Provider.of<AuthService>(context, listen: false)
-                        .currentUser
-                        ?.address ??
-                    ''
-                : Provider.of<Profileprovider>(context, listen: false)
-                        .visitedProfile
-                        ?.address ??
-                    '',
-            style: TextStyle(
-              //color: Colors.black,
-              fontSize: 13,
-              fontFamily: 'Raleway',
-              fontWeight: FontWeight.w400,
-              height: 1.54,
-              letterSpacing: -0.13,
-            ),
-          ),
-          SizedBox(
-            height: 8,
-          ),
-          Text(
-            widget.id == null
-                ? "+216 ${Provider.of<AuthService>(context, listen: false).currentUser?.phoneNumber ?? ''}"
-                : "+216 ${Provider.of<Profileprovider>(context, listen: false).visitedProfile?.phoneNumber ?? ''}",
-            style: TextStyle(
-              // color: Colors.black,
-              fontSize: 13,
-              fontFamily: 'Raleway',
-              fontWeight: FontWeight.w400,
-              height: 1.54,
-              letterSpacing: -0.13,
-            ),
-          ),
-          SizedBox(
-            height: 8,
-          ),
-          Text(
-            widget.id == null
-                ? Provider.of<AuthService>(context, listen: false)
-                        .currentUser
-                        ?.email ??
-                    ''
-                : Provider.of<Profileprovider>(context, listen: false)
-                        .visitedProfile
-                        ?.email ??
-                    '',
-            style: TextStyle(
-              //color: Colors.black,
-              fontSize: 13,
-              fontFamily: 'Raleway',
-              fontWeight: FontWeight.w400,
-              height: 1.54,
-              letterSpacing: -0.13,
-            ),
-          )
-        ],
-      ),
+          itemBuilder: (context, index) {
+            final product = products[index];
+            final imageUrl = product['images']?.isNotEmpty == true
+                ? "${AppConfig.baseUrl}/${product['images'][0]}"
+                : 'assets/images/test1.png';
+
+            return GestureDetector(
+              onTap: widget.id == null
+                  ? null
+                  : () {
+                      final productData = {
+                        'type': 'Pour vous',
+                        'category': product['category'] ?? 'Unknown',
+                        'subcategory': product['subcategory'] ?? 'Unknown',
+                        'imageUrl': imageUrl,
+                        'images': product['images'] ?? [],
+                        'productName': product['title'] ?? 'Unknown Product',
+                        'productPrice': "${product['price']} TND",
+                        'product_id': "${product['id']}",
+                        'description': product['description'] ?? '',
+                        'is_available': product['is_available'] ?? false,
+                        'taille': product['taille'],
+                        'is_favorite': product['is_favorite'] ?? false,
+                        'pointure': product['pointure'],
+                        'selled': product['selled'],
+                        'brand': product['brand'],
+                        'owner_id': widget.id,
+                        'type_pdp': product['type'],
+                        'owner_profile_pic':
+                            product['owner']?['profile_pic'] ?? "",
+                        'owner_username': product['owner']?['username'] ?? "",
+                        'owner_ratings': product['owner']?['ratings'] ?? "",
+                        'comments': (product['comments'] as List<dynamic>?)
+                                ?.map((comment) => {
+                                      'username':
+                                          comment['username'] ?? 'Unknown',
+                                      'avatar': comment['avatar'] ?? '',
+                                      'content': comment['content'] ?? '',
+                                      'created_at': comment['created_at'] ?? '',
+                                    })
+                                .toList() ??
+                            [],
+                      };
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ItemDetails(product: productData),
+                        ),
+                      );
+                    },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Stack(
+                    children: [
+                      ProductCard(
+                        imageUrl: imageUrl,
+                        productName: product['title'] ?? '',
+                        productPrice: '${product['price']} TND',
+                      ),
+                      if (product['selled'] == true)
+                        Positioned.fill(
+                          child: Center(
+                            child: Transform.rotate(
+                              angle: -0.1,
+                              child: Container(
+                                height: 40,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.red.withOpacity(0.7),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                alignment: Alignment.center,
+                                child: const Text(
+                                  'Vendu',
+                                  style: TextStyle(
+                                    fontFamily: "Raleway",
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      if (widget.id == null)
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: GestureDetector(
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                builder: (context) {
+                                  return Container(
+                                    padding: const EdgeInsets.all(16.0),
+                                    height: 200, // Hauteur ajustée
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            Provider.of<Products>(context,
+                                                    listen: false)
+                                                .updateProductSelled(
+                                                    product['id'],
+                                                    !(product['selled'] ??
+                                                        false));
+                                            Provider.of<Products>(context,
+                                                    listen: false)
+                                                .getProducts();
+                                            Provider.of<Products>(context,
+                                                    listen: false)
+                                                .getProductsViewed();
+                                            product['selled'] =
+                                                !(product['selled'] ?? false);
+                                          },
+                                          child: Text(
+                                            product['selled'] == true
+                                                ? "Marquer comme disponible"
+                                                : "Marquer comme vendu",
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontFamily: 'Raleway',
+                                              fontWeight: FontWeight.w700,
+                                              height: 2,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 20),
+                                        InkWell(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    SellProductScreen(
+                                                  product: product,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "Modifier l'article",
+                                                style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontFamily: 'Raleway',
+                                                  fontWeight: FontWeight.w700,
+                                                  height: 2,
+                                                ),
+                                              ),
+                                              const Spacer(),
+                                              SvgPicture.asset(
+                                                "assets/Icons/edit.svg",
+                                                color: theme
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                                width: 30,
+                                                height: 30,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(height: 20),
+                                        InkWell(
+                                          onTap: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Text(
+                                                    'Confirmation',
+                                                    style: TextStyle(
+                                                      //color: Colors.black,
+                                                      fontSize: 14,
+                                                      fontFamily: 'Raleway',
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      height: 1.43,
+                                                      letterSpacing: 0.10,
+                                                    ),
+                                                  ),
+                                                  content: Text(
+                                                    'Êtes-vous sûr de vouloir supprimer cette article ? ',
+                                                    style: TextStyle(
+                                                      //color: Colors.black,
+                                                      fontSize: 14,
+                                                      fontFamily: 'Raleway',
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      height: 1.43,
+                                                      letterSpacing: 0.10,
+                                                    ),
+                                                  ),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop(); // Ferme le dialog
+                                                      },
+                                                      child: Text(
+                                                        'Annuler',
+                                                        style: TextStyle(
+                                                          //color: Colors.black,
+                                                          fontSize: 14,
+                                                          fontFamily: 'Raleway',
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          height: 1.43,
+                                                          letterSpacing: 0.10,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    TextButton(
+                                                      onPressed: () async {
+                                                        bool deleted = await Provider
+                                                                .of<Products>(
+                                                                    context,
+                                                                    listen:
+                                                                        false)
+                                                            .deleteProduct(
+                                                                product["id"],
+                                                                Provider.of<AuthService>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .currentUser!
+                                                                    .id);
+                                                        if (deleted) {
+                                                          Navigator.pop(
+                                                              context);
+                                                          setState(() {});
+                                                        }
+                                                      },
+                                                      child: Container(
+                                                        width: 110,
+                                                        height: 40,
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                horizontal: 24,
+                                                                vertical: 10),
+                                                        decoration:
+                                                            ShapeDecoration(
+                                                          color:
+                                                              Color(0xFFEA4335),
+                                                          shape: RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8)),
+                                                        ),
+                                                        child: Row(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Text(
+                                                              'Supprimer',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 12,
+                                                                fontFamily:
+                                                                    'Raleway',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                height: 1.43,
+                                                                letterSpacing:
+                                                                    0.10,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          },
+                                          child: Text(
+                                            'Supprimer',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: Colors.red,
+                                              fontSize: 20,
+                                              fontFamily: 'Raleway',
+                                              fontWeight: FontWeight.w700,
+                                              height: 1.43,
+                                              letterSpacing: 0.10,
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                            child: const Icon(
+                              Icons.arrow_drop_down,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  if (product['validated'] == false)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFCF1D0),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: const Text(
+                          "En attente d'approbation",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 10,
+                            fontFamily: 'Raleway',
+                            fontWeight: FontWeight.w400,
+                            height: 2,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

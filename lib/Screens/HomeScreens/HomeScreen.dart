@@ -50,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
         userId:
             Provider.of<AuthService>(context, listen: false).currentUser!.id);
     Provider.of<Products>(context, listen: false).getProductsByUser();
+     Provider.of<Products>(context, listen: false).getProductsSelledByUser();
     Provider.of<Products>(context, listen: false).getFavourite(
         Provider.of<AuthService>(context, listen: false).currentUser!.id);
     Provider.of<Products>(context, listen: false).getFollowers(

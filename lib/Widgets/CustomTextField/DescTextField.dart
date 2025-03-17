@@ -66,6 +66,7 @@ class _DescTextFieldState extends State<DescTextField> {
               ),
             ),
             child: TextFormField(
+              maxLines: 5,
               onSaved: widget.onSaved,
               controller: widget.controller,
               obscureText: widget.isPassword ? _obscureText : false,

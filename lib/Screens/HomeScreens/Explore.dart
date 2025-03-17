@@ -323,6 +323,9 @@ class _ExploreState extends State<Explore> {
                               .fetchProfile(member["id"]);
                           await Provider.of<Products>(context, listen: false)
                               .getProductsByUserVisited(member["id"]);
+
+                            await Provider.of<Products>(context, listen: false)
+                              .getProductsSelledByUserVisited(member["id"]);
                           await Provider.of<Products>(context, listen: false)
                               .getRatingByRatedUserVisited(
                             userId: member["id"],

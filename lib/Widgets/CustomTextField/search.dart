@@ -100,13 +100,20 @@ class _SearchBarFState extends State<SearchBarF> {
                         _isTouched = true;
                       });
                     },
-                    decoration: InputDecoration(
-                      prefixIcon: SizedBox(
-                        height: 5,width: 5,
-                        child: SvgPicture.asset("assets/Icons/Search.svg", height: 5,width: 5,)),
+                   decoration: InputDecoration(
+                      prefixIcon: Container(
+                        padding: EdgeInsets.all(
+                            8), // Vous pouvez réduire la marge ici
+                        child: SvgPicture.asset(
+                          "assets/Icons/Search.svg",
+                          height:
+                              20, // Ajuster la taille à ce que vous souhaitez
+                          width:
+                              20, // Assurez-vous que la largeur et la hauteur sont réduites
+                        ),
+                      ),
                       labelText: widget.label,
                       labelStyle: const TextStyle(
-                        
                         fontSize: 16,
                         fontFamily: 'Raleway',
                         fontWeight: FontWeight.w400,

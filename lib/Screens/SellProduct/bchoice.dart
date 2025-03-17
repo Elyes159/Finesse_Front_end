@@ -65,34 +65,63 @@ class _BChoiceState extends State<BChoice> {
               label: "Vétements",
               image: true,
               pathImageHorsmenu: "assets/images/vt.jpeg",
-              options: const [
-                {"TOUTV": "Tout les vétements"},
-                //{"BB": "Vêtements Bébé"},
-                {"EX": "Vêtements d'exterieur"},
-                //{"RO": "Robe"},
-                //{"CAF": "Caftan"},
-                {"T-S": "T-Shirt"},
-                {"PU": "Pull"},
-                {"CH": "Chemise"},
-                {"GI": "Gilet"},
-                {"VE": "Veste"},
-                {"MAN": "Manteau"},
-                //{"TR": "Trench"},
-                {"PAN": "Pantalon"},
-                {"PAC": "Pantacourt"},
-                {"SH": "Short"},
-                //{"SALO": "Salopette"},
-                // {"JU": "Jupe"},
-                {"MAI": "Maillot"},
-                //{"LIN": "Lingerie"},
-                {"PY": "Pyjamas"},
-                //{"KIM": "Kimono"},
-                //{"COM": "Combinaison"},
-                //{"SARI": "Sari"},
-                {"ENS": "Ensemble"},
-                {"S-V": "sous vêtements"},
-                {"COS": "Costumes"},
-              ],
+              options: widget.isExplore == true
+                  ? const [
+                      {"TOUTV": "Tout les vétements"},
+                      //{"BB": "Vêtements Bébé"},
+                      {"EX": "Vêtements d'exterieur"},
+                      //{"RO": "Robe"},
+                      //{"CAF": "Caftan"},
+                      {"T-S": "T-Shirt"},
+                      {"PU": "Pull"},
+                      {"CH": "Chemise"},
+                      {"GI": "Gilet"},
+                      {"VE": "Veste"},
+                      {"MAN": "Manteau"},
+                      //{"TR": "Trench"},
+                      {"PAN": "Pantalon"},
+                      {"PAC": "Pantacourt"},
+                      {"SH": "Short"},
+                      //{"SALO": "Salopette"},
+                      // {"JU": "Jupe"},
+                      {"MAI": "Maillot"},
+                      //{"LIN": "Lingerie"},
+                      {"PY": "Pyjamas"},
+                      //{"KIM": "Kimono"},
+                      //{"COM": "Combinaison"},
+                      //{"SARI": "Sari"},
+                      {"ENS": "Ensemble"},
+                      {"S-V": "sous vêtements"},
+                      {"COS": "Costumes"},
+                    ]
+                  : const [
+                      //{"BB": "Vêtements Bébé"},
+                      {"EX": "Vêtements d'exterieur"},
+                      //{"RO": "Robe"},
+                      //{"CAF": "Caftan"},
+                      {"T-S": "T-Shirt"},
+                      {"PU": "Pull"},
+                      {"CH": "Chemise"},
+                      {"GI": "Gilet"},
+                      {"VE": "Veste"},
+                      {"MAN": "Manteau"},
+                      //{"TR": "Trench"},
+                      {"PAN": "Pantalon"},
+                      {"PAC": "Pantacourt"},
+                      {"SH": "Short"},
+                      //{"SALO": "Salopette"},
+                      // {"JU": "Jupe"},
+                      {"MAI": "Maillot"},
+                      //{"LIN": "Lingerie"},
+                      {"PY": "Pyjamas"},
+                      //{"KIM": "Kimono"},
+                      //{"COM": "Combinaison"},
+                      //{"SARI": "Sari"},
+                      {"ENS": "Ensemble"},
+                      {"S-V": "sous vêtements"},
+                      {"COS": "Costumes"},
+                      {"TOUTV": "autres"},
+                    ],
               onChanged: (selectedKey) {
                 setState(() {
                   for_field = getSelectedValue([
@@ -136,23 +165,41 @@ class _BChoiceState extends State<BChoice> {
               label: "Chaussures",
               image: true,
               pathImageHorsmenu: "assets/images/ch.jpeg",
-              options: const [
-                {"TOUTC": "Tout les chaussures"},
-                {"BO": "Bottes"},
-                //{"BOTI": "Bottines"},
-                //{"ESC": "Escarpins"},
-                {"COMP": "Compensés"},
-                {"SA": "Sandales"},
-                {"BAS": "Baskets"},
-                {"ESP": "Espadrilles"},
-                //{"S-O": "Slip-on"},
-                //{"BALL": "Ballerines"},
-                //{"MU": "Mules"},
-                //{"DER": "Derbies"},
-                //{"BB": "Bébé"},
-                {"CHAUSS": "Chaussons"},
-                {"MO": "Mocassins"},
-              ],
+              options: widget.isExplore == true
+                  ? const [
+                      {"TOUTC": "Tout les chaussures"},
+                      {"BO": "Bottes"},
+                      //{"BOTI": "Bottines"},
+                      //{"ESC": "Escarpins"},
+                      {"COMP": "Compensés"},
+                      {"SA": "Sandales"},
+                      {"BAS": "Baskets"},
+                      {"ESP": "Espadrilles"},
+                      //{"S-O": "Slip-on"},
+                      //{"BALL": "Ballerines"},
+                      //{"MU": "Mules"},
+                      //{"DER": "Derbies"},
+                      //{"BB": "Bébé"},
+                      {"CHAUSS": "Chaussons"},
+                      {"MO": "Mocassins"},
+                    ]
+                  : const [
+                      //{"TOUTC": "Tout les chaussures"},
+                      {"BO": "Bottes"},
+                      //{"BOTI": "Bottines"},
+                      //{"ESC": "Escarpins"},
+                      {"COMP": "Compensés"},
+                      {"SA": "Sandales"},
+                      {"BAS": "Baskets"},
+                      {"ESP": "Espadrilles"},
+                      //{"S-O": "Slip-on"},
+                      //{"BALL": "Ballerines"},
+                      //{"MU": "Mules"},
+                      //{"DER": "Derbies"},
+                      //{"BB": "Bébé"},
+                      {"CHAUSS": "Chaussons"},
+                      {"TOUTC": "autres"},
+                    ],
               onChanged: (selectedKey) {
                 setState(() {
                   for_field = getSelectedValue([
@@ -185,20 +232,35 @@ class _BChoiceState extends State<BChoice> {
               label: "Sacs",
               image: true,
               pathImageHorsmenu: "assets/images/sacs.jpeg",
-              options: const [
-                {"TOUTS": "Tout les sacs"},
-                //{"SM": "Sac à main"},
-                //{"BAND": "Sac à bandoulière"},
-                //{"P": "Pochette"},
-                {"SD": "Sac à dos"},
-                //{"COU": "Couffin"},
-                {"PORT": "Portefeuille"},
-                {"PORTM": "Porte-monnaie"},
-                {"CA": "Cartable"},
-                //{"BB": "Sac bébé"},
-                //{"EC": "Étui à crayon"},
-                {"SS": "Sac de sport"},
-              ],
+              options: widget.isExplore == true
+                  ? const [
+                      {"TOUTS": "Tout les sacs"},
+                      //{"SM": "Sac à main"},
+                      //{"BAND": "Sac à bandoulière"},
+                      //{"P": "Pochette"},
+                      {"SD": "Sac à dos"},
+                      //{"COU": "Couffin"},
+                      {"PORT": "Portefeuille"},
+                      {"PORTM": "Porte-monnaie"},
+                      {"CA": "Cartable"},
+                      //{"BB": "Sac bébé"},
+                      //{"EC": "Étui à crayon"},
+                      {"SS": "Sac de sport"},
+                    ]
+                  : const [
+                      //{"SM": "Sac à main"},
+                      //{"BAND": "Sac à bandoulière"},
+                      //{"P": "Pochette"},
+                      {"SD": "Sac à dos"},
+                      //{"COU": "Couffin"},
+                      {"PORT": "Portefeuille"},
+                      {"PORTM": "Porte-monnaie"},
+                      {"CA": "Cartable"},
+                      //{"BB": "Sac bébé"},
+                      //{"EC": "Étui à crayon"},
+                      {"SS": "Sac de sport"},
+                      {"TOUTS": "autres"},
+                    ],
               onChanged: (selectedKey) {
                 setState(() {
                   for_field = getSelectedValue([
@@ -228,22 +290,39 @@ class _BChoiceState extends State<BChoice> {
               label: "Accessoires",
               image: true,
               pathImageHorsmenu: "assets/images/acc.jpeg",
-              options: const [
-                {"TOUTA": "Tout les accessoires"},
-                {"LU": "Lunette"},
-                {"CE": "Ceinture"},
-                //{"CHE": "Accessoires pour cheveux"},
-                //{"CO": "Collant"},
-                //{"CHAUSS": "Chaussette"},
-                {"CHAP": "Chapeau"},
-                {"BONN": "Bonnet"},
-                {"ECH": "Écharpe"},
-                //{"FOU": "Foulard"},
-                //{"BI": "Bijoux"},
-                {"CR": "Cravate"},
-                {"PAP": "Nœud de papillon"},
-                {"MONTRE": "MONTRE"}
-              ],
+              options: widget.isExplore == true
+                  ? const [
+                      {"TOUTA": "Tout les accessoires"},
+                      {"LU": "Lunette"},
+                      {"CE": "Ceinture"},
+                      //{"CHE": "Accessoires pour cheveux"},
+                      //{"CO": "Collant"},
+                      //{"CHAUSS": "Chaussette"},
+                      {"CHAP": "Chapeau"},
+                      {"BONN": "Bonnet"},
+                      {"ECH": "Écharpe"},
+                      //{"FOU": "Foulard"},
+                      //{"BI": "Bijoux"},
+                      {"CR": "Cravate"},
+                      {"PAP": "Nœud de papillon"},
+                      {"MONTRE": "MONTRE"}
+                    ]
+                  : const [
+                      {"LU": "Lunette"},
+                      {"CE": "Ceinture"},
+                      //{"CHE": "Accessoires pour cheveux"},
+                      //{"CO": "Collant"},
+                      //{"CHAUSS": "Chaussette"},
+                      {"CHAP": "Chapeau"},
+                      {"BONN": "Bonnet"},
+                      {"ECH": "Écharpe"},
+                      //{"FOU": "Foulard"},
+                      //{"BI": "Bijoux"},
+                      {"CR": "Cravate"},
+                      {"PAP": "Nœud de papillon"},
+                      {"MONTRE": "MONTRE"},
+                      {"TOUTA": "autres"}
+                    ],
               onChanged: (selectedKey) {
                 print("onChanged déclenché avec : $selectedKey");
                 setState(() {
@@ -313,33 +392,61 @@ class _BChoiceState extends State<BChoice> {
               label: "Vétements",
               image: true,
               pathImageHorsmenu: "assets/images/vt.jpeg",
-              options: const [
-                {"TOUTV": "Tout les vétements"},
-                {"EX": "Vêtements d'exterieur"},
-                {"RO": "Robe"},
-                {"CAF": "Caftan"},
-                {"T-S": "T-Shirt"},
-                {"PU": "Pull"},
-                {"CH": "Chemise"},
-                {"GI": "Gilet"},
-                {"VE": "Veste"},
-                {"MAN": "Manteau"},
-                {"TR": "Trench"},
-                {"PAN": "Pantalon"},
-                {"PAC": "Pantacourt"},
-                {"SH": "Short"},
-                {"SALO": "Salopette"},
-                {"JU": "Jupe"},
-                {"MAI": "Maillot"},
-                {"LIN": "Lingerie"},
-                {"PY": "Pyjamas"},
-                {"KIM": "Kimono"},
-                {"COM": "Combinaison"},
-                {"SARI": "Sari"},
-                {"ENS": "Ensemble"},
-                {"S-V": "sous vêtements"},
-                {"COS": "Costumes"},
-              ],
+              options: widget.isExplore == true
+                  ? const [
+                      {"TOUTV": "Tout les vétements"},
+                      {"EX": "Vêtements d'exterieur"},
+                      {"RO": "Robe"},
+                      {"CAF": "Caftan"},
+                      {"T-S": "T-Shirt"},
+                      {"PU": "Pull"},
+                      {"CH": "Chemise"},
+                      {"GI": "Gilet"},
+                      {"VE": "Veste"},
+                      {"MAN": "Manteau"},
+                      {"TR": "Trench"},
+                      {"PAN": "Pantalon"},
+                      {"PAC": "Pantacourt"},
+                      {"SH": "Short"},
+                      {"SALO": "Salopette"},
+                      {"JU": "Jupe"},
+                      {"MAI": "Maillot"},
+                      {"LIN": "Lingerie"},
+                      {"PY": "Pyjamas"},
+                      {"KIM": "Kimono"},
+                      {"COM": "Combinaison"},
+                      {"SARI": "Sari"},
+                      {"ENS": "Ensemble"},
+                      {"S-V": "sous vêtements"},
+                      {"COS": "Costumes"},
+                    ]
+                  : const [
+                      {"EX": "Vêtements d'exterieur"},
+                      {"RO": "Robe"},
+                      {"CAF": "Caftan"},
+                      {"T-S": "T-Shirt"},
+                      {"PU": "Pull"},
+                      {"CH": "Chemise"},
+                      {"GI": "Gilet"},
+                      {"VE": "Veste"},
+                      {"MAN": "Manteau"},
+                      {"TR": "Trench"},
+                      {"PAN": "Pantalon"},
+                      {"PAC": "Pantacourt"},
+                      {"SH": "Short"},
+                      {"SALO": "Salopette"},
+                      {"JU": "Jupe"},
+                      {"MAI": "Maillot"},
+                      {"LIN": "Lingerie"},
+                      {"PY": "Pyjamas"},
+                      {"KIM": "Kimono"},
+                      {"COM": "Combinaison"},
+                      {"SARI": "Sari"},
+                      {"ENS": "Ensemble"},
+                      {"S-V": "sous vêtements"},
+                      {"COS": "Costumes"},
+                      {"TOUTV": "autres"},
+                    ],
               onChanged: (selectedKey) {
                 setState(() {
                   for_field = getSelectedValue([
@@ -383,17 +490,29 @@ class _BChoiceState extends State<BChoice> {
               label: "Produits de beauté",
               image: true,
               pathImageHorsmenu: "assets/images/pb.jpeg",
-              options: const [
-                {"TOUTPB": "Tout les produits de beauté"},
-                {"PF": "Parfum"},
-                {"SV": "Soins visage"},
-                {"SC": "Soins corps"},
-                {"SCH": "Soins cheveux"},
-                {"SM": "Soins mains"},
-                {"DOU": "Douche"},
-                {"MAQUI": "Maquillage"},
-                {"VER": "Vernis"},
-              ],
+              options: widget.isExplore == true
+                  ? const [
+                      {"TOUTPB": "Tout les produits de beauté"},
+                      {"PF": "Parfum"},
+                      {"SV": "Soins visage"},
+                      {"SC": "Soins corps"},
+                      {"SCH": "Soins cheveux"},
+                      {"SM": "Soins mains"},
+                      {"DOU": "Douche"},
+                      {"MAQUI": "Maquillage"},
+                      {"VER": "Vernis"},
+                    ]
+                  : const [
+                      {"PF": "Parfum"},
+                      {"SV": "Soins visage"},
+                      {"SC": "Soins corps"},
+                      {"SCH": "Soins cheveux"},
+                      {"SM": "Soins mains"},
+                      {"DOU": "Douche"},
+                      {"MAQUI": "Maquillage"},
+                      {"VER": "Vernis"},
+                      {"TOUTPB": "autres"},
+                    ],
               onChanged: (selectedKey) {
                 setState(() {
                   for_field = getSelectedValue([
@@ -420,7 +539,7 @@ class _BChoiceState extends State<BChoice> {
               label: "Bijoux",
               image: true,
               pathImageHorsmenu: "assets/images/bj.jpeg",
-              options: const [
+              options: widget.isExplore ==true ? const [
                 {"TOUTB": "Tout les bijoux"},
                 {"C": "Collier"},
                 {"B": "Bracelet"},
@@ -429,6 +548,16 @@ class _BChoiceState extends State<BChoice> {
                 {"MO": "Montre"},
                 {"PAR": "Parure"},
                 {"PIER": "Piercing"},
+              ]:const [
+                
+                {"C": "Collier"},
+                {"B": "Bracelet"},
+                {"BO": "Boucles d'oreilles"},
+                {"BAG": "Bague"},
+                {"MO": "Montre"},
+                {"PAR": "Parure"},
+                {"PIER": "Piercing"},
+                {"TOUTB": "autres"},
               ],
               onChanged: (selectedKey) {
                 setState(() {
@@ -455,7 +584,7 @@ class _BChoiceState extends State<BChoice> {
               label: "Chaussures",
               image: true,
               pathImageHorsmenu: "assets/images/ch.jpeg",
-              options: const [
+              options: widget.isExplore ==true ? const [
                 {"TOUTC": "Tout les chaussures"},
                 {"BO": "Bottes"},
                 {"BOTI": "Bottines"},
@@ -471,6 +600,23 @@ class _BChoiceState extends State<BChoice> {
                 //{"BB": "Bébé"},
                 {"CHAUSS": "Chaussons"},
                 //{"MO": "Mocassins"},
+              ]:const [
+                
+                {"BO": "Bottes"},
+                {"BOTI": "Bottines"},
+                {"ESC": "Escarpins"},
+                {"COMP": "Compensés"},
+                {"SA": "Sandales"},
+                {"BAS": "Baskets"},
+                {"ESP": "Espadrilles"},
+                {"S-O": "Slip-on"},
+                {"BALL": "Ballerines"},
+                {"MU": "Mules"},
+                {"DER": "Derbies"},
+                //{"BB": "Bébé"},
+                {"CHAUSS": "Chaussons"},
+                //{"MO": "Mocassins"},
+                {"TOUTC": "autres"},
               ],
               onChanged: (selectedKey) {
                 setState(() {
@@ -504,7 +650,7 @@ class _BChoiceState extends State<BChoice> {
               label: "Sacs",
               image: true,
               pathImageHorsmenu: "assets/images/sacs.jpeg",
-              options: const [
+              options: widget.isExplore ==true ? const [
                 {"TOUTS": "Tout les sacs"},
                 {"SM": "Sac à main"},
                 {"BAND": "Sac à bandoulière"},
@@ -517,6 +663,20 @@ class _BChoiceState extends State<BChoice> {
                 //{"BB": "Sac bébé"},
                 //{"EC": "Étui à crayon"},
                 {"SS": "Sac de sport"},
+              ] :const [
+                
+                {"SM": "Sac à main"},
+                {"BAND": "Sac à bandoulière"},
+                {"P": "Pochette"},
+                {"SD": "Sac à dos"},
+                {"COU": "Couffin"},
+                {"PORT": "Portefeuille"},
+                {"PORTM": "Porte-monnaie"},
+                {"CA": "Cartable"},
+                //{"BB": "Sac bébé"},
+                //{"EC": "Étui à crayon"},
+                {"SS": "Sac de sport"},
+                {"TOUTS": "autres"},
               ],
               onChanged: (selectedKey) {
                 setState(() {
@@ -545,7 +705,7 @@ class _BChoiceState extends State<BChoice> {
               label: "Accessoires",
               image: true,
               pathImageHorsmenu: "assets/images/acc.jpeg",
-              options: const [
+              options: widget.isExplore==true? const [
                 {"TOUTA": "Tout les accesoires"},
                 {"LU": "Lunette"},
                 {"CE": "Ceinture"},
@@ -560,7 +720,22 @@ class _BChoiceState extends State<BChoice> {
                 {"MONTRE": "MONTRE"}
                 //{"CR": "Cravate"},
                 //{"PAP": "Nœud de papillon"},
-              ],
+              ] :const [
+                {"LU": "Lunette"},
+                {"CE": "Ceinture"},
+                {"CHE": "Accessoires pour cheveux"},
+                {"CO": "Collant"},
+                {"CHAUSS": "Chaussette"},
+                {"CHAP": "Chapeau"},
+                {"BONN": "Bonnet"},
+                {"ECH": "Écharpe"},
+                {"FOU": "Foulard"},
+                {"BI": "Bijoux"},
+                {"MONTRE": "MONTRE"},
+                {"TOUTA": "autres"},
+                //{"CR": "Cravate"},
+                //{"PAP": "Nœud de papillon"},
+              ] ,
               onChanged: (selectedKey) {
                 setState(() {
                   for_field = getSelectedValue([
@@ -627,7 +802,7 @@ class _BChoiceState extends State<BChoice> {
               label: "Vétements",
               image: true,
               pathImageHorsmenu: "assets/images/vt.jpeg",
-              options: const [
+              options: widget.isExplore ==true ? const [
                 {"TOUTV": "Tout les vétements"},
                 {"BB": "Vêtements Bébé"},
                 {"EX": "Vêtements d'exterieur"},
@@ -653,6 +828,34 @@ class _BChoiceState extends State<BChoice> {
                 {"SARI": "Sari"},
                 {"ENS": "Ensemble"},
                 {"S-V": "sous vêtements"},
+                //{"COS": "Costumes"},
+              ]:const [
+                
+                {"BB": "Vêtements Bébé"},
+                {"EX": "Vêtements d'exterieur"},
+                {"RO": "Robe"},
+                {"CAF": "Caftan"},
+                {"T-S": "T-Shirt"},
+                {"PU": "Pull"},
+                //{"CH": "Chemise"},
+                {"GI": "Gilet"},
+                {"VE": "Veste"},
+                {"MAN": "Manteau"},
+                {"TR": "Trench"},
+                {"PAN": "Pantalon"},
+                {"PAC": "Pantacourt"},
+                {"SH": "Short"},
+                {"SALO": "Salopette"},
+                {"JU": "Jupe"},
+                {"MAI": "Maillot"},
+                {"LIN": "Lingerie"},
+                {"PY": "Pyjamas"},
+                {"KIM": "Kimono"},
+                {"COM": "Combinaison"},
+                {"SARI": "Sari"},
+                {"ENS": "Ensemble"},
+                {"S-V": "sous vêtements"},
+                {"TOUTV": "autres"},
                 //{"COS": "Costumes"},
               ],
               onChanged: (selectedKey) {
@@ -697,7 +900,7 @@ class _BChoiceState extends State<BChoice> {
               label: "Chaussures",
               image: true,
               pathImageHorsmenu: "assets/images/ch.jpeg",
-              options: const [
+              options: widget.isExplore ==true ? const [
                 {"TOUTC": "Tout les chaussures"},
                 {"BO": "Bottes"},
                 {"BOTI": "Bottines"},
@@ -712,6 +915,22 @@ class _BChoiceState extends State<BChoice> {
                 {"DER": "Derbies"},
                 {"BB": "Bébé"},
                 {"CHAUSS": "Chaussons"},
+              ] : const [
+                
+                {"BO": "Bottes"},
+                {"BOTI": "Bottines"},
+                //{"ESC": "Escarpins"},
+                {"COMP": "Compensés"},
+                {"SA": "Sandales"},
+                {"BAS": "Baskets"},
+                {"ESP": "Espadrilles"},
+                {"S-O": "Slip-on"},
+                {"BALL": "Ballerines"},
+                {"MU": "Mules"},
+                {"DER": "Derbies"},
+                {"BB": "Bébé"},
+                {"CHAUSS": "Chaussons"},
+                {"TOUTC": "autres"},
               ],
               onChanged: (selectedKey) {
                 setState(() {
@@ -744,7 +963,7 @@ class _BChoiceState extends State<BChoice> {
               label: "Sacs",
               image: true,
               pathImageHorsmenu: "assets/images/sacs.jpeg",
-              options: const [
+              options: widget.isExplore ==true ? const [
                 {"TOUTS": "Tout les sacs"},
                 {"SM": "Sac à main"},
                 //{"BAND": "Sac à bandoulière"},
@@ -756,6 +975,20 @@ class _BChoiceState extends State<BChoice> {
                 {"CA": "Cartable"},
                 {"BB": "Sac bébé"},
                 {"EC": "Étui à crayon"},
+                //{"SS": "Sac de sport"},
+              ] :const [
+                
+                {"SM": "Sac à main"},
+                //{"BAND": "Sac à bandoulière"},
+                //{"P": "Pochette"},
+                {"SD": "Sac à dos"},
+                //{"COU": "Couffin"},
+                //{"PORT": "Portefeuille"},
+                //{"PORTM": "Porte-monnaie"},
+                {"CA": "Cartable"},
+                {"BB": "Sac bébé"},
+                {"EC": "Étui à crayon"},
+                {"TOUTS": "autres"},
                 //{"SS": "Sac de sport"},
               ],
               onChanged: (selectedKey) {
@@ -786,7 +1019,7 @@ class _BChoiceState extends State<BChoice> {
               label: "Accessoires",
               image: true,
               pathImageHorsmenu: "assets/images/acc.jpeg",
-              options: const [
+              options: widget.isExplore ==true? const [
                 {"TOUTA": "Tout les accessoires"},
                 {"LU": "Lunette"},
                 //{"CE": "Ceinture"},
@@ -797,6 +1030,20 @@ class _BChoiceState extends State<BChoice> {
                 {"ECH": "Écharpe"},
                 //{"FOU": "Foulard"},
                 {"BI": "Bijoux"},
+                //{"CR": "Cravate"},
+                //{"PAP": "Nœud de papillon"},
+              ] :const [
+                
+                {"LU": "Lunette"},
+                //{"CE": "Ceinture"},
+                {"CHE": "Accessoires pour cheveux"},
+                {"CO": "Collant"},
+                {"CHAUSS": "Chaussette"},
+                {"CHAP": "Chapeau"},
+                {"ECH": "Écharpe"},
+                //{"FOU": "Foulard"},
+                {"BI": "Bijoux"},
+                {"TOUTA": "autres"},
                 //{"CR": "Cravate"},
                 //{"PAP": "Nœud de papillon"},
               ],
@@ -831,7 +1078,7 @@ class _BChoiceState extends State<BChoice> {
               label: "Jouets",
               image: true,
               pathImageHorsmenu: "assets/images/jouets.jpeg",
-              options: const [
+              options: widget.isExplore == true ? const [
                 {"TOUTJ": "Tout les jouets"},
                 {"BA": "Ballons"},
                 {"DO": "Dominos"},
@@ -842,7 +1089,19 @@ class _BChoiceState extends State<BChoice> {
                 {"TRO": "Trottinettes"},
                 {"VHE": "Véhicules"},
                 {"POU": "Poupées"},
-              ],
+              ] :const [
+                
+                {"BA": "Ballons"},
+                {"DO": "Dominos"},
+                {"JE": "Jeux éducatifs"},
+                {"PA": "Patins"},
+                {"PE": "Peluches"},
+                {"PU": "Puzzles"},
+                {"TRO": "Trottinettes"},
+                {"VHE": "Véhicules"},
+                {"POU": "Poupées"},
+                {"TOUTJ": "autres"},
+              ] ,
               onChanged: (selectedKey) {
                 setState(() {
                   for_field = getSelectedValue([
@@ -903,7 +1162,7 @@ class _BChoiceState extends State<BChoice> {
               label: "Vétements",
               image: true,
               pathImageHorsmenu: "assets/images/vt.jpeg",
-              options: const [
+              options: widget.isExplore == true ? const [
                 {"TOUTV": "Tout les vétements"},
                 {"BB": "Vêtements Bébé"},
                 {"EX": "Vêtements d'exterieur"},
@@ -930,6 +1189,34 @@ class _BChoiceState extends State<BChoice> {
                 {"ENS": "Ensemble"},
                 {"S-V": "sous vêtements"},
                 {"COS": "Costumes"},
+              ]:const [
+                
+                {"BB": "Vêtements Bébé"},
+                {"EX": "Vêtements d'exterieur"},
+                //{"RO": "Robe"},
+                //{"CAF": "Caftan"},
+                {"T-S": "T-Shirt"},
+                {"PU": "Pull"},
+                {"CH": "Chemise"},
+                {"GI": "Gilet"},
+                {"VE": "Veste"},
+                {"MAN": "Manteau"},
+                //{"TR": "Trench"},
+                {"PAN": "Pantalon"},
+                {"PAC": "Pantacourt"},
+                {"SH": "Short"},
+                //{"SALO": "Salopette"},
+                // {"JU": "Jupe"},
+                {"MAI": "Maillot"},
+                //{"LIN": "Lingerie"},
+                {"PY": "Pyjamas"},
+                //{"KIM": "Kimono"},
+                //{"COM": "Combinaison"},
+                //{"SARI": "Sari"},
+                {"ENS": "Ensemble"},
+                {"S-V": "sous vêtements"},
+                {"COS": "Costumes"},
+                {"TOUTV": "autres"},
               ],
               onChanged: (selectedKey) {
                 setState(() {
@@ -974,7 +1261,7 @@ class _BChoiceState extends State<BChoice> {
               label: "Chaussures",
               image: true,
               pathImageHorsmenu: "assets/images/ch.jpeg",
-              options: const [
+              options: widget.isExplore ==true ? const [
                 {"TOUTC": "Tout les chaussures"},
                 {"BO": "Bottes"},
                 //{"BOTI": "Bottines"},
@@ -989,6 +1276,22 @@ class _BChoiceState extends State<BChoice> {
                 //{"DER": "Derbies"},
                 {"BB": "Bébé"},
                 {"CHAUSS": "Chaussons"},
+              ] : const [
+                
+                {"BO": "Bottes"},
+                //{"BOTI": "Bottines"},
+                //{"ESC": "Escarpins"},
+                {"COMP": "Compensés"},
+                {"SA": "Sandales"},
+                {"BAS": "Baskets"},
+                {"ESP": "Espadrilles"},
+                //{"S-O": "Slip-on"},
+                //{"BALL": "Ballerines"},
+                //{"MU": "Mules"},
+                //{"DER": "Derbies"},
+                {"BB": "Bébé"},
+                {"CHAUSS": "Chaussons"},
+                {"TOUTC": "autres"},
               ],
               onChanged: (selectedKey) {
                 setState(() {
@@ -1021,7 +1324,7 @@ class _BChoiceState extends State<BChoice> {
               label: "Sacs",
               image: true,
               pathImageHorsmenu: "assets/images/sacs.jpeg",
-              options: const [
+              options: widget.isExplore ==true ? const [
                 {"TOUTS": "Tout les sacs"},
                 {"SM": "Sac à main"},
                 //{"BAND": "Sac à bandoulière"},
@@ -1033,6 +1336,19 @@ class _BChoiceState extends State<BChoice> {
                 {"CA": "Cartable"},
                 {"BB": "Sac bébé"},
                 {"EC": "Étui à crayon"},
+              ] : const [
+                
+                {"SM": "Sac à main"},
+                //{"BAND": "Sac à bandoulière"},
+                //{"P": "Pochette"},
+                {"SD": "Sac à dos"},
+                //{"COU": "Couffin"},
+                //{"PORT": "Portefeuille"},
+                //{"PORTM": "Porte-monnaie"},
+                {"CA": "Cartable"},
+                {"BB": "Sac bébé"},
+                {"EC": "Étui à crayon"},
+                {"TOUTS": "autres"},
               ],
               onChanged: (selectedKey) {
                 setState(() {
@@ -1062,7 +1378,7 @@ class _BChoiceState extends State<BChoice> {
               label: "Accessoires",
               image: true,
               pathImageHorsmenu: "assets/images/acc.jpeg",
-              options: const [
+              options: widget.isExplore ==true? const [
                 {"TOUTA": "Tout les accessoires"},
                 {"LU": "Lunette"},
                 {"CE": "Ceinture"},
@@ -1076,7 +1392,22 @@ class _BChoiceState extends State<BChoice> {
                 {"CR": "Cravate"},
                 {"PAP": "Nœud de papillon"},
                 {"MONTRE": "Montres"},
-              ],
+              ] : const [
+                
+                {"LU": "Lunette"},
+                {"CE": "Ceinture"},
+                //{"CHE": "Accessoires pour cheveux"},
+                {"CO": "Collant"},
+                {"CHAUSS": "Chaussette"},
+                {"CHAP": "Chapeau"},
+                {"ECH": "Écharpe"},
+                //{"FOU": "Foulard"},
+                //{"BI": "Bijoux"},
+                {"CR": "Cravate"},
+                {"PAP": "Nœud de papillon"},
+                {"MONTRE": "Montres"},
+                {"TOUTA": "autres"},
+              ] ,
               onChanged: (selectedKey) {
                 setState(() {
                   for_field = getSelectedValue([
@@ -1111,7 +1442,7 @@ class _BChoiceState extends State<BChoice> {
               label: "Jouets",
               image: true,
               pathImageHorsmenu: "assets/images/jouets.jpeg",
-              options: const [
+              options: widget.isExplore ==true? const [
                 {"TOUTJ": "Tout les jouets"},
                 {"BA": "Ballons"},
                 {"DO": "Dominos"},
@@ -1121,6 +1452,18 @@ class _BChoiceState extends State<BChoice> {
                 {"PU": "Puzzles"},
                 {"TRO": "Trottinettes"},
                 {"VHE": "Véhicules"},
+                //{"POU": "Poupées"},
+              ]: const [
+                
+                {"BA": "Ballons"},
+                {"DO": "Dominos"},
+                {"JE": "Jeux éducatifs"},
+                //{"PA": "Patins"},
+                //{"PE": "Peluches"},
+                {"PU": "Puzzles"},
+                {"TRO": "Trottinettes"},
+                {"VHE": "Véhicules"},
+                {"TOUTJ": "autres"},
                 //{"POU": "Poupées"},
               ],
               onChanged: (selectedKey) {
@@ -1159,13 +1502,13 @@ class _BChoiceState extends State<BChoice> {
                     : () {
                         print(categorieForBackend);
                         if (widget.isExplore == true) {
-                         
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => Navigation(
-                                        category_for_field : "${widget.genderForFiled} - $for_field",
-                                         from_mv: categorieForBackend,
+                                        category_for_field:
+                                            "${widget.genderForFiled} - $for_field",
+                                        from_mv: categorieForBackend,
                                         onItemSelected: (int value) {},
                                         currentIndex: 1,
                                       )));
@@ -1179,12 +1522,13 @@ class _BChoiceState extends State<BChoice> {
                           //               categoryFromMv: categorieForBackend,
                           //             )));
 
-                           Navigator.pushReplacement(
+                          Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => Navigation(
-                                        category_for_field : "${widget.genderForFiled} - $for_field",
-                                         from_mv: categorieForBackend,
+                                        category_for_field:
+                                            "${widget.genderForFiled} - $for_field",
+                                        from_mv: categorieForBackend,
                                         onItemSelected: (int value) {},
                                         currentIndex: 2,
                                       )));

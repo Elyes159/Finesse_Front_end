@@ -40,6 +40,10 @@ class _ItemDetailsState extends State<ItemDetails> {
         .fetchProfile(widget.product["owner_id"]);
     Provider.of<Products>(context, listen: false)
         .getProductsByUserVisited(widget.product["owner_id"]);
+
+    Provider.of<Products>(context, listen: false)
+        .getProductsSelledByUserVisited(widget.product["owner_id"]);
+
     Provider.of<Products>(context, listen: false).getRatingByRatedUserVisited(
       userId: widget.product["owner_id"],
     );
@@ -330,14 +334,13 @@ class _ItemDetailsState extends State<ItemDetails> {
                                   productsProvider.createWish(
                                       productId: productId);
 
-                                  
                                   setState(() {
                                     productsProvider.getWish(
-                                    Provider.of<AuthService>(context,
-                                            listen: false)
-                                        .currentUser!
-                                        .id,
-                                  );
+                                      Provider.of<AuthService>(context,
+                                              listen: false)
+                                          .currentUser!
+                                          .id,
+                                    );
                                     isWished = true;
                                   });
                                 },

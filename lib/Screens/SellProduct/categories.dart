@@ -206,13 +206,20 @@ class _ChooseCategoryState extends State<ChooseCategory> {
               image: true,
               pathImageHorsmenu: "assets/images/ov.jpeg",
               label: "œuvres d’art",
-              options: const [
+              options: widget.isExplore ==true? const [
                 {"TOEU": "Toutes les œuvres "},
                 {"tableaux": "Tableaux "},
                 {"ARTGRAPH": "Arts graphiques"},
                 {"SCUL": "Sculptures "},
                 {"L": "Livres "},
-              ],
+              ] :const [
+                
+                {"tableaux": "Tableaux "},
+                {"ARTGRAPH": "Arts graphiques"},
+                {"SCUL": "Sculptures "},
+                {"L": "Livres "},
+                {"TOEU": "autres "},
+              ] ,
               onChanged: (selectedKey) {
                 setState(() {
                   CategoryForBackend = "OV";
@@ -243,7 +250,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
               image: true,
               pathImageHorsmenu: "assets/images/cra.jpeg",
               label: "Création Artisanale",
-              options: const [
+              options: widget.isExplore ==true ? const [
                 {"TCREA": "Toutes les créations "},
                 {"CERAPO": "Céramique et poterie "},
                 {"HAUCO": "Haute couture"},
@@ -251,6 +258,14 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                 {"BIJOUX": "Bijoux  "},
                 {"SACOU": "Sacs et couffin  "},
                 {"TAPI": "Tapis  "},
+              ] : const [
+                {"CERAPO": "Céramique et poterie "},
+                {"HAUCO": "Haute couture"},
+                {"MACRA": "Macramé  "},
+                {"BIJOUX": "Bijoux  "},
+                {"SACOU": "Sacs et couffin  "},
+                {"TAPI": "Tapis  "},
+                {"TCREA": "autres "},
               ],
               onChanged: (selectedKey) {
                 setState(() {
@@ -280,7 +295,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
               label: "Decoration",
               image: true,
               pathImageHorsmenu: "assets/images/deco.jpeg",
-              options: const [
+              options: widget.isExplore ==true? const [
                 {"TOUTD": "Toutes Decoration"},
                 {"DECOMU": "Décoration murale"},
                 {"PLVA": "Plantes, vases"},
@@ -290,6 +305,17 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                 {"BGS": "Bougies,senteurs"},
                 {"TAP": "Tapis"},
                 {"LINM": "Linge de maison"},
+              ] : const [
+                
+                {"DECOMU": "Décoration murale"},
+                {"PLVA": "Plantes, vases"},
+                {"LUMI": "Luminaires"},
+                {"OBDEC": "Objets déco "},
+                {"RAN": "Rangements"},
+                {"BGS": "Bougies,senteurs"},
+                {"TAP": "Tapis"},
+                {"LINM": "Linge de maison"},
+                {"TOUTD": "autres"},
               ],
               onChanged: (selectedKey) {
                 setState(() {
@@ -336,7 +362,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
               pathImageHorsmenu: "assets/images/livre.jpeg",
               label: "Livres",
              
-              options: widget.isExplore !=null && widget.isExplore ==true ? const [
+              options: widget.isExplore ==true ? const [
                  {"TOUTL": "Tout les livres"},
                 {"LLIT": "Littérature"},
                 {"LROM": "Romans"},
@@ -357,7 +383,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                 {"LDO": "Documentaire"},
                 {"LED": "Éducation"},
                 {"LBD": "Bande dessinée"},
-                {"autres": "autres"},
+                {"TOUTL": "autres"},
               ],
 
               onChanged: (selectedKey) {
@@ -394,7 +420,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
               image: true,
               pathImageHorsmenu: "assets/images/tableau.jpeg",
               label: "Sous catégorie de TABLEAUX",
-              options: const [
+              options: widget.isExplore ==true? const [
                 {"TPEIN": "Toutes les peintures"},
                 {"PH": "Peinture acrylique"},
                 {"AQ": "Aquarelles"},
@@ -406,6 +432,19 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                 {"ARTPORT": "Portrait "},
                 {"ARTIMPR": "impressionnisme "},
                 {"ARTURB": "Art urban "},
+              ]:const [
+               
+                {"PH": "Peinture acrylique"},
+                {"AQ": "Aquarelles"},
+                {"CUB": "Cubisme"},
+                {"ARTEXPR": "Expressionnisme"},
+                {"REAL": "Réalisme"},
+                {"ARTABS": "Art abstrait "},
+                {"ARTPOP": "Pop art"},
+                {"ARTPORT": "Portrait "},
+                {"ARTIMPR": "impressionnisme "},
+                {"ARTURB": "Art urban "},
+                 {"TPEIN": "autres"},
               ],
               onChanged: (selectedKey) {
                 setState(() {
@@ -439,13 +478,20 @@ class _ChooseCategoryState extends State<ChooseCategory> {
               image: true,
               pathImageHorsmenu: "assets/images/scul.jpeg",
               label: "Sous catégorie de SCULPTURES",
-              options: const [
+              options: widget.isExplore == true ? const [
                 {"SCULT": "Toutes les sculptures"},
                 {"SCULBR": "Bronzes"},
                 {"SCULMAR": "Sculptures en marbre"},
                 {"SCULPLA": "Sculptures en plâtre"},
                 {"SCULBOI": "Sculptures en bois"},
                 {"SCULTERRE": "Sculptures en terre cuite "},
+              ]:const [
+                {"SCULBR": "Bronzes"},
+                {"SCULMAR": "Sculptures en marbre"},
+                {"SCULPLA": "Sculptures en plâtre"},
+                {"SCULBOI": "Sculptures en bois"},
+                {"SCULTERRE": "Sculptures en terre cuite "},
+                {"SCULT": "autres"},
               ],
               onChanged: (selectedKey) {
                 setState(() {
@@ -474,12 +520,19 @@ class _ChooseCategoryState extends State<ChooseCategory> {
               image: true,
               pathImageHorsmenu: "assets/images/ag.jpeg",
               label: "Sous catégorie de art graphique",
-              options: const [
+              options: widget.isExplore ==true? const [
                 {"PHOTOGRAPH": "Photographies"},
                 {"AFFICH": "Affiches"},
                 {"STREET": "Street art, graffiti"},
                 {"AQUA": "Aquarelles"},
                 {"OEUPAP": "Œuvres sur papier"},
+              ]:const [
+                {"PHOTOGRAPH": "Photographies"},
+                {"AFFICH": "Affiches"},
+                {"STREET": "Street art, graffiti"},
+                {"AQUA": "Aquarelles"},
+                {"OEUPAP": "Œuvres sur papier"},
+                {"TOEU": "autres"},
               ],
               onChanged: (selectedKey) {
                 setState(() {
@@ -489,6 +542,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                     {"STREET": "Street art, graffiti"},
                     {"AQUA": "Aquarelles"},
                     {"OEUPAP": "Œuvres sur papier"},
+                    {"TOEU": "autres - art graphiques"},
                   ], selectedKey);
                   SubSubCategoryForBackend = SubCategoryForBackend;
                   SubSubCategoryForBackend =

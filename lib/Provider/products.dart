@@ -21,7 +21,10 @@ class Products extends ChangeNotifier {
   late List Ratings = [];
   late List RatingsVisited = [];
   late List productsByUser = [];
+  late List productsSelledByUser = [];
   late List productsByUserVisited = [];
+  late List productsSelledByUserVisited = [];
+
   double? avarageRate;
   int? countRate;
   late double ratingPercentage1 = 0;
@@ -84,6 +87,7 @@ class Products extends ChangeNotifier {
       String? pointure,
       String? etat,
       String? brand,
+      String? dimension,
       List<File?> images) async {
     // Vérification de la validité de l'ID utilisateur
     String? storedUserId = await storage.read(key: 'user_id');
@@ -104,6 +108,7 @@ class Products extends ChangeNotifier {
     request.fields['pointure'] = pointure ?? "0";
     request.fields['etat'] = etat ?? "";
     request.fields['brand'] = brand ?? "";
+    request.fields['dimension'] = dimension ?? "";
     request.fields['is_available'] = "true"; // Défini comme "true"
 
     // Ajouter les images à la requête
@@ -307,6 +312,61 @@ class Products extends ChangeNotifier {
             print(product["is_refused"]);
             print(product["validated"]);
           }
+          notifyListeners();
+        } else {
+          print('Aucun produit trouvé pour cet utilisateur.');
+        }
+      } else {
+        print(
+            'Erreur lors de la récupération des produits: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Erreur rencontrée : $e');
+    }
+  }
+
+  Future<void> getProductsSelledByUser() async {
+    try {
+      String? storedUserId = await storage.read(key: 'user_id');
+      final url = Uri.parse(
+          '${AppConfig.baseUrl}/api/products/getProductsSelledByUser/$storedUserId/');
+      final headers = {
+        'Content-Type': 'application/json',
+      };
+      final response = await http.get(url, headers: headers);
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['products'] != null) {
+          productsSelledByUser = data['products'];
+          print(productsSelledByUser);
+
+          notifyListeners();
+        } else {
+          print('Aucun produit trouvé pour cet utilisateur.');
+        }
+      } else {
+        print(
+            'Erreur lors de la récupération des produits: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Erreur rencontrée : $e');
+    }
+  }
+
+  Future<void> getProductsSelledByUserVisited(int storedUserId) async {
+    try {
+      final url = Uri.parse(
+          '${AppConfig.baseUrl}/api/products/getProductsSelledByUser/$storedUserId/');
+      final headers = {
+        'Content-Type': 'application/json',
+      };
+      final response = await http.get(url, headers: headers);
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['products'] != null) {
+          productsSelledByUserVisited = data['products'];
+          print(productsSelledByUser);
+
           notifyListeners();
         } else {
           print('Aucun produit trouvé pour cet utilisateur.');

@@ -57,6 +57,8 @@ class _SellProductScreenState extends State<SellProductScreen> {
   final TextEditingController _tailleController = TextEditingController();
   final TextEditingController _etatController = TextEditingController();
   final TextEditingController _brandController = TextEditingController();
+    final TextEditingController _dimensionController = TextEditingController();
+
   final PageStorageBucket _bucket = PageStorageBucket();
   final _formKey = GlobalKey<FormState>();
   String? _errorMessage;
@@ -377,7 +379,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                             _categoryController.text = category == "MV"
                                 ? 'Mode et Vintage'
                                 : category == "OV"
-                                    ? "Art et création"
+                                    ? "Oeuvre d'art"
                                     : category == "D"
                                         ? "Decoration"
                                         : category == "L"
@@ -451,7 +453,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
               const SizedBox(
                 height: 16,
               ),
-              if (subcategory.startsWith("C")) ...[
+              if (subcategory.startsWith("C") && category!="CRA") ...[
                 CustomTextFormField(
                   controller: _pointureController,
                   label: "Pointure",
@@ -473,8 +475,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                   height: 16,
                 ),
               ],
-              if (widget.categoryFromMv != null &&
-                  widget.categoryFromMv!.startsWith("V")) ...[
+              if (widget.categoryFromMv != null &&widget.categoryFromMv!.startsWith("V")) ...[
                 CustomDropdownFormField<String, String>(
                   options: const [
                     {'S': 'S'},
@@ -578,6 +579,23 @@ class _SellProductScreenState extends State<SellProductScreen> {
                   },
                 )
               ],
+              if(category =="D" || category == "OV" || category=="CRA")...[
+                CustomTextFormField(
+                  controller: _dimensionController,
+                  label: 'Dimension',
+                  isPassword: false,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      _errorMessage = "dimension obligatoire";
+                      return 'la dimension est obligatoire';
+                    } else {
+                      setState(() {
+                        _errorMessage = null;
+                      });
+                      return null;
+                    }
+                  }),
+              ],
               if (widget.categoryFromMv != null &&
                   !widget.categoryFromMv!.startsWith("V")) ...[
                 CustomDropdownFormField<String, String>(
@@ -654,6 +672,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                             _pointureController.text,
                             _etatController.text,
                             _brandController.text,
+                            _dimensionController.text,
                             Provider.of<SellProductProvider>(context,
                                     listen: false)
                                 .images,
