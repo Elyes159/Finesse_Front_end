@@ -1,9 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:finesse_frontend/ApiServices/backend_url.dart';
 import 'package:finesse_frontend/Provider/AuthService.dart';
+import 'package:finesse_frontend/Provider/products.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/letzGo.dart';
+import 'package:finesse_frontend/Screens/AuthScreens/memebers.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
 import 'package:finesse_frontend/Widgets/CustomTextField/DescTextField.dart';
+import 'package:finesse_frontend/Widgets/CustomTextField/artistsfirld.dart';
+import 'package:finesse_frontend/Widgets/CustomTextField/categoryAbsorb.dart';
 import 'package:finesse_frontend/Widgets/CustomTextField/customTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -13,6 +18,8 @@ import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:typed_data';
+import 'package:http/http.dart' as http;
+
 
 class CompleteInfo extends StatefulWidget {
   final String parameter;
@@ -29,9 +36,11 @@ class _CompleteInfoState extends State<CompleteInfo> {
   final TextEditingController _fullnameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _userIdController = TextEditingController();
+  List<Map<String, dynamic>> selectedMembers = [];
   String _errorMessage = '';
   bool isLoading = false;
-
+  List<int> userIds = [];
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
@@ -40,6 +49,16 @@ class _CompleteInfoState extends State<CompleteInfo> {
         _imageFile = image;
       });
     }
+  }
+
+  void filterMembers(String query) {
+    final productsProvider = Provider.of<Products>(context, listen: false);
+    setState(() {
+      final members = productsProvider.filteredMembers
+          .where((member) =>
+              member['full_name'].toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    });
   }
 
   Future<Uint8List> _loadImageFromAssets(String assetPath) async {
@@ -98,7 +117,8 @@ class _CompleteInfoState extends State<CompleteInfo> {
                         shape: BoxShape.circle,
                       ),
                       child: _imageFile == null
-                          ? (widget.parameter == "normal" || widget.parameter == "apple"
+                          ? (widget.parameter == "normal" ||
+                                  widget.parameter == "apple"
                               ? const Icon(
                                   Icons.camera_alt,
                                   color: Colors.white,
@@ -143,7 +163,7 @@ class _CompleteInfoState extends State<CompleteInfo> {
                 ),
                 const SizedBox(height: 16),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 0.0),
                   child: Row(
                     children: [
                       Container(
@@ -223,6 +243,68 @@ class _CompleteInfoState extends State<CompleteInfo> {
                         ),
                       )
                     : Container(),
+                GestureDetector(
+                  onTap: () async {
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MemberSelectionPage(),
+                      ),
+                    );
+
+                    if (result != null && result is List) {
+                      List<Map<String, dynamic>> selectedUsers =
+                          List<Map<String, dynamic>>.from(result);
+                      String selectedNames =
+                          selectedUsers.map((m) => m['full_name']).join(', ');
+
+                      List<int> userIds = selectedUsers.map((m) => m['id'] as int).toList();
+                      setState(() {
+                        _userIdController.text = selectedNames;
+                      });
+
+                      // URL de l'API Django pour ajouter les IDs des artistes
+                      final url = Uri.parse(
+                          '${AppConfig.baseUrl}/api/auth/add_artists_ids/'); // Remplacez par l'URL correcte de votre API Django
+
+                      final body = json.encode({
+                        'user_id':
+                            Provider.of<AuthService>(context,listen: false).userId, // L'ID de l'utilisateur actuel (assurez-vous de définir `yourUserId`)
+                        'ids':
+                            userIds, // Liste des IDs des artistes sélectionnés
+                      });
+
+                      // En-têtes pour la requête
+                      final headers = {
+                        'Content-Type': 'application/json',
+                      };
+
+                      try {
+                        final response = await http.post(
+                          url,
+                          body: body,
+                          headers: headers,
+                        );
+
+                        if (response.statusCode == 200) {
+                          print('IDs des artistes ajoutés avec succès');
+                        } else {
+                          print(
+                              'Erreur lors de l\'ajout des IDs: ${response.body}');
+                        }
+                      } catch (e) {
+                        print('Erreur réseau: $e');
+                      }
+                    }
+                  },
+                  child: AbsorbPointer(
+                    child: ArtistsField(
+                      controller: _userIdController,
+                      label: "Artistes à suivre",
+                      isPassword: false,
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 16),
                 CustomButton(
                   label: isLoading ? "Chargement..." : "Créer un compte",
@@ -296,6 +378,7 @@ class _CompleteInfoState extends State<CompleteInfo> {
                                       context,
                                       listen: false)
                                   .registerProfile(
+                                userIds: userIds,
                                 full_name: _fullnameController.text,
                                 phone_number: _phoneController.text,
                                 address: _addressController.text,
@@ -325,12 +408,13 @@ class _CompleteInfoState extends State<CompleteInfo> {
                                     "Erreur survenue"; // Affichage du message d'erreur
                               });
                             }
-                          } else if (widget.parameter == "google" ) {
+                          } else if (widget.parameter == "google") {
                             try {
                               final response = await Provider.of<AuthService>(
                                       context,
                                       listen: false)
                                   .registerProfileGoogle(
+                                userIds: userIds,
                                 full_name: _fullnameController.text,
                                 phone_number: _phoneController.text,
                                 address: _addressController.text,
@@ -364,6 +448,7 @@ class _CompleteInfoState extends State<CompleteInfo> {
                                       context,
                                       listen: false)
                                   .registerProfilefacebook(
+                                userIds: userIds,
                                 full_name: _fullnameController.text,
                                 phone_number: _phoneController.text,
                                 address: _addressController.text,
@@ -391,20 +476,20 @@ class _CompleteInfoState extends State<CompleteInfo> {
                                 _errorMessage = "Erreur dans l'application";
                               });
                             }
-                          }else if(widget.parameter =="apple"){
+                          } else if (widget.parameter == "apple") {
                             try {
                               final response = await Provider.of<AuthService>(
                                       context,
                                       listen: false)
                                   .registerProfileApple(
-                                    image: _imageFile,
+                                userIds: userIds,
+                                image: _imageFile,
                                 full_name: _fullnameController.text,
                                 phone_number: _phoneController.text,
                                 address: _addressController.text,
                                 userId: Provider.of<AuthService>(context,
                                         listen: false)
                                     .userId,
-                                
                               );
 
                               if (response.statusCode == 200) {

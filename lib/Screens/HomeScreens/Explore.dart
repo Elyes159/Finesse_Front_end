@@ -16,7 +16,12 @@ import 'package:provider/provider.dart';
 class Explore extends StatefulWidget {
   final String? from_mv;
   final String? category_for_field;
-  const Explore({super.key, this.from_mv , this.category_for_field, this.bottomNavigationBar,});
+  const Explore({
+    super.key,
+    this.from_mv,
+    this.category_for_field,
+    this.bottomNavigationBar,
+  });
   final Widget? bottomNavigationBar;
 
   @override
@@ -34,8 +39,7 @@ class _ExploreState extends State<Explore> {
     super.initState();
 
     // Récupération des produits au démarrage
-    Provider.of<Products>(context, listen: false).fetchMembers(
-        Provider.of<AuthService>(context, listen: false).currentUser!.id);
+    Provider.of<Products>(context, listen: false).fetchMembers();
 
     _searchController.addListener(_onSearchChanged);
 
@@ -324,7 +328,7 @@ class _ExploreState extends State<Explore> {
                           await Provider.of<Products>(context, listen: false)
                               .getProductsByUserVisited(member["id"]);
 
-                            await Provider.of<Products>(context, listen: false)
+                          await Provider.of<Products>(context, listen: false)
                               .getProductsSelledByUserVisited(member["id"]);
                           await Provider.of<Products>(context, listen: false)
                               .getRatingByRatedUserVisited(

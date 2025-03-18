@@ -252,9 +252,9 @@ class Products extends ChangeNotifier {
   List<Map<String, dynamic>> _members = [];
   List<Map<String, dynamic>> get members => _members;
 
-  Future<void> fetchMembers(int userId) async {
+  Future<void> fetchMembers() async {
     final url =
-        '${AppConfig.baseUrl}/api/auth/fatchmembers/$userId'; // Remplacez par votre URL d'API
+        '${AppConfig.baseUrl}/api/auth/fatchmembers/'; // Remplacez par votre URL d'API
 
     try {
       final response = await http.get(Uri.parse(url));

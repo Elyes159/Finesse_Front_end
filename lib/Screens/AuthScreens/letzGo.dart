@@ -1,4 +1,5 @@
 import 'package:finesse_frontend/Provider/AuthService.dart';
+import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/SignIn.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
 import 'package:finesse_frontend/Widgets/CustomTextField/customTextField.dart';
@@ -24,6 +25,8 @@ class _LetzGoState extends State<LetzGo> {
    bool _isLoading = false;
   @override
   Widget build(BuildContext context) {
+        final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
+
     return Scaffold(
       appBar: AppBar(
         
@@ -122,7 +125,8 @@ class _LetzGoState extends State<LetzGo> {
                   child: RichText(
                     text: TextSpan(
                       text: "J'ai lu et j'accepte ",
-                      style: const TextStyle(
+                      style:  TextStyle(
+                        color: theme? Colors.white : Colors.black,
                         //color: Color(0xFF111928),
                         fontSize: 14,
                         fontFamily: 'Raleway',

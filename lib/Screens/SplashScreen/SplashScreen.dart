@@ -40,7 +40,6 @@ class _SplashScreenState extends State<SplashScreen> {
     String? accessToken = await storage.read(key: 'access_token');
     String? parametre = await storage.read(key: 'parametre');
 
-    // Vérification du token pour la navigation
     _navigationTimer = Timer(Duration(seconds: durationInSeconds), () {
       if (!mounted) return;
       if (accessToken != null && accessToken.isNotEmpty) {

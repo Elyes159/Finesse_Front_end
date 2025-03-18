@@ -4,6 +4,7 @@ import 'package:finesse_frontend/ApiServices/backend_url.dart';
 import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Provider/Stories.dart';
 import 'package:finesse_frontend/Provider/products.dart';
+import 'package:finesse_frontend/Provider/profileProvider.dart';
 import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:finesse_frontend/Provider/virement.dart';
 import 'package:finesse_frontend/Screens/HomeScreens/cart.dart';
@@ -60,6 +61,8 @@ class _HomeScreenState extends State<HomeScreen> {
         Provider.of<AuthService>(context, listen: false).currentUser!.id);
     Provider.of<Products>(context, listen: false).getWish(
         Provider.of<AuthService>(context, listen: false).currentUser!.id);
+    Provider.of<Profileprovider>(context, listen: false).getArtistsIds(
+        Provider.of<AuthService>(context, listen: false).currentUser!.id);
   }
 
   Future<void> _pickImage() async {
@@ -107,6 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           String? token =
                               await FirebaseMessaging.instance.getToken();
                           print(token);
+                          print(user.artists);
                         },
                         child: Text(
                           user.fullName == "None None"
@@ -138,7 +142,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       const SizedBox(width: 20),
-                      
                     ],
                   ),
                 ],
@@ -494,6 +497,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                 }
 
+                final artistList =
+                    Provider.of<Profileprovider>(context, listen: false)
+                        .artistsList;
+                print("artistList: $artistList");
+
                 final now = DateTime.now();
                 final sixDaysAgo =
                     now.subtract(Duration(days: 6)); // 6 derniers jours
@@ -569,7 +577,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 if (kDebugMode) {
                   print(
-                    "📦 Produits filtrés pour les 6 derniers jours: ${thisWeekProducts.length}");
+                      "📦 Produits filtrés pour les 6 derniers jours: ${thisWeekProducts.length}");
                 }
 
                 final allProducts = [
@@ -652,45 +660,50 @@ class _HomeScreenState extends State<HomeScreen> {
                           [], // Ajout des commentaires ici
                     },
                   ),
-                  ...productsProvider.products.map(
-                    (product) => {
-                      'type': 'Pour vous',
-                      'category': product['category'] ?? 'Unknown',
-                      'subcategory': product['subcategory'] ?? 'Unknown',
-                      'imageUrl': "${AppConfig.baseUrl}${product['images'][0]}"
-                              .isNotEmpty
-                          ? "${AppConfig.baseUrl}${product['images'][0]}"
-                          : 'assets/images/test1.png',
-                      'images':
-                          product['images'] ?? [], // Liste complète des images
-                      'productName': product['title'] ?? 'Unknown Product',
-                      'productPrice': "${product['price']}".toString(),
-                      'product_id': "${product['id']}",
-                      'description': product['description'] ?? '',
-                      'is_available': product['is_available'] ?? false,
-                      'taille': product['taille'],
-                      'is_favorite': product['is_favorite'],
-                      'pointure': product['pointure'],
-                      'selled': product["selled"],
-                      'brand': product['brand'],
-                      'owner_id': product["owner"]["id"],
-                      'type_pdp': product["type"],
-                      'owner_profile_pic':
-                          product["owner"]["profile_pic"] ?? "",
-                      'owner_username': product["owner"]["username"] ?? "",
-                      'owner_ratings': product["owner"]["ratings"] ?? "",
-                      'comments': product['comments']
-                              ?.map((comment) => {
-                                    'username':
-                                        comment['username'] ?? 'Unknown',
-                                    'avatar': comment['avatar'] ?? '',
-                                    'content': comment['content'] ?? '',
-                                    'created_at': comment['created_at'] ?? '',
-                                  })
-                              .toList() ??
-                          [], // Ajout des commentaires ici
-                    },
-                  ),
+                  ...productsProvider.products
+                      .map(
+                        (product) => {
+                          'type': 'Pour vous',
+                          'category': product['category'] ?? 'Unknown',
+                          'subcategory': product['subcategory'] ?? 'Unknown',
+                          'imageUrl':
+                              "${AppConfig.baseUrl}${product['images'][0]}"
+                                      .isNotEmpty
+                                  ? "${AppConfig.baseUrl}${product['images'][0]}"
+                                  : 'assets/images/test1.png',
+                          'images': product['images'] ?? [],
+                          'productName': product['title'] ?? 'Unknown Product',
+                          'productPrice': "${product['price']}".toString(),
+                          'product_id': "${product['id']}",
+                          'description': product['description'] ?? '',
+                          'is_available': product['is_available'] ?? false,
+                          'taille': product['taille'],
+                          'is_favorite': product['is_favorite'],
+                          'pointure': product['pointure'],
+                          'selled': product["selled"],
+                          'brand': product['brand'],
+                          'owner_id': product["owner"]["id"],
+                          'type_pdp': product["type"],
+                          'owner_profile_pic':
+                              product["owner"]["profile_pic"] ?? "",
+                          'owner_username': product["owner"]["username"] ?? "",
+                          'owner_ratings': product["owner"]["ratings"] ?? "",
+                          'comments': product['comments']
+                                  ?.map((comment) => {
+                                        'username':
+                                            comment['username'] ?? 'Unknown',
+                                        'avatar': comment['avatar'] ?? '',
+                                        'content': comment['content'] ?? '',
+                                        'created_at':
+                                            comment['created_at'] ?? '',
+                                      })
+                                  .toList() ??
+                              [],
+                        },
+                      )
+                      .where(
+                          (product) => artistList.contains(product["owner_id"]))
+                      .toList(),
                 ];
                 final filteredProducts = selectedCategory == "All"
                     ? allProducts
