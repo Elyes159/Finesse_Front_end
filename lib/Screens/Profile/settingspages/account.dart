@@ -96,15 +96,19 @@ class _AccountState extends State<Account> {
                         alignment: Alignment.bottomRight,
                         children: [
                           InkWell(
-                            onTap:  parametre == "normal" ? () {
-                              _pickImage(); // Appeler la fonction pour choisir une image
-                            } : null,
+                            onTap: parametre == "normal"
+                                ? () {
+                                    _pickImage(); // Appeler la fonction pour choisir une image
+                                  }
+                                : null,
                             child: CircleAvatar(
                               radius: 50.0,
                               backgroundImage: _selectedImage != null
-                                  ? FileImage(_selectedImage!) // Utiliser l'image sélectionnée
+                                  ? FileImage(
+                                      _selectedImage!) // Utiliser l'image sélectionnée
                                   : (user.avatar != "" && user.avatar != null)
-                                      ? NetworkImage(parametre == "normal" || parametre == "apple"
+                                      ? NetworkImage(parametre == "normal" ||
+                                              parametre == "apple"
                                           ? "${AppConfig.baseUrl}${user.avatar}"
                                           : user.avatar!)
                                       : AssetImage('assets/images/user.png')
@@ -162,7 +166,7 @@ class _AccountState extends State<Account> {
                       height: 16,
                     ),
                     CustomTextFormField(
-                      enabled: parametre == "normal",
+                        enabled: parametre == "normal",
                         controller: emailController,
                         label: "E-mail",
                         isPassword: false),
@@ -180,13 +184,14 @@ class _AccountState extends State<Account> {
                         controller: addressController,
                         label: "Addresse",
                         isPassword: false),
-                  SizedBox(
+                    SizedBox(
                       height: 16,
                     ),
                     DescTextField(
                         controller: descriptionController,
                         label: "Biographie",
                         isPassword: false),
+                   
                     SizedBox(
                       height: 40,
                     ),
@@ -194,6 +199,20 @@ class _AccountState extends State<Account> {
                       buttonColor: Color(0xFFC668AA),
                       label: "Enregistrer les modifications",
                       onTap: () async {
+                        String bio = descriptionController.text.trim();
+                        if (bio.isNotEmpty &&
+                            (bio.length < 50 || bio.length > 150)) {
+                          setState(() {
+                            errorMessage =
+                                "La biographie doit contenir entre 50 et 150 caractères.";
+                          });
+                          return;
+                        } else {
+                          setState(() {
+                            errorMessage =
+                                null; // Réinitialiser l'erreur si tout est correct
+                          });
+                        }
                         // Appel de la fonction updateProfile
                         int statusCode = await authService.updateProfile(
                           user.id,
@@ -203,20 +222,24 @@ class _AccountState extends State<Account> {
                           addressController.text,
                           descriptionController.text,
                           _selectedImage,
-                           // Passer le fichier d'image sélectionné
+                          // Passer le fichier d'image sélectionné
                         );
 
                         if (statusCode == 200) {
-                          Provider.of<AuthService>(context,listen:false).loadUserData();
+                          Provider.of<AuthService>(context, listen: false)
+                              .loadUserData();
                           setState(() {
-                            errorMessage = null; // Réinitialiser le message d'erreur
+                            errorMessage =
+                                null; // Réinitialiser le message d'erreur
                           });
                         } else {
                           setState(() {
                             if (statusCode == 444) {
-                              errorMessage = "Nom d'utilisateur invalide"; // Message d'erreur spécifique
+                              errorMessage =
+                                  "Nom d'utilisateur invalide"; // Message d'erreur spécifique
                             } else {
-                              errorMessage = 'erreur inconnue '; // Message d'erreur générique
+                              errorMessage =
+                                  'erreur inconnue '; // Message d'erreur générique
                             }
                           });
                         }
@@ -232,4 +255,3 @@ class _AccountState extends State<Account> {
     );
   }
 }
-

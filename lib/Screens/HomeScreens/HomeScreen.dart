@@ -113,22 +113,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                       as ImageProvider,
                         ),
                         const SizedBox(width: 14),
-                        GestureDetector(
-                          onTap: () async {
-                            String? token =
-                                await FirebaseMessaging.instance.getToken();
-                            print(token);
-                            print(user.artists);
-                          },
-                          child: Text(
-                            user.fullName == "None None"
-                                ? "Bienvenue ${user.username}"
-                                : 'Bienvenue, ${user.fullName.split(' ')[0]}',
-                            style: const TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Raleway',
-                            ),
+                        Text(
+                          user.fullName == "None None"
+                              ? "Bienvenue ${user.username}"
+                              : 'Bienvenue, ${user.fullName.split(' ')[0]}',
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Raleway',
                           ),
                         ),
                       ],

@@ -42,10 +42,14 @@ class _ProfileMainState extends State<ProfileMain> {
   void initState() {
     super.initState();
     _loadParameter();
+    if(widget.id == Provider.of<AuthService>(context, listen: false).currentUser!.id ){
+      widget.id =null;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    
     final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
     String deepLinkUrl = 'flutterdeeplink://www.flutter-deep-link.com/profileFinos/${Provider.of<AuthService>(context, listen: false).currentUser!.id}';
 
@@ -146,7 +150,7 @@ class _ProfileMainState extends State<ProfileMain> {
                               as ImageProvider,
                       backgroundColor: Colors.transparent,
                       child: user.avatar == null
-                          ? const CircularProgressIndicator()
+                          ? const SizedBox()
                           : null,
                     ),
                     const SizedBox(width: 16),
@@ -363,7 +367,7 @@ class _ProfileMainState extends State<ProfileMain> {
                   style: TextStyle(
                     fontSize: 14,
                     fontFamily: 'Raleway',
-                    fontWeight: FontWeight.w400,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
