@@ -15,6 +15,13 @@ class WishList extends StatefulWidget {
 
 class _WishListState extends State<WishList> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Provider.of<Products>(context, listen: false).getWish(
+        Provider.of<AuthService>(context, listen: false).currentUser!.id);
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

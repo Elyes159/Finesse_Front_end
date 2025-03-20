@@ -38,9 +38,11 @@ class Users {
   final bool? isEmailVerified;
   final String? verificationCode;
   final bool hasStory;
+  final String description;
   final List<Artist> artists; // Liste des artistes associés
 
-  Users({
+  Users( {
+    required this.description,
     required this.id,
     required this.username,
     required this.email,
@@ -71,7 +73,8 @@ class Users {
       isEmailVerified: json['user_profile']['is_email_verified'] ?? true,
       verificationCode: json['user_profile']['verification_code'],
       hasStory: json['user_profile']['hasStory'],
-      artists: artists, // Remplir la liste des artistes
+      artists: artists,
+      description: json["user_profile"]["description"] ?? "" // Remplir la liste des artistes
     );
   }
 
@@ -81,10 +84,12 @@ class Users {
     String? address,
     String? avatar,
     String? username,
+    String? description,
     List<Artist>? artists, // Ajouter artists dans copyWith
   }) {
     return Users(
       id: id,
+      description: description ?? this.description ,
       username: this.username,
       email: email,
       phoneNumber: phoneNumber ?? this.phoneNumber,

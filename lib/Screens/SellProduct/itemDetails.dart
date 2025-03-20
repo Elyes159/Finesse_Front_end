@@ -5,8 +5,11 @@ import 'package:finesse_frontend/Provider/profileProvider.dart';
 import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:finesse_frontend/Screens/HomeScreens/checkout.dart';
 import 'package:finesse_frontend/Screens/Profile/ProfileScreen.dart';
+import 'package:finesse_frontend/Screens/SellProduct/returnPolicyScreen.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
 import 'package:finesse_frontend/Widgets/CustomTextField/customfieldbuton.dart';
+import 'package:finesse_frontend/Widgets/cards/detailcontainer.dart';
+import 'package:finesse_frontend/Widgets/cards/productCard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -54,14 +57,134 @@ class _ItemDetailsState extends State<ItemDetails> {
         second_id: widget.product["owner_id"]);
     Provider.of<Products>(context, listen: false)
         .getFollowersVisited(widget.product["owner_id"]);
+    Provider.of<Products>(context, listen: false)
+        .getFollowingVisited(widget.product["owner_id"]);
     isFavorite = widget.product["is_favorite"] ?? false;
   }
 
+  bool containsPhoneOrEmail(String text) {
+    // Expression régulière pour détecter une adresse email
+    final RegExp emailRegex = RegExp(
+      r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}",
+    );
+
+    // Expression régulière pour détecter un numéro de téléphone
+    final RegExp phoneRegex = RegExp(
+      r"(?:\+?\d{1,3}[ -]?)?(?:\(?\d{2,4}\)?[ -]?)?\d{3,4}[ -]?\d{3,4}",
+    );
+
+    return emailRegex.hasMatch(text) || phoneRegex.hasMatch(text);
+  }
+
   final TextEditingController _commentController = TextEditingController();
+  String getTimeAgo(String createdDate) {
+    // Convertir la chaîne de date en DateTime
+    DateTime createdDateTime = DateTime.parse(createdDate);
+
+    // Obtenir la date et l'heure actuelles
+    DateTime now = DateTime.now();
+
+    // Calculer la différence entre la date actuelle et la date de création
+    Duration difference = now.difference(createdDateTime);
+
+    if (difference.inDays > 365) {
+      // Si plus d'un an, afficher en années
+      int years = difference.inDays ~/ 365;
+      return "il y a $years ${years > 1 ? 'ans' : 'an'}";
+    } else if (difference.inDays > 30) {
+      // Si plus d'un mois, afficher en mois
+      int months = difference.inDays ~/ 30;
+      return "il y a $months ${months > 1 ? 'mois' : 'mois'}";
+    } else if (difference.inDays > 0) {
+      // Si plus d'un jour
+      return "il y a ${difference.inDays} jour${difference.inDays > 1 ? 's' : ''}";
+    } else if (difference.inHours > 0) {
+      // Si plus d'une heure
+      return "il y a ${difference.inHours} heure${difference.inHours > 1 ? 's' : ''}";
+    } else if (difference.inMinutes > 0) {
+      // Si plus d'une minute
+      return "il y a ${difference.inMinutes} minute${difference.inMinutes > 1 ? 's' : ''}";
+    } else {
+      // Si moins d'une minute
+      return "il y a quelques secondes";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
+    final now = DateTime.now();
+
+    // Fonction pour obtenir la date au format "lundi 31 mars"
+    String formatDate(DateTime date) {
+      final months = [
+        "janvier",
+        "février",
+        "mars",
+        "avril",
+        "mai",
+        "juin",
+        "juillet",
+        "août",
+        "septembre",
+        "octobre",
+        "novembre",
+        "décembre"
+      ];
+
+      final dayOfWeek = date.weekday;
+      String weekday = "";
+
+      switch (dayOfWeek) {
+        case 1:
+          weekday = "lundi";
+          break;
+        case 2:
+          weekday = "mardi";
+          break;
+        case 3:
+          weekday = "mercredi";
+          break;
+        case 4:
+          weekday = "jeudi";
+          break;
+        case 5:
+          weekday = "vendredi";
+          break;
+        case 6:
+          weekday = "samedi";
+          break;
+        case 7:
+          weekday = "dimanche";
+          break;
+      }
+
+      return "$weekday ${date.day} ${months[date.month - 1]}";
+    }
+
+    // Fonction pour obtenir le lundi suivant si c'est le week-end, sinon la date du jour
+    DateTime getNextWeekday(DateTime startDate) {
+      if (startDate.weekday == 6 || startDate.weekday == 7) {
+        // Si c'est samedi ou dimanche, retourne lundi
+        return startDate.add(Duration(
+            days: (8 -
+                startDate
+                    .weekday))); // 8 - 6 = 2 jours pour samedi, 8 - 7 = 1 jour pour dimanche
+      }
+      return startDate.add(Duration(days: 1)); // Sinon retourne demain
+    }
+
+    // Date de demain
+    DateTime tomorrow = getNextWeekday(now);
+    // Date après-demain
+    DateTime afterTomorrow = getNextWeekday(tomorrow);
+
+    final filteredProducts = Provider.of<Products>(context, listen: false)
+        .products
+        .where((productItem) =>
+            productItem["subcategory"] == widget.product["subcategory"] &&
+            productItem["id"] != widget.product["product_id"])
+        .toList();
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -146,54 +269,91 @@ class _ItemDetailsState extends State<ItemDetails> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: 18),
-                        Text(
-                          widget.product['productName'],
-                          style: TextStyle(
-                            //color: Colors.black,
-                            fontSize: 16,
-                            fontFamily: 'Raleway',
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        SizedBox(height: 16),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              widget.product["brand"] == "('',)"
-                                  ? ""
-                                  : "Brand: ${widget.product["brand"]}",
+                              widget.product['productName'],
                               style: TextStyle(
-                                //color: Color(0xFF111928),
+                                //color: Colors.black,
                                 fontSize: 16,
                                 fontFamily: 'Raleway',
-                                fontWeight: FontWeight.w500,
-                                height: 1.25,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
-                            Text(
-                              widget.product["taille"] != "XX"
-                                  ? "Size: ${widget.product["taille"]}"
-                                  : widget.product["pointure"] != "XX"
-                                      ? "Size: ${widget.product["taille"]}"
-                                      : "",
-                              style: TextStyle(
-                                //color: Color(0xFF111928),
-                                fontSize: 16,
-                                fontFamily: 'Raleway',
-                                fontWeight: FontWeight.w500,
-                                height: 1.25,
+                            Spacer(),
+                            GestureDetector(
+                              onTap: () {
+                                print(widget.product["created"]);
+                              },
+                              child: Text(
+                                "${widget.product["productPrice"]} TND",
+                                style: TextStyle(
+                                  //color: Color(0xFF111928),
+                                  fontSize: 16,
+                                  fontFamily: 'Raleway',
+                                  fontWeight: FontWeight.w500,
+                                  height: 1.25,
+                                ),
                               ),
                             ),
-                            Text(
-                              "${widget.product["productPrice"]} TND",
-                              style: TextStyle(
-                                //color: Color(0xFF111928),
-                                fontSize: 16,
-                                fontFamily: 'Raleway',
-                                fontWeight: FontWeight.w500,
-                                height: 1.25,
+                          ],
+                        ),
+                        SizedBox(height: 16),
+                        Wrap(
+                          spacing:
+                              10, // Espacement horizontal entre les éléments
+                          runSpacing:
+                              10, // Espacement vertical entre les lignes
+                          children: [
+                            if (widget.product["brand"] != "('',)") ...[
+                              DetailsContainer(
+                                content: widget.product["brand"],
+                                title: 'Brand',
                               ),
+                            ],
+                            if (widget.product["taille"] != "XX") ...[
+                              DetailsContainer(
+                                title: "Taille",
+                                content: widget.product["taille"],
+                              ),
+                            ],
+                            if (widget.product["pointure"] != "XX") ...[
+                              DetailsContainer(
+                                title: "Taille",
+                                content: widget.product["pointure"],
+                              ),
+                            ],
+                            if (widget.product["longeur"] != "XX" &&
+                                widget.product["longeur"] != "('',)") ...[
+                              DetailsContainer(
+                                title: "Longueur",
+                                content: widget.product["longeur"] + " cm",
+                              ),
+                            ],
+                            if (widget.product["largeur"] != "XX" &&
+                                widget.product["largeur"] != "('',)") ...[
+                              DetailsContainer(
+                                title: "Largeur",
+                                content: widget.product["largeur"] + " cm",
+                              ),
+                            ],
+                            if (widget.product["hauteur"] != "XX" &&
+                                widget.product["hauteur"] != "('',)") ...[
+                              DetailsContainer(
+                                title: "Hauteur",
+                                content: widget.product["hauteur"] + " cm",
+                              ),
+                            ],
+                            if (widget.product["etat"] != null &&
+                                widget.product["etat"] != "('',)") ...[
+                              DetailsContainer(
+                                content: widget.product["etat"],
+                                title: 'État',
+                              ),
+                            ],
+                            DetailsContainer(
+                              content: getTimeAgo(widget.product["created"]),
+                              title: 'Déposé',
                             ),
                           ],
                         ),
@@ -320,62 +480,249 @@ class _ItemDetailsState extends State<ItemDetails> {
                           ),
                         ),
                       ),
-                      Consumer<Products>(
-                        builder: (context, productsProvider, child) {
-                          final productId = widget.product["product_id"];
 
-                          // Trouver le produit dans wishProducts
+                      // Trouver le produit dans wishProducts
 
-                          bool isWished = false;
-
-                          return Column(
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  productsProvider.createWish(
-                                      productId: productId);
-
-                                  setState(() {
-                                    productsProvider.getWish(
-                                      Provider.of<AuthService>(context,
-                                              listen: false)
-                                          .currentUser!
-                                          .id,
-                                    );
-                                    isWished = true;
-                                  });
-                                },
-                                child: SvgPicture.asset(
-                                  "assets/Icons/heart-add.svg",
-                                  color: theme
-                                      ? Color.fromARGB(255, 249, 217, 144)
-                                      : null,
-                                ),
-                              ),
-                            ],
-                          );
+                      InkWell(
+                        onTap: () {
+                          Provider.of<Products>(context, listen: false)
+                              .createWish(
+                                  productId: widget.product["product_id"]);
+                          Provider.of<Products>(context, listen: false).getWish(
+                              Provider.of<AuthService>(context, listen: false)
+                                  .currentUser!
+                                  .id);
                         },
+                        child: SvgPicture.asset(
+                          "assets/Icons/heart-add.svg",
+                          color:
+                              theme ? Color.fromARGB(255, 249, 217, 144) : null,
+                        ),
                       ),
+
                       SizedBox(width: 20),
                     ],
                   ),
+                  SizedBox(
+                    height: 20,
+                  ),
 
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16.0, right: 16),
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: theme
+                              ? const Color.fromARGB(255, 249, 217, 144)
+                              : const Color(0xFF5C7CA4),
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Livraison",
+                            style: TextStyle(
+                              fontFamily: "Raleway",
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: theme ? Colors.white : Colors.black87,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            "L'article est disponible de suite. Commandez-le aujourd'hui et recevez le au plus tard entre ${formatDate(tomorrow)} et ${formatDate(afterTomorrow)}. Plus d'informations lors de la finalisation de votre commande",
+                            style: TextStyle(
+                              fontFamily: "Raleway",
+                              fontSize: 14,
+                              color: theme ? Colors.white : Colors.black87,
+                              height: 1.5, // Espacement entre les lignes
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16.0, right: 16),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>ReturnPolicyScreen()));
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context)
+                            .size
+                            .width, // Largeur égale à celle de l'écran
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: theme
+                                ? const Color.fromARGB(255, 249, 217, 144)
+                                : const Color(0xFF5C7CA4),
+                          ),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Protection",
+                              style: TextStyle(
+                                fontFamily: "Raleway",
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: theme ? Colors.white : Colors.black87,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              "Retour Gratuit sous Conditions.\nCliquez ici pour en savoir plus",
+                              style: TextStyle(
+                                fontFamily: "Raleway",
+                                fontSize: 14,
+                                color: theme ? Colors.white : Colors.black87,
+                                height: 1.5, // Espacement entre les lignes
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                   SizedBox(height: 24),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
                       "Commentaires",
                       style: TextStyle(
+                        color: theme
+                            ? Color.fromARGB(255, 249, 217, 144)
+                            : Color(0xFFFB98B7),
                         //color: Colors.black,
                         fontSize: 13,
                         fontFamily: 'Raleway',
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w700,
                         height: 1.38,
                         letterSpacing: -0.13,
                       ),
                     ),
                   ),
                   SizedBox(height: 8),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: CustomTextFormFieldwithButton(
+                      isCommented: isComented,
+                      controller: _commentController,
+                      label: 'Votre commentaire',
+                      isPassword: false,
+                      onButtonPressed: () async {
+                        String commentText = _commentController.text.trim();
+
+                        if (commentText.isEmpty) {
+                          setState(() {
+                            errorMsg = "Le commentaire est vide";
+                          });
+                          return;
+                        }
+
+                        if (containsPhoneOrEmail(commentText)) {
+                          setState(() {
+                            errorMsg =
+                                "Votre commentaire ne doit pas contenir de numéro ou d'email.";
+                          });
+                          return;
+                        }
+
+                        bool? commented =
+                            await Provider.of<Products>(context, listen: false)
+                                .createComment(
+                                    productId: widget.product["product_id"],
+                                    content: commentText);
+
+                        if (commented) {
+                          setState(() {
+                            errorMsg = null;
+                            isComented = true;
+                          });
+
+                          Future.delayed(const Duration(seconds: 2), () {
+                            setState(() {
+                              isComented = false;
+                            });
+                          });
+
+                          Provider.of<Products>(context, listen: false)
+                              .getProducts();
+                          Provider.of<Products>(context, listen: false)
+                              .getProductsViewed();
+                        } else {
+                          setState(() {
+                            errorMsg = "Erreur survenue";
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16.0, right: 16),
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: theme
+                              ? const Color.fromARGB(255, 249, 217, 144)
+                              : const Color(0xFF5C7CA4),
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Attention !",
+                            style: TextStyle(
+                              fontFamily: "Raleway",
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: theme ? Colors.white : Colors.black87,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            "Pour votre sécurité, ne communiquez jamais vos informatiosn personnelles (Facebook, numéro de téléphone, e-mail, adresse) dans les commentaires. En cliquant sur Acheter, vous êtes protégé contre les arnaques et les mauvaises surprises.",
+                            style: TextStyle(
+                              fontFamily: "Raleway",
+                              fontSize: 14,
+                              color: theme ? Colors.white : Colors.black87,
+                              height: 1.5, // Espacement entre les lignes
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  if (errorMsg != null)
+                    Text(
+                      "$errorMsg",
+                      style: TextStyle(
+                        fontFamily: "Raleway",
+                        color: Colors.red,
+                        fontSize: 14,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+
                   widget.product['comments'].isNotEmpty
                       ? Column(
                           children: widget.product['comments']
@@ -426,8 +773,8 @@ class _ItemDetailsState extends State<ItemDetails> {
                                               ),
                                               SizedBox(height: 4),
                                               Text(
-                                                comment['created_at'] ??
-                                                    "Date inconnue",
+                                                getTimeAgo(
+                                                    comment['created_at']),
                                                 style: TextStyle(
                                                   //color: Colors.grey,
                                                   fontSize: 12,
@@ -443,82 +790,133 @@ class _ItemDetailsState extends State<ItemDetails> {
                                   ))
                               .toList(),
                         )
-                      : Padding(
-                          padding: const EdgeInsets.only(bottom: 90, left: 16),
-                          child: Text(
-                            "Aucun commentaire pour le moment.",
-                            style: TextStyle(
-                              fontFamily: "Raleway",
-                              //color: Colors.black54,
-                              fontSize: 14,
-                              fontStyle: FontStyle.italic,
-                            ),
-                          ),
+                      : SizedBox(),
+
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      "Articles similaires",
+                      style: TextStyle(
+                        color: theme
+                            ? Color.fromARGB(255, 249, 217, 144)
+                            : Color(0xFFFB98B7),
+                        //color: Colors.black,
+                        fontSize: 14,
+                        fontFamily: 'Raleway',
+                        fontWeight: FontWeight.w700,
+                        height: 1.38,
+                        letterSpacing: -0.13,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      height:
+                          400, // Définir une hauteur fixe pour votre GridView
+                      child: GridView.builder(
+                        padding: const EdgeInsets.all(8),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2, // 2 colonnes
+                          crossAxisSpacing: 8,
+                          mainAxisSpacing: 8,
+                          childAspectRatio:
+                              0.7, // Ajuster pour la taille des cartes
                         ),
+                        itemCount: filteredProducts.length,
+                        itemBuilder: (context, index) {
+                          final product = filteredProducts[index];
+                          return GestureDetector(
+                            onTap: () {
+                              {
+                                final productData = {
+                                  'type': "Récemment consulté",
+                                  'subcategory':
+                                      product['subcategory'] ?? 'Unknown',
+                                  'imageUrl':
+                                      "${AppConfig.baseUrl}${product['images'][0]}"
+                                              .isNotEmpty
+                                          ? "${AppConfig.baseUrl}${product['images'][0]}"
+                                          : 'assets/images/test1.png',
+                                  'images': product['images'] ??
+                                      [], // Liste complète des images
+                                  'productName':
+                                      product['title'] ?? 'Unknown Product',
+                                  'productPrice':
+                                      "${product['price']}".toString(),
+                                  'product_id': "${product['id']}",
+                                  'description': product['description'] ?? '',
+                                  'is_available':
+                                      product['is_available'] ?? false,
+                                  'category': product['category'] ?? 'Unknown',
+                                  'taille': product['taille'],
+                                  'pointure': product['pointure'],
+                                  'brand': product['brand'],
+                                  "longeur": product["longeur"],
+                                  "hauteur": product["hauteur"],
+                                  'etat': product["etat"],
+                                  "largeur": product["largeur"],
+                                  'selled': product["selled"],
+                                  "created": product["created"],
+                                  'type_pdp': product["type"],
+                                  'owner_id': product["owner"]["id"],
+                                  'is_favorite': product['is_favorite'],
+                                  'owner_profile_pic':
+                                      product["owner"]["profile_pic"] ?? "",
+                                  'owner_username':
+                                      product["owner"]["username"] ?? "",
+                                  'owner_ratings':
+                                      product["owner"]["ratings"] ?? "",
+                                  'comments': product['comments']
+                                          ?.map((comment) => {
+                                                'username':
+                                                    comment['username'] ??
+                                                        'Unknown',
+                                                'avatar':
+                                                    comment['avatar'] ?? '',
+                                                'content':
+                                                    comment['content'] ?? '',
+                                                'created_at':
+                                                    comment['created_at'] ?? '',
+                                              })
+                                          .toList() ??
+                                      [], // Ajout des commentaires ici
+                                };
+
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        ItemDetails(product: productData),
+                                  ),
+                                );
+                              }
+                            },
+                            child: ProductCard(
+                              imageUrl:
+                                  "${AppConfig.baseUrl}${product["images"][0]}",
+                              productName: product["title"],
+                              productPrice: product["price"],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
           ),
-
-          // Position the CustomTextFormFieldwithButton at the bottom of the screen
-
           Container(
-            color: theme ? Color(0XFF1C1C1C) : Color(0XFFf5fafb),
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: CustomTextFormFieldwithButton(
-              isCommented: isComented,
-              controller: _commentController,
-              label: 'Votre commentaire',
-              isPassword: false,
-              onButtonPressed: () async {
-                if (_commentController.text.isEmpty) {
-                  setState(() {
-                    errorMsg = "commentaire est vide";
-                  });
-                } else {
-                  bool? commented =
-                      await Provider.of<Products>(context, listen: false)
-                          .createComment(
-                              productId: widget.product["product_id"],
-                              content: _commentController.text);
-                  if (commented) {
-                    setState(() {
-                      errorMsg = null;
-                      isComented = true;
-                      Provider.of<Products>(context, listen: false)
-                          .getProducts();
-                      Provider.of<Products>(context, listen: false)
-                          .getProductsViewed();
-                    });
-                  } else {
-                    setState(() {
-                      errorMsg = "Erreur survenue";
-                    });
-                  }
-                }
-              },
-            ),
-          ),
-          if (errorMsg != null)
-            Text(
-              "$errorMsg",
-              style: TextStyle(
-                color: Colors.red,
-                fontSize: 14,
-                fontStyle: FontStyle.italic,
-              ),
-            ),
-          Container(
-            color: theme ? Color(0XFF1C1C1C) : Color(0XFFf5fafb),
             child: Padding(
               padding: const EdgeInsets.only(
                 bottom: 30,
                 right: 16.0,
                 left: 16,
               ),
-              child: Container(
+              child: SizedBox(
                 width: MediaQuery.of(context).size.width,
-                color: theme ? Color(0XFF1C1C1C) : Color(0XFFf5fafb),
                 child: CustomButton(
                   label: "Acheter",
                   onTap: () async {
@@ -526,14 +924,13 @@ class _ItemDetailsState extends State<ItemDetails> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => CheckoutPage(
-                                  productIds: [widget.product["product_id"]],
-                                  subtotal: double.tryParse(
-                                          widget.product["productPrice"]) ??
-                                      99.0,
-                                  total: double.tryParse(
-                                          widget.product["productPrice"])! +7
-                                      
-                                )));
+                                productIds: [widget.product["product_id"]],
+                                subtotal: double.tryParse(
+                                        widget.product["productPrice"]) ??
+                                    99.0,
+                                total: double.tryParse(
+                                        widget.product["productPrice"])! +
+                                    7)));
                   },
                 ),
               ),

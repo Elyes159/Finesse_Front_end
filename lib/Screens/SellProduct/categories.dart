@@ -249,21 +249,21 @@ class _ChooseCategoryState extends State<ChooseCategory> {
             CustomDropdownFormField<String, String>(
               image: true,
               pathImageHorsmenu: "assets/images/cra.jpeg",
-              label: "Création Artisanale",
+              label: "Creations artisanales",
               options: widget.isExplore ==true ? const [
                 {"TCREA": "Toutes les créations "},
                 {"CERAPO": "Céramique et poterie "},
                 {"HAUCO": "Haute couture"},
-                {"MACRA": "Macramé  "},
-                {"BIJOUX": "Bijoux  "},
-                {"SACOU": "Sacs et couffin  "},
-                {"TAPI": "Tapis  "},
+                {"MACRA": "Macramé"},
+                {"BIJOUX": "Bijoux"},
+                {"SACOU": "Sacs et couffins"},
+                {"TAPI": "Tapis"},
               ] : const [
                 {"CERAPO": "Céramique et poterie "},
                 {"HAUCO": "Haute couture"},
                 {"MACRA": "Macramé  "},
                 {"BIJOUX": "Bijoux  "},
-                {"SACOU": "Sacs et couffin  "},
+                {"SACOU": "Sacs et couffins  "},
                 {"TAPI": "Tapis  "},
                 {"TCREA": "autres "},
               ],
@@ -278,7 +278,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                     {"HAUCO": "Haute couture"},
                     {"MACRA": "Macramé  "},
                     {"BIJOUX": "Bijoux  "},
-                    {"SACOU": "Sacs et couffin  "},
+                    {"SACOU": "Sacs et couffins  "},
                     {"TAPI": "Tapis  "},
                   ], selectedKey);
                   selectedSubCategory = selectedKey;
@@ -292,56 +292,56 @@ class _ChooseCategoryState extends State<ChooseCategory> {
           if ((selectedCategory == null)) ...[
             const SizedBox(height: 24),
             CustomDropdownFormField<String, String>(
-              label: "Decoration",
+              label: "Décorations",
               image: true,
               pathImageHorsmenu: "assets/images/deco.jpeg",
               options: widget.isExplore ==true? const [
-                {"TOUTD": "Toutes Decoration"},
-                {"DECOMU": "Décoration murale"},
+                {"TOUTD": "Toutes les décorations"},
+                {"DECOMU": "Décorations murales"},
                 {"PLVA": "Plantes, vases"},
                 {"LUMI": "Luminaires"},
                 {"OBDEC": "Objets déco "},
                 {"RAN": "Rangements"},
                 {"BGS": "Bougies,senteurs"},
                 {"TAP": "Tapis"},
-                {"LINM": "Linge de maison"},
+                {"LINM": "Linges de maison"},
               ] : const [ 
-                {"DECOMU": "Décoration murale"},
+                {"DECOMU": "Décorations murales"},
                 {"PLVA": "Plantes, vases"},
                 {"LUMI": "Luminaires"},
                 {"OBDEC": "Objets déco "},
                 {"RAN": "Rangements"},
                 {"BGS": "Bougies,senteurs"},
                 {"TAP": "Tapis"},
-                {"LINM": "Linge de maison"},
+                {"LINM": "Linges de maison"},
                 {"TOUTD": "autres"},
               ],
               onChanged: (selectedKey) {
                 setState(() {
                   for_field = getSelectedValue([
-                    {"TOUTD": "Toutes Decoration"},
-                    {"DECOMU": "Décoration murale"},
+                    {"TOUTD": "Toutes les Décoration"},
+                    {"DECOMU": "Décorations murales"},
                     {"PLVA": "Plantes, vases"},
                     {"LUMI": "Luminaires"},
                     {"OBDEC": "Objets déco "},
                     {"RAN": "Rangements"},
                     {"BGS": "Bougies,senteurs"},
                     {"TAP": "Tapis"},
-                    {"LINM": "Linge de maison"},
+                    {"LINM": "Linges de maison"},
                   ], selectedKey);
                   print(for_field);
                   selectedCategory = "D";
                   CategoryForBackend = "D";
                   SubCategoryForBackend = selectedKey;
                   for_field = getSelectedValue([
-                    {"DECOMU": "Décoration murale"},
+                    {"DECOMU": "Décorations murales"},
                     {"PLVA": "Plantes, vases"},
                     {"LUMI": "Luminaires"},
                     {"OBDEC": "Objets déco "},
                     {"RAN": "Rangements"},
                     {"BGS": "Bougies,senteurs"},
                     {"TAP": "Tapis"},
-                    {"LINM": "Linge de maison"},
+                    {"LINM": "Linges de maison"},
                   ], selectedKey);
                   print("$CategoryForBackend $SubCategoryForBackend");
                   // Mettre la catégorie principale sur "Mode et Vintage"

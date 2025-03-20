@@ -12,12 +12,19 @@ class Products extends ChangeNotifier {
   final storage = FlutterSecureStorage();
   String? errorMessage;
   int? nbfollowers;
+    int? nbfollowing;
+
   int? nbfollowervisited;
+  int? nbfollowingvisited;
+
   late List products = [];
   late List productsView = [];
   late List productsArt = [];
   late List followers = [];
+  late List following = [];
   late List followersvisited = [];
+  late List followingvisited = [];
+
   late List Ratings = [];
   late List RatingsVisited = [];
   late List productsByUser = [];
@@ -78,20 +85,21 @@ class Products extends ChangeNotifier {
   }
 
   Future<bool> sellProduct(
-      String title,
-      String description,
-      String subCatgory,
-      double price,
-      String possibleDeff,
-      String? taille,
-      String? pointure,
-      String? etat,
-      String? brand,
-      String? dimension,
-      List<File?> images,
-      String? hauteur,
-      String? largeur,
-      String? longeur,) async {
+    String title,
+    String description,
+    String subCatgory,
+    double price,
+    String possibleDeff,
+    String? taille,
+    String? pointure,
+    String? etat,
+    String? brand,
+    String? dimension,
+    List<File?> images,
+    String? hauteur,
+    String? largeur,
+    String? longeur,
+  ) async {
     // Vérification de la validité de l'ID utilisateur
     String? storedUserId = await storage.read(key: 'user_id');
     if (storedUserId == null || storedUserId.isEmpty) {
@@ -827,6 +835,33 @@ class Products extends ChangeNotifier {
       print('Erreur rencontrée : $e');
     }
   }
+    Future<void> getFollowing(int userId) async {
+    try {
+      final url =
+          Uri.parse('${AppConfig.baseUrl}/api/auth/get_following/$userId/');
+      final headers = {
+        'Content-Type': 'application/json',
+      };
+      final response = await http.get(url, headers: headers);
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['following'] != null) {
+          nbfollowing = data["count"];
+          following = data['following'];
+          notifyListeners();
+          print("hoooouuuni");
+          print(following);
+        } else {
+          print('Aucun produit trouvé pour cet utilisateur.');
+        }
+      } else {
+        print(
+            'Erreur lors de la récupération des produits: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Erreur rencontrée : $e');
+    }
+  }
 
   Future<void> getFollowersVisited(int userId) async {
     try {
@@ -844,6 +879,34 @@ class Products extends ChangeNotifier {
           notifyListeners();
           print("hoooouuuni");
           print(followersvisited);
+        } else {
+          print('Aucun produit trouvé pour cet utilisateur.');
+        }
+      } else {
+        print(
+            'Erreur lors de la récupération des produits: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Erreur rencontrée : $e');
+    }
+  }
+
+  Future<void> getFollowingVisited(int userId) async {
+    try {
+      final url =
+          Uri.parse('${AppConfig.baseUrl}/api/auth/get_following/$userId/');
+      final headers = {
+        'Content-Type': 'application/json',
+      };
+      final response = await http.get(url, headers: headers);
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['following'] != null) {
+          nbfollowingvisited = data["count"];
+          followingvisited = data['following'];
+          notifyListeners();
+          print("hoooouuuni");
+          print(followingvisited);
         } else {
           print('Aucun produit trouvé pour cet utilisateur.');
         }

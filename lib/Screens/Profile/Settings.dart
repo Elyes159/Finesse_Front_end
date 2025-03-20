@@ -1,6 +1,7 @@
 import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/SignIn.dart';
+import 'package:finesse_frontend/Screens/Profile/ProfileScreen.dart';
 import 'package:finesse_frontend/Screens/Profile/contact.dart';
 import 'package:finesse_frontend/Screens/Profile/settingspages/account.dart';
 import 'package:finesse_frontend/Screens/Profile/settingspages/annonce.dart';
@@ -62,6 +63,14 @@ class _ParametresState extends State<Parametres> {
       body: ListView(
         padding: EdgeInsets.all(16),
         children: [
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => ProfileMain()));
+            },
+            child: SettingsTile(
+                 title: "Mon dressing"),
+          ),
           InkWell(
             onTap: () {
               Navigator.push(

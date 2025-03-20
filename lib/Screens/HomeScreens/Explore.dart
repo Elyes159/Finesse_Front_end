@@ -343,6 +343,8 @@ class _ExploreState extends State<Explore> {
                                   second_id: member["id"]);
                           await Provider.of<Products>(context, listen: false)
                               .getFollowersVisited(member["id"]);
+                            await Provider.of<Products>(context, listen: false)
+                              .getFollowingVisited(member["id"]);
 
                           Navigator.push(
                             context,

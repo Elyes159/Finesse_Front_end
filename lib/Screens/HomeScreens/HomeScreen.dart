@@ -10,6 +10,8 @@ import 'package:finesse_frontend/Provider/virement.dart';
 import 'package:finesse_frontend/Screens/HomeScreens/cart.dart';
 import 'package:finesse_frontend/Screens/HomeScreens/story.dart';
 import 'package:finesse_frontend/Screens/HomeScreens/wish.dart';
+import 'package:finesse_frontend/Screens/Profile/ProfileScreen.dart';
+import 'package:finesse_frontend/Screens/Profile/settingspages/orders.dart';
 import 'package:finesse_frontend/Screens/SellProduct/itemDetails.dart';
 import 'package:finesse_frontend/Widgets/cards/productCard.dart';
 import 'package:finesse_frontend/Widgets/categorieChip/categoryChip.dart';
@@ -59,6 +61,8 @@ class _HomeScreenState extends State<HomeScreen> {
         Provider.of<AuthService>(context, listen: false).currentUser!.id);
     Provider.of<Products>(context, listen: false).getFollowers(
         Provider.of<AuthService>(context, listen: false).currentUser!.id);
+         Provider.of<Products>(context, listen: false).getFollowing(
+        Provider.of<AuthService>(context, listen: false).currentUser!.id);
     Provider.of<Products>(context, listen: false).getWish(
         Provider.of<AuthService>(context, listen: false).currentUser!.id);
     Provider.of<Profileprovider>(context, listen: false).getArtistsIds(
@@ -91,39 +95,44 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 20,
-                        backgroundImage:
-                            (user.avatar != "" && user.avatar != null)
-                                ? NetworkImage(widget.parameter == "normal" ||
-                                        widget.parameter == "apple"
-                                    ? "${AppConfig.baseUrl}${user.avatar}"
-                                    : user.avatar!)
-                                : const AssetImage('assets/images/user.png')
-                                    as ImageProvider,
-                      ),
-                      const SizedBox(width: 14),
-                      GestureDetector(
-                        onTap: () async {
-                          String? token =
-                              await FirebaseMessaging.instance.getToken();
-                          print(token);
-                          print(user.artists);
-                        },
-                        child: Text(
-                          user.fullName == "None None"
-                              ? "Bienvenue ${user.username}"
-                              : 'Bienvenue, ${user.fullName.split(' ')[0]}',
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w700,
-                            fontFamily: 'Raleway',
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfileMain()));
+                    },
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundImage:
+                              (user.avatar != "" && user.avatar != null)
+                                  ? NetworkImage(widget.parameter == "normal" ||
+                                          widget.parameter == "apple"
+                                      ? "${AppConfig.baseUrl}${user.avatar}"
+                                      : user.avatar!)
+                                  : const AssetImage('assets/images/user.png')
+                                      as ImageProvider,
+                        ),
+                        const SizedBox(width: 14),
+                        GestureDetector(
+                          onTap: () async {
+                            String? token =
+                                await FirebaseMessaging.instance.getToken();
+                            print(token);
+                            print(user.artists);
+                          },
+                          child: Text(
+                            user.fullName == "None None"
+                                ? "Bienvenue ${user.username}"
+                                : 'Bienvenue, ${user.fullName.split(' ')[0]}',
+                            style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w700,
+                              fontFamily: 'Raleway',
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   Row(
                     children: [
@@ -142,6 +151,21 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       const SizedBox(width: 20),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Orders()));
+                        },
+                        child: SvgPicture.asset(
+                          "assets/Icons/sac.svg",
+                          height: 20,
+                          width: 18,
+                          color: theme ? Colors.white : null,
+                        ),
+                      ),
+                      
                     ],
                   ),
                 ],
@@ -538,7 +562,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       return false;
                     }
                   }).map((product) => {
-                        'type': "Nouveauté",
+                        'type': "Nouveautés",
                         'subcategory': product['subcategory'] ?? 'Unknown',
                         'imageUrl': (product['images'] != null &&
                                 product['images'].isNotEmpty)
@@ -556,6 +580,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         'brand': product['brand'],
                         'selled': product["selled"],
                         'type_pdp': product["type"],
+                        "longeur": product["longeur"],
+                        "hauteur": product["hauteur"],
+                        "largeur": product["largeur"],
+                        "created": product["created"],
                         'owner_id': product["owner"]["id"],
                         'is_favorite': product['is_favorite'],
                         'owner_profile_pic':
@@ -601,7 +629,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       'taille': product['taille'],
                       'pointure': product['pointure'],
                       'brand': product['brand'],
+                      "longeur": product["longeur"],
+                      "hauteur": product["hauteur"],
+                      'etat': product["etat"],
+                      "largeur": product["largeur"],
                       'selled': product["selled"],
+                      "created": product["created"],
                       'type_pdp': product["type"],
                       'owner_id': product["owner"]["id"],
                       'is_favorite': product['is_favorite'],
@@ -639,8 +672,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       'category': product['category'] ?? 'Unknown',
                       'taille': product['taille'],
                       'pointure': product['pointure'],
+                      "created": product["created"],
                       'brand': product['brand'],
+                      "longeur": product["longeur"],
+                      "hauteur": product["hauteur"],
+                      "largeur": product["largeur"],
                       'selled': product["selled"],
+                      'etat': product["etat"],
                       'type_pdp': product["type"],
                       'owner_id': product["owner"]["id"],
                       'is_favorite': product['is_favorite'],
@@ -678,6 +716,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           'description': product['description'] ?? '',
                           'is_available': product['is_available'] ?? false,
                           'taille': product['taille'],
+                          'etat': product["etat"],
+                          "created": product["created"],
                           'is_favorite': product['is_favorite'],
                           'pointure': product['pointure'],
                           'selled': product["selled"],
@@ -701,9 +741,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               [],
                         },
                       )
-                      .where(
-                          (product) => artistList.contains(product["owner_id"]))
-                      .toList(),
+                      .where((product) =>
+                          artistList.contains(product["owner_id"])),
                 ];
                 final filteredProducts = selectedCategory == "All"
                     ? allProducts

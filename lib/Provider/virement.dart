@@ -3,7 +3,6 @@ import 'package:finesse_frontend/ApiServices/backend_url.dart';
 import 'package:finesse_frontend/Models/virement.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'virement.dart';
 
 class VirementProvider with ChangeNotifier {
   List<Virement> _virements = [];
@@ -27,16 +26,25 @@ class VirementProvider with ChangeNotifier {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        final virementsData = data['virements'] as List;
+        final virementsData = data['virements'] as List?;
 
-        _virements = virementsData.map((virement) {
-          return Virement.fromJson(virement);
-        }).toList();
+        // Si la liste 'virements' est vide ou nulle, on ne fait rien et on considère qu'il n'y a pas d'erreur
+        if (virementsData != null && virementsData.isNotEmpty) {
+          _virements = virementsData.map((virement) {
+            return Virement.fromJson(virement);
+          }).toList();
+        } else {
+          _virements = []; // Aucune donnée à afficher
+        }
       } else {
-        throw Exception('Erreur lors de la récupération des virements');
+        // Si la réponse n'est pas 200, on traite l'erreur sans utiliser rethrow
+        _virements = [];
+        print('Erreur lors de la récupération des virements: ${response.statusCode}');
       }
     } catch (error) {
-      rethrow;
+      // Capture l'erreur sans rethrow, on peut loguer ou traiter l'erreur
+      _virements = [];
+      print('Erreur: $error');
     } finally {
       _isLoading = false;
       notifyListeners();

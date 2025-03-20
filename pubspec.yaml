@@ -56,6 +56,10 @@ dependencies:
   sign_in_with_apple: ^6.1.4
   flutter_launcher_icons: ^0.14.3
   intl: ^0.20.2
+  flutter_colorpicker: ^1.1.0
+  color_parser: ^0.0.3
+  app_links: ^6.4.0
+  share_plus: ^10.1.4
 
 dev_dependencies:
   flutter_test:

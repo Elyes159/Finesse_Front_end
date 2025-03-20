@@ -11,7 +11,8 @@ import 'package:provider/provider.dart';  // Importer le package flutter_svg
 
 class VerificationMail extends StatefulWidget {
   final String parametre;
-  const VerificationMail({super.key, required this.parametre});
+  final String? email;
+  const VerificationMail({super.key, this.email, required this.parametre});
 
   @override
   State<VerificationMail> createState() => _VerificationMailState();
@@ -28,25 +29,16 @@ class _VerificationMailState extends State<VerificationMail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: SvgPicture.asset(
-            'assets/Icons/ArrowLeft.svg', // Le chemin vers l'icône SVG
-            width: 24, // Ajuster la taille si nécessaire
-            height: 24,
-          ),
-          onPressed: () {
-            Navigator.pop(context); // Permet de revenir à la page précédente
-          },
-        ),
+        
       ),
       body: ListView(
         children: [
-          const Text(
-            "Entrez le code d'accès",
+           Text(
+            "Nous avons envoyé votre code à ${widget.email ?? "votre email"}",
             textAlign: TextAlign.center,
             style: TextStyle(
               //color: Color(0xFF111928),
-              fontSize: 32,
+              fontSize: 20,
               fontFamily: 'Raleway',
               fontWeight: FontWeight.w800,
             ),
@@ -56,7 +48,7 @@ class _VerificationMailState extends State<VerificationMail> {
             width: 343,
             height: 30,
             child: Text(
-              "Entrez le code d'accès envoyé à 'email'.",
+              "Entrez le code à 6 chiffres",
               textAlign: TextAlign.center,
               style: TextStyle(
                 //color: Color(0xFF111928),

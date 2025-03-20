@@ -1,15 +1,16 @@
+import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'dart:io';
 
 class SellProductProvider extends ChangeNotifier {
   List<File?> _images = List.filled(5, null); // Liste de 5 images initialisées à null
   String? _title; 
-  int? _price; 
+  double? _price; 
 
   // Getters
   List<File?> get images => _images;
   String? get title => _title;
-  int? get price => _price;
+  double? get price => _price;
 
   // Setters
   void setImage(int index, File image) {
@@ -32,12 +33,17 @@ class SellProductProvider extends ChangeNotifier {
       _price = null; // Si aucun prix n'est défini, on garde null
     } else {
       try {
-        _price = int.parse(value);
+        _price = double.parse(value);
       } catch (e) {
         _price = null; // En cas d'erreur de parsing, on met null
       }
     }
     notifyListeners();
+  }
+
+  // Méthode pour vérifier si un des champs est rempli
+  bool isAnyFieldFilled() {
+    return _images.any((image) => image != null) || _title?.isNotEmpty == true || _price != null;
   }
 
   // Méthode pour réinitialiser toutes les valeurs

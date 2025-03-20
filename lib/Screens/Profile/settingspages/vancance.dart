@@ -15,8 +15,8 @@ class Vacance extends StatefulWidget {
 }
 
 class _VacanceState extends State<Vacance> {
-  TextEditingController _startDateController = TextEditingController();
-  TextEditingController _endDateController = TextEditingController();
+  final TextEditingController _startDateController = TextEditingController();
+  final TextEditingController _endDateController = TextEditingController();
 
   DateTime? _startDate;
   DateTime? _endDate;
@@ -44,18 +44,16 @@ class _VacanceState extends State<Vacance> {
               ? ThemeData.dark().copyWith(
                   primaryColor: Color.fromARGB(255, 249, 217, 144),
                   hintColor: Color.fromARGB(255, 249, 217, 144),
-                  dialogBackgroundColor: Colors.grey[800],
                   textButtonTheme: TextButtonThemeData(
                     style: TextButton.styleFrom(foregroundColor: Colors.white),
-                  ),
+                  ), dialogTheme: DialogThemeData(backgroundColor: Colors.grey[800]),
                 )
               : ThemeData.light().copyWith(
                   primaryColor: Color(0xFFFB98B7),
                   hintColor: Color(0xFFFB98B7),
-                  dialogBackgroundColor: Colors.white,
                   textButtonTheme: TextButtonThemeData(
                     style: TextButton.styleFrom(foregroundColor: Colors.black),
-                  ),
+                  ), dialogTheme: DialogThemeData(backgroundColor: Colors.white),
                 ),
           child: child!,
         );

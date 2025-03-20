@@ -94,117 +94,133 @@ class AuthService with ChangeNotifier {
     }
   }
 
- Future<void> signIn({
-  required String username,
-  required String password,
-}) async {
-  final url = Uri.parse("${AppConfig.baseUrl}/api/auth/signin/");
-  final response = await http.post(
-    url,
-    headers: {'Content-Type': 'application/json'},
-    body: json.encode({
-      'username': username,
-      'password': password,
-    }),
-  );
-
-  if (response.statusCode == 200) {
-    final data = json.decode(response.body);
-
-    _accessToken = data['access_token']; // Récupération du token
-    _isAuthenticated = true;
-
-    // Enregistrement du token dans le stockage
-    await storage.write(key: 'access_token', value: _accessToken);
-
-    // Assurez-vous d'extraire les informations utilisateur et de les assigner à _currentUser
-    _currentUser = Users.fromJson(data);
-    await storage.write(key: 'user_id', value: _currentUser!.id.toString());
-    await storage.write(key: 'user_email', value: _currentUser!.email);
-    await storage.write(key: 'user_phone_number', value: _currentUser!.phoneNumber);
-    await storage.write(key: 'user_username', value: _currentUser!.username);
-    await storage.write(
-        key: 'user_avatar',
-        value: _currentUser!.avatar ?? ''); // Si avatar est null, on peut le mettre comme une chaîne vide
-    await storage.write(key: 'user_address', value: _currentUser!.address);
-    await storage.write(
-        key: 'user_is_email_verified',
-        value: _currentUser!.isEmailVerified.toString());
-    await storage.write(
-        key: 'user_verification_code', value: _currentUser!.verificationCode);
-    await storage.write(key: 'user_full_name', value: _currentUser!.fullName);
-    await storage.write(key: 'parametre', value: "normal");
-    await storage.write(
-        key: 'hasStory', value: _currentUser!.hasStory.toString());
-
-    // Récupérer et stocker les artistes
-    List<Artist> artists = [];
-    if (data['artists'] != null) {
-      var artistsJson = data['artists'] as List;
-      artists = artistsJson.map((artistJson) => Artist.fromJson(artistJson)).toList();
-    }
-
-    // Convertir la liste des artistes en chaîne JSON
-    String artistsJsonString = json.encode(artists.map((artist) => artist.toJson()).toList());
-
-    // Stocker la liste des artistes dans FlutterSecureStorage
-    await storage.write(key: 'user_artists', value: artistsJsonString);
-    print("ARTIIIISISIIST");
-    print(artistsJsonString);
-    notifyListeners();
-  } else {
-    print(response.body);
-    throw Exception('Erreur lors de la connexion : ${response.statusCode}');
-  }
-}
-
-
-Future<void> loadUserData() async {
-  String? storedToken = await storage.read(key: 'access_token');
-  String? storedUsername = await storage.read(key: 'user_username');
-  String? storedUserId = await storage.read(key: 'user_id');
-  String? storedUserEmail = await storage.read(key: 'user_email');
-  String? storedUserPhoneNumber = await storage.read(key: 'user_phone_number');
-  String? storedUserAvatar = await storage.read(key: 'user_avatar');
-  String? storedUserFullName = await storage.read(key: 'user_full_name');
-  String? storedUserAddress = await storage.read(key: 'user_address');
-  String? storedUserIsEmailVerified = await storage.read(key: 'user_is_email_verified');
-  String? storedUserVerificationCode = await storage.read(key: 'user_verification_code');
-  String? storedUserDescription = await storage.read(key: 'user_description');
-  String? storedHasStory = await storage.read(key: 'hasStory');
-  String? storedArtists = await storage.read(key: 'user_artists'); // Récupérer la liste des artistes
-
-  if (storedToken != null && storedUserId != null) {
-    _accessToken = storedToken;
-
-    // Convertir la liste d'artistes (si elle existe) depuis JSON
-    List<Artist> artists = [];
-    if (storedArtists != null) {
-      var artistsJson = json.decode(storedArtists) as List;
-      artists = artistsJson.map((artistJson) => Artist.fromJson(artistJson)).toList();
-    }
-
-    _currentUser = Users(
-      id: int.parse(storedUserId),
-      username: storedUsername!,
-      email: storedUserEmail!,
-      phoneNumber: storedUserPhoneNumber!,
-      avatar: storedUserAvatar,
-      fullName: storedUserFullName!,
-      address: storedUserAddress!,
-      isEmailVerified: storedUserIsEmailVerified == 'true',
-      verificationCode: storedUserVerificationCode!,
-      hasStory: storedHasStory == "true",
-      artists: artists,  // Ajouter la liste des artistes
+  Future<void> signIn({
+    required String username,
+    required String password,
+  }) async {
+    final url = Uri.parse("${AppConfig.baseUrl}/api/auth/signin/");
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'username': username,
+        'password': password,
+      }),
     );
 
-    _isAuthenticated = true;
-    notifyListeners();
-  } else {
-    _isAuthenticated = false;
-  }
-}
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
 
+      _accessToken = data['access_token']; // Récupération du token
+      _isAuthenticated = true;
+
+      // Enregistrement du token dans le stockage
+      await storage.write(key: 'access_token', value: _accessToken);
+
+      // Assurez-vous d'extraire les informations utilisateur et de les assigner à _currentUser
+      _currentUser = Users.fromJson(data);
+      await storage.write(key: 'user_id', value: _currentUser!.id.toString());
+      await storage.write(key: 'user_email', value: _currentUser!.email);
+      await storage.write(
+          key: 'user_phone_number', value: _currentUser!.phoneNumber);
+      await storage.write(key: 'user_username', value: _currentUser!.username);
+      await storage.write(
+          key: 'user_avatar',
+          value: _currentUser!.avatar ??
+              ''); // Si avatar est null, on peut le mettre comme une chaîne vide
+      await storage.write(key: 'user_address', value: _currentUser!.address);
+      await storage.write(
+          key: 'user_is_email_verified',
+          value: _currentUser!.isEmailVerified.toString());
+      await storage.write(
+          key: 'user_verification_code', value: _currentUser!.verificationCode);
+      await storage.write(key: 'user_full_name', value: _currentUser!.fullName);
+      await storage.write(key: 'parametre', value: "normal");
+      await storage.write(
+          key: 'hasStory', value: _currentUser!.hasStory.toString());
+
+      await storage.write(
+          key: 'description', value: _currentUser!.description);
+
+      // Récupérer et stocker les artistes
+      List<Artist> artists = [];
+      if (data['artists'] != null) {
+        var artistsJson = data['artists'] as List;
+        artists = artistsJson
+            .map((artistJson) => Artist.fromJson(artistJson))
+            .toList();
+      }
+
+      // Convertir la liste des artistes en chaîne JSON
+      String artistsJsonString =
+          json.encode(artists.map((artist) => artist.toJson()).toList());
+
+      // Stocker la liste des artistes dans FlutterSecureStorage
+      await storage.write(key: 'user_artists', value: artistsJsonString);
+      print("ARTIIIISISIIST");
+      print(artistsJsonString);
+      notifyListeners();
+    } else {
+      print(response.body);
+      throw Exception('Erreur lors de la connexion : ${response.statusCode}');
+    }
+  }
+
+  Future<void> loadUserData() async {
+    String? storedToken = await storage.read(key: 'access_token');
+    String? storedUsername = await storage.read(key: 'user_username');
+    String? storedUserId = await storage.read(key: 'user_id');
+    String? storedUserEmail = await storage.read(key: 'user_email');
+    String? storedUserPhoneNumber =
+        await storage.read(key: 'user_phone_number');
+    String? storedUserAvatar = await storage.read(key: 'user_avatar');
+    String? storedUserFullName = await storage.read(key: 'user_full_name');
+    String? storedUserAddress = await storage.read(key: 'user_address');
+    String? storedUserIsEmailVerified =
+        await storage.read(key: 'user_is_email_verified');
+    String? storedUserVerificationCode =
+        await storage.read(key: 'user_verification_code');
+    String? storedUserDescription = await storage.read(key: 'user_description');
+    String? storedHasStory = await storage.read(key: 'hasStory');
+    String? storedDesc = await storage.read(
+        key: 'description'); // Récupérer la liste des artistes
+
+    String? storedArtists = await storage.read(
+        key: 'user_artists'); // Récupérer la liste des artistes
+
+    if (storedToken != null && storedUserId != null) {
+      _accessToken = storedToken;
+
+      // Convertir la liste d'artistes (si elle existe) depuis JSON
+      List<Artist> artists = [];
+      if (storedArtists != null) {
+        var artistsJson = json.decode(storedArtists) as List;
+        artists = artistsJson
+            .map((artistJson) => Artist.fromJson(artistJson))
+            .toList();
+      }
+
+      _currentUser = Users(
+        id: int.parse(storedUserId),
+        username: storedUsername!,
+        email: storedUserEmail!,
+        phoneNumber: storedUserPhoneNumber!,
+        avatar: storedUserAvatar,
+        fullName: storedUserFullName!,
+        address: storedUserAddress!,
+        isEmailVerified: storedUserIsEmailVerified == 'true',
+        verificationCode: storedUserVerificationCode!,
+        hasStory: storedHasStory == "true",
+        artists: artists,
+        description: storedDesc ?? "", // Ajouter la liste des artistes
+      );
+
+      _isAuthenticated = true;
+      notifyListeners();
+    } else {
+      _isAuthenticated = false;
+    }
+  }
 
   void signOut() async {
     await storage.delete(key: 'access_token');
@@ -329,14 +345,13 @@ Future<void> loadUserData() async {
     }
   }
 
-  Future<http.Response> registerProfileApple({
-    required String full_name,
-    required String phone_number,
-    required String address,
-    XFile? image,
-    required int userId,
-    List<int>? userIds
-  }) async {
+  Future<http.Response> registerProfileApple(
+      {required String full_name,
+      required String phone_number,
+      required String address,
+      XFile? image,
+      required int userId,
+      List<int>? userIds}) async {
     final url = Uri.parse(
         "${AppConfig.baseUrl}/api/auth/$userId/register_profile_apple/");
     var request = http.MultipartRequest('POST', url)
@@ -411,15 +426,12 @@ Future<void> loadUserData() async {
     }
   }
 
-
-
-  Future<http.Response> registerProfilefacebook({
-    required String full_name,
-    required String phone_number,
-    required String address,
-    required int userId,
-    List<int>? userIds
-  }) async {
+  Future<http.Response> registerProfilefacebook(
+      {required String full_name,
+      required String phone_number,
+      required String address,
+      required int userId,
+      List<int>? userIds}) async {
     final url = Uri.parse(
         "${AppConfig.baseUrl}/api/auth/$userId/register_profile_facebook/");
 
@@ -778,28 +790,135 @@ Future<void> loadUserData() async {
   }
 
   Future<bool> googleLogin() async {
-  try {
-    print('Début de la connexion avec Google.');
-    GoogleSignInAccount? account = await _googleSignIn.signIn();
-    print('Compte Google récupéré: $account');
+    try {
+      print('Début de la connexion avec Google.');
+      GoogleSignInAccount? account = await _googleSignIn.signIn();
+      print('Compte Google récupéré: $account');
 
-    if (account != null) {
-      final GoogleSignInAuthentication googleAuth =
-          await account.authentication;
-      print('Authentification Google récupérée: $googleAuth');
+      if (account != null) {
+        final GoogleSignInAuthentication googleAuth =
+            await account.authentication;
+        print('Authentification Google récupérée: $googleAuth');
 
-      final String? idToken = googleAuth.idToken;
-      final String? accessToken = googleAuth.accessToken;
+        final String? idToken = googleAuth.idToken;
+        final String? accessToken = googleAuth.accessToken;
 
+        print('idToken: $idToken');
+        print('accessToken: $accessToken');
+
+        if (idToken == null || accessToken == null) {
+          print('Erreur: idToken ou accessToken est nul');
+          return false;
+        }
+
+        final url = Uri.parse("${AppConfig.baseUrl}/api/auth/googlelogin/");
+        print('URL pour l\'API: $url');
+
+        final response = await http.post(
+          url,
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode({'id_token': idToken}),
+        );
+
+        print('Réponse de l\'API: ${response.body}');
+        print('Code statut de l\'API: ${response.statusCode}');
+
+        if (response.statusCode == 200) {
+          final data = json.decode(response.body);
+          print('Données retournées par l\'API: $data');
+
+          if (response.body.contains("Email does not exist in the database")) {
+            throw Exception('Email does not exist in the database');
+          }
+
+          _accessToken = data['access_token'] ?? '';
+          print('AccessToken après API: $_accessToken');
+
+          _isAuthenticated = true;
+
+          _currentUser = Users.fromJson(data);
+          print('Utilisateur actuel après conversion: $_currentUser');
+
+          // Récupérer et stocker les artistes
+          List<Artist> artists = [];
+          if (data['artists'] != null) {
+            var artistsJson = data['artists'] as List;
+            artists = artistsJson
+                .map((artistJson) => Artist.fromJson(artistJson))
+                .toList();
+          }
+
+          // Convertir la liste des artistes en chaîne JSON
+          String artistsJsonString =
+              json.encode(artists.map((artist) => artist.toJson()).toList());
+
+          // Stocker la liste des artistes dans FlutterSecureStorage
+          await storage.write(key: 'user_artists', value: artistsJsonString);
+
+          // Stocker les autres informations dans FlutterSecureStorage
+          await storage.write(key: 'access_token', value: _accessToken);
+          await storage.write(
+              key: 'user_id', value: _currentUser!.id.toString());
+          await storage.write(key: 'user_email', value: _currentUser!.email);
+          await storage.write(
+              key: 'user_phone_number', value: _currentUser!.phoneNumber);
+          await storage.write(
+              key: 'user_username', value: _currentUser!.username);
+          await storage.write(
+              key: 'user_avatar', value: _currentUser!.avatar ?? '');
+          await storage.write(
+              key: 'user_address', value: _currentUser!.address);
+          await storage.write(
+              key: 'user_is_email_verified',
+              value: _currentUser!.isEmailVerified?.toString() ?? '');
+          await storage.write(
+              key: 'user_verification_code',
+              value: _currentUser!.verificationCode ?? '');
+          await storage.write(
+              key: 'user_full_name', value: _currentUser!.fullName);
+          await storage.write(key: 'parametre', value: "google");
+                    await storage.write(key: 'description', value: _currentUser!.description);
+
+
+          notifyListeners();
+          return true;
+        } else {
+          print(
+              'Erreur lors de la connexion avec Google (statut HTTP): ${response.body}');
+          return false;
+        }
+      } else {
+        print('L\'utilisateur a annulé la connexion Google.');
+        return false;
+      }
+    } catch (e) {
+      print('Erreur lors de la connexion avec Google: $e');
+      return false;
+    }
+  }
+
+  Future<bool> appleLogin() async {
+    try {
+      print('Début de la connexion avec Apple.');
+
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName
+        ],
+      );
+      print('Identifiants Apple récupérés: $credential');
+      final String? idToken = credential.identityToken;
+      final String authorizationCode = credential.authorizationCode;
       print('idToken: $idToken');
-      print('accessToken: $accessToken');
+      print('authorizationCode: $authorizationCode');
 
-      if (idToken == null || accessToken == null) {
-        print('Erreur: idToken ou accessToken est nul');
+      if (idToken == null || authorizationCode == null) {
+        print('Erreur: idToken ou authorizationCode est nul');
         return false;
       }
 
-      final url = Uri.parse("${AppConfig.baseUrl}/api/auth/googlelogin/");
+      final url = Uri.parse("${AppConfig.baseUrl}/api/auth/applelogin/");
       print('URL pour l\'API: $url');
 
       final response = await http.post(
@@ -807,7 +926,6 @@ Future<void> loadUserData() async {
         headers: {'Content-Type': 'application/json'},
         body: json.encode({'id_token': idToken}),
       );
-
       print('Réponse de l\'API: ${response.body}');
       print('Code statut de l\'API: ${response.statusCode}');
 
@@ -831,19 +949,21 @@ Future<void> loadUserData() async {
         List<Artist> artists = [];
         if (data['artists'] != null) {
           var artistsJson = data['artists'] as List;
-          artists = artistsJson.map((artistJson) => Artist.fromJson(artistJson)).toList();
+          artists = artistsJson
+              .map((artistJson) => Artist.fromJson(artistJson))
+              .toList();
         }
 
         // Convertir la liste des artistes en chaîne JSON
-        String artistsJsonString = json.encode(artists.map((artist) => artist.toJson()).toList());
+        String artistsJsonString =
+            json.encode(artists.map((artist) => artist.toJson()).toList());
 
         // Stocker la liste des artistes dans FlutterSecureStorage
         await storage.write(key: 'user_artists', value: artistsJsonString);
 
-        // Stocker les autres informations dans FlutterSecureStorage
+        // Stockage sécurisé des autres données utilisateur
         await storage.write(key: 'access_token', value: _accessToken);
-        await storage.write(
-            key: 'user_id', value: _currentUser!.id.toString());
+        await storage.write(key: 'user_id', value: _currentUser!.id.toString());
         await storage.write(key: 'user_email', value: _currentUser!.email);
         await storage.write(
             key: 'user_phone_number', value: _currentUser!.phoneNumber);
@@ -851,8 +971,7 @@ Future<void> loadUserData() async {
             key: 'user_username', value: _currentUser!.username);
         await storage.write(
             key: 'user_avatar', value: _currentUser!.avatar ?? '');
-        await storage.write(
-            key: 'user_address', value: _currentUser!.address);
+        await storage.write(key: 'user_address', value: _currentUser!.address);
         await storage.write(
             key: 'user_is_email_verified',
             value: _currentUser!.isEmailVerified?.toString() ?? '');
@@ -861,296 +980,217 @@ Future<void> loadUserData() async {
             value: _currentUser!.verificationCode ?? '');
         await storage.write(
             key: 'user_full_name', value: _currentUser!.fullName);
-        await storage.write(key: 'parametre', value: "google");
+        await storage.write(key: 'parametre', value: "apple");
+        await storage.write(key: 'description', value: _currentUser!.description);
 
         notifyListeners();
         return true;
       } else {
         print(
-            'Erreur lors de la connexion avec Google (statut HTTP): ${response.body}');
+            'Erreur lors de la connexion avec Apple (statut HTTP): ${response.body}');
         return false;
       }
-    } else {
-      print('L\'utilisateur a annulé la connexion Google.');
+    } catch (e) {
+      print('Erreur lors de la connexion avec Apple: $e');
       return false;
     }
-  } catch (e) {
-    print('Erreur lors de la connexion avec Google: $e');
-    return false;
   }
-}
 
+  Future<bool> facebookLogin() async {
+    try {
+      final LoginResult result = await FacebookAuth.instance.login();
 
-Future<bool> appleLogin() async {
-  try {
-    print('Début de la connexion avec Apple.');
+      if (result.status == LoginStatus.success) {
+        final AccessToken accessToken = result.accessToken!;
 
-    final credential = await SignInWithApple.getAppleIDCredential(
-      scopes: [
-        AppleIDAuthorizationScopes.email,
-        AppleIDAuthorizationScopes.fullName
-      ],
-    );
-    print('Identifiants Apple récupérés: $credential');
-    final String? idToken = credential.identityToken;
-    final String authorizationCode = credential.authorizationCode;
-    print('idToken: $idToken');
-    print('authorizationCode: $authorizationCode');
+        // Récupérer les données de l'utilisateur de Facebook
+        final userData = await FacebookAuth.instance.getUserData(
+          fields: "email,first_name,last_name,picture",
+        );
 
-    if (idToken == null || authorizationCode == null) {
-      print('Erreur: idToken ou authorizationCode est nul');
-      return false;
-    }
+        final String idToken = accessToken.tokenString;
 
-    final url = Uri.parse("${AppConfig.baseUrl}/api/auth/applelogin/");
-    print('URL pour l\'API: $url');
+        final url = Uri.parse("${AppConfig.baseUrl}/api/auth/facebooklogin/");
+        final response = await http.post(
+          url,
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode({
+            'id_token': idToken,
+            'email': userData['email'],
+            'first_name': userData['first_name'],
+            'last_name': userData['last_name'],
+            'avatar': userData['picture']['data']['url'],
+          }),
+        );
 
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode({'id_token': idToken}),
-    );
-    print('Réponse de l\'API: ${response.body}');
-    print('Code statut de l\'API: ${response.statusCode}');
+        if (response.statusCode == 200) {
+          final data = json.decode(response.body);
 
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      print('Données retournées par l\'API: $data');
+          if (response.body.contains("Email does not exist in the database")) {
+            throw Exception('Email does not exist in the database');
+          }
 
-      if (response.body.contains("Email does not exist in the database")) {
-        throw Exception('Email does not exist in the database');
-      }
+          _accessToken = data['access_token'];
+          _isAuthenticated = true;
+          _currentUser = Users.fromJson(data);
 
-      _accessToken = data['access_token'] ?? '';
-      print('AccessToken après API: $_accessToken');
+          // Récupérer et stocker les artistes
+          List<Artist> artists = [];
+          if (data['artists'] != null) {
+            var artistsJson = data['artists'] as List;
+            artists = artistsJson
+                .map((artistJson) => Artist.fromJson(artistJson))
+                .toList();
+          }
 
-      _isAuthenticated = true;
+          // Convertir la liste des artistes en chaîne JSON
+          String artistsJsonString =
+              json.encode(artists.map((artist) => artist.toJson()).toList());
 
-      _currentUser = Users.fromJson(data);
-      print('Utilisateur actuel après conversion: $_currentUser');
+          // Stocker la liste des artistes dans FlutterSecureStorage
+          await storage.write(key: 'user_artists', value: artistsJsonString);
 
-      // Récupérer et stocker les artistes
-      List<Artist> artists = [];
-      if (data['artists'] != null) {
-        var artistsJson = data['artists'] as List;
-        artists = artistsJson.map((artistJson) => Artist.fromJson(artistJson)).toList();
-      }
-
-      // Convertir la liste des artistes en chaîne JSON
-      String artistsJsonString = json.encode(artists.map((artist) => artist.toJson()).toList());
-
-      // Stocker la liste des artistes dans FlutterSecureStorage
-      await storage.write(key: 'user_artists', value: artistsJsonString);
-
-      // Stockage sécurisé des autres données utilisateur
-      await storage.write(key: 'access_token', value: _accessToken);
-      await storage.write(key: 'user_id', value: _currentUser!.id.toString());
-      await storage.write(key: 'user_email', value: _currentUser!.email);
-      await storage.write(key: 'user_phone_number', value: _currentUser!.phoneNumber);
-      await storage.write(key: 'user_username', value: _currentUser!.username);
-      await storage.write(key: 'user_avatar', value: _currentUser!.avatar ?? '');
-      await storage.write(key: 'user_address', value: _currentUser!.address);
-      await storage.write(
-          key: 'user_is_email_verified', value: _currentUser!.isEmailVerified?.toString() ?? '');
-      await storage.write(key: 'user_verification_code', value: _currentUser!.verificationCode ?? '');
-      await storage.write(key: 'user_full_name', value: _currentUser!.fullName);
-      await storage.write(key: 'parametre', value: "apple");
-
-      notifyListeners();
-      return true;
-    } else {
-      print('Erreur lors de la connexion avec Apple (statut HTTP): ${response.body}');
-      return false;
-    }
-  } catch (e) {
-    print('Erreur lors de la connexion avec Apple: $e');
-    return false;
-  }
-}
-
-Future<bool> facebookLogin() async {
-  try {
-    final LoginResult result = await FacebookAuth.instance.login();
-
-    if (result.status == LoginStatus.success) {
-      final AccessToken accessToken = result.accessToken!;
-
-      // Récupérer les données de l'utilisateur de Facebook
-      final userData = await FacebookAuth.instance.getUserData(
-        fields: "email,first_name,last_name,picture",
-      );
-
-      final String idToken = accessToken.tokenString;
-
-      final url = Uri.parse("${AppConfig.baseUrl}/api/auth/facebooklogin/");
-      final response = await http.post(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({
-          'id_token': idToken,
-          'email': userData['email'],
-          'first_name': userData['first_name'],
-          'last_name': userData['last_name'],
-          'avatar': userData['picture']['data']['url'],
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-
-        if (response.body.contains("Email does not exist in the database")) {
-          throw Exception('Email does not exist in the database');
+          // Stocker les autres informations dans FlutterSecureStorage
+          await storage.write(key: 'access_token', value: _accessToken);
+          await storage.write(
+              key: 'user_id', value: _currentUser!.id.toString());
+          await storage.write(key: 'user_email', value: _currentUser!.email);
+          await storage.write(
+              key: 'user_phone_number', value: _currentUser!.phoneNumber);
+          await storage.write(
+              key: 'user_username', value: _currentUser!.username);
+          await storage.write(
+              key: 'user_avatar', value: _currentUser!.avatar ?? '');
+          await storage.write(
+              key: 'user_address', value: _currentUser!.address);
+          await storage.write(
+              key: 'user_is_email_verified',
+              value: _currentUser!.isEmailVerified.toString());
+          await storage.write(
+              key: 'user_verification_code',
+              value: _currentUser!.verificationCode);
+          await storage.write(
+              key: 'user_full_name', value: _currentUser!.fullName);
+          await storage.write(key: 'parametre', value: "facebook");
+          await storage.write(key: 'description', value: _currentUser!.description);
+          notifyListeners();
+          return true;
+        } else {
+          print('Erreur lors de la connexion avec Facebook: ${response.body}');
+          return false;
         }
-
-        _accessToken = data['access_token'];
-        _isAuthenticated = true;
-        _currentUser = Users.fromJson(data);
-
-        // Récupérer et stocker les artistes
-        List<Artist> artists = [];
-        if (data['artists'] != null) {
-          var artistsJson = data['artists'] as List;
-          artists = artistsJson.map((artistJson) => Artist.fromJson(artistJson)).toList();
-        }
-
-        // Convertir la liste des artistes en chaîne JSON
-        String artistsJsonString = json.encode(artists.map((artist) => artist.toJson()).toList());
-
-        // Stocker la liste des artistes dans FlutterSecureStorage
-        await storage.write(key: 'user_artists', value: artistsJsonString);
-
-        // Stocker les autres informations dans FlutterSecureStorage
-        await storage.write(key: 'access_token', value: _accessToken);
-        await storage.write(
-            key: 'user_id', value: _currentUser!.id.toString());
-        await storage.write(key: 'user_email', value: _currentUser!.email);
-        await storage.write(
-            key: 'user_phone_number', value: _currentUser!.phoneNumber);
-        await storage.write(
-            key: 'user_username', value: _currentUser!.username);
-        await storage.write(
-            key: 'user_avatar', value: _currentUser!.avatar ?? '');
-        await storage.write(
-            key: 'user_address', value: _currentUser!.address);
-        await storage.write(
-            key: 'user_is_email_verified',
-            value: _currentUser!.isEmailVerified.toString());
-        await storage.write(
-            key: 'user_verification_code',
-            value: _currentUser!.verificationCode);
-        await storage.write(
-            key: 'user_full_name', value: _currentUser!.fullName);
-        await storage.write(key: 'parametre', value: "facebook");
-
-        notifyListeners();
-        return true;
       } else {
-        print('Erreur lors de la connexion avec Facebook: ${response.body}');
+        print('L\'utilisateur a annulé la connexion Facebook.');
         return false;
       }
-    } else {
-      print('L\'utilisateur a annulé la connexion Facebook.');
-      return false;
-    }
-  } catch (e) {
-    if (e is Exception &&
-        e.toString() == 'Email does not exist in the database') {
-      print(
-          'L\'email n\'existe pas dans la base de données. Vous pouvez vous inscrire.');
-      return false;
-    } else {
-      print('Erreur lors de la connexion avec Facebook: $e');
-      return false;
+    } catch (e) {
+      if (e is Exception &&
+          e.toString() == 'Email does not exist in the database') {
+        print(
+            'L\'email n\'existe pas dans la base de données. Vous pouvez vous inscrire.');
+        return false;
+      } else {
+        print('Erreur lors de la connexion avec Facebook: $e');
+        return false;
+      }
     }
   }
-}
-
 
   Future<void> loadUserGoogleData() async {
-  String? storedToken = await storage.read(key: 'access_token');
-  String? storedUsername = await storage.read(key: 'user_username');
-  String? storedUserId = await storage.read(key: 'user_id');
-  String? storedUserEmail = await storage.read(key: 'user_email');
-  String? storedUserPhoneNumber = await storage.read(key: 'user_phone_number');
-  String? storedUserAvatar = await storage.read(key: 'user_avatar');
-  String? storedUserFullName = await storage.read(key: 'user_full_name');
-  String? storedUserAddress = await storage.read(key: 'user_address');
-  String? storedUserDescription = await storage.read(key: 'user_description');
-  String? storedHasStory = await storage.read(key: 'hasStory');
-  String? storedArtists = await storage.read(key: 'user_artists'); // Récupérer la liste des artistes
+    String? storedToken = await storage.read(key: 'access_token');
+    String? storedUsername = await storage.read(key: 'user_username');
+    String? storedUserId = await storage.read(key: 'user_id');
+    String? storedUserEmail = await storage.read(key: 'user_email');
+    String? storedUserPhoneNumber =
+        await storage.read(key: 'user_phone_number');
+    String? storedUserAvatar = await storage.read(key: 'user_avatar');
+    String? storedUserFullName = await storage.read(key: 'user_full_name');
+    String? storedUserAddress = await storage.read(key: 'user_address');
+    String? storedUserDescription = await storage.read(key: 'user_description');
+    String? storedHasStory = await storage.read(key: 'hasStory');
+    String? storedArtists = await storage.read(
+        key: 'user_artists');
+    String? storedDesc = await storage.read(
+        key: 'description'); // Récupérer la liste des artistes
 
-  if (storedToken != null && storedUserId != null) {
-    _accessToken = storedToken;
+    if (storedToken != null && storedUserId != null) {
+      _accessToken = storedToken;
 
-    // Convertir la liste d'artistes (si elle existe) depuis JSON
-    List<Artist> artists = [];
-    if (storedArtists != null) {
-      var artistsJson = json.decode(storedArtists) as List;
-      artists = artistsJson.map((artistJson) => Artist.fromJson(artistJson)).toList();
+      // Convertir la liste d'artistes (si elle existe) depuis JSON
+      List<Artist> artists = [];
+      if (storedArtists != null) {
+        var artistsJson = json.decode(storedArtists) as List;
+        artists = artistsJson
+            .map((artistJson) => Artist.fromJson(artistJson))
+            .toList();
+      }
+
+      _currentUser = Users(
+        id: int.parse(storedUserId),
+        email: storedUserEmail!,
+        username: storedUsername!,
+        fullName: storedUserFullName!,
+        avatar: storedUserAvatar ?? "",
+        phoneNumber: storedUserPhoneNumber!,
+        address: storedUserAddress!,
+        hasStory: storedHasStory == "true",
+        artists: artists, description: storedDesc ?? "", // Ajouter la liste des artistes
+      );
+
+      _isAuthenticated = true;
+      notifyListeners();
+    } else {
+      _isAuthenticated = false;
     }
-
-    _currentUser = Users(
-      id: int.parse(storedUserId),
-      email: storedUserEmail!,
-      username: storedUsername!,
-      fullName: storedUserFullName!,
-      avatar: storedUserAvatar ?? "",
-      phoneNumber: storedUserPhoneNumber!,
-      address: storedUserAddress!,
-      hasStory: storedHasStory == "true",
-      artists: artists,  // Ajouter la liste des artistes
-    );
-
-    _isAuthenticated = true;
-    notifyListeners();
-  } else {
-    _isAuthenticated = false;
   }
-}
-
 
   Future<void> loadUserFacebookData() async {
-  String? storedToken = await storage.read(key: 'access_token');
-  String? storedUsername = await storage.read(key: 'user_username');
-  String? storedUserId = await storage.read(key: 'user_id');
-  String? storedUserEmail = await storage.read(key: 'user_email');
-  String? storedUserPhoneNumber = await storage.read(key: 'user_phone_number');
-  String? storedUserAvatar = await storage.read(key: 'user_avatar');
-  String? storedUserFullName = await storage.read(key: 'user_full_name');
-  String? storedUserAddress = await storage.read(key: 'user_address');
-  String? storedUserDescription = await storage.read(key: 'user_description');
-  String? storedHasStory = await storage.read(key: 'hasStory');
-  String? storedArtists = await storage.read(key: 'user_artists'); // Récupérer la liste des artistes
+    String? storedToken = await storage.read(key: 'access_token');
+    String? storedUsername = await storage.read(key: 'user_username');
+    String? storedUserId = await storage.read(key: 'user_id');
+    String? storedUserEmail = await storage.read(key: 'user_email');
+    String? storedUserPhoneNumber =
+        await storage.read(key: 'user_phone_number');
+    String? storedUserAvatar = await storage.read(key: 'user_avatar');
+    String? storedUserFullName = await storage.read(key: 'user_full_name');
+    String? storedUserAddress = await storage.read(key: 'user_address');
+    String? storedUserDescription = await storage.read(key: 'user_description');
+    String? storedHasStory = await storage.read(key: 'hasStory');
+    String? storedArtists = await storage.read(
+        key: 'user_artists');
+        String? storedDesc = await storage.read(
+        key: 'description'); // Récupérer la liste des artistes
 
-  if (storedToken != null && storedUserId != null) {
-    _accessToken = storedToken;
+    if (storedToken != null && storedUserId != null) {
+      _accessToken = storedToken;
 
-    // Convertir la liste d'artistes (si elle existe) depuis JSON
-    List<Artist> artists = [];
-    if (storedArtists != null) {
-      var artistsJson = json.decode(storedArtists) as List;
-      artists = artistsJson.map((artistJson) => Artist.fromJson(artistJson)).toList();
+      // Convertir la liste d'artistes (si elle existe) depuis JSON
+      List<Artist> artists = [];
+      if (storedArtists != null) {
+        var artistsJson = json.decode(storedArtists) as List;
+        artists = artistsJson
+            .map((artistJson) => Artist.fromJson(artistJson))
+            .toList();
+      }
+
+      _currentUser = Users(
+        id: int.parse(storedUserId),
+        email: storedUserEmail!,
+        username: storedUsername!,
+        fullName: storedUserFullName!,
+        avatar: storedUserAvatar ?? "",
+        phoneNumber: storedUserPhoneNumber!,
+        address: storedUserAddress!,
+        hasStory: storedHasStory == "true",
+        artists: artists, description: storedDesc ?? "", // Ajouter la liste des artistes
+      );
+
+      _isAuthenticated = true;
+      notifyListeners();
+    } else {
+      _isAuthenticated = false;
     }
-
-    _currentUser = Users(
-      id: int.parse(storedUserId),
-      email: storedUserEmail!,
-      username: storedUsername!,
-      fullName: storedUserFullName!,
-      avatar: storedUserAvatar ?? "",
-      phoneNumber: storedUserPhoneNumber!,
-      address: storedUserAddress!,
-      hasStory: storedHasStory == "true",
-      artists: artists,  // Ajouter la liste des artistes
-    );
-
-    _isAuthenticated = true;
-    notifyListeners();
-  } else {
-    _isAuthenticated = false;
   }
-}
-
 
   void signOutGoogle() async {
     await storage.delete(key: 'access_token');
@@ -1170,7 +1210,7 @@ Future<bool> facebookLogin() async {
   }
 
   Future<int> updateProfile(int userId, String fullName, String username,
-      String phoneNumber, String address, File? avatar) async {
+      String phoneNumber, String address, String description,File? avatar) async {
     final url = '${AppConfig.baseUrl}/api/auth/update_user_profile/$userId/';
 
     var request = http.MultipartRequest('POST', Uri.parse(url));
@@ -1179,6 +1219,7 @@ Future<bool> facebookLogin() async {
     request.fields['username'] = username;
     request.fields['phone_number'] = phoneNumber;
     request.fields['address'] = address;
+    request.fields['description'] = description;
 
     if (avatar != null) {
       request.files
@@ -1201,6 +1242,7 @@ Future<bool> facebookLogin() async {
           username: responseJson['data']['username'],
           phoneNumber: responseJson['data']['phone_number'],
           address: responseJson['data']['address'],
+          description: responseJson['data']['description'],
           avatar: responseJson['data'][
               'avatar'], // Assurez-vous que cette clé est présente dans la réponse
         );
@@ -1215,6 +1257,9 @@ Future<bool> facebookLogin() async {
             key: 'user_address', value: responseJson['data']['address']);
         await storage.write(
             key: 'user_avatar', value: responseJson['data']['avatar']);
+
+        await storage.write(
+            key: 'description', value: responseJson['data']['description']);
 
         return response.statusCode; // Retourne le code de statut 200
       } else {
@@ -1290,66 +1335,68 @@ Future<bool> facebookLogin() async {
     }
   }
 
+  Future<bool> sendNotif(int userId, String title, String body, String image,
+      int notifierId) async {
+    final url = '${AppConfig.baseUrl}/sendNotif/';
+    try {
+      final Map<String, dynamic> requestData = {
+        'image': image,
+        'user_id': userId,
+        'title': title,
+        'body': body,
+        'notifier_id': notifierId
+      };
+      final String jsonBody = json.encode(requestData);
+      final response = await http.post(
+        Uri.parse(url),
+        body: jsonBody,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+      if (response.statusCode == 200) {
+        print('Notification envoyée avec succès');
+        return true;
+      } else {
+        final errorResponse = json.decode(response.body);
+        print('Erreur: ${errorResponse['message']}');
+        return false;
+      }
+    } catch (error) {
+      print('Error: $error');
+      return false; // Vous pouvez gérer l'erreur ici ou la relancer
+    }
+  }
 
-Future<bool> sendNotif(int userId, String title, String body , String image , int notifierId) async {
-  final url = '${AppConfig.baseUrl}/sendNotif/';
-  try {
-    final Map<String, dynamic> requestData = {
-      'image' : image,
-      'user_id': userId,
-      'title': title,
-      'body': body,
-      'notifier_id' : notifierId
-    };
-    final String jsonBody = json.encode(requestData);
-    final response = await http.post(
-      Uri.parse(url),
-      body: jsonBody,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    );
-    if (response.statusCode == 200) {
-      print('Notification envoyée avec succès');
-      return true;
-    } else {
-      final errorResponse = json.decode(response.body);
-      print('Erreur: ${errorResponse['message']}');
-      return false;
+  Future<bool> sendNotifToAllUsers(
+      String title, String body, String image, int notifierId) async {
+    final url = '${AppConfig.baseUrl}/sendNotifToAllUsers/';
+    try {
+      final Map<String, dynamic> requestData = {
+        'image': image,
+        'title': title,
+        'body': body,
+        'notifier_id': notifierId
+      };
+      final String jsonBody = json.encode(requestData);
+      final response = await http.post(
+        Uri.parse(url),
+        body: jsonBody,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+      if (response.statusCode == 200) {
+        print('Notification envoyée avec succès');
+        return true;
+      } else {
+        final errorResponse = json.decode(response.body);
+        print('Erreur: ${errorResponse['message']}');
+        return false;
+      }
+    } catch (error) {
+      print('Error: $error');
+      return false; // Vous pouvez gérer l'erreur ici ou la relancer
     }
-  } catch (error) {
-    print('Error: $error');
-    return false; // Vous pouvez gérer l'erreur ici ou la relancer
   }
-}
-Future<bool> sendNotifToAllUsers( String title, String body , String image , int notifierId) async {
-  final url = '${AppConfig.baseUrl}/sendNotifToAllUsers/';
-  try {
-    final Map<String, dynamic> requestData = {
-      'image' : image,
-      'title': title,
-      'body': body,
-      'notifier_id' : notifierId
-    };
-    final String jsonBody = json.encode(requestData);
-    final response = await http.post(
-      Uri.parse(url),
-      body: jsonBody,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    );
-    if (response.statusCode == 200) {
-      print('Notification envoyée avec succès');
-      return true;
-    } else {
-      final errorResponse = json.decode(response.body);
-      print('Erreur: ${errorResponse['message']}');
-      return false;
-    }
-  } catch (error) {
-    print('Error: $error');
-    return false; // Vous pouvez gérer l'erreur ici ou la relancer
-  }
-}
 }

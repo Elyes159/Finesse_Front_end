@@ -92,9 +92,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           if (value.length < 8) {
                             return "Le mot de passe doit comporter au moins 8 caractères.";
                           }
-                          if (!RegExp(r'^(.*[A-Z].*){2,}').hasMatch(value)) {
-                            return "Le mot de passe doit contenir au moins 2 lettres majuscules.";
+                          if (!RegExp(r'^(.*[A-Z].*)').hasMatch(value)) {
+                            return "Le mot de passe doit contenir au moins une lettre majuscule.";
                           }
+
                           if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]')
                               .hasMatch(value)) {
                             return "Le mot de passe doit contenir au moins 1 caractère spécial.";
@@ -176,19 +177,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       phoneNumber: "",
                                       firstName: "",
                                       lastName: "",
-                                      fcmToken: "await FirebaseMessaging.instance.getToken()",
+                                      fcmToken: await FirebaseMessaging.instance
+                                          .getToken(),
                                     );
-                                    Navigator.pushReplacement(
+                                    Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) =>
-                                            const VerificationMail(
-                                                parametre: "signup"),
+                                        builder: (context) => VerificationMail(
+                                            email: _emailController.text,
+                                            parametre: "signup"),
                                       ),
                                     );
                                   } catch (error) {
                                     setState(() {
-                                      _errorMessage = error.toString();
+                                      _errorMessage =
+                                          "cette adresse mail est déjà associé à un autre compte";
                                     });
                                   } finally {
                                     setState(() {
@@ -240,8 +243,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           final result = await Provider.of<AuthService>(context,
                                   listen: false)
                               .signUpGoogle(
-                                  fcmToken:
-                                      "await FirebaseMessaging.instance.getToken()");
+                                  fcmToken: await FirebaseMessaging.instance
+                                      .getToken());
 
                           if (result.statusCode == 200) {
                             Navigator.pushReplacement(
@@ -258,7 +261,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           }
                         } catch (e) {
                           setState(() {
-                            _errorMessage = "Account already exist";
+                            _errorMessage =
+                                "cette adresse mail est déjà associé à un autre compte";
                           });
                         }
                       },
@@ -276,7 +280,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   listen: false)
                               .signUpFacebook(
                             fcmToken:
-                                "await FirebaseMessaging.instance.getToken()",
+                                await FirebaseMessaging.instance.getToken(),
                           );
 
                           if (result.statusCode == 200) {
@@ -286,12 +290,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   builder: (context) =>
                                       CompleteInfo(parameter: "facebook")),
                             );
-                          } else {
+                          } else if (result.statusCode == 400) {
                             final responseData =
                                 jsonDecode(result.body); // Décodage du JSON
                             setState(() {
                               _errorMessage =
-                                  "Une erreur inconnue est survenue.";
+                                  "cette adresse mail est déjà associé à un autre compte";
                             });
                           }
                         } catch (e) {

@@ -7,6 +7,7 @@ import 'package:finesse_frontend/Provider/products.dart';
 import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:finesse_frontend/Screens/HomeScreens/livraison.dart';
 import 'package:finesse_frontend/Screens/HomeScreens/paymentpage.dart';
+import 'package:finesse_frontend/Screens/Profile/settingspages/account.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
 import 'package:finesse_frontend/Widgets/CustomTextField/customfieldbuton.dart';
 import 'package:finesse_frontend/Widgets/Navigation/Navigation.dart';
@@ -158,30 +159,58 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   ),
                 ),
                 Spacer(),
-                Text(
-                  Provider.of<AuthService>(context, listen: false)
-                              .currentUser!
-                              .address !=
-                          ""
-                      ? Provider.of<AuthService>(context, listen: false)
-                          .currentUser!
-                          .address
-                      : "À compléter",
-                  textAlign: TextAlign.right,
-                  style: TextStyle(
-                    color: Provider.of<AuthService>(context, listen: false)
-                                .currentUser!
-                                .address ==
-                            ""
-                        ? Color(0xFFBA1A1A)
-                        : theme
-                            ? Colors.white
-                            : Color(0xFF111928),
-                    fontSize: 11,
-                    fontFamily: 'Raleway',
-                    fontWeight: FontWeight.w500,
-                    height: 1.45,
-                  ),
+                Row(
+                  children: [
+                    Consumer<AuthService>(
+                      builder: (context, authService, child) {
+                        final address = authService.currentUser?.address ?? "";
+                        return Text(
+                          address != "" ? address : "À compléter",
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                            color: address == ""
+                                ? Color(0xFFBA1A1A)
+                                : theme
+                                    ? Colors.white
+                                    : Color(0xFF111928),
+                            fontSize: 11,
+                            fontFamily: 'Raleway',
+                            fontWeight: FontWeight.w500,
+                            height: 1.45,
+                          ),
+                        );
+                      },
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Account()));
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(
+                            8.0), // Pour ajouter de l'espace autour du texte
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey, // Couleur de la bordure
+                            width: 1.0, // Épaisseur de la bordure
+                          ),
+                          borderRadius: BorderRadius.circular(
+                              8), // Rayon de la bordure (arrondi)
+                        ),
+                        child: Text(
+                          "Modifier",
+                          style: TextStyle(
+                              color: Colors.grey,
+                              fontFamily: "Raleway",
+                              fontSize:
+                                  16), // Vous pouvez ajuster la taille du texte ici
+                        ),
+                      ),
+                    )
+                  ],
                 )
               ],
             ),
@@ -479,8 +508,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     }
                   }
                 } else {
-                   double totalWithDelivery =
-                        (promoprix ?? widget.total) + deliveryFee;
+                  double totalWithDelivery =
+                      (promoprix ?? widget.total) + deliveryFee;
                   bool ordered =
                       await Provider.of<Products>(context, listen: false)
                           .createOrder(

@@ -4,6 +4,7 @@ import 'package:finesse_frontend/Provider/products.dart';
 import 'package:finesse_frontend/Provider/profileProvider.dart';
 import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:finesse_frontend/Screens/Profile/Settings.dart';
+import 'package:finesse_frontend/Screens/Profile/settingspages/account.dart';
 import 'package:finesse_frontend/Screens/SellProduct/SellproductScreen.dart';
 import 'package:finesse_frontend/Screens/SellProduct/itemDetails.dart';
 import 'package:finesse_frontend/Widgets/cards/productCard.dart';
@@ -13,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
+
 
 // ignore: must_be_immutable
 class ProfileMain extends StatefulWidget {
@@ -44,193 +47,348 @@ class _ProfileMainState extends State<ProfileMain> {
   @override
   Widget build(BuildContext context) {
     final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
+    String deepLinkUrl = 'flutterdeeplink://www.flutter-deep-link.com/profileFinos/${Provider.of<AuthService>(context, listen: false).currentUser!.id}';
 
     final user = widget.id == null
         ? Provider.of<AuthService>(context, listen: false).currentUser!
         : Provider.of<Profileprovider>(context, listen: false).visitedProfile!;
     return Scaffold(
-      appBar: widget.id == null ? null : AppBar(),
-      body: SafeArea(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 32,
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 50.0,
-                    backgroundImage: (user.avatar != "" && user.avatar != null)
-                        ? NetworkImage(
-                            parametre == "normal" || parametre == "apple"
-                                ? widget.id == null
-                                    ? "${AppConfig.baseUrl}${user.avatar}"
-                                    : "${user.avatar}"
-                                : user.avatar!)
-                        : AssetImage('assets/images/user.png') as ImageProvider,
-                    backgroundColor: Colors.transparent,
-                    child: user.avatar == null
-                        ? const CircularProgressIndicator()
-                        : null,
+      appBar: AppBar(
+        title: Text(""), // Remplace par le titre approprié
+        actions: [
+          if (widget.id == null)
+            IconButton(
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(16.0)),
                   ),
-                  const SizedBox(width: 16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.id == null ? user.fullName : user.fullName,
-                        style: TextStyle(
-                          //color: Color(0xFF111928),
-                          fontSize: 20,
-                          fontFamily: 'Raleway',
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        widget.id == null
-                            ? '${Provider.of<Products>(context, listen: false).nbfollowers ?? "0"} Abonnés'
-                            : '${Provider.of<Products>(context, listen: false).nbfollowervisited} Abonnés',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: 'Raleway',
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      if (widget.id != null)
-                        InkWell(
-                          onTap: () async {
-                            bool followed = await Provider.of<Profileprovider>(
-                                    context,
-                                    listen: false)
-                                .followUser(
-                              Provider.of<AuthService>(context, listen: false)
-                                  .currentUser!
-                                  .id,
-                              widget.id!,
-                            );
-
-                            if (followed) {
-                              // Envoie de la notification après le suivi
-                              bool notifSent = await Provider.of<AuthService>(
-                                      context,
-                                      listen: false)
-                                  .sendNotif(
-                                      widget.id!,
-                                      'Nouvel Abonné',
-                                      '${Provider.of<AuthService>(context, listen: false).currentUser!.fullName} à commencer à vous suivre',
-                                      parametre == "normal"
-                                          ? "${AppConfig.baseUrl}${Provider.of<AuthService>(context, listen: false).currentUser!.avatar}"
-                                          : "${Provider.of<AuthService>(context, listen: false).currentUser!.avatar}",
-                                      Provider.of<AuthService>(context,
-                                              listen: false)
-                                          .currentUser!
-                                          .id);
-
-                              print(Provider.of<AuthService>(context,
-                                      listen: false)
-                                  .currentUser!
-                                  .id);
-
-                              if (notifSent) {
-                                print('Notification envoyée avec succès');
-                              } else {
-                                print('Échec de l\'envoi de la notification');
-                              }
-
-                              // Mise à jour de l'état pour afficher la liste des abonnés
-                              setState(() {
-                                Provider.of<Products>(context, listen: false)
-                                    .getFollowersVisited(widget.id!);
-                              });
-                            }
-                          },
-                          child: Container(
-                            width: 94,
-                            height: 36,
-                            clipBehavior: Clip.antiAlias,
-                            decoration: ShapeDecoration(
-                              color: theme
-                                  ? Color.fromARGB(255, 249, 217, 144)
-                                  : Color(0xFFFB98B7),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            child: Center(
-                              child: Consumer<Products>(
-                                builder: (context, productsProvider, child) {
-                                  bool isFollowing =
-                                      productsProvider.followersvisited.any(
-                                    (follower) =>
-                                        follower['id'] ==
-                                        Provider.of<AuthService>(context,
-                                                listen: false)
-                                            .currentUser!
-                                            .id,
-                                  );
-
-                                  return Text(
-                                    isFollowing ? 'désabonner' : "S'abonner",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color:
-                                          theme ? Colors.black : Colors.white,
-                                      fontSize: 14,
-                                      fontFamily: 'Raleway',
-                                      fontWeight: FontWeight.w400,
-                                      height: 1.43,
-                                    ),
-                                  );
-                                },
+                  builder: (context) {
+                    return Container(
+                      width:
+                          double.infinity, // Prend toute la largeur de l'écran
+                      padding: const EdgeInsets.all(16.0),
+                      height: 150, // Hauteur ajustée
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Account()),
+                              );
+                            },
+                            child: const Text(
+                              "Modifier mon profil",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontFamily: 'Raleway',
+                                fontWeight: FontWeight.w700,
+                                height: 2,
                               ),
                             ),
                           ),
-                        )
-                    ],
-                  ),
-                  const Spacer(),
-                  if (widget.id == null)
-                    IconButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Parametres()),
-                          );
-                        },
-                        icon: SvgPicture.asset(
-                          "assets/Icons/setting.svg",
-                          color: theme ? Colors.white : null,
-                        )),
-                ],
-              ),
+                          Divider(),
+                          InkWell(
+                            onTap: () {
+                              Share.share('Découvrez mon profil: $deepLinkUrl');
+                            },
+                            child: const Text(
+                              "Partager mon profil",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontFamily: 'Raleway',
+                                fontWeight: FontWeight.w700,
+                                height: 2,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
+              icon: Icon(Icons.more_horiz),
             ),
-            const SizedBox(height: 8),
-
-            // Onglets
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        ],
+      ),
+      body: Column(
+        children: [
+          SizedBox(
+            height: 0,
+          ),
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Column(
               children: [
-                _buildTab("Articles", index: 0, icon: "assets/Icons/item.svg"),
-                _buildTab("Évaluations",
-                    index: 1, icon: "assets/Icons/rating.svg"),
-                _buildTab("Vendu", index: 2, icon: "assets/Icons/selled.svg"),
+                Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 50.0,
+                      backgroundImage: (user.avatar != "" &&
+                              user.avatar != null)
+                          ? NetworkImage(
+                              parametre == "normal" || parametre == "apple"
+                                  ? widget.id == null
+                                      ? "${AppConfig.baseUrl}${user.avatar}"
+                                      : "${user.avatar}"
+                                  : user.avatar!)
+                          : AssetImage('assets/images/user.png')
+                              as ImageProvider,
+                      backgroundColor: Colors.transparent,
+                      child: user.avatar == null
+                          ? const CircularProgressIndicator()
+                          : null,
+                    ),
+                    const SizedBox(width: 16),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.id == null ? user.fullName : user.fullName,
+                          style: TextStyle(
+                            //color: Color(0xFF111928),
+                            fontSize: 20,
+                            fontFamily: 'Raleway',
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        if (widget.id != null)
+                          InkWell(
+                            onTap: () async {
+                              bool followed =
+                                  await Provider.of<Profileprovider>(context,
+                                          listen: false)
+                                      .followUser(
+                                Provider.of<AuthService>(context,
+                                        listen: false)
+                                    .currentUser!
+                                    .id,
+                                widget.id!,
+                              );
+      
+                              if (followed) {
+                                // Envoie de la notification après le suivi
+                                bool notifSent = await Provider.of<
+                                        AuthService>(context, listen: false)
+                                    .sendNotif(
+                                        widget.id!,
+                                        'Nouvel Abonné',
+                                        '${Provider.of<AuthService>(context, listen: false).currentUser!.fullName} à commencer à vous suivre',
+                                        parametre == "normal"
+                                            ? "${AppConfig.baseUrl}${Provider.of<AuthService>(context, listen: false).currentUser!.avatar}"
+                                            : "${Provider.of<AuthService>(context, listen: false).currentUser!.avatar}",
+                                        Provider.of<AuthService>(context,
+                                                listen: false)
+                                            .currentUser!
+                                            .id);
+      
+                                print(Provider.of<AuthService>(context,
+                                        listen: false)
+                                    .currentUser!
+                                    .id);
+      
+                                if (notifSent) {
+                                  print('Notification envoyée avec succès');
+                                } else {
+                                  print(
+                                      'Échec de l\'envoi de la notification');
+                                }
+      
+                                // Mise à jour de l'état pour afficher la liste des abonnés
+                                setState(() {
+                                  Provider.of<Products>(context,
+                                          listen: false)
+                                      .getFollowersVisited(widget.id!);
+                                });
+                              }
+                            },
+                            child: Container(
+                              width: 94,
+                              height: 36,
+                              clipBehavior: Clip.antiAlias,
+                              decoration: ShapeDecoration(
+                                color: theme
+                                    ? Color.fromARGB(255, 249, 217, 144)
+                                    : Color(0xFFFB98B7),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              child: Center(
+                                child: Consumer<Products>(
+                                  builder:
+                                      (context, productsProvider, child) {
+                                    bool isFollowing =
+                                        productsProvider.followersvisited.any(
+                                      (follower) =>
+                                          follower['id'] ==
+                                          Provider.of<AuthService>(context,
+                                                  listen: false)
+                                              .currentUser!
+                                              .id,
+                                    );
+      
+                                    return Text(
+                                      isFollowing
+                                          ? 'désabonner'
+                                          : "S'abonner",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: theme
+                                            ? Colors.black
+                                            : Colors.white,
+                                        fontSize: 14,
+                                        fontFamily: 'Raleway',
+                                        fontWeight: FontWeight.w400,
+                                        height: 1.43,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                        const SizedBox(height: 4),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  widget.id == null
+                                      ? '${Provider.of<Products>(context, listen: false).nbfollowers ?? "0"}'
+                                      : '${Provider.of<Products>(context, listen: false).nbfollowervisited} ',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontFamily: 'Raleway',
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                Text(
+                                  'Abonnés',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontFamily: 'Raleway',
+                                    fontWeight: FontWeight.w400,
+                                    // Choisissez la couleur que vous souhaitez
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  widget.id == null
+                                      ? '${Provider.of<Products>(context, listen: false).nbfollowing ?? "0"}'
+                                      : '${Provider.of<Products>(context, listen: false).nbfollowingvisited} ',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontFamily: 'Raleway',
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                Text(
+                                  'Abonnements',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontFamily: 'Raleway',
+                                    fontWeight: FontWeight.w400,
+                                    // Choisissez la couleur que vous souhaitez
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Consumer<Products>(
+                              builder: (context, provider, child) {
+                                final products = widget.id == null
+                                    ? provider.productsByUser
+                                    : provider.productsByUserVisited;
+      
+                                return Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      '${products.length}', // Affiche le nombre d'éléments dans la liste
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontFamily: 'Raleway',
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Produits', // Libellé sous le nombre
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontFamily: 'Raleway',
+                                        fontWeight: FontWeight.w400,
+                                        // Couleur personnalisable
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const Spacer(),
+                  ],
+                ),
+                Text(
+                  widget.id == null
+                      ? Provider.of<AuthService>(context, listen: false).currentUser!.description
+                      : '${Provider.of<Profileprovider>(context, listen: false).visitedProfile!.description} ',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: 'Raleway',
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
               ],
             ),
-            const SizedBox(height: 8),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: _buildTabContent(),
-              ),
+          ),
+          const SizedBox(height: 8),
+      
+          // Onglets
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildTab("Articles", index: 0, icon: "assets/Icons/item.svg"),
+              _buildTab("Vendu", index: 1, icon: "assets/Icons/selled.svg"),
+              _buildTab("Évaluations",
+                  index: 2, icon: "assets/Icons/rating.svg"),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: _buildTabContent(),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -295,9 +453,9 @@ class _ProfileMainState extends State<ProfileMain> {
     switch (_selectedTabIndex) {
       case 0:
         return _buildItemsTab();
-      case 1:
-        return _buildRatingsTab();
       case 2:
+        return _buildRatingsTab();
+      case 1:
         return _buildAboutTab();
       default:
         return const Center(child: Text("Invalid Tab"));
@@ -344,28 +502,38 @@ class _ProfileMainState extends State<ProfileMain> {
                   ? null
                   : () {
                       final productData = {
-                        'type': 'Pour vous',
-                        'category': product['category'] ?? 'Unknown',
+                        'type': "Récemment consulté",
                         'subcategory': product['subcategory'] ?? 'Unknown',
-                        'imageUrl': imageUrl,
-                        'images': product['images'] ?? [],
+                        'imageUrl':
+                            "${AppConfig.baseUrl}${product['images'][0]}"
+                                    .isNotEmpty
+                                ? "${AppConfig.baseUrl}${product['images'][0]}"
+                                : 'assets/images/test1.png',
+                        'images': product['images'] ??
+                            [], // Liste complète des images
                         'productName': product['title'] ?? 'Unknown Product',
-                        'productPrice': "${product['price']} TND",
+                        'productPrice': "${product['price']}".toString(),
                         'product_id': "${product['id']}",
                         'description': product['description'] ?? '',
                         'is_available': product['is_available'] ?? false,
+                        'category': product['category'] ?? 'Unknown',
                         'taille': product['taille'],
-                        'is_favorite': product['is_favorite'] ?? false,
                         'pointure': product['pointure'],
-                        'selled': product['selled'],
                         'brand': product['brand'],
-                        'owner_id': widget.id,
-                        'type_pdp': product['type'],
+                        "longeur": product["longeur"],
+                        "hauteur": product["hauteur"],
+                        'etat': product["etat"],
+                        "largeur": product["largeur"],
+                        'selled': product["selled"],
+                        "created": product["created"],
+                        'type_pdp': product["type"],
+                        'owner_id': product["owner"]["id"],
+                        'is_favorite': product['is_favorite'],
                         'owner_profile_pic':
-                            product['owner']?['profile_pic'] ?? "",
-                        'owner_username': product['owner']?['username'] ?? "",
-                        'owner_ratings': product['owner']?['ratings'] ?? "",
-                        'comments': (product['comments'] as List<dynamic>?)
+                            product["owner"]["profile_pic"] ?? "",
+                        'owner_username': product["owner"]["username"] ?? "",
+                        'owner_ratings': product["owner"]["ratings"] ?? "",
+                        'comments': product['comments']
                                 ?.map((comment) => {
                                       'username':
                                           comment['username'] ?? 'Unknown',
@@ -374,7 +542,7 @@ class _ProfileMainState extends State<ProfileMain> {
                                       'created_at': comment['created_at'] ?? '',
                                     })
                                 .toList() ??
-                            [],
+                            [], // Ajout des commentaires ici
                       };
 
                       Navigator.push(

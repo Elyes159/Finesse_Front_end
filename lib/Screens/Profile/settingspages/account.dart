@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
+import 'package:finesse_frontend/Widgets/CustomTextField/DescTextField.dart';
 import 'package:finesse_frontend/Widgets/CustomTextField/customTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -62,6 +63,8 @@ class _AccountState extends State<Account> {
             TextEditingController(text: user.phoneNumber);
         TextEditingController addressController =
             TextEditingController(text: user.address);
+        TextEditingController descriptionController =
+            TextEditingController(text: user.description);
         return Scaffold(
           appBar: AppBar(
             title: Center(
@@ -177,6 +180,13 @@ class _AccountState extends State<Account> {
                         controller: addressController,
                         label: "Addresse",
                         isPassword: false),
+                  SizedBox(
+                      height: 16,
+                    ),
+                    DescTextField(
+                        controller: descriptionController,
+                        label: "Biographie",
+                        isPassword: false),
                     SizedBox(
                       height: 40,
                     ),
@@ -191,7 +201,9 @@ class _AccountState extends State<Account> {
                           usernameController.text,
                           phoneController.text,
                           addressController.text,
-                          _selectedImage, // Passer le fichier d'image sélectionné
+                          descriptionController.text,
+                          _selectedImage,
+                           // Passer le fichier d'image sélectionné
                         );
 
                         if (statusCode == 200) {

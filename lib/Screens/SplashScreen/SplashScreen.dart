@@ -5,6 +5,7 @@ import 'package:finesse_frontend/Provider/products.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/SignIn.dart';
 import 'package:finesse_frontend/Screens/HomeScreens/HomeScreen.dart';
 import 'package:finesse_frontend/Widgets/Navigation/Navigation.dart';
+import 'package:finesse_frontend/deeplinks.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -45,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (accessToken != null && accessToken.isNotEmpty) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => Navigation(onItemSelected: (int value) {},currentIndex: 0,)),
+          MaterialPageRoute(builder: (context) => DeepLinksListener(child: Navigation(onItemSelected: (int value) {},currentIndex: 0,))),
         );
       } else {
         Navigator.pushReplacement(

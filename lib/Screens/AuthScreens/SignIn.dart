@@ -83,7 +83,7 @@ class _SignInScreenState extends State<SignInScreen> {
               width: 251,
               height: 48,
               child: Text(
-                "Entrez nom d'utilisateur\net votre mot de passe",
+                "Se connecter à Finos",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   //color: Color(0xFF111928),
@@ -114,7 +114,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   const SizedBox(height: 16),
                   CustomTextFormField(
                     controller: _passwordController,
-                    label: "Votre mot de passe",
+                    label: "Mot de passe",
                     isPassword: true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -327,7 +327,7 @@ class _SignInScreenState extends State<SignInScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  'Pas encore de compte ?',
+                  "Tu n'as pas de compte? ",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     //color: Color(0xFF111928),
@@ -348,7 +348,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: theme? Color.fromARGB(255, 249, 217, 144):  Color(0xFFC668AA),
-                      fontSize: 12,
+                      fontSize: 14,
                       fontFamily: 'Raleway',
                       fontWeight: FontWeight.w500,
                     ),

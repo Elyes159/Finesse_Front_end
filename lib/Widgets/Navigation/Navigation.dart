@@ -1,11 +1,14 @@
 import 'package:finesse_frontend/ApiServices/backend_url.dart';
 import 'package:finesse_frontend/Provider/AuthService.dart';
+import 'package:finesse_frontend/Provider/sellprovider.dart';
 import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:finesse_frontend/Screens/HomeScreens/Explore.dart';
 import 'package:finesse_frontend/Screens/HomeScreens/HomeScreen.dart';
 import 'package:finesse_frontend/Screens/Notifications/NotifScreens.dart';
 import 'package:finesse_frontend/Screens/Profile/ProfileScreen.dart';
+import 'package:finesse_frontend/Screens/Profile/Settings.dart';
 import 'package:finesse_frontend/Screens/SellProduct/SellproductScreen.dart';
+import 'package:finesse_frontend/deeplinks.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -51,7 +54,7 @@ class NavigationState extends State<Navigation> {
     parametre = await const FlutterSecureStorage().read(key: 'parametre');
     setState(() {
       _pages = [
-        HomeScreen(parameter: parametre!),
+        DeepLinksListener(child: HomeScreen(parameter: parametre!)),
         Explore(
             category_for_field: widget.category_for_field,
             from_mv: widget.from_mv),
@@ -60,16 +63,94 @@ class NavigationState extends State<Navigation> {
             product: widget.product,
             categoryFromMv: widget.from_mv),
         NotifScreen(),
-        ProfileMain(),
+        Parametres()
       ];
     });
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    widget.onItemSelected(index);
+  void _onItemTapped(int index) async {
+    // Récupère le SellProductProvider pour vérifier si des champs sont remplis
+    final sellProductProvider =
+        Provider.of<SellProductProvider>(context, listen: false);
+
+    // Vérifie si l'utilisateur essaie de quitter la page "SellProductScreen"
+    if (_selectedIndex == 2 && index != 2) {
+      // Si des champs sont remplis, affiche un dialog de confirmation avant de quitter la page
+      if (sellProductProvider.isAnyFieldFilled()) {
+        bool? confirmExit = await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Confirmation',
+                  style: TextStyle(
+                      fontFamily: "Raleway",
+                      color: Provider.of<ThemeProvider>(context, listen: false)
+                              .isDarkMode
+                          ? Colors.white
+                          : Colors.black)),
+              content: Text(
+                  'Êtes-vous sûr de vouloir annuler les modifications?',
+                  style: TextStyle(
+                      fontFamily: "Raleway",
+                      color: Provider.of<ThemeProvider>(context, listen: false)
+                              .isDarkMode
+                          ? Colors.white
+                          : Colors.black)),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false); // Annule la navigation
+                  },
+                  child: Text('Non',
+                      style: TextStyle(
+                          fontFamily: "Raleway",
+                          color:
+                              Provider.of<ThemeProvider>(context, listen: false)
+                                      .isDarkMode
+                                  ? Colors.white
+                                  : Colors.black)),
+                ),
+                TextButton(
+                  onPressed: () {
+                    // Réinitialise les variables du provider à null avant de quitter
+                    sellProductProvider.reset();
+                    Navigator.of(context).pop(true); // Accepte la navigation
+                  },
+                  child: Text(
+                    'Oui',
+                    style: TextStyle(
+                        fontFamily: "Raleway",
+                        color:
+                            Colors.red),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+
+        // Si l'utilisateur confirme, on change l'onglet
+        if (confirmExit ?? false) {
+          setState(() {
+            _selectedIndex = index; // Met à jour l'index sélectionné
+          });
+          widget.onItemSelected(
+              index); // Appelle le callback pour changer d'onglet
+        }
+      } else {
+        // Si aucune donnée n'est remplie, on peut quitter directement
+        setState(() {
+          _selectedIndex = index;
+        });
+        widget.onItemSelected(index);
+      }
+    } else {
+      // Si l'utilisateur n'est pas sur "SellProductScreen", on continue normalement
+      setState(() {
+        _selectedIndex = index;
+      });
+      widget.onItemSelected(index);
+    }
   }
 
   @override
@@ -140,31 +221,19 @@ class NavigationState extends State<Navigation> {
             label: 'Notifications',
           ),
           BottomNavigationBarItem(
-            icon: Container(
-              height: 24,
-              width: 24,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: _selectedIndex == 4
-                      ? (theme
-                          ? Border.all(
-                              color: Color.fromARGB(255, 249, 217, 144),
-                              width: 2)
-                          : Border.all(color: Color(0xFFFB98B7), width: 2))
-                      : null),
-              child: CircleAvatar(
-                radius: 50.0,
-                backgroundImage: (user.avatar != "" && user.avatar != null)
-                    ? NetworkImage(parametre == "normal" || parametre == "apple"
-                        ? "${AppConfig.baseUrl}${user.avatar}"
-                        : user.avatar!)
-                    : AssetImage('assets/images/user.png') as ImageProvider,
-                backgroundColor: Colors.transparent,
-                child: user.avatar == null ? Container() : null,
-              ),
+            icon: SvgPicture.asset(
+              "assets/Icons/setting.svg",
+              color: _selectedIndex == 4
+                  ? theme
+                      ? Color.fromARGB(255, 249, 217, 144)
+                      : Color(0xFFFB98B7)
+                  : theme
+                      ? Colors.white
+                      : Colors.black,
             ),
-            label: "Profil",
+            label: 'Paramétres',
           ),
+          
         ],
         selectedLabelStyle: TextStyle(
           fontFamily: "Raleway",

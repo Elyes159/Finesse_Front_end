@@ -1,5 +1,7 @@
+import 'dart:developer';
 import 'dart:io';
 
+import 'package:app_links/app_links.dart';
 import 'package:finesse_frontend/FirebaseService/firebase_options.dart';
 import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Provider/Notifications.dart';
@@ -9,8 +11,10 @@ import 'package:finesse_frontend/Provider/profileProvider.dart';
 import 'package:finesse_frontend/Provider/sellprovider.dart';
 import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:finesse_frontend/Provider/virement.dart';
+import 'package:finesse_frontend/Screens/Profile/ProfileScreen.dart';
 import 'package:finesse_frontend/Screens/SplashScreen/SplashScreen.dart';
 import 'package:finesse_frontend/Widgets/Navigation/Navigation.dart';
+import 'package:finesse_frontend/deeplinks.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +45,12 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await initializeNotifications(); 
+  final applinks = AppLinks();
+  final sub = applinks.uriLinkStream.listen((uri) {
+    log("URI : ${uri.toString()}");
+    print("URI : ${uri.toString()}");
+  },);
+  await initializeNotifications();
 
   runApp(
     MultiProvider(
@@ -67,6 +76,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return MaterialApp(
+      routes: {
+        '/ProfileFinos' : (context)=>  ProfileMain(id: 0,)
+      },
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: themeProvider.isDarkMode
@@ -74,7 +86,7 @@ class MyApp extends StatelessWidget {
             : ColorScheme.fromSeed(seedColor: Colors.white, brightness: Brightness.light),
         useMaterial3: true,
       ),
-      home: const SplashScreen(),
+      home: DeepLinksListener(child: const SplashScreen()),
     );
   }
 }

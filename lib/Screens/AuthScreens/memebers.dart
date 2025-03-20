@@ -5,13 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class MemberSelectionPage extends StatefulWidget {
+  const MemberSelectionPage({super.key});
+
   @override
   _MemberSelectionPageState createState() => _MemberSelectionPageState();
 }
 
 class _MemberSelectionPageState extends State<MemberSelectionPage> {
   List<dynamic> selectedMembers = [];
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {

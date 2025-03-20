@@ -33,8 +33,9 @@ class Profileprovider with ChangeNotifier {
         address: data["user_profile"]['address'] ?? "",
         isEmailVerified: data["user_profile"]['is_email_verified'] ?? false,
         verificationCode: data["user_profile"]['verification_code'] ?? "",
+
         hasStory: data["user_profile"]['hasStory'] ?? false,
-        artists: artists,  // Ajouter la liste des artistes
+        artists: artists, description: data["user_profile"]["description"],  // Ajouter la liste des artistes
       );
       notifyListeners();
     } else {
