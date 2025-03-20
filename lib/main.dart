@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:app_links/app_links.dart';
-import 'package:finesse_frontend/FirebaseService/firebase_options.dart';
+import 'package:finesse_frontend/firebase_options.dart';
 import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Provider/Notifications.dart';
 import 'package:finesse_frontend/Provider/Stories.dart';

@@ -233,27 +233,32 @@ class _ExploreState extends State<Explore> {
                             final product =
                                 productsProvider.filteredProducts[index];
                             final productData = {
-                              'type': 'Pour vous',
-                              'category': product['category'] ?? 'Unknown',
+                              'type': "Nouveautés",
                               'subcategory':
                                   product['subcategory'] ?? 'Unknown',
-                              'imageUrl': product['images'].isNotEmpty
+                              'imageUrl': (product['images'] != null &&
+                                      product['images'].isNotEmpty)
                                   ? "${AppConfig.baseUrl}${product['images'][0]}"
-                                  : 'assets/default_image.png',
+                                  : 'assets/images/test1.png',
                               'images': product['images'] ?? [],
                               'productName':
                                   product['title'] ?? 'Unknown Product',
-                              'productPrice': "${product['price']} TND",
+                              'productPrice': "${product['price']}",
                               'product_id': "${product['id']}",
                               'description': product['description'] ?? '',
                               'is_available': product['is_available'] ?? false,
+                              'category': product['category'] ?? 'Unknown',
                               'taille': product['taille'],
-                              'is_favorite': product['is_favorite'],
                               'pointure': product['pointure'],
-                              'selled': product["selled"],
                               'brand': product['brand'],
-                              'owner_id': product["owner"]["id"],
+                              'selled': product["selled"],
                               'type_pdp': product["type"],
+                              "longeur": product["longeur"],
+                              "hauteur": product["hauteur"],
+                              "largeur": product["largeur"],
+                              "created": product["created"],
+                              'owner_id': product["owner"]["id"],
+                              'is_favorite': product['is_favorite'],
                               'owner_profile_pic':
                                   product["owner"]["profile_pic"] ?? "",
                               'owner_username':
@@ -343,7 +348,7 @@ class _ExploreState extends State<Explore> {
                                   second_id: member["id"]);
                           await Provider.of<Products>(context, listen: false)
                               .getFollowersVisited(member["id"]);
-                            await Provider.of<Products>(context, listen: false)
+                          await Provider.of<Products>(context, listen: false)
                               .getFollowingVisited(member["id"]);
 
                           Navigator.push(
