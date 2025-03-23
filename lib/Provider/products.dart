@@ -85,6 +85,7 @@ class Products extends ChangeNotifier {
   }
 
   Future<bool> sellProduct(
+    String? color,
     String title,
     String description,
     String subCatgory,
@@ -122,6 +123,7 @@ class Products extends ChangeNotifier {
     request.fields['longeur'] = longeur ?? "";
     request.fields['largeur'] = largeur ?? "";
     request.fields['hauteur'] = hauteur ?? "";
+    request.fields['color'] = color ?? "";
     request.fields['is_available'] = "true"; // Défini comme "true"
 
     // Ajouter les images à la requête
@@ -271,6 +273,8 @@ class Products extends ChangeNotifier {
         final data = json.decode(response.body);
         _members = List<Map<String, dynamic>>.from(data['members']);
         _errorMessage = '';
+        print("heeeeeeeeeeeeeeeeeeeeeeey");
+        print(data);
       } else if (response.statusCode == 404) {
         _errorMessage = 'Utilisateur non trouvé.';
         _members = [];

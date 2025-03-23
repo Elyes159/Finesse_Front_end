@@ -4,19 +4,20 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class CustomDropdownFormField<K, V> extends StatefulWidget {
-  final List<Map<K, V>> options; // Liste des options sous forme de Map<K, V>
-  final String label; // Label du champ
+  final List<Map<K, V>> options; 
+  final String label; 
   final K? selectedKey;
-  final String? selectedValue; // Clé sélectionnée par défaut
-  final ValueChanged<K?>? onChanged; // Callback pour le changement de clé
-  final FormFieldValidator<K>? validator; // Validation
+  final String? selectedValue; 
+  final ValueChanged<K?>? onChanged; 
+  final FormFieldValidator<K>? validator; 
   final FormFieldSetter<K>? onSaved;
   final bool? isButton;
   final bool? imageMenu;
   final bool? image;
   final String? pathImageHorsmenu;
-  final String? pathImageForsmenu;
-  final VoidCallback? onTap; // Sauvegarde
+  final List<Color>? colors; // Liste des couleurs
+  final List<String>? pathImagesForsmenu;
+  final VoidCallback? onTap;
 
   const CustomDropdownFormField({
     super.key,
@@ -31,8 +32,9 @@ class CustomDropdownFormField<K, V> extends StatefulWidget {
     this.onTap,
     this.imageMenu = false,
     this.image = false,
+    this.colors, // Liste des couleurs
     this.pathImageHorsmenu,
-    this.pathImageForsmenu, // Défaut à false pour un DropdownButton
+    this.pathImagesForsmenu,
   });
 
   @override
@@ -51,8 +53,7 @@ class _CustomDropdownFormFieldState<K, V>
   void initState() {
     super.initState();
     if (widget.selectedKey != null &&
-        widget.options
-            .any((option) => option.keys.first == widget.selectedKey)) {
+        widget.options.any((option) => option.keys.first == widget.selectedKey)) {
       _selectedKey = widget.selectedKey;
     } else {
       _selectedKey = null;
@@ -108,24 +109,19 @@ class _CustomDropdownFormFieldState<K, V>
             ),
             child: widget.isButton == true
                 ? GestureDetector(
-                  onTap: widget.onTap,
-                  child: Row(
+                    onTap: widget.onTap,
+                    child: Row(
                       children: [
                         if (widget.image == true)
                           Container(
-                            width:
-                                50, // Augmente la largeur pour agrandir l'image
-                            height:
-                                50, // Assure-toi que la hauteur est identique à la largeur pour le carré
+                            width: 50,
+                            height: 50,
                             decoration: BoxDecoration(
-                              shape: BoxShape
-                                  .rectangle, // Pour obtenir une forme carrée
-                              borderRadius: BorderRadius.circular(
-                                  0), // Pour arrondir les coins si tu veux
+                              shape: BoxShape.rectangle,
+                              borderRadius: BorderRadius.circular(0),
                               image: DecorationImage(
                                 image: AssetImage(widget.pathImageHorsmenu!),
-                                fit: BoxFit
-                                    .cover, // Assure-toi que l'image remplit l'espace
+                                fit: BoxFit.cover,
                               ),
                             ),
                           ),
@@ -149,42 +145,21 @@ class _CustomDropdownFormFieldState<K, V>
                           ),
                         ),
                         Spacer(),
-                        // GestureDetector(
-                        //   onTap: widget.onTap,
-                        //   child: Container(
-                        //       margin: const EdgeInsets.only(left: 8.0),
-                        //       width: 40,
-                        //       height: 40,
-                        //       decoration: BoxDecoration(
-                        //         color: theme
-                        //             ? Color.fromARGB(255, 249, 217, 144)
-                        //             : Color(0xFFFB98B7),
-                        //         shape: BoxShape.circle,
-                        //       ),
-                        //       child: const Icon(
-                        //         Icons.arrow_forward,
-                        //         color: Colors.white,
-                        //         size: 24,
-                        //       )),
-                        // ),
                       ],
                     ),
-                )
+                  )
                 : Row(
                     children: [
                       if (widget.image == true)
                         Container(
-                          width: 50, // Définir la largeur du carré
-                          height:
-                              50, // Définir la hauteur du carré (doit être égal à la largeur pour un carré)
+                          width: 50,
+                          height: 50,
                           decoration: BoxDecoration(
                             image: DecorationImage(
                               image: AssetImage(widget.pathImageHorsmenu!),
-                              fit: BoxFit
-                                  .cover, // Pour ajuster l'image à l'intérieur du carré
+                              fit: BoxFit.cover,
                             ),
-                            borderRadius: BorderRadius
-                                .zero, // Pas de bordure arrondie, c'est un carré
+                            borderRadius: BorderRadius.zero,
                           ),
                         ),
                       const SizedBox(width: 12),
@@ -204,35 +179,48 @@ class _CustomDropdownFormFieldState<K, V>
                             color: theme ? Colors.white : Colors.black,
                           ),
                           underline: const SizedBox.shrink(),
-                          items: widget.options
-                              .map(
-                                (option) => DropdownMenuItem<K>(
-                                  value: option.keys.first,
-                                  child: Row(
-                                    children: [
-                                      if (widget.imageMenu == true)
-                                        CircleAvatar(
-                                          radius: 50,
-                                          backgroundImage: AssetImage(
-                                            widget.pathImageForsmenu!,
-                                          ),
-                                        ),
-                                      Expanded(
-                                        child: Text(
-                                          option.values.first.toString(),
-                                          style: TextStyle(
-                                            color: theme
-                                                ? Colors.white
-                                                : Colors.black,
-                                            fontFamily: 'Raleway',
-                                          ),
+                          items: widget.options.asMap().entries.map(
+                            (entry) {
+                              int index = entry.key;
+                              Map<K, V> option = entry.value;
+
+                              // Utilisation de la liste des couleurs pour chaque élément
+                              Color itemColor = widget.colors != null &&
+                                      widget.colors!.isNotEmpty
+                                  ? widget.colors![index % widget.colors!.length]
+                                  : (theme ? Colors.white : Colors.black);
+
+                              return DropdownMenuItem<K>(
+                                value: option.keys.first,
+                                child: Row(
+                                  children: [
+                                    if (widget.imageMenu == true &&
+                                        widget.pathImagesForsmenu != null)
+                                      Container(
+                                        height: 30,
+                                        width: 30,
+                                        decoration: BoxDecoration(
+                                            color: itemColor,
+                                            borderRadius:
+                                                BorderRadius.circular(30)),
+                                      ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(
+                                        option.values.first.toString(),
+                                        style: TextStyle(
+                                          color: theme
+                                              ? Colors.white
+                                              : Colors.black,
+                                          fontFamily: 'Raleway',
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                              )
-                              .toList(),
+                              );
+                            },
+                          ).toList(),
                           hint: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -283,3 +271,4 @@ class _CustomDropdownFormFieldState<K, V>
     );
   }
 }
+

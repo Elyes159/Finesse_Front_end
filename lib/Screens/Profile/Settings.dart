@@ -69,7 +69,7 @@ class _ParametresState extends State<Parametres> {
                   context, MaterialPageRoute(builder: (context) => ProfileMain()));
             },
             child: SettingsTile(
-                 title: "Mon dressing"),
+                 title: "Mon profil"),
           ),
           InkWell(
             onTap: () {

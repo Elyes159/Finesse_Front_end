@@ -6,6 +6,7 @@ import 'package:finesse_frontend/Provider/products.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/letzGo.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/memebers.dart';
 import 'package:finesse_frontend/Widgets/AuthButtons/CustomButton.dart';
+import 'package:finesse_frontend/Widgets/CustomOptionsFields/optionsField.dart';
 import 'package:finesse_frontend/Widgets/CustomTextField/DescTextField.dart';
 import 'package:finesse_frontend/Widgets/CustomTextField/artistsfirld.dart';
 import 'package:finesse_frontend/Widgets/CustomTextField/categoryAbsorb.dart';
@@ -19,7 +20,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:typed_data';
 import 'package:http/http.dart' as http;
-
 
 class CompleteInfo extends StatefulWidget {
   final String parameter;
@@ -39,8 +39,8 @@ class _CompleteInfoState extends State<CompleteInfo> {
   final TextEditingController _userIdController = TextEditingController();
   List<Map<String, dynamic>> selectedMembers = [];
   String _errorMessage = '';
+  String? selectedActivity = '';
   bool isLoading = false;
-  List<int> userIds = [];
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
@@ -243,67 +243,17 @@ class _CompleteInfoState extends State<CompleteInfo> {
                         ),
                       )
                     : Container(),
-                GestureDetector(
-                  onTap: () async {
-                    final result = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MemberSelectionPage(),
-                      ),
-                    );
-
-                    if (result != null && result is List) {
-                      List<Map<String, dynamic>> selectedUsers =
-                          List<Map<String, dynamic>>.from(result);
-                      String selectedNames =
-                          selectedUsers.map((m) => m['full_name']).join(', ');
-
-                      List<int> userIds = selectedUsers.map((m) => m['id'] as int).toList();
-                      setState(() {
-                        _userIdController.text = selectedNames;
-                      });
-
-                      // URL de l'API Django pour ajouter les IDs des artistes
-                      final url = Uri.parse(
-                          '${AppConfig.baseUrl}/api/auth/add_artists_ids/'); // Remplacez par l'URL correcte de votre API Django
-
-                      final body = json.encode({
-                        'user_id':
-                            Provider.of<AuthService>(context,listen: false).userId, // L'ID de l'utilisateur actuel (assurez-vous de définir `yourUserId`)
-                        'ids':
-                            userIds, // Liste des IDs des artistes sélectionnés
-                      });
-
-                      // En-têtes pour la requête
-                      final headers = {
-                        'Content-Type': 'application/json',
-                      };
-
-                      try {
-                        final response = await http.post(
-                          url,
-                          body: body,
-                          headers: headers,
-                        );
-
-                        if (response.statusCode == 200) {
-                          print('IDs des artistes ajoutés avec succès');
-                        } else {
-                          print(
-                              'Erreur lors de l\'ajout des IDs: ${response.body}');
-                        }
-                      } catch (e) {
-                        print('Erreur réseau: $e');
-                      }
-                    }
+                CustomDropdownFormField(
+                  label: "Activités",
+                  options: const [
+                    {"Artiste": "Artiste"},
+                    {"Artisan": "Artisan "},
+                    {"Autres": "Autres"},
+                  ],
+                  onChanged: (value) {
+                    selectedActivity = value;
+                    print(selectedActivity);
                   },
-                  child: AbsorbPointer(
-                    child: ArtistsField(
-                      controller: _userIdController,
-                      label: "Artistes à suivre",
-                      isPassword: false,
-                    ),
-                  ),
                 ),
                 const SizedBox(height: 16),
                 CustomButton(
@@ -378,7 +328,7 @@ class _CompleteInfoState extends State<CompleteInfo> {
                                       context,
                                       listen: false)
                                   .registerProfile(
-                                userIds: userIds,
+                                    activite: selectedActivity,
                                 full_name: _fullnameController.text,
                                 phone_number: _phoneController.text,
                                 address: _addressController.text,
@@ -414,7 +364,7 @@ class _CompleteInfoState extends State<CompleteInfo> {
                                       context,
                                       listen: false)
                                   .registerProfileGoogle(
-                                userIds: userIds,
+                                    activite: selectedActivity,
                                 full_name: _fullnameController.text,
                                 phone_number: _phoneController.text,
                                 address: _addressController.text,
@@ -448,7 +398,7 @@ class _CompleteInfoState extends State<CompleteInfo> {
                                       context,
                                       listen: false)
                                   .registerProfilefacebook(
-                                userIds: userIds,
+                                    activite: selectedActivity,
                                 full_name: _fullnameController.text,
                                 phone_number: _phoneController.text,
                                 address: _addressController.text,
@@ -482,7 +432,7 @@ class _CompleteInfoState extends State<CompleteInfo> {
                                       context,
                                       listen: false)
                                   .registerProfileApple(
-                                userIds: userIds,
+                                    activite: selectedActivity,
                                 image: _imageFile,
                                 full_name: _fullnameController.text,
                                 phone_number: _phoneController.text,

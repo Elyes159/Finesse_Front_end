@@ -19,9 +19,13 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>$(FLUTTER_BUILD_NAME)</string>
+	<string>1.0.0</string> <!-- Ajoute ici la version de ton application -->
+	<key>CFBundleVersion</key>
+	<string>1</string> <!-- Ajoute ici la version du build -->
 	<key>CFBundleSignature</key>
 	<string>????</string>
+
+	<!-- ✅ Suppression de la duplication -->
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -35,31 +39,21 @@
 				<string>com.googleusercontent.apps.996086520169-kk9449feupn8qk31k4mtu3kfq19l75mp</string>
 				<string>fb1107580743939514</string>
 			</array>
-			<key>CFBundleURLTypes</key>
-			<array>
-				<dict>
-					<key>CFBundleURLSchemes</key>
-					<array>
-						<string>fb1107580743939514</string>
-						<string>flutterdeeplink</string>
-						<string>com.googleusercontent.apps.996086520169-kk9449feupn8qk31k4mtu3kfq19l75mp</string>
-					</array>
-				</dict>
-			</array>
 		</dict>
 	</array>
-	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
+
+	<!-- ✅ Configuration Facebook -->
 	<key>FacebookAppID</key>
 	<string>1107580743939514</string>
 	<key>FacebookClientToken</key>
 	<string>6823c783ca4657d9ad0a7dcbdb37feeb</string>
 	<key>FacebookDisplayName</key>
 	<string>Finesse</string>
-	<key>FlutterDeepLinkingEnabled</key>
-	<false/>
+
+	<!-- ✅ Configuration Google Sign-In -->
 	<key>GIDClientID</key>
 	<string>996086520169-kk9449feupn8qk31k4mtu3kfq19l75mp.apps.googleusercontent.com</string>
+
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
@@ -67,6 +61,7 @@
 		<string>fbauth2</string>
 		<string>fbshareextension</string>
 	</array>
+
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSUserTrackingUsageDescription</key>

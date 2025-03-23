@@ -39,7 +39,7 @@ class Users {
   final String? verificationCode;
   final bool hasStory;
   final String description;
-  final List<Artist> artists; // Liste des artistes associés
+  final String activite; // Liste des artistes associés
 
   Users( {
     required this.description,
@@ -53,7 +53,7 @@ class Users {
     this.isEmailVerified,
     this.verificationCode,
     required this.hasStory,
-    required this.artists, // Ajout du paramètre artists dans le constructeur
+    required this.activite, // Ajout du paramètre artists dans le constructeur
   });
 
   factory Users.fromJson(Map<String, dynamic> json) {
@@ -73,7 +73,7 @@ class Users {
       isEmailVerified: json['user_profile']['is_email_verified'] ?? true,
       verificationCode: json['user_profile']['verification_code'],
       hasStory: json['user_profile']['hasStory'],
-      artists: artists,
+      activite: json['user_profile']['activite'] ?? "Autres",
       description: json["user_profile"]["description"] ?? "" // Remplir la liste des artistes
     );
   }
@@ -85,7 +85,7 @@ class Users {
     String? avatar,
     String? username,
     String? description,
-    List<Artist>? artists, // Ajouter artists dans copyWith
+    String? activite, // Ajouter artists dans copyWith
   }) {
     return Users(
       id: id,
@@ -99,7 +99,7 @@ class Users {
       isEmailVerified: isEmailVerified,
       verificationCode: verificationCode,
       hasStory: hasStory,
-      artists: artists ?? this.artists, // Prendre la liste des artistes mise à jour ou l'ancienne
+      activite: activite ?? this.activite, // Prendre la liste des artistes mise à jour ou l'ancienne
     );
   }
 }

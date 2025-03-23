@@ -2,35 +2,21 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <!-- 📌 Activation des notifications push -->
-    <key>aps-environment</key>
-    <string>development</string>
-
-    <!-- 📌 Sign In avec Apple -->
-    <key>com.apple.developer.applesignin</key>
-    <array>
-        <string>Default</string>
-    </array>
-
-    <!-- 📌 Domaines associés pour les deep links -->
-    <key>com.apple.developer.associated-domains</key>
-    <array>
-        <string>applinks:flutter-deep-link</string> <!-- Remplace si besoin -->
-    </array>
-
-    <!-- 📌 Paiements in-app (optionnel, à activer si nécessaire) -->
-    <key>com.apple.developer.in-app-payments</key>
-    <array/>
-
-    <!-- 📌 Autorisation pour Facebook Login -->
-    <key>com.apple.developer.facebook</key>
-    <array>
-        <string>1107580743939514</string> <!-- Remplace avec ton Facebook App ID -->
-    </array>
-
-    <!-- 📌 Autorisation pour Google Sign-In -->
-    <key>GIDClientID</key>
-    <string>996086520169-kk9449feupn8qk31k4mtu3kfq19l75mp.apps.googleusercontent.com</string>
-
+	<key>aps-environment</key>
+	<string>development</string>
+	<key>com.apple.developer.applesignin</key>
+	<array>
+		<string>Default</string>
+	</array>
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:flutter-deep-link</string>
+	</array>
+	<key>com.apple.developer.in-app-payments</key>
+	<array/>
+	<key>keychain-access-groups</key>
+	<array>
+		<string>$(AppIdentifierPrefix)com.example.finesseFrontend</string>
+	</array>
 </dict>
 </plist>

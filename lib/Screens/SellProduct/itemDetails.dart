@@ -308,7 +308,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                             if (widget.product["brand"] != "('',)") ...[
                               DetailsContainer(
                                 content: widget.product["brand"],
-                                title: 'Brand',
+                                title: 'Marque',
                               ),
                             ],
                             if (widget.product["taille"] != "XX") ...[
@@ -529,7 +529,9 @@ class _ItemDetailsState extends State<ItemDetails> {
                               fontFamily: "Raleway",
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: theme ? Colors.white : Colors.black87,
+                              color: theme
+                                  ? Color.fromARGB(255, 249, 217, 144)
+                                  : Color(0xFFFB98B7),
                             ),
                           ),
                           const SizedBox(height: 6),
@@ -538,7 +540,10 @@ class _ItemDetailsState extends State<ItemDetails> {
                             style: TextStyle(
                               fontFamily: "Raleway",
                               fontSize: 14,
-                              color: theme ? Colors.white : Colors.black87,
+                              fontWeight: FontWeight.w700,
+                              color: theme
+                                  ? Color.fromARGB(255, 249, 217, 144)
+                                  : Color(0xFFFB98B7),
                               height: 1.5, // Espacement entre les lignes
                             ),
                           ),
@@ -553,7 +558,10 @@ class _ItemDetailsState extends State<ItemDetails> {
                     padding: const EdgeInsets.only(left: 16.0, right: 16),
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>ReturnPolicyScreen()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ReturnPolicyScreen()));
                       },
                       child: Container(
                         width: MediaQuery.of(context)
@@ -578,7 +586,9 @@ class _ItemDetailsState extends State<ItemDetails> {
                                 fontFamily: "Raleway",
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: theme ? Colors.white : Colors.black87,
+                                color: theme
+                                    ? Color.fromARGB(255, 249, 217, 144)
+                                    : Color(0xFFFB98B7),
                               ),
                             ),
                             const SizedBox(height: 6),
@@ -587,7 +597,10 @@ class _ItemDetailsState extends State<ItemDetails> {
                               style: TextStyle(
                                 fontFamily: "Raleway",
                                 fontSize: 14,
-                                color: theme ? Colors.white : Colors.black87,
+                                fontWeight: FontWeight.w700,
+                                color: theme
+                                    ? Color.fromARGB(255, 249, 217, 144)
+                                    : Color(0xFFFB98B7),
                                 height: 1.5, // Espacement entre les lignes
                               ),
                             ),
@@ -692,7 +705,9 @@ class _ItemDetailsState extends State<ItemDetails> {
                               fontFamily: "Raleway",
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: theme ? Colors.white : Colors.black87,
+                              color: theme
+                                  ? Color.fromARGB(255, 249, 217, 144)
+                                  : Color(0xFFFB98B7),
                             ),
                           ),
                           const SizedBox(height: 6),
@@ -701,7 +716,10 @@ class _ItemDetailsState extends State<ItemDetails> {
                             style: TextStyle(
                               fontFamily: "Raleway",
                               fontSize: 14,
-                              color: theme ? Colors.white : Colors.black87,
+                              fontWeight: FontWeight.w700,
+                              color: theme
+                                  ? Color.fromARGB(255, 249, 217, 144)
+                                  : Color(0xFFFB98B7),
                               height: 1.5, // Espacement entre les lignes
                             ),
                           ),

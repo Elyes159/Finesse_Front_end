@@ -253,7 +253,6 @@ class _SellProductScreenState extends State<SellProductScreen> {
         : List.generate(5, (index) => "");
   }
 
-
   Future<bool> _onWillPop() async {
     // Affiche un dialog de confirmation
     bool? confirmExit = await showDialog(
@@ -284,12 +283,36 @@ class _SellProductScreenState extends State<SellProductScreen> {
     return confirmExit ?? false;
   }
 
-
-
   late String forBackend = "";
   late String subcategory = "";
   late String category = "";
   bool _Loading = false;
+  List<Color> colors = [
+    Colors.black, // Noir
+    Colors.white, // Blanc
+    Colors.grey, // Gris
+    Color(0xFFD4AF37), // Doré
+    Color(0xFFC0C0C0), // Argent
+    Colors.red, // Rouge
+    Colors.blue, // Bleu
+    Colors.yellow, // Jaune
+    Colors.green, // Vert
+    Color(0xFF40E0D0), // Turquoise
+    Color(0xFFAFEEEE), // Vert d'eau
+    Color(0xFFF5F5DC), // Beige
+    Color(0xFF6A4E23), // Marron
+    Color(0xFFC19A6B), // Camel
+    Colors.orange, // Orange
+    Color(0xFFFF7F50), // Corail
+    Color(0xFFFF66B2), // Rose
+    Color(0xFF8A2BE2), // Violet
+    Color(0xFF9B111E), // Bordeaux
+    Color(0xFFF3C8A0), // Rose poudré
+    Color(0xFFF2D1C9), // Nude
+    Color(0xFF000080), // Bleu marine
+    Color(0xFF4B5320), // Kaki
+    Color(0xFF006400), // Vert foncé
+  ];
   @override
   Widget build(BuildContext context) {
     final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
@@ -401,7 +424,8 @@ class _SellProductScreenState extends State<SellProductScreen> {
                                                       color: Colors.black,
                                                       fontSize: 14,
                                                       fontFamily: 'Raleway',
-                                                      fontWeight: FontWeight.w400,
+                                                      fontWeight:
+                                                          FontWeight.w400,
                                                     ),
                                                   )
                                                 ],
@@ -478,7 +502,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                               ),
                             ),
                           );
-      
+
                           // Mise à jour des champs avec les données retournées
                           if (result != null) {
                             final Map<String, String> subCategoryMapping = {
@@ -496,14 +520,14 @@ class _SellProductScreenState extends State<SellProductScreen> {
                             subcategory = result['subcategory'] ?? "";
                             final String subsubcategory =
                                 result['subsubcategory'] ?? "";
-      
+
                             if (kDebugMode) {
                               print("hahom houni chouf");
                               print(forBackend);
                               print(subcategory);
                               print(subsubcategory);
                             }
-      
+
                             setState(() {
                               // Mise à jour de la catégorie principale
                               _categoryController.text = category == "MV"
@@ -516,21 +540,22 @@ class _SellProductScreenState extends State<SellProductScreen> {
                                               ? "Livres"
                                               : category == "CRA"
                                                   ? "Créations artisanales"
-                                                  : widget.categoryFromMv != null
+                                                  : widget.categoryFromMv !=
+                                                          null
                                                       ? "Mode et Vintage"
                                                       : "";
-      
+
                               // Définir la sous-catégorie ou sous-sous-catégorie
                               final String? mappedSubCategory =
                                   subcategory != null
                                       ? subCategoryMapping[subcategory]
                                       : subCategoryMapping[subsubcategory];
-      
+
                               if (mappedSubCategory != null) {
                                 _categoryController.text +=
                                     " - $mappedSubCategory";
                               }
-      
+
                               subCategoryOrSubsubcategory = subcategory;
                             });
                           }
@@ -728,60 +753,54 @@ class _SellProductScreenState extends State<SellProductScreen> {
                   SizedBox(
                     height: 16,
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      _openColorPicker(context);
-                    },
-                    child: AbsorbPointer(
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 60,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
-                        decoration: ShapeDecoration(
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(
-                              width: 1,
-                              color: theme
-                                  ? const Color.fromARGB(255, 249, 217, 144)
-                                  : const Color(0xFF5C7CA4),
-                            ),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        child: TextFormField(
-                          controller: _colorController,
-                          decoration: InputDecoration(
-                            labelStyle: const TextStyle(
-                              fontSize: 16,
-                              fontFamily: 'Raleway',
-                              fontWeight: FontWeight.w400,
-                              height: 1.5,
-                              letterSpacing: 0.5,
-                            ),
-                            border: InputBorder.none,
-                            contentPadding: const EdgeInsets.only(left: 10),
-                            labelText: "Choisir une couleur",
-                            suffixIcon: Container(
-                              width: 9, 
-                              height: 9,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color:
-                                    _selectedColor, 
-                                border: Border.all(
-                                    color: Colors.grey),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
                 ],
+                if (widget.categoryFromMv != null)
+                  CustomDropdownFormField(
+                    imageMenu: true,
+                    colors: colors,
+                    pathImagesForsmenu: [""],
+                    options: [
+                      {'multicolores': 'Multicolores'},
+                      {'noir': 'Noir'},
+                      {'blanc': 'Blanc'},
+                      {'gris': 'Gris'},
+                      {'doré': 'Doré'},
+                      {'argent': 'Argent'},
+                      {'rouge': 'Rouge'},
+                      {'bleu': 'Bleu'},
+                      {'jaune': 'Jaune'},
+                      {'vert': 'Vert'},
+                      {'turquoise': 'Turquoise'},
+                      {'vert_eau': 'Vert d\'eau'},
+                      {'beige': 'Beige'},
+                      {'marron': 'Marron'},
+                      {'camel': 'Camel'},
+                      {'orange': 'Orange'},
+                      {'corail': 'Corail'},
+                      {'rose': 'Rose'},
+                      {'violet': 'Violet'},
+                      {'bordeaux': 'Bordeaux'},
+                      {'rose_poudré': 'Rose poudré'},
+                      {'nude': 'Nude'},
+                      {'bleu_marine': 'Bleu marine'},
+                      {'kaki': 'Kaki'},
+                      {'vert_fonce': 'Vert foncé'},
+                    ],
+                    label: "Choisir la couleur",
+                    onChanged: (value) {
+                      setState(() {
+                        if (value != null) {
+                        _colorController.text = value;
+                      } else {
+                        _colorController.text = "color";
+                      }
+                      });
+                      
+                    },
+                  ),
+                SizedBox(
+                  height: 16,
+                ),
                 if (category == "D" ||
                     category == "OV" ||
                     (category == "CRA" && subcategory != "HAUCO")) ...[
@@ -836,7 +855,9 @@ class _SellProductScreenState extends State<SellProductScreen> {
                           return null;
                         }
                       }),
-                      SizedBox(height: 16,),
+                  SizedBox(
+                    height: 16,
+                  ),
                 ],
                 if (category == "CRA" && subcategory == "HAUCO") ...[
                   CustomTextFormField(
@@ -883,7 +904,9 @@ class _SellProductScreenState extends State<SellProductScreen> {
                       _etatController.text = value ?? '';
                     },
                   ),
-                  SizedBox(height: 16,)
+                  SizedBox(
+                    height: 16,
+                  )
                 ],
                 Container(
                   padding: const EdgeInsets.all(12),
@@ -904,7 +927,9 @@ class _SellProductScreenState extends State<SellProductScreen> {
                           fontFamily: "Raleway",
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: theme ? Colors.white : Colors.black87,
+                          color: theme
+                              ? Color.fromARGB(255, 249, 217, 144)
+                              : Color(0xFFFB98B7),
                         ),
                       ),
                       const SizedBox(height: 6),
@@ -913,7 +938,10 @@ class _SellProductScreenState extends State<SellProductScreen> {
                         style: TextStyle(
                           fontFamily: "Raleway",
                           fontSize: 14,
-                          color: theme ? Colors.white : Colors.black87,
+                          fontWeight: FontWeight.w700,
+                          color: theme
+                              ? Color.fromARGB(255, 249, 217, 144)
+                              : Color(0xFFFB98B7),
                           height: 1.5, // Espacement entre les lignes
                         ),
                       ),
@@ -942,7 +970,9 @@ class _SellProductScreenState extends State<SellProductScreen> {
                           fontFamily: "Raleway",
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: theme ? Colors.white : Colors.black87,
+                          color: theme
+                              ? Color.fromARGB(255, 249, 217, 144)
+                              : Color(0xFFFB98B7),
                         ),
                       ),
                       const SizedBox(height: 6),
@@ -951,7 +981,10 @@ class _SellProductScreenState extends State<SellProductScreen> {
                         style: TextStyle(
                           fontFamily: "Raleway",
                           fontSize: 14,
-                          color: theme ? Colors.white : Colors.black87,
+                          fontWeight: FontWeight.w700,
+                          color: theme
+                              ? Color.fromARGB(255, 249, 217, 144)
+                              : Color(0xFFFB98B7),
                           height: 1.5, // Espacement entre les lignes
                         ),
                       ),
@@ -989,11 +1022,13 @@ class _SellProductScreenState extends State<SellProductScreen> {
                                 double.tryParse(_priceController.text);
                             int? quantity =
                                 int.tryParse(_quantityController.text);
-                            print("heeeeeeeeeeeeey $subCategoryOrSubsubcategory");
+                            print(
+                                "heeeeeeeeeeeeey $subCategoryOrSubsubcategory");
                             final bool result = await Provider.of<Products>(
                                     context,
                                     listen: false)
                                 .sellProduct(
+                                  _colorController.text,
                               _titleController.text,
                               _descriptionController.text,
                               subcategory.isNotEmpty
@@ -1015,9 +1050,10 @@ class _SellProductScreenState extends State<SellProductScreen> {
                             );
                             if (result) {
                               setState(() {
-
                                 _Loading = false;
-                                Provider.of<SellProductProvider>(context,listen: false).reset();
+                                Provider.of<SellProductProvider>(context,
+                                        listen: false)
+                                    .reset();
                               });
                               Navigator.pushAndRemoveUntil(
                                 context,
@@ -1028,9 +1064,9 @@ class _SellProductScreenState extends State<SellProductScreen> {
                               );
                             } else {
                               setState(() {
-                                _errorMessage =
-                                    Provider.of<Products>(context, listen: false)
-                                        .errorMessage;
+                                _errorMessage = Provider.of<Products>(context,
+                                        listen: false)
+                                    .errorMessage;
                               });
                               setState(() {
                                 _Loading = false;
@@ -1045,7 +1081,8 @@ class _SellProductScreenState extends State<SellProductScreen> {
                                 double.tryParse(_priceController.text);
                             int? quantity =
                                 int.tryParse(_quantityController.text);
-                            print("heeeeeeeeeeeeey $subCategoryOrSubsubcategory");
+                            print(
+                                "heeeeeeeeeeeeey $subCategoryOrSubsubcategory");
                             final http.StreamedResponse result =
                                 await Provider.of<Products>(context,
                                         listen: false)
@@ -1088,9 +1125,9 @@ class _SellProductScreenState extends State<SellProductScreen> {
                               });
                             } else {
                               setState(() {
-                                _errorMessage =
-                                    Provider.of<Products>(context, listen: false)
-                                        .errorMessage;
+                                _errorMessage = Provider.of<Products>(context,
+                                        listen: false)
+                                    .errorMessage;
                               });
                               setState(() {
                                 _Loading = false;

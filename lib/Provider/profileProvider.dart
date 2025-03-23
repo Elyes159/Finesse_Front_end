@@ -17,11 +17,7 @@ class Profileprovider with ChangeNotifier {
       final Map<String, dynamic> data = jsonDecode(response.body);
 
       // Récupérer la liste des artistes dans la réponse
-      List<Artist> artists = [];
-      if (data["user_profile"]["artists"] != null) {
-        var artistsJson = data["user_profile"]["artists"] as List;
-        artists = artistsJson.map((artistJson) => Artist.fromJson(artistJson)).toList();
-      }
+     
 
       _visitedProfile = Users(
         id: userId,
@@ -35,7 +31,7 @@ class Profileprovider with ChangeNotifier {
         verificationCode: data["user_profile"]['verification_code'] ?? "",
 
         hasStory: data["user_profile"]['hasStory'] ?? false,
-        artists: artists, description: data["user_profile"]["description"],  // Ajouter la liste des artistes
+        activite: data["user_profile"]["activite"] ?? "Autres", description: data["user_profile"]["description"],  // Ajouter la liste des artistes
       );
       notifyListeners();
     } else {

@@ -143,22 +143,14 @@ class AuthService with ChangeNotifier {
           key: 'description', value: _currentUser!.description);
 
       // Récupérer et stocker les artistes
-      List<Artist> artists = [];
-      if (data['artists'] != null) {
-        var artistsJson = data['artists'] as List;
-        artists = artistsJson
-            .map((artistJson) => Artist.fromJson(artistJson))
-            .toList();
-      }
+     
 
       // Convertir la liste des artistes en chaîne JSON
-      String artistsJsonString =
-          json.encode(artists.map((artist) => artist.toJson()).toList());
+      
 
       // Stocker la liste des artistes dans FlutterSecureStorage
-      await storage.write(key: 'user_artists', value: artistsJsonString);
+      await storage.write(key: 'activite', value: _currentUser!.activite);
       print("ARTIIIISISIIST");
-      print(artistsJsonString);
       notifyListeners();
     } else {
       print(response.body);
@@ -185,20 +177,14 @@ class AuthService with ChangeNotifier {
     String? storedDesc = await storage.read(
         key: 'description'); // Récupérer la liste des artistes
 
-    String? storedArtists = await storage.read(
-        key: 'user_artists'); // Récupérer la liste des artistes
+    String? storedActivite = await storage.read(
+        key: 'activite'); // Récupérer la liste des artistes
 
     if (storedToken != null && storedUserId != null) {
       _accessToken = storedToken;
 
       // Convertir la liste d'artistes (si elle existe) depuis JSON
-      List<Artist> artists = [];
-      if (storedArtists != null) {
-        var artistsJson = json.decode(storedArtists) as List;
-        artists = artistsJson
-            .map((artistJson) => Artist.fromJson(artistJson))
-            .toList();
-      }
+      
 
       _currentUser = Users(
         id: int.parse(storedUserId),
@@ -211,7 +197,7 @@ class AuthService with ChangeNotifier {
         isEmailVerified: storedUserIsEmailVerified == 'true',
         verificationCode: storedUserVerificationCode!,
         hasStory: storedHasStory == "true",
-        artists: artists,
+        activite: storedActivite ?? "Autres",
         description: storedDesc ?? "", // Ajouter la liste des artistes
       );
 
@@ -263,7 +249,24 @@ class AuthService with ChangeNotifier {
       throw Exception('${json.decode(response.body)}');
     }
   }
-
+  Future<bool> resend_code({
+    required String? email,
+  }) async {
+    final url = Uri.parse("${AppConfig.baseUrl}/api/auth/resend_code/");
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'email': email,
+      }),
+    );
+    if (response.statusCode == 200) {
+      print("Email succesfully sent");
+      return true;
+    } else {
+      return false;
+    }
+  }
   Future<void> confirmEmailVerificationForReset({
     required String email,
     required String? verificationCode,
@@ -305,7 +308,7 @@ class AuthService with ChangeNotifier {
   }
 
   Future<http.Response> registerProfile({
-    List<int>? userIds,
+     String? activite,
     required String full_name,
     required String phone_number,
     required String address,
@@ -318,7 +321,7 @@ class AuthService with ChangeNotifier {
       ..fields['full_name'] = full_name
       ..fields['phone_number'] = phone_number
       ..fields['address'] = address
-      ..fields['userIds'] = jsonEncode(userIds);
+      ..fields['activite'] = activite ?? "";
 
     // Si l'image est non nulle, ajoutez-la à la requête
     if (image != null) {
@@ -351,14 +354,15 @@ class AuthService with ChangeNotifier {
       required String address,
       XFile? image,
       required int userId,
-      List<int>? userIds}) async {
+       String? activite,
+      }) async {
     final url = Uri.parse(
         "${AppConfig.baseUrl}/api/auth/$userId/register_profile_apple/");
     var request = http.MultipartRequest('POST', url)
       ..fields['full_name'] = full_name
       ..fields['phone_number'] = phone_number
       ..fields['address'] = address
-      ..fields['userIds'] = jsonEncode(userIds);
+      ..fields['activite'] = activite ?? "";
 
     // Si l'image est non nulle, ajoutez-la à la requête
     if (image != null) {
@@ -390,7 +394,7 @@ class AuthService with ChangeNotifier {
     required String phone_number,
     required String address,
     required int userId,
-    List<int>? userIds,
+     String? activite,
   }) async {
     final url = Uri.parse(
         "${AppConfig.baseUrl}/api/auth/$userId/register_profile_google/");
@@ -401,7 +405,7 @@ class AuthService with ChangeNotifier {
       'phone_number': phone_number,
       'address': address,
       'description': "",
-      'userIds': jsonEncode(userIds),
+      'activite': activite,
     };
     try {
       // Envoi de la requête POST avec le corps JSON
@@ -431,7 +435,8 @@ class AuthService with ChangeNotifier {
       required String phone_number,
       required String address,
       required int userId,
-      List<int>? userIds}) async {
+       String? activite,
+      }) async {
     final url = Uri.parse(
         "${AppConfig.baseUrl}/api/auth/$userId/register_profile_facebook/");
 
@@ -440,7 +445,7 @@ class AuthService with ChangeNotifier {
       'full_name': full_name,
       'phone_number': phone_number,
       'address': address,
-      'userIds': jsonEncode(userIds),
+      'activite': activite,
     };
 
     try {
@@ -840,20 +845,13 @@ class AuthService with ChangeNotifier {
           print('Utilisateur actuel après conversion: $_currentUser');
 
           // Récupérer et stocker les artistes
-          List<Artist> artists = [];
-          if (data['artists'] != null) {
-            var artistsJson = data['artists'] as List;
-            artists = artistsJson
-                .map((artistJson) => Artist.fromJson(artistJson))
-                .toList();
-          }
+         
 
           // Convertir la liste des artistes en chaîne JSON
-          String artistsJsonString =
-              json.encode(artists.map((artist) => artist.toJson()).toList());
+        
 
           // Stocker la liste des artistes dans FlutterSecureStorage
-          await storage.write(key: 'user_artists', value: artistsJsonString);
+          await storage.write(key: 'activite', value: _currentUser!.activite);
 
           // Stocker les autres informations dans FlutterSecureStorage
           await storage.write(key: 'access_token', value: _accessToken);
@@ -946,20 +944,13 @@ class AuthService with ChangeNotifier {
         print('Utilisateur actuel après conversion: $_currentUser');
 
         // Récupérer et stocker les artistes
-        List<Artist> artists = [];
-        if (data['artists'] != null) {
-          var artistsJson = data['artists'] as List;
-          artists = artistsJson
-              .map((artistJson) => Artist.fromJson(artistJson))
-              .toList();
-        }
+        
 
         // Convertir la liste des artistes en chaîne JSON
-        String artistsJsonString =
-            json.encode(artists.map((artist) => artist.toJson()).toList());
+        
 
         // Stocker la liste des artistes dans FlutterSecureStorage
-        await storage.write(key: 'user_artists', value: artistsJsonString);
+        await storage.write(key: 'activite', value: _currentUser!.activite);
 
         // Stockage sécurisé des autres données utilisateur
         await storage.write(key: 'access_token', value: _accessToken);
@@ -1035,20 +1026,13 @@ class AuthService with ChangeNotifier {
           _currentUser = Users.fromJson(data);
 
           // Récupérer et stocker les artistes
-          List<Artist> artists = [];
-          if (data['artists'] != null) {
-            var artistsJson = data['artists'] as List;
-            artists = artistsJson
-                .map((artistJson) => Artist.fromJson(artistJson))
-                .toList();
-          }
+         
 
           // Convertir la liste des artistes en chaîne JSON
-          String artistsJsonString =
-              json.encode(artists.map((artist) => artist.toJson()).toList());
+         
 
           // Stocker la liste des artistes dans FlutterSecureStorage
-          await storage.write(key: 'user_artists', value: artistsJsonString);
+          await storage.write(key: 'activite', value: _currentUser!.activite);
 
           // Stocker les autres informations dans FlutterSecureStorage
           await storage.write(key: 'access_token', value: _accessToken);
@@ -1108,8 +1092,8 @@ class AuthService with ChangeNotifier {
     String? storedUserAddress = await storage.read(key: 'user_address');
     String? storedUserDescription = await storage.read(key: 'user_description');
     String? storedHasStory = await storage.read(key: 'hasStory');
-    String? storedArtists = await storage.read(
-        key: 'user_artists');
+    String? storedActivite = await storage.read(
+        key: 'activite');
     String? storedDesc = await storage.read(
         key: 'description'); // Récupérer la liste des artistes
 
@@ -1117,13 +1101,7 @@ class AuthService with ChangeNotifier {
       _accessToken = storedToken;
 
       // Convertir la liste d'artistes (si elle existe) depuis JSON
-      List<Artist> artists = [];
-      if (storedArtists != null) {
-        var artistsJson = json.decode(storedArtists) as List;
-        artists = artistsJson
-            .map((artistJson) => Artist.fromJson(artistJson))
-            .toList();
-      }
+     
 
       _currentUser = Users(
         id: int.parse(storedUserId),
@@ -1134,7 +1112,7 @@ class AuthService with ChangeNotifier {
         phoneNumber: storedUserPhoneNumber!,
         address: storedUserAddress!,
         hasStory: storedHasStory == "true",
-        artists: artists, description: storedDesc ?? "", // Ajouter la liste des artistes
+        activite: storedActivite ?? "Autres", description: storedDesc ?? "", // Ajouter la liste des artistes
       );
 
       _isAuthenticated = true;
@@ -1156,8 +1134,8 @@ class AuthService with ChangeNotifier {
     String? storedUserAddress = await storage.read(key: 'user_address');
     String? storedUserDescription = await storage.read(key: 'user_description');
     String? storedHasStory = await storage.read(key: 'hasStory');
-    String? storedArtists = await storage.read(
-        key: 'user_artists');
+    String? storedActivite = await storage.read(
+        key: 'activite');
         String? storedDesc = await storage.read(
         key: 'description'); // Récupérer la liste des artistes
 
@@ -1165,13 +1143,7 @@ class AuthService with ChangeNotifier {
       _accessToken = storedToken;
 
       // Convertir la liste d'artistes (si elle existe) depuis JSON
-      List<Artist> artists = [];
-      if (storedArtists != null) {
-        var artistsJson = json.decode(storedArtists) as List;
-        artists = artistsJson
-            .map((artistJson) => Artist.fromJson(artistJson))
-            .toList();
-      }
+     
 
       _currentUser = Users(
         id: int.parse(storedUserId),
@@ -1182,7 +1154,7 @@ class AuthService with ChangeNotifier {
         phoneNumber: storedUserPhoneNumber!,
         address: storedUserAddress!,
         hasStory: storedHasStory == "true",
-        artists: artists, description: storedDesc ?? "", // Ajouter la liste des artistes
+        activite: storedActivite ?? "Autres", description: storedDesc ?? "", // Ajouter la liste des artistes
       );
 
       _isAuthenticated = true;

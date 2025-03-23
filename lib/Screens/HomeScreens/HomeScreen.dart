@@ -61,12 +61,13 @@ class _HomeScreenState extends State<HomeScreen> {
         Provider.of<AuthService>(context, listen: false).currentUser!.id);
     Provider.of<Products>(context, listen: false).getFollowers(
         Provider.of<AuthService>(context, listen: false).currentUser!.id);
-         Provider.of<Products>(context, listen: false).getFollowing(
+    Provider.of<Products>(context, listen: false).getFollowing(
         Provider.of<AuthService>(context, listen: false).currentUser!.id);
     Provider.of<Products>(context, listen: false).getWish(
         Provider.of<AuthService>(context, listen: false).currentUser!.id);
     Provider.of<Profileprovider>(context, listen: false).getArtistsIds(
         Provider.of<AuthService>(context, listen: false).currentUser!.id);
+    Provider.of<Products>(context, listen: false).fetchMembers();
   }
 
   Future<void> _pickImage() async {
@@ -97,7 +98,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfileMain()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ProfileMain()));
                     },
                     child: Row(
                       children: [
@@ -157,7 +161,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: theme ? Colors.white : null,
                         ),
                       ),
-                      
                     ],
                   ),
                 ],
@@ -522,7 +525,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 final sixDaysAgo =
                     now.subtract(Duration(days: 6)); // 6 derniers jours
 
-// Affichage de la date actuelle et celle de 6 jours en arrière
                 print("📅 Date actuelle: $now");
                 print("📅 Date il y a 6 jours: $sixDaysAgo");
 
@@ -749,6 +751,145 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemCount:
                         filteredProducts.map((e) => e['type']).toSet().length,
                     itemBuilder: (context, categoryIndex) {
+                      if (categoryIndex == 2) {
+                        // Choisir l'emplacement où ajouter un widget (ici après la première catégorie)
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Artiste à suivre",
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Raleway',
+                              ),
+                            ),
+                            Container(
+                              height:
+                                  200, // Ajuste la hauteur selon tes besoins
+                              child: Builder(
+                                builder: (context) {
+                                  final filteredMembers = productsProvider
+                                      .members
+                                      .where((member) =>
+                                          member["artiste_artisan"] == true)
+                                      .toList();
+
+                                  if (filteredMembers.isEmpty) {
+                                    return Center(
+                                      child: Text(
+                                        "",
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    );
+                                  }
+
+                                  return ListView.builder(
+                                    padding: const EdgeInsets.all(10),
+                                    scrollDirection: Axis
+                                        .horizontal, // Défilement horizontal
+                                    itemCount: filteredMembers.length,
+                                    itemBuilder: (context, index) {
+                                      final member = filteredMembers[index];
+
+                                      return Padding(
+                                        padding: const EdgeInsets.only(
+                                            right:
+                                                10), // Espacement entre les éléments
+                                        child: Column(
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () async {
+                                                // Navigation vers le profil du membre
+                                                await Provider.of<
+                                                            Profileprovider>(
+                                                        context,
+                                                        listen: false)
+                                                    .fetchProfile(member["id"]);
+                                                await Provider.of<Products>(
+                                                        context,
+                                                        listen: false)
+                                                    .getProductsByUserVisited(
+                                                        member["id"]);
+                                                await Provider.of<Products>(
+                                                        context,
+                                                        listen: false)
+                                                    .getProductsSelledByUserVisited(
+                                                        member["id"]);
+                                                await Provider.of<Products>(
+                                                        context,
+                                                        listen: false)
+                                                    .getRatingByRatedUserVisited(
+                                                        userId: member["id"]);
+                                                await Provider.of<Products>(
+                                                        context,
+                                                        listen: false)
+                                                    .checkOrderedorNot(
+                                                        first_id: Provider.of<
+                                                                    AuthService>(
+                                                                context,
+                                                                listen: false)
+                                                            .currentUser!
+                                                            .id,
+                                                        second_id:
+                                                            member["id"]);
+                                                await Provider.of<Products>(
+                                                        context,
+                                                        listen: false)
+                                                    .getFollowersVisited(
+                                                        member["id"]);
+                                                await Provider.of<Products>(
+                                                        context,
+                                                        listen: false)
+                                                    .getFollowingVisited(
+                                                        member["id"]);
+
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ProfileMain(
+                                                              id: member[
+                                                                  "id"])),
+                                                );
+                                              },
+                                              child: CircleAvatar(
+                                                radius:
+                                                    30, // Taille de l'avatar
+                                                backgroundImage: NetworkImage(
+                                                  member["image_type"] ==
+                                                          "normal"
+                                                      ? "${AppConfig.baseUrl}${member['avatar'] ?? ''}"
+                                                      : (member["avatar"] ??
+                                                          ''),
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                                height:
+                                                    8), // Espacement entre l'avatar et le texte
+                                            Text(
+                                              member['full_name'] ??
+                                                  'Art zi user',
+                                              style: TextStyle(
+                                                  fontFamily: "Raleway",
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        );
+                      }
                       final categoryType = filteredProducts
                           .map((e) => e['type'])
                           .toSet()

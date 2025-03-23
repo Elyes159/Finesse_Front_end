@@ -379,8 +379,8 @@ class _ProfileMainState extends State<ProfileMain> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildTab("Articles", index: 0, icon: "assets/Icons/item.svg"),
-              _buildTab("Vendu", index: 1, icon: "assets/Icons/selled.svg"),
+              _buildTab("Articles déposé", index: 0, icon: "assets/Icons/item.svg"),
+              _buildTab("Articles vendu", index: 1, icon: "assets/Icons/selled.svg"),
               _buildTab("Évaluations",
                   index: 2, icon: "assets/Icons/rating.svg"),
             ],
@@ -443,7 +443,7 @@ class _ProfileMainState extends State<ProfileMain> {
             Container(
               margin: const EdgeInsets.only(top: 4),
               height: 2,
-              width: 69,
+              width: 100,
               color: theme
                   ? Color.fromARGB(255, 249, 217, 144)
                   : Color(0xFFFB98B7),
