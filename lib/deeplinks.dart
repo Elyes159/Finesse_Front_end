@@ -43,16 +43,12 @@ class _DeepLinksListenerState extends State<DeepLinksListener> {
             print('ID récupéré: $id');
 
             try {
-              // Effectuer les appels API ou les actions liées à l'ID
               await Provider.of<Profileprovider>(context, listen: false)
                   .fetchProfile(id);
-
               await Provider.of<Products>(context, listen: false)
                   .getProductsByUserVisited(id);
-
               await Provider.of<Products>(context, listen: false)
                   .getProductsSelledByUserVisited(id);
-
               await Provider.of<Products>(context, listen: false)
                   .getRatingByRatedUserVisited(userId: id);
 
