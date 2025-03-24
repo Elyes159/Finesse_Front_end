@@ -1,6 +1,7 @@
 import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Provider/theme.dart';
 import 'package:finesse_frontend/Screens/AuthScreens/SignIn.dart';
+import 'package:finesse_frontend/Screens/HomeScreens/wish.dart';
 import 'package:finesse_frontend/Screens/Profile/ProfileScreen.dart';
 import 'package:finesse_frontend/Screens/Profile/contact.dart';
 import 'package:finesse_frontend/Screens/Profile/settingspages/account.dart';
@@ -80,15 +81,16 @@ class _ParametresState extends State<Parametres> {
                 iconPath: "assets/Icons/icon-3.svg", title: "Compte"),
           ),
           InkWell(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => BankTransferForm()));
-              },
-              child: SettingsTile(
-                  iconPath: "assets/Icons/icon-7.svg",
-                  title: "Recevoir par virement")),
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Annonce()));
+            },
+            child: SettingsTile(
+              height: 25,
+              iconPath: "assets/Icons/annonce.svg",
+              title: "Annonce",
+            ),
+          ),
           InkWell(
             onTap: () {
               Navigator.push(
@@ -107,14 +109,15 @@ class _ParametresState extends State<Parametres> {
               title: "Récemment vus",
             ),
           ),
-          SettingsTile(
-            iconPath: "assets/Icons/moon.svg",
-            title: "Thème sombre",
-            hasSwitch: true,
-            switchValue: themeProvider.isDarkMode,
-            onToggle: (value) {
-              themeProvider.toggleTheme();
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => WishList()));
             },
+            child: SettingsTile(
+              iconPath: "assets/Icons/heartt.svg",
+              title: "Favories",
+            ),
           ),
           InkWell(
             onTap: () {
@@ -124,17 +127,6 @@ class _ParametresState extends State<Parametres> {
             child: SettingsTile(
               iconPath: "assets/Icons/icon-4.svg",
               title: "Remises",
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Annonce()));
-            },
-            child: SettingsTile(
-              height: 25,
-              iconPath: "assets/Icons/annonce.svg",
-              title: "Annonce",
             ),
           ),
           InkWell(
@@ -149,6 +141,27 @@ class _ParametresState extends State<Parametres> {
                   height: 25,
 
                   title: "Mode vancance")),
+          InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => BankTransferForm()));
+              },
+              child: SettingsTile(
+                  iconPath: "assets/Icons/icon-7.svg",
+                  title: "Recevoir par virement")),
+          
+          
+          SettingsTile(
+            iconPath: "assets/Icons/moon.svg",
+            title: "Thème sombre",
+            hasSwitch: true,
+            switchValue: themeProvider.isDarkMode,
+            onToggle: (value) {
+              themeProvider.toggleTheme();
+            },
+          ),
           SizedBox(height: 46),
           Padding(
             padding: const EdgeInsets.only(left: 16.0),

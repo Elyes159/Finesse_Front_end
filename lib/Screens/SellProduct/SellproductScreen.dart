@@ -613,7 +613,8 @@ class _SellProductScreenState extends State<SellProductScreen> {
                       return Text(
                         "Vous gagnez en cas de vente : ${earnings.toStringAsFixed(2)} Dinars",
                         style: TextStyle(
-                            color: theme ? Colors.white : Colors.black,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.red,
                             fontSize: 14,
                             fontFamily: "Raleway"),
                       );
@@ -647,7 +648,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                   ),
                 ],
                 if (widget.categoryFromMv != null &&
-                    widget.categoryFromMv!.startsWith("V")) ...[
+                    !subcategory.startsWith("C")) ...[
                   CustomDropdownFormField<String, String>(
                     options: const [
                       {'S': 'S'},
@@ -790,12 +791,11 @@ class _SellProductScreenState extends State<SellProductScreen> {
                     onChanged: (value) {
                       setState(() {
                         if (value != null) {
-                        _colorController.text = value;
-                      } else {
-                        _colorController.text = "color";
-                      }
+                          _colorController.text = value;
+                        } else {
+                          _colorController.text = "color";
+                        }
                       });
-                      
                     },
                   ),
                 SizedBox(
@@ -934,7 +934,10 @@ class _SellProductScreenState extends State<SellProductScreen> {
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        "Si votre article est vendu, un livreur viendra récupérer l'article chez vous et vous recevrez le virement bancaire 24h après la livraison finale du colis.",
+                        "Procédure de vente et de livraison :\n"
+                        "1. Vente de l’article : Une fois votre article vendu, vous recevrez un code de livraison spécifique.\n"
+                        "2. Livraison : Ce code devra être joint à votre commande, et un livreur viendra récupérer l’article sous 24 heures.\n"
+                        "3. Virement : Le paiement de la somme vous sera effectué 48 heures après la livraison.",
                         style: TextStyle(
                           fontFamily: "Raleway",
                           fontSize: 14,
@@ -965,7 +968,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Éventuels défauts",
+                        "Transparence avec l’acheteur",
                         style: TextStyle(
                           fontFamily: "Raleway",
                           fontSize: 18,
@@ -977,7 +980,9 @@ class _SellProductScreenState extends State<SellProductScreen> {
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        "Veuillez mentionner dans la description si votre article présente le moindre défaut (fissuré, trouvé, abîmé, non authentique, etc...) et préciser avec soin la taille, la marque et la couleur, Toute réclamation à ce sujet peut engendrer un retour et des frais qui s'élèvent à 7,000 DT",
+                        "Mentionner tout défaut garantit que l’acheteur est bien informé avant de prendre sa décision, ce qui évite les conflits et les retours non souhaités.\n"
+                        "1. Description détaillée du défaut : Indiquez clairement tout dommage, rayure, déformation, ou tout autre problème visible sur l’article.\n"
+                        "2. Photos des défauts : Si possible, prenez des photos qui montrent les défauts de manière précise.",
                         style: TextStyle(
                           fontFamily: "Raleway",
                           fontSize: 14,
@@ -1028,7 +1033,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                                     context,
                                     listen: false)
                                 .sellProduct(
-                                  _colorController.text,
+                              _colorController.text,
                               _titleController.text,
                               _descriptionController.text,
                               subcategory.isNotEmpty

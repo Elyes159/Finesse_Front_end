@@ -536,7 +536,8 @@ class _ItemDetailsState extends State<ItemDetails> {
                           ),
                           const SizedBox(height: 6),
                           Text(
-                            "L'article est disponible de suite. Commandez-le aujourd'hui et recevez le au plus tard entre ${formatDate(tomorrow)} et ${formatDate(afterTomorrow)}. Plus d'informations lors de la finalisation de votre commande",
+                            "L’article est disponible. Commandez dès maintenant et recevez-le sous 48h.\n"
+                            "Pour suivre l’état actuel de votre commande, consultez l’onglet <Commande> après la finalisation de votre achat.",
                             style: TextStyle(
                               fontFamily: "Raleway",
                               fontSize: 14,

@@ -49,7 +49,8 @@ void main() async {
   final sub = applinks.uriLinkStream.listen((uri) {
     log("URI : ${uri.toString()}");
     print("URI : ${uri.toString()}");
-  },);
+  });
+
   await initializeNotifications();
 
   runApp(
@@ -58,26 +59,28 @@ void main() async {
         ChangeNotifierProvider(create: (_) => SellProductProvider()),
         ChangeNotifierProvider(create: (_) => AuthService()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        ChangeNotifierProvider(create: (_) => Profileprovider()),
+        ChangeNotifierProvider(create: (_) => Profileprovider()), // Le Profileprovider est ici
         ChangeNotifierProvider(create: (_) => Stories()),
         ChangeNotifierProvider(create: (_) => Products()),
         ChangeNotifierProvider(create: (_) => VirementProvider()),
         ChangeNotifierProvider(create: (_) => NotificationProvider()),
       ],
-      child: const MyApp(),
+      child: const MyApp(), // Le MultiProvider est ici, et MyApp est un enfant
     ),
   );
 }
 
 
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context); 
     return MaterialApp(
       routes: {
-        '/ProfileFinos' : (context)=>  ProfileMain(id: 0,)
+        '/ProfileFinos': (context) => ProfileMain(id: 0),
       },
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -86,7 +89,10 @@ class MyApp extends StatelessWidget {
             : ColorScheme.fromSeed(seedColor: Colors.white, brightness: Brightness.light),
         useMaterial3: true,
       ),
-      home: DeepLinksListener(child: const SplashScreen()),
+      home: DeepLinksListener(child: const SplashScreen()), // DeepLinksListener est l'enfant ici
     );
   }
 }
+
+
+

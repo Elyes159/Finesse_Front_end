@@ -40,13 +40,13 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _initializeApp() async {
     String? accessToken = await storage.read(key: 'access_token');
     String? parametre = await storage.read(key: 'parametre');
-
+    
     _navigationTimer = Timer(Duration(seconds: durationInSeconds), () {
       if (!mounted) return;
-      if (accessToken != null && accessToken.isNotEmpty) {
+      if (accessToken != null && accessToken.isNotEmpty && Provider.of<AuthService>(context,listen:false).currentUser!=null ) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => DeepLinksListener(child: Navigation(onItemSelected: (int value) {},currentIndex: 0,))),
+          MaterialPageRoute(builder: (context) => Navigation(onItemSelected: (int value) {},currentIndex: 0,)),
         );
       } else {
         Navigator.pushReplacement(
@@ -56,11 +56,9 @@ class _SplashScreenState extends State<SplashScreen> {
       }
     });
 
-    // Appel de la fonction pour charger les données de l'utilisateur
     _loadUserDataBasedOnParam(parametre);
   }
 
-  /// Fonction qui charge les données de l'utilisateur en fonction de la valeur de "parametre"
   void _loadUserDataBasedOnParam(String? parametre) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (parametre == "normal") {
@@ -93,6 +91,7 @@ class _SplashScreenState extends State<SplashScreen> {
     _navigationTimer?.cancel();
     super.dispose();
   }
+
 
   @override
   Widget build(BuildContext context) {

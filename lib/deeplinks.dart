@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:convert'; // Pour utiliser Uri.decodeComponent
 import 'package:app_links/app_links.dart';
 import 'package:finesse_frontend/Provider/AuthService.dart';
+import 'package:finesse_frontend/Provider/products.dart';
+import 'package:finesse_frontend/Provider/profileProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:finesse_frontend/Provider/ProfileProvider.dart';
-import 'package:finesse_frontend/Provider/Products.dart';
 import 'package:finesse_frontend/Screens/Profile/ProfileScreen.dart';
 
 class DeepLinksListener extends StatefulWidget {
@@ -17,6 +17,7 @@ class DeepLinksListener extends StatefulWidget {
 }
 
 class _DeepLinksListenerState extends State<DeepLinksListener> {
+
   late StreamSubscription uriStreamSubscription;
 
   @override
@@ -29,17 +30,15 @@ class _DeepLinksListenerState extends State<DeepLinksListener> {
         if (pathSegments.isNotEmpty) {
           // Extrait la dernière partie du chemin
           final idString = pathSegments.last;
-          
-          // Décode l'ID et nettoie le %0A ou autres caractères spéciaux
           String decodedId = Uri.decodeComponent(idString);
-
-          // Nettoie tous les caractères non numériques
-          decodedId = decodedId.replaceAll(RegExp(r'\D'), '');
-
           print('ID brut: $idString');
-          print('ID décodé: $decodedId');
-          final id = int.tryParse(decodedId);
+          print('ID décodé avant nettoyage: $decodedId');
 
+          decodedId = decodedId.replaceAll('%25', '%');
+
+          decodedId = decodedId.replaceAll(RegExp(r'\D'), '');
+          print('ID décodé après nettoyage: $decodedId');
+          final id = int.tryParse(decodedId);
           if (id != null && mounted) {
             print('ID récupéré: $id');
 

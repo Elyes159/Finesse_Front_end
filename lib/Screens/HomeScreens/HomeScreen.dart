@@ -189,7 +189,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       }
                       return Row(
                         children: [
-                          // Ajout de la story de l'utilisateur actuel
                           Column(
                             children: [
                               Stack(

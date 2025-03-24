@@ -27,8 +27,30 @@ class DescTextField extends StatefulWidget {
 
 class _DescTextFieldState extends State<DescTextField> {
   bool _obscureText = true;
-  String? _errorMessage; // Message d'erreur
-  bool _isTouched = false; // Indique si le champ a été touché
+  String? _errorMessage;
+  bool _isTouched = false;
+  late VoidCallback _listener;
+
+  @override
+  void initState() {
+    super.initState();
+    
+    _listener = () {
+      if (mounted) {
+        setState(() {
+          _errorMessage = widget.validator?.call(widget.controller.text);
+        });
+      }
+    };
+
+    widget.controller.addListener(_listener);
+  }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(_listener);
+    super.dispose();
+  }
 
   void _togglePasswordVisibility() {
     setState(() {
@@ -37,19 +59,9 @@ class _DescTextFieldState extends State<DescTextField> {
   }
 
   @override
-  void initState() {
-    super.initState();
-
-    widget.controller.addListener(() {
-      setState(() {
-        _errorMessage = widget.validator?.call(widget.controller.text); // Validation
-      });
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final theme = Provider.of<ThemeProvider>(context,listen: false).isDarkMode;
+    final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 0.0),
       child: Column(
@@ -61,7 +73,10 @@ class _DescTextFieldState extends State<DescTextField> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: ShapeDecoration(
               shape: RoundedRectangleBorder(
-                side: BorderSide(width: 1, color: theme ? Color.fromARGB(255, 249, 217, 144) : Color(0xFF5C7CA4)),
+                side: BorderSide(
+                  width: 1,
+                  color: theme ? Color.fromARGB(255, 249, 217, 144) : Color(0xFF5C7CA4),
+                ),
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
@@ -75,7 +90,7 @@ class _DescTextFieldState extends State<DescTextField> {
               style: const TextStyle(fontFamily: 'Raleway'),
               onTap: () {
                 setState(() {
-                  _isTouched = true; // Champ touché
+                  _isTouched = true;
                 });
               },
               decoration: InputDecoration(
@@ -102,7 +117,6 @@ class _DescTextFieldState extends State<DescTextField> {
               ),
             ),
           ),
-          // Affichage conditionnel du message d'erreur
           if (_isTouched && _errorMessage != null && _errorMessage!.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(top: 4.0),
