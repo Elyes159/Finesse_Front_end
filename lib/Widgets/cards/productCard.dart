@@ -16,7 +16,7 @@ class ProductCard extends StatefulWidget {
 
 Widget _buildImage(String imageUrl) {
   return ClipRRect(
-      borderRadius: BorderRadius.circular(8), // Arrondi des coins
+      borderRadius: BorderRadius.circular(2), // Arrondi des coins
       child: Image.network(
         imageUrl,
         height: 120,

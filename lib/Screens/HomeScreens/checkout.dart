@@ -164,21 +164,33 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     Consumer<AuthService>(
                       builder: (context, authService, child) {
                         final address = authService.currentUser?.address ?? "";
-                        return Text(
-                          address != "" ? address : "À compléter",
-                          textAlign: TextAlign.right,
-                          style: TextStyle(
-                            color: address == ""
-                                ? Color(0xFFBA1A1A)
-                                : theme
-                                    ? Colors.white
-                                    : Color(0xFF111928),
-                            fontSize: 11,
-                            fontFamily: 'Raleway',
-                            fontWeight: FontWeight.w500,
-                            height: 1.45,
-                          ),
-                        );
+                        return Container(
+                            // Le Container s'adapte à la taille du texte
+                            padding: const EdgeInsets.only(
+                                right: 8.0), // Espace à droite du texte
+                            child: Text(
+                              // Vérifier si le texte a plus de deux mots et ajouter des points de suspension si c'est le cas
+                              address.split(' ').length > 2
+                                  ? address.split(' ').take(2).join(' ') + '...'
+                                  : address != ""
+                                      ? address
+                                      : "À compléter",
+                              textAlign: TextAlign.right,
+                              style: TextStyle(
+                                color: address == ""
+                                    ? Color(0xFFBA1A1A)
+                                    : theme
+                                        ? Colors.white
+                                        : Color(0xFF111928),
+                                fontSize: 11,
+                                fontFamily: 'Raleway',
+                                fontWeight: FontWeight.w500,
+                                height: 1.45,
+                              ),
+                              overflow: TextOverflow
+                                  .ellipsis, // Ajoute les trois points si le texte est trop long
+                              maxLines: 1, // Limite le texte à une seule ligne
+                            ));
                       },
                     ),
                     SizedBox(
@@ -198,18 +210,18 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             width: 1.0, // Épaisseur de la bordure
                           ),
                           borderRadius: BorderRadius.circular(
-                              8), // Rayon de la bordure (arrondi)
+                              2), // Rayon de la bordure (arrondi)
                         ),
                         child: Text(
                           "Modifier",
                           style: TextStyle(
-                              color: Colors.grey,
+                              color: Colors.black,
                               fontFamily: "Raleway",
                               fontSize:
                                   16), // Vous pouvez ajuster la taille du texte ici
                         ),
                       ),
-                    )
+                    ),
                   ],
                 )
               ],

@@ -615,60 +615,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                           selectedSubCategory == "SCUL" &&
                           (selectedSubCategory == null ||
                               selectedSubSubCategory == null))),
-          SizedBox(
-            width: 343,
-            child: RichText(
-              text: TextSpan(
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontFamily: 'Raleway',
-                  fontWeight: FontWeight.w500,
-                  height: 1.43,
-                ),
-                children: <TextSpan>[
-                  TextSpan(
-                    style:
-                        TextStyle(color: theme ? Colors.white : Colors.black),
-                    text: "Ou vous pouvez ", // Partie du texte non stylisée
-                  ),
-                  TextSpan(
-                    text:
-                        "Réinitialiser", // Mot à colorier en rose et rendre interactif
-                    style: TextStyle(
-                      color: theme
-                          ? Color.fromARGB(255, 249, 217, 144)
-                          : Color(0xFFFB98B7), // Couleur rose
-                    ),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        setState(() {
-                          selectedCategory = null;
-                          selectedSubCategory = null;
-                          selectedSubSubCategory = null;
-                          CategoryForEnd = null;
-                          CategoryForBackend = null;
-                          SubCategoryForBackend = null;
-                          SubSubCategoryForBackend = null;
-                          selectedCheckboxes = {
-                            "Men": false,
-                            "Women": false,
-                            "Boys": false,
-                            "Girls": false,
-                          };
-                        });
-                        print("Reset clicked");
-                      },
-                  ),
-                  TextSpan(
-                    style:
-                        TextStyle(color: theme ? Colors.white : Colors.black),
-                    text: ' votre choix', // Partie du texte non stylisée
-                  ),
-                ],
-              ),
-              textAlign: TextAlign.center,
-            ),
-          )
+          
         ],
       ),
     );

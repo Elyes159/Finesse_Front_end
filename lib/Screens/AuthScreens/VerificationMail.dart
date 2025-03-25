@@ -186,7 +186,7 @@ class _VerificationMailState extends State<VerificationMail> {
                         ? Colors.grey
                         : theme
                             ? Color.fromARGB(255, 249, 217, 144)
-                            : Color(0xFFFB98B7),
+                            : Colors.black,
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),

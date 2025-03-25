@@ -74,7 +74,6 @@ class _BChoiceState extends State<BChoice> {
                       {"CH": "Chemises"},
                       {"PAN": "Pantalons"},
                       {"JEAN": "Jeans"},
-                      {"EX": "Vêtements d'exterieur"},
                       {"COS": "Costumes"},
                       {"POLO": "Polos"},
                       {"SH": "Shorts"},
@@ -87,7 +86,6 @@ class _BChoiceState extends State<BChoice> {
                       {"CH": "Chemises"},
                       {"PAN": "Pantalons"},
                       {"JEAN": "Jeans"},
-                      {"EX": "Vêtements d'exterieur"},
                       {"COS": "Costumes"},
                       {"POLO": "Polos"},
                       {"SH": "Shorts"},
@@ -104,7 +102,6 @@ class _BChoiceState extends State<BChoice> {
                     {"CH": "Chemises"},
                     {"PAN": "Pantalons"},
                     {"JEAN": "Jeans"},
-                    {"EX": "Vêtements d'exterieur"},
                     {"COS": "Costumes"},
                     {"POLO": "Polos"},
                     {"SH": "Shorts"},
@@ -168,13 +165,13 @@ class _BChoiceState extends State<BChoice> {
               options: widget.isExplore == true
                   ? const [
                       {"TOUTS": "Tous les sacs"},
-                      {"SD": "Sac à dos"},
+                      {"SD": "Sacs à dos"},
                       {"PORT": "Petite maroquinerie"},
                       {"CA": "Sacs de voyage"},
                       {"SS": "Cabas"},
                     ]
                   : const [
-                      {"SD": "Sac à dos"},
+                      {"SD": "Sacs à dos"},
                       {"PORT": "Petite maroquinerie"},
                       {"CA": "Sacs de voyage"},
                       {"SS": "Cabas"},
@@ -184,7 +181,7 @@ class _BChoiceState extends State<BChoice> {
                 setState(() {
                   for_field = getSelectedValue([
                     {"TOUTS": "Tout les sacs"},
-                    {"SD": "Sac à dos"},
+                    {"SD": "Sacs à dos"},
                     {"PORT": "Petite maroquinerie"},
                     {"CA": "Sacs de voyage"},
                     {"SS": "Cabas"},
@@ -208,7 +205,7 @@ class _BChoiceState extends State<BChoice> {
                       {"LU": "Lunettes"},
                       {"CE": "Ceintures"},
                       {"BONN": "Bonnets et Chapeaux"},
-                      {"ECH": "Écharpe"},
+                      {"ECH": "Écharpes"},
                       {"CR": "Cravates"},
                       {"PORTF": "Portefeuilles"},
                       {"MONTRE": "Montres et bijoux"},
@@ -218,7 +215,7 @@ class _BChoiceState extends State<BChoice> {
                       {"LU": "Lunettes"},
                       {"CE": "Ceintures"},
                       {"BONN": "Bonnets et Chapeaux"},
-                      {"ECH": "Écharpe"},
+                      {"ECH": "Écharpes"},
                       {"CR": "Cravates"},
                       {"PORTF": "Portefeuilles"},
                       {"MONTRE": "Montres et bijoux"},
@@ -233,7 +230,7 @@ class _BChoiceState extends State<BChoice> {
                     {"LU": "Lunettes"},
                     {"CE": "Ceintures"},
                     {"BONN": "Bonnets et Chapeaux"},
-                    {"ECH": "Écharpe"},
+                    {"ECH": "Écharpes"},
                     {"CR": "Cravates"},
                     {"PORTF": "Portefeuilles"},
                     {"MONTRE": "Montres et bijoux"},
@@ -257,7 +254,7 @@ class _BChoiceState extends State<BChoice> {
                     ? Colors.grey
                     : theme
                         ? Color.fromARGB(255, 249, 217, 144)
-                        : Color(0xFFFB98B7),
+                        : Colors.black,
                 label: "choisir",
                 onTap: categorieForBackend == null
                     ? () {
@@ -374,55 +371,8 @@ class _BChoiceState extends State<BChoice> {
                 });
               },
             ),
-            SizedBox(
-              height: 16,
-            ),
-            CustomDropdownFormField<String, String>(
-              label: "Produits de beauté",
-              image: true,
-              pathImageHorsmenu: "assets/images/pb.jpeg",
-              options: widget.isExplore == true
-                  ? const [
-                      {"TOUTPB": "Tous les produits de beauté"},
-                      {"PF": "Parfum"},
-                      {"SV": "Soins visage"},
-                      {"SC": "Soins corps"},
-                      {"SCH": "Soins cheveux"},
-                      {"SM": "Soins mains"},
-                      {"DOU": "Douche"},
-                      {"MAQUI": "Maquillage"},
-                      {"VER": "Vernis"},
-                    ]
-                  : const [
-                      {"PF": "Parfum"},
-                      {"SV": "Soins visage"},
-                      {"SC": "Soins corps"},
-                      {"SCH": "Soins cheveux"},
-                      {"SM": "Soins mains"},
-                      {"DOU": "Douche"},
-                      {"MAQUI": "Maquillage"},
-                      {"VER": "Vernis"},
-                      {"TOUTPB": "autres"},
-                    ],
-              onChanged: (selectedKey) {
-                setState(() {
-                  for_field = getSelectedValue([
-                    {"TOUTPB": "Tous les produits de beauté"},
-                    {"PF": "Parfum"},
-                    {"SV": "Soins visage"},
-                    {"SC": "Soins corps"},
-                    {"SCH": "Soins cheveux"},
-                    {"SM": "Soins mains"},
-                    {"DOU": "Douche"},
-                    {"MAQUI": "Maquillage"},
-                    {"VER": "Vernis"},
-                  ], selectedKey)!;
-                  categorieForBackend =
-                      "P${widget.gender}$selectedKey".toUpperCase();
-                  print(categorieForBackend);
-                });
-              },
-            ),
+            
+            
             SizedBox(
               height: 16,
             ),
@@ -483,7 +433,7 @@ class _BChoiceState extends State<BChoice> {
               options: widget.isExplore == true
                   ? const [
                       {"TOUTS": "Tous les sacs"},
-                      {"SM": "Sac à main"},
+                      {"SM": "Sacs à main"},
                       {"BAND": "Sacs à bandoulière"},
                       {"PORT": "Sacs porté épaule"},
                       {"CA": "Sacs cabas"},
@@ -492,7 +442,7 @@ class _BChoiceState extends State<BChoice> {
                       {"SD": "Sac à dos"},
                     ]
                   : const [
-                      {"SM": "Sac à main"},
+                      {"SM": "Sacs à main"},
                       {"BAND": "Sacs à bandoulière"},
                       {"PORT": "Sacs porté épaule"},
                       {"CA": "Sacs cabas"},
@@ -505,13 +455,13 @@ class _BChoiceState extends State<BChoice> {
                 setState(() {
                   for_field = getSelectedValue([
                     {"TOUTS": "Tous les sacs"},
-                    {"SM": "Sac à main"},
+                    {"SM": "Sacs à main"},
                     {"BAND": "Sacs à bandoulière"},
                     {"PORT": "Sacs porté épaule"},
                     {"CA": "Sacs cabas"},
                     {"P": "Pochettes"},
                     {"VOY": "Sacs de voyage"},
-                    {"SD": "Sac à dos"},
+                    {"SD": "Sacs à dos"},
                   ], selectedKey)!;
                   categorieForBackend =
                       "S${widget.gender}$selectedKey".toUpperCase();
@@ -577,7 +527,7 @@ class _BChoiceState extends State<BChoice> {
                     ? Colors.grey
                     : theme
                         ? Color.fromARGB(255, 249, 217, 144)
-                        : Color(0xFFFB98B7),
+                        : Colors.black,
                 label: "choisir",
                 onTap: categorieForBackend == null
                     ? () {
@@ -731,16 +681,16 @@ class _BChoiceState extends State<BChoice> {
               options: widget.isExplore == true
                   ? const [
                       {"TOUTS": "Tout les sacs"},
-                      {"SM": "Sac à main"},
-                      {"BB": "Sac bébé filles"},
-                      {"SD": "Sac à dos"},
+                      {"SM": "Sacs à main"},
+                      {"BB": "Sacs bébé filles"},
+                      {"SD": "Sacs à dos"},
                       {"SS": "Sacs de sport"},
                       {"TROU": "Trousses"},
                     ]
                   : const [
-                      {"SM": "Sac à main"},
-                      {"BB": "Sac bébé filles"},
-                      {"SD": "Sac à dos"},
+                      {"SM": "Sacs à main"},
+                      {"BB": "Sacs bébé filles"},
+                      {"SD": "Sacs à dos"},
                       {"SS": "Sacs de sport"},
                       {"TROU": "Trousses"},
                       {"TOUTS": "autres"},
@@ -749,9 +699,9 @@ class _BChoiceState extends State<BChoice> {
                 setState(() {
                   for_field = getSelectedValue([
                     {"TOUTS": "Tous les sacs"},
-                    {"SM": "Sac à main"},
-                    {"BB": "Sac bébé filles"},
-                    {"SD": "Sac à dos"},
+                    {"SM": "Sacs à main"},
+                    {"BB": "Sacs bébé filles"},
+                    {"SD": "Sacs à dos"},
                     {"SS": "Sacs de sport"},
                     {"TROU": "Trousses"},
                   ], selectedKey)!;
@@ -808,58 +758,7 @@ class _BChoiceState extends State<BChoice> {
                 });
               },
             ),
-            SizedBox(
-              height: 16,
-            ),
-            CustomDropdownFormField<String, String>(
-              label: "Jouets",
-              image: true,
-              pathImageHorsmenu: "assets/images/jouets.jpeg",
-              options: widget.isExplore == true
-                  ? const [
-                      {"TOUTJ": "Tous les jouets"},
-                      {"BA": "Ballons"},
-                      {"DO": "Dominos"},
-                      {"JE": "Jeux éducatifs"},
-                      {"PA": "Patins"},
-                      {"PE": "Peluches"},
-                      {"PU": "Puzzles"},
-                      {"TRO": "Trottinettes"},
-                      {"VHE": "Véhicules"},
-                      {"POU": "Poupées"},
-                    ]
-                  : const [
-                      {"BA": "Ballons"},
-                      {"DO": "Dominos"},
-                      {"JE": "Jeux éducatifs"},
-                      {"PA": "Patins"},
-                      {"PE": "Peluches"},
-                      {"PU": "Puzzles"},
-                      {"TRO": "Trottinettes"},
-                      {"VHE": "Véhicules"},
-                      {"POU": "Poupées"},
-                      {"TOUTJ": "autres"},
-                    ],
-              onChanged: (selectedKey) {
-                setState(() {
-                  for_field = getSelectedValue([
-                    {"TOUTJ": "Tous les jouets"},
-                    {"BA": "Ballons"},
-                    {"DO": "Dominos"},
-                    {"JE": "Jeux éducatifs"},
-                    {"PA": "Patins"},
-                    {"PE": "Peluches"},
-                    {"PU": "Puzzles"},
-                    {"TRO": "Trottinettes"},
-                    {"VHE": "Véhicules"},
-                    {"POU": "Poupées"},
-                  ], selectedKey)!;
-                  categorieForBackend =
-                      "J${widget.gender}$selectedKey".toUpperCase();
-                  print(categorieForBackend);
-                });
-              },
-            ),
+            
             SizedBox(
               height: 24,
             ),
@@ -868,7 +767,7 @@ class _BChoiceState extends State<BChoice> {
                     ? Colors.grey
                     : theme
                         ? Color.fromARGB(255, 249, 217, 144)
-                        : Color(0xFFFB98B7),
+                        : Colors.black,
                 label: "choisir",
                 onTap: categorieForBackend == null
                     ? () {
@@ -1016,14 +915,14 @@ class _BChoiceState extends State<BChoice> {
               options: widget.isExplore == true
                   ? const [
                       {"TOUTS": "Tous les sacs"},
-                      {"BB": "Sac bébé garçons"},
-                      {"SD": "Sac à dos"},
+                      {"BB": "Sacs bébé garçons"},
+                      {"SD": "Sacs à dos"},
                       {"SS": "Sacs de sport"},
                       {"TROU": "Trousses"},
                     ]
                   : const [
-                      {"BB": "Sac bébé garçons"},
-                      {"SD": "Sac à dos"},
+                      {"BB": "Sacs bébé garçons"},
+                      {"SD": "Sacs à dos"},
                       {"SS": "Sacs de sport"},
                       {"TROU": "Trousses"},
                       {"TOUTS": "autres"},
@@ -1032,8 +931,8 @@ class _BChoiceState extends State<BChoice> {
                 setState(() {
                   for_field = getSelectedValue([
                     {"TOUTS": "Tous les sacs"},
-                    {"BB": "Sac bébé garçons"},
-                    {"SD": "Sac à dos"},
+                    {"BB": "Sacs bébé garçons"},
+                    {"SD": "Sacs à dos"},
                     {"SS": "Sacs de sport"},
                     {"TROU": "Trousses"},
                   ], selectedKey)!;
@@ -1090,56 +989,7 @@ class _BChoiceState extends State<BChoice> {
                 });
               },
             ),
-            SizedBox(
-              height: 16,
-            ),
-            CustomDropdownFormField<String, String>(
-              label: "Jouets",
-              image: true,
-              pathImageHorsmenu: "assets/images/jouets.jpeg",
-              options: widget.isExplore == true
-                  ? const [
-                      {"TOUTJ": "Tous les jouets"},
-                      {"BA": "Ballons"},
-                      {"DO": "Dominos"},
-                      {"JE": "Jeux éducatifs"},
-                      //{"PA": "Patins"},
-                      //{"PE": "Peluches"},
-                      {"PU": "Puzzles"},
-                      {"TRO": "Trottinettes"},
-                      {"VHE": "Véhicules"},
-                      //{"POU": "Poupées"},
-                    ]
-                  : const [
-                      {"BA": "Ballons"},
-                      {"DO": "Dominos"},
-                      {"JE": "Jeux éducatifs"},
-                      //{"PA": "Patins"},
-                      //{"PE": "Peluches"},
-                      {"PU": "Puzzles"},
-                      {"TRO": "Trottinettes"},
-                      {"VHE": "Véhicules"},
-                      {"TOUTJ": "autres"},
-                      //{"POU": "Poupées"},
-                    ],
-              onChanged: (selectedKey) {
-                setState(() {
-                  for_field = getSelectedValue([
-                    {"TOUTJ": "Tous les jouets"},
-                    {"BA": "Ballons"},
-                    {"DO": "Dominos"},
-                    {"JE": "Jeux éducatifs"},
-                    {"PU": "Puzzles"},
-                    {"PE": "Peluches"},
-                    {"TRO": "Trottinettes"},
-                    {"VHE": "Véhicules"},
-                  ], selectedKey)!;
-                  categorieForBackend =
-                      "J${widget.gender}$selectedKey".toUpperCase();
-                  print(categorieForBackend);
-                });
-              },
-            ),
+           
             SizedBox(
               height: 24,
             ),
@@ -1148,7 +998,7 @@ class _BChoiceState extends State<BChoice> {
                     ? Colors.grey
                     : theme
                         ? Color.fromARGB(255, 249, 217, 144)
-                        : Color(0xFFFB98B7),
+                        : Colors.black,
                 label: "choisir",
                 onTap: categorieForBackend == null
                     ? () {

@@ -51,7 +51,7 @@ class DetailsContainer extends StatelessWidget {
               fontFamily: "Raleway",
               color: theme
                   ? Color.fromARGB(255, 249, 217, 144)
-                  : Color(0xFFFB98B7),
+                  : Colors.black,
             ),
           ),
           SizedBox(height: 10),

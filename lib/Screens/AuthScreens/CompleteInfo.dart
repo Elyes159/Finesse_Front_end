@@ -174,16 +174,17 @@ class _CompleteInfoState extends State<CompleteInfo> {
                         decoration: ShapeDecoration(
                           shape: RoundedRectangleBorder(
                             side: const BorderSide(
-                                width: 1, color: Color(0xFF5C7CA4)),
-                            borderRadius: BorderRadius.circular(8),
+                                width: 1, color: Colors.black),
+                            borderRadius: BorderRadius.circular(2),
                           ),
                         ),
                         child: IntlPhoneField(
+                          
                           showDropdownIcon: false,
                           style: const TextStyle(fontFamily: "Raleway"),
                           decoration: const InputDecoration(
                             labelStyle: TextStyle(
-                              color: Color(0xFF3E536E),
+                              color: Colors.black,
                               fontSize: 16,
                               fontFamily: 'Raleway',
                               fontWeight: FontWeight.w400,
@@ -260,7 +261,7 @@ class _CompleteInfoState extends State<CompleteInfo> {
                   label: isLoading ? "Chargement..." : "Créer un compte",
                   textColor: isLoading ? Color(0xFF111928) : Colors.white,
                   buttonColor:
-                      isLoading ? Color(0xFFE5E7EB) : Color(0xFFFB98B7),
+                      isLoading ? Color(0xFFE5E7EB) : Colors.black,
                   onTap: isLoading
                       ? () {}
                       : () async {

@@ -58,7 +58,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-        final theme = Provider.of<ThemeProvider>(context).isDarkMode;
+    final theme = Provider.of<ThemeProvider>(context).isDarkMode;
 
     final authService = Provider.of<AuthService>(context);
     return Scaffold(
@@ -83,7 +83,7 @@ class _SignInScreenState extends State<SignInScreen> {
               width: 251,
               height: 48,
               child: Text(
-                "Se connecter à Finos",
+                "Se connecter à Art zi",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   //color: Color(0xFF111928),
@@ -157,7 +157,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   CustomButton(
                     textColor: _isLoading ? Color(0xFF111928) : Colors.white,
                     buttonColor:
-                        _isLoading ? Color(0xFFE5E7EB) : Color(0xFFFB98B7),
+                        _isLoading ? Color(0xFFE5E7EB) : Colors.black,
                     label: _isLoading
                         ? "Chargement..."
                         : "Se connecter", // Change the label dynamically
@@ -178,8 +178,9 @@ class _SignInScreenState extends State<SignInScreen> {
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        Navigation(onItemSelected: (int value) {  },),
+                                    builder: (context) => Navigation(
+                                      onItemSelected: (int value) {},
+                                    ),
                                   ),
                                   (Route<dynamic> route) => false,
                                 );
@@ -238,13 +239,14 @@ class _SignInScreenState extends State<SignInScreen> {
                               .googleLogin();
                       if (isLoggedIn) {
                         Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        Navigation(onItemSelected: (int value) {  },),
-                                  ),
-                                  (Route<dynamic> route) => false,
-                                );
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Navigation(
+                              onItemSelected: (int value) {},
+                            ),
+                          ),
+                          (Route<dynamic> route) => false,
+                        );
                       } else {
                         setState(() {
                           _errorMessage =
@@ -269,14 +271,15 @@ class _SignInScreenState extends State<SignInScreen> {
                                 listen: false)
                             .facebookLogin();
                         if (isLoggedIn) {
-                         Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        Navigation(onItemSelected: (int value) {  },),
-                                  ),
-                                  (Route<dynamic> route) => false,
-                                );
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Navigation(
+                                onItemSelected: (int value) {},
+                              ),
+                            ),
+                            (Route<dynamic> route) => false,
+                          );
                         } else {
                           setState(() {
                             _errorMessage =
@@ -292,21 +295,23 @@ class _SignInScreenState extends State<SignInScreen> {
                     },
                     imagePath: "assets/Icons/facebook.svg"),
                 const SizedBox(width: 8.86),
-                CustomContainer(onTap: () async {
+                CustomContainer(
+                    onTap: () async {
                       try {
                         bool isLoggedIn = await Provider.of<AuthService>(
                                 context,
                                 listen: false)
                             .appleLogin();
                         if (isLoggedIn) {
-                         Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        Navigation(onItemSelected: (int value) {  },),
-                                  ),
-                                  (Route<dynamic> route) => false,
-                                );
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Navigation(
+                                onItemSelected: (int value) {},
+                              ),
+                            ),
+                            (Route<dynamic> route) => false,
+                          );
                         } else {
                           setState(() {
                             _errorMessage =
@@ -319,7 +324,8 @@ class _SignInScreenState extends State<SignInScreen> {
                               'Erreur lors de la connexion avec facebook';
                         });
                       }
-                    }, imagePath: "assets/Icons/apple.svg"),
+                    },
+                    imagePath: "assets/Icons/apple.svg"),
               ],
             ),
             const SizedBox(height: 24),
@@ -337,23 +343,33 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ),
                 InkWell(
-                  onTap: () {
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const SignUpScreen()));
-                  },
-                  child: Text(
-                    ' Inscrivez-vous maintenant',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: theme? Color.fromARGB(255, 249, 217, 144):  Color(0xFFC668AA),
-                      fontSize: 14,
-                      fontFamily: 'Raleway',
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
+                    onTap: () {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const SignUpScreen()));
+                    },
+                    child: Text(
+                      ' Inscrivez-vous maintenant',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: theme
+                            ? Color.fromARGB(255, 249, 217, 144)
+                            : Colors.black,
+                        fontSize: 14,
+                        fontFamily: 'Raleway',
+                        fontWeight: FontWeight.w500,
+                        decoration:
+                            TextDecoration.underline, // Ajout de la sous-ligne
+                        decorationColor: theme
+                            ? Color.fromARGB(255, 249, 217,
+                                144) // Couleur de la ligne selon le thème
+                            : Colors
+                                .black, // Couleur de la ligne selon le thème
+                      ),
+                      textDirection: TextDirection
+                          .ltr, // Remplacer avec la direction du texte souhaitée
+                    )),
               ],
             ),
           ],

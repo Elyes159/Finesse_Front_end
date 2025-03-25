@@ -134,7 +134,7 @@ class _LetzGoState extends State<LetzGo> {
                       ),
                       children: [
                         TextSpan(
-                          text: "les Conditions d'utilisation de Finesse",
+                          text: "les Conditions d'utilisation de Art zi",
                           style: const TextStyle(
                             color: Colors.blue,
                             decoration: TextDecoration.underline,
@@ -194,7 +194,7 @@ class _LetzGoState extends State<LetzGo> {
             const SizedBox(height: 28),
             CustomButton(
                textColor: _isLoading ? Color(0xFF111928) : Colors.white,
-                  buttonColor: _isLoading? Color(0xFFE5E7EB) : Color(0xFFFB98B7),
+                  buttonColor: _isLoading? Color(0xFFE5E7EB) : Colors.black,
               label: _isLoading? "Chargement...": "C'est parti ! ⚡️",
               onTap: _isLoading?(){}: _usernameError !=null ? (){}: () async {
                 setState(() {

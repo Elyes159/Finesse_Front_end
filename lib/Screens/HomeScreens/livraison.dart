@@ -36,7 +36,7 @@ class _LivraisonState extends State<Livraison> {
             height: 200,
           ),
           SvgPicture.asset("assets/Icons/truck-time.svg",
-              color: theme ? Color.fromARGB(255, 249, 217, 144) : null),
+              color: theme ? Color.fromARGB(255, 249, 217, 144) : Colors.black),
           SizedBox(
             height: 24,
           ),

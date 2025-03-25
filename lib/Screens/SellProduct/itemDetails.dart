@@ -351,6 +351,13 @@ class _ItemDetailsState extends State<ItemDetails> {
                                 title: 'État',
                               ),
                             ],
+                            if (widget.product["color"] != null &&
+                                widget.product["color"] != "XX") ...[
+                              DetailsContainer(
+                                content: widget.product["color"],
+                                title: 'Couleur',
+                              ),
+                            ],
                             DetailsContainer(
                               content: getTimeAgo(widget.product["created"]),
                               title: 'Déposé',
@@ -531,7 +538,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                               fontWeight: FontWeight.bold,
                               color: theme
                                   ? Color.fromARGB(255, 249, 217, 144)
-                                  : Color(0xFFFB98B7),
+                                  : Colors.black,
                             ),
                           ),
                           const SizedBox(height: 6),
@@ -544,7 +551,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                               fontWeight: FontWeight.w700,
                               color: theme
                                   ? Color.fromARGB(255, 249, 217, 144)
-                                  : Color(0xFFFB98B7),
+                                  : Colors.black,
                               height: 1.5, // Espacement entre les lignes
                             ),
                           ),
@@ -589,7 +596,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                                 fontWeight: FontWeight.bold,
                                 color: theme
                                     ? Color.fromARGB(255, 249, 217, 144)
-                                    : Color(0xFFFB98B7),
+                                    : Colors.black,
                               ),
                             ),
                             const SizedBox(height: 6),
@@ -601,7 +608,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                                 fontWeight: FontWeight.w700,
                                 color: theme
                                     ? Color.fromARGB(255, 249, 217, 144)
-                                    : Color(0xFFFB98B7),
+                                    : Colors.black,
                                 height: 1.5, // Espacement entre les lignes
                               ),
                             ),
@@ -618,7 +625,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                       style: TextStyle(
                         color: theme
                             ? Color.fromARGB(255, 249, 217, 144)
-                            : Color(0xFFFB98B7),
+                            : Colors.black,
                         //color: Colors.black,
                         fontSize: 13,
                         fontFamily: 'Raleway',
@@ -708,7 +715,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                               fontWeight: FontWeight.bold,
                               color: theme
                                   ? Color.fromARGB(255, 249, 217, 144)
-                                  : Color(0xFFFB98B7),
+                                  : Colors.black,
                             ),
                           ),
                           const SizedBox(height: 6),
@@ -720,7 +727,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                               fontWeight: FontWeight.w700,
                               color: theme
                                   ? Color.fromARGB(255, 249, 217, 144)
-                                  : Color(0xFFFB98B7),
+                                  : Colors.black,
                               height: 1.5, // Espacement entre les lignes
                             ),
                           ),
@@ -818,7 +825,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                       style: TextStyle(
                         color: theme
                             ? Color.fromARGB(255, 249, 217, 144)
-                            : Color(0xFFFB98B7),
+                            : Colors.black,
                         //color: Colors.black,
                         fontSize: 14,
                         fontFamily: 'Raleway',

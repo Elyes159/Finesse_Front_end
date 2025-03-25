@@ -30,7 +30,7 @@ class CustomButtonLogOut extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
           decoration: BoxDecoration(
             color: buttonColor,
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(2),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -41,7 +41,7 @@ class CustomButtonLogOut extends StatelessWidget {
                 label,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Colors.white, // Use the passed text color if enabled
+                  color: textColor,
                   fontSize: 14,
                   fontFamily: 'Raleway',
                   fontWeight: FontWeight.w500,

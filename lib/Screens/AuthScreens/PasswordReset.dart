@@ -173,7 +173,7 @@ class _PasswordResetState extends State<PasswordReset> {
               buttonColor: isLoading
                   ? Color(0xFFE5E7EB) // Light grey when loading
                   : (_isEmailValid
-                      ? Color(0xFFFB98B7)
+                      ? Colors.black
                       : Color(0xFFE5E7EB)), // Color when email is valid/invalid
             
               // Set text color based on loading state and email validity

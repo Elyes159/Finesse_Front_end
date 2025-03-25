@@ -56,6 +56,8 @@ class _HomeScreenState extends State<HomeScreen> {
         userId:
             Provider.of<AuthService>(context, listen: false).currentUser!.id);
     Provider.of<Products>(context, listen: false).getProductsByUser();
+    Provider.of<AuthService>(context, listen: false).fetchSellingOrders(
+        Provider.of<AuthService>(context, listen: false).currentUser!.id);
     Provider.of<Products>(context, listen: false).getProductsSelledByUser();
     Provider.of<Products>(context, listen: false).getFavourite(
         Provider.of<AuthService>(context, listen: false).currentUser!.id);
@@ -484,16 +486,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         });
                       },
                     ),
-                    CategoryChip(
-                      iconPath: "assets/images/jouets.jpeg",
-                      text: "Jouets",
-                      isSelected: selectedCategory == "Jouets",
-                      onTap: () {
-                        setState(() {
-                          selectedCategory = "Jouets";
-                        });
-                      },
-                    ),
                   ],
                 ),
               ),
@@ -569,6 +561,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         'is_available': product['is_available'] ?? false,
                         'category': product['category'] ?? 'Unknown',
                         'taille': product['taille'],
+                        'color': product["color"],
                         'pointure': product['pointure'],
                         'brand': product['brand'],
                         'selled': product["selled"],
@@ -625,6 +618,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       "longeur": product["longeur"],
                       "hauteur": product["hauteur"],
                       'etat': product["etat"],
+                      'color': product["color"],
                       "largeur": product["largeur"],
                       'selled': product["selled"],
                       "created": product["created"],
@@ -665,6 +659,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       'category': product['category'] ?? 'Unknown',
                       'taille': product['taille'],
                       'pointure': product['pointure'],
+                      'color': product["color"],
                       "created": product["created"],
                       'brand': product['brand'],
                       "longeur": product["longeur"],
@@ -717,6 +712,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           'brand': product['brand'],
                           'owner_id': product["owner"]["id"],
                           'type_pdp': product["type"],
+                          'color': product["color"],
                           'owner_profile_pic':
                               product["owner"]["profile_pic"] ?? "",
                           'owner_username': product["owner"]["username"] ?? "",

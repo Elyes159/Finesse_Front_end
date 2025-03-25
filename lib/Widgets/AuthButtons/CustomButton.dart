@@ -12,7 +12,7 @@ class CustomButton extends StatelessWidget {
   const CustomButton({super.key, 
     required this.label,
     required this.onTap,
-    this.buttonColor = const Color(0xFFFB98B7), // Default button color
+    this.buttonColor =  Colors.black, // Default button color
     this.textColor = Colors.white, // Default text color
     this.isDisabled = false, // Default to enabled
   });
@@ -32,7 +32,7 @@ class CustomButton extends StatelessWidget {
             color: isDisabled
                 ? Color(0xFFE5E7EB) // Grey out the button if disabled
                 : theme ? Color.fromARGB(255, 249, 217, 144) : buttonColor, // Use the passed button color if enabled
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(2),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,

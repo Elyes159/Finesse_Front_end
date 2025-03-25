@@ -75,9 +75,9 @@ class _DescTextFieldState extends State<DescTextField> {
               shape: RoundedRectangleBorder(
                 side: BorderSide(
                   width: 1,
-                  color: theme ? Color.fromARGB(255, 249, 217, 144) : Color(0xFF5C7CA4),
+                  color: theme ? Color.fromARGB(255, 249, 217, 144) : Colors.black,
                 ),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(2),
               ),
             ),
             child: TextFormField(

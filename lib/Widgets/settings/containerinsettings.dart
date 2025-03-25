@@ -61,7 +61,7 @@ class SettingsTile extends StatelessWidget {
                       : (iconPath != null && iconPath!.endsWith('.svg'))
                           ? SvgPicture.asset(
                               iconPath!,
-                              color: theme ? Colors.white : null,
+                              color: theme ? Colors.white : Colors.black,
                               height: height ?? 24,
                               width: width ?? 24,
                             )

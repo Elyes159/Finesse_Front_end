@@ -6,6 +6,8 @@ import 'package:finesse_frontend/Screens/Profile/ProfileScreen.dart';
 import 'package:finesse_frontend/Screens/Profile/contact.dart';
 import 'package:finesse_frontend/Screens/Profile/settingspages/account.dart';
 import 'package:finesse_frontend/Screens/Profile/settingspages/annonce.dart';
+import 'package:finesse_frontend/Screens/Profile/settingspages/badges.dart';
+import 'package:finesse_frontend/Screens/Profile/settingspages/cg.dart';
 import 'package:finesse_frontend/Screens/Profile/settingspages/faq.dart';
 import 'package:finesse_frontend/Screens/Profile/settingspages/orders.dart';
 import 'package:finesse_frontend/Screens/Profile/settingspages/privacupolicy.dart';
@@ -67,10 +69,18 @@ class _ParametresState extends State<Parametres> {
           InkWell(
             onTap: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => ProfileMain()));
+                  context, MaterialPageRoute(builder: (context) => Badges()));
             },
-            child: SettingsTile(
-                 title: "Mon profil"),
+            child:
+                SettingsTile(iconPath: "assets/Icons/cup.svg", title: "Badges"),
+          ),
+          Divider(),
+          InkWell(
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ProfileMain()));
+            },
+            child: SettingsTile(title: "Mon profil"),
           ),
           InkWell(
             onTap: () {
@@ -131,15 +141,12 @@ class _ParametresState extends State<Parametres> {
           ),
           InkWell(
               onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Vacance()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Vacance()));
               },
               child: SettingsTile(
                   iconPath: "assets/Icons/holiday.svg",
                   height: 25,
-
                   title: "Mode vancance")),
           InkWell(
               onTap: () {
@@ -151,8 +158,6 @@ class _ParametresState extends State<Parametres> {
               child: SettingsTile(
                   iconPath: "assets/Icons/icon-7.svg",
                   title: "Recevoir par virement")),
-          
-          
           SettingsTile(
             iconPath: "assets/Icons/moon.svg",
             title: "Thème sombre",
@@ -225,9 +230,28 @@ class _ParametresState extends State<Parametres> {
                       false, // Supprime toutes les routes précédentes
                 );
               },
-              buttonColor: Color(0xffEA4335),
+              textColor: theme ? Colors.black : Colors.white,
+              buttonColor: theme ? Colors.white : Colors.black,
             ),
           ),
+          SizedBox(height: 10,),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>TermsAndConditionsPage()));
+            },
+            child: Center(
+              child: Text(
+                "Conditions générales",
+                style: TextStyle(
+                  fontFamily: "Raleway",
+                  decoration: TextDecoration.underline,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+          Center(child: Text("Version 1.0.0" , style: TextStyle(color: Colors.grey),))
         ],
       ),
     );

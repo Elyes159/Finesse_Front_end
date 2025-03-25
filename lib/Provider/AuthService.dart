@@ -15,21 +15,31 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 class AuthService with ChangeNotifier {
   String _accessToken = '';
   bool _isAuthenticated = false;
+  bool _showIntro = true;
   Users? _currentUser;
   int _userId = 0;
+  int number_of_orders = 0;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   String _googleAvatar = "";
   final String _fullnameGoogle = "";
   final storage = FlutterSecureStorage();
-
   bool get isAuthenticated => _isAuthenticated;
+  bool get showIntro => _showIntro;
   Users? get currentUser => _currentUser;
   int get userId => _userId;
   String get googleAvatar => _googleAvatar;
   String get fullnameGoogle => _fullnameGoogle;
   List<dynamic>? orderdata;
   List<dynamic>? orderselldata;
+  set showIntro(bool value) {
+    _showIntro = value;
+    notifyListeners(); // Notifier les widgets écoutant ce Provider
+  }
+  void setShowIntro(bool value) {
+  _showIntro = value;
+  notifyListeners();
+}
 
   Future<bool> registerToken({
     required int user_id,
@@ -139,14 +149,11 @@ class AuthService with ChangeNotifier {
       await storage.write(
           key: 'hasStory', value: _currentUser!.hasStory.toString());
 
-      await storage.write(
-          key: 'description', value: _currentUser!.description);
+      await storage.write(key: 'description', value: _currentUser!.description);
 
       // Récupérer et stocker les artistes
-     
 
       // Convertir la liste des artistes en chaîne JSON
-      
 
       // Stocker la liste des artistes dans FlutterSecureStorage
       await storage.write(key: 'activite', value: _currentUser!.activite);
@@ -177,14 +184,13 @@ class AuthService with ChangeNotifier {
     String? storedDesc = await storage.read(
         key: 'description'); // Récupérer la liste des artistes
 
-    String? storedActivite = await storage.read(
-        key: 'activite'); // Récupérer la liste des artistes
+    String? storedActivite =
+        await storage.read(key: 'activite'); // Récupérer la liste des artistes
 
     if (storedToken != null && storedUserId != null) {
       _accessToken = storedToken;
 
       // Convertir la liste d'artistes (si elle existe) depuis JSON
-      
 
       _currentUser = Users(
         id: int.parse(storedUserId),
@@ -249,6 +255,7 @@ class AuthService with ChangeNotifier {
       throw Exception('${json.decode(response.body)}');
     }
   }
+
   Future<bool> resend_code({
     required String? email,
   }) async {
@@ -267,6 +274,7 @@ class AuthService with ChangeNotifier {
       return false;
     }
   }
+
   Future<void> confirmEmailVerificationForReset({
     required String email,
     required String? verificationCode,
@@ -308,7 +316,7 @@ class AuthService with ChangeNotifier {
   }
 
   Future<http.Response> registerProfile({
-     String? activite,
+    String? activite,
     required String full_name,
     required String phone_number,
     required String address,
@@ -348,14 +356,14 @@ class AuthService with ChangeNotifier {
     }
   }
 
-  Future<http.Response> registerProfileApple(
-      {required String full_name,
-      required String phone_number,
-      required String address,
-      XFile? image,
-      required int userId,
-       String? activite,
-      }) async {
+  Future<http.Response> registerProfileApple({
+    required String full_name,
+    required String phone_number,
+    required String address,
+    XFile? image,
+    required int userId,
+    String? activite,
+  }) async {
     final url = Uri.parse(
         "${AppConfig.baseUrl}/api/auth/$userId/register_profile_apple/");
     var request = http.MultipartRequest('POST', url)
@@ -394,7 +402,7 @@ class AuthService with ChangeNotifier {
     required String phone_number,
     required String address,
     required int userId,
-     String? activite,
+    String? activite,
   }) async {
     final url = Uri.parse(
         "${AppConfig.baseUrl}/api/auth/$userId/register_profile_google/");
@@ -430,13 +438,13 @@ class AuthService with ChangeNotifier {
     }
   }
 
-  Future<http.Response> registerProfilefacebook(
-      {required String full_name,
-      required String phone_number,
-      required String address,
-      required int userId,
-       String? activite,
-      }) async {
+  Future<http.Response> registerProfilefacebook({
+    required String full_name,
+    required String phone_number,
+    required String address,
+    required int userId,
+    String? activite,
+  }) async {
     final url = Uri.parse(
         "${AppConfig.baseUrl}/api/auth/$userId/register_profile_facebook/");
 
@@ -845,10 +853,8 @@ class AuthService with ChangeNotifier {
           print('Utilisateur actuel après conversion: $_currentUser');
 
           // Récupérer et stocker les artistes
-         
 
           // Convertir la liste des artistes en chaîne JSON
-        
 
           // Stocker la liste des artistes dans FlutterSecureStorage
           await storage.write(key: 'activite', value: _currentUser!.activite);
@@ -875,8 +881,8 @@ class AuthService with ChangeNotifier {
           await storage.write(
               key: 'user_full_name', value: _currentUser!.fullName);
           await storage.write(key: 'parametre', value: "google");
-                    await storage.write(key: 'description', value: _currentUser!.description);
-
+          await storage.write(
+              key: 'description', value: _currentUser!.description);
 
           notifyListeners();
           return true;
@@ -944,10 +950,8 @@ class AuthService with ChangeNotifier {
         print('Utilisateur actuel après conversion: $_currentUser');
 
         // Récupérer et stocker les artistes
-        
 
         // Convertir la liste des artistes en chaîne JSON
-        
 
         // Stocker la liste des artistes dans FlutterSecureStorage
         await storage.write(key: 'activite', value: _currentUser!.activite);
@@ -972,7 +976,8 @@ class AuthService with ChangeNotifier {
         await storage.write(
             key: 'user_full_name', value: _currentUser!.fullName);
         await storage.write(key: 'parametre', value: "apple");
-        await storage.write(key: 'description', value: _currentUser!.description);
+        await storage.write(
+            key: 'description', value: _currentUser!.description);
 
         notifyListeners();
         return true;
@@ -1026,10 +1031,8 @@ class AuthService with ChangeNotifier {
           _currentUser = Users.fromJson(data);
 
           // Récupérer et stocker les artistes
-         
 
           // Convertir la liste des artistes en chaîne JSON
-         
 
           // Stocker la liste des artistes dans FlutterSecureStorage
           await storage.write(key: 'activite', value: _currentUser!.activite);
@@ -1056,7 +1059,8 @@ class AuthService with ChangeNotifier {
           await storage.write(
               key: 'user_full_name', value: _currentUser!.fullName);
           await storage.write(key: 'parametre', value: "facebook");
-          await storage.write(key: 'description', value: _currentUser!.description);
+          await storage.write(
+              key: 'description', value: _currentUser!.description);
           notifyListeners();
           return true;
         } else {
@@ -1092,8 +1096,7 @@ class AuthService with ChangeNotifier {
     String? storedUserAddress = await storage.read(key: 'user_address');
     String? storedUserDescription = await storage.read(key: 'user_description');
     String? storedHasStory = await storage.read(key: 'hasStory');
-    String? storedActivite = await storage.read(
-        key: 'activite');
+    String? storedActivite = await storage.read(key: 'activite');
     String? storedDesc = await storage.read(
         key: 'description'); // Récupérer la liste des artistes
 
@@ -1101,7 +1104,6 @@ class AuthService with ChangeNotifier {
       _accessToken = storedToken;
 
       // Convertir la liste d'artistes (si elle existe) depuis JSON
-     
 
       _currentUser = Users(
         id: int.parse(storedUserId),
@@ -1112,7 +1114,8 @@ class AuthService with ChangeNotifier {
         phoneNumber: storedUserPhoneNumber!,
         address: storedUserAddress!,
         hasStory: storedHasStory == "true",
-        activite: storedActivite ?? "Autres", description: storedDesc ?? "", // Ajouter la liste des artistes
+        activite: storedActivite ?? "Autres",
+        description: storedDesc ?? "", // Ajouter la liste des artistes
       );
 
       _isAuthenticated = true;
@@ -1134,16 +1137,14 @@ class AuthService with ChangeNotifier {
     String? storedUserAddress = await storage.read(key: 'user_address');
     String? storedUserDescription = await storage.read(key: 'user_description');
     String? storedHasStory = await storage.read(key: 'hasStory');
-    String? storedActivite = await storage.read(
-        key: 'activite');
-        String? storedDesc = await storage.read(
+    String? storedActivite = await storage.read(key: 'activite');
+    String? storedDesc = await storage.read(
         key: 'description'); // Récupérer la liste des artistes
 
     if (storedToken != null && storedUserId != null) {
       _accessToken = storedToken;
 
       // Convertir la liste d'artistes (si elle existe) depuis JSON
-     
 
       _currentUser = Users(
         id: int.parse(storedUserId),
@@ -1154,7 +1155,8 @@ class AuthService with ChangeNotifier {
         phoneNumber: storedUserPhoneNumber!,
         address: storedUserAddress!,
         hasStory: storedHasStory == "true",
-        activite: storedActivite ?? "Autres", description: storedDesc ?? "", // Ajouter la liste des artistes
+        activite: storedActivite ?? "Autres",
+        description: storedDesc ?? "", // Ajouter la liste des artistes
       );
 
       _isAuthenticated = true;
@@ -1181,8 +1183,14 @@ class AuthService with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<int> updateProfile(int userId, String fullName, String username,
-      String phoneNumber, String address, String description,File? avatar) async {
+  Future<int> updateProfile(
+      int userId,
+      String fullName,
+      String username,
+      String phoneNumber,
+      String address,
+      String description,
+      File? avatar) async {
     final url = '${AppConfig.baseUrl}/api/auth/update_user_profile/$userId/';
 
     var request = http.MultipartRequest('POST', Uri.parse(url));
@@ -1272,6 +1280,8 @@ class AuthService with ChangeNotifier {
 
       if (response.statusCode == 200) {
         orderselldata = json.decode(response.body)['orders'];
+        number_of_orders =
+            int.parse(json.decode(response.body)['total_orders_count']);
         notifyListeners();
         return true; // Succès
       } else {

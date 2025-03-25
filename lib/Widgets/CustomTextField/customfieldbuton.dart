@@ -80,8 +80,8 @@ class _CustomTextFormFieldwithButtonState extends State<CustomTextFormFieldwithB
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: ShapeDecoration(
               shape: RoundedRectangleBorder(
-                side: BorderSide(width: 1, color: theme ?Color.fromARGB(255, 249, 217, 144) : Color(0xFF5C7CA4)),
-                borderRadius: BorderRadius.circular(8),
+                side: BorderSide(width: 1, color: theme ?Color.fromARGB(255, 249, 217, 144) : Colors.black),
+                borderRadius: BorderRadius.circular(2),
               ),
             ),
             child: Row(
@@ -137,7 +137,7 @@ class _CustomTextFormFieldwithButtonState extends State<CustomTextFormFieldwithB
                       height: 40,
                       decoration: BoxDecoration(
                         color: !(widget.isCommented!) 
-                        ?theme? Color.fromARGB(255, 249, 217, 144) : Color(0xFFFB98B7)
+                        ?theme? Color.fromARGB(255, 249, 217, 144) : Colors.black
                          : Colors.green,
                         shape: BoxShape.circle,
                       ),

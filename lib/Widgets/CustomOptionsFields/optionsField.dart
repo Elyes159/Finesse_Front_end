@@ -84,7 +84,7 @@ class _CustomDropdownFormFieldState<K, V>
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
               color: theme ? Colors.black : Colors.white,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(2),
               boxShadow: theme
                   ? [
                       BoxShadow(
@@ -103,7 +103,7 @@ class _CustomDropdownFormFieldState<K, V>
               border: Border.all(
                 color: theme
                     ? Color.fromARGB(255, 249, 217, 144)
-                    : Color(0xFF5C7CA4),
+                    : Colors.black,
                 width: 1,
               ),
             ),

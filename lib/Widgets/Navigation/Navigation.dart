@@ -169,10 +169,10 @@ class NavigationState extends State<Navigation> {
               color: _selectedIndex == 0
                   ? theme
                       ? Color.fromARGB(255, 249, 217, 144)
-                      : Color(0xFFFB98B7)
+                      : Colors.black
                   : theme
                       ? Colors.white
-                      : Colors.black,
+                      : Colors.grey,
               height: 24,
               width: 24,
             ),
@@ -186,10 +186,10 @@ class NavigationState extends State<Navigation> {
               color: _selectedIndex == 1
                   ? theme
                       ? Color.fromARGB(255, 249, 217, 144)
-                      : Color(0xFFFB98B7)
+                      : Colors.black
                   : theme
                       ? Colors.white
-                      : Colors.black,
+                      : Colors.grey,
             ),
             label: "Explorer",
           ),
@@ -199,10 +199,10 @@ class NavigationState extends State<Navigation> {
               color: _selectedIndex == 2
                   ? theme
                       ? Color.fromARGB(255, 249, 217, 144)
-                      : Color(0xFFFB98B7)
+                      : Colors.black
                   : theme
                       ? Colors.white
-                      : Colors.black,
+                      : Colors.grey,
               size: 24,
             ),
             label: "Vendre",
@@ -213,10 +213,10 @@ class NavigationState extends State<Navigation> {
               color: _selectedIndex == 3
                   ? theme
                       ? Color.fromARGB(255, 249, 217, 144)
-                      : Color(0xFFFB98B7)
+                      : Colors.black
                   : theme
                       ? Colors.white
-                      : Colors.black,
+                      : Colors.grey,
             ),
             label: 'Notifications',
           ),
@@ -226,19 +226,20 @@ class NavigationState extends State<Navigation> {
               color: _selectedIndex == 4
                   ? theme
                       ? Color.fromARGB(255, 249, 217, 144)
-                      : Color(0xFFFB98B7)
+                      : Colors.black
                   : theme
                       ? Colors.white
-                      : Colors.black,
+                      : Colors.grey,
             ),
             label: 'Paramétres',
           ),
           
         ],
         selectedLabelStyle: TextStyle(
+          fontWeight: FontWeight.w600,
           fontFamily: "Raleway",
           fontSize: 12,
-          color: theme ? Color.fromARGB(255, 249, 217, 144) : Color(0xFFFB98B7),
+          color: theme ? Color.fromARGB(255, 249, 217, 144) : Colors.black,
         ),
         unselectedLabelStyle: TextStyle(
           fontFamily: "Raleway",
@@ -246,8 +247,8 @@ class NavigationState extends State<Navigation> {
           color: theme ? Colors.white : Colors.black,
         ),
         selectedItemColor:
-            theme ? Color.fromARGB(255, 249, 217, 144) : Color(0xFFFB98B7),
-        unselectedItemColor: theme ? Colors.white : Colors.black,
+            theme ? Color.fromARGB(255, 249, 217, 144) : Colors.black,
+        unselectedItemColor: theme ? Colors.white : Colors.grey,
         type: BottomNavigationBarType.fixed,
       ),
     );

@@ -415,7 +415,7 @@ class _ProfileMainState extends State<ProfileMain> {
             color: isSelected
                 ? theme
                     ? Color.fromARGB(255, 249, 217, 144)
-                    : Color(0xFFFB98B7)
+                    : Colors.black
                 : theme
                     ? Colors.white
                     : Colors.black,
@@ -433,7 +433,7 @@ class _ProfileMainState extends State<ProfileMain> {
               color: isSelected
                   ? theme
                       ? Color.fromARGB(255, 249, 217, 144)
-                      : Color(0xFFFB98B7)
+                      : Colors.black
                   : theme
                       ? Colors.white
                       : Colors.black,
@@ -446,7 +446,7 @@ class _ProfileMainState extends State<ProfileMain> {
               width: 100,
               color: theme
                   ? Color.fromARGB(255, 249, 217, 144)
-                  : Color(0xFFFB98B7),
+                  : Colors.black,
             ),
         ],
       ),

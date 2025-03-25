@@ -117,7 +117,7 @@ class _ExploreState extends State<Explore> {
                               color: _searchType == 'article'
                                   ? theme
                                       ? Color.fromARGB(255, 249, 217, 144)
-                                      : Color(0xFFFB98B7)
+                                      : Colors.black
                                   : Colors.transparent,
                               borderRadius: BorderRadius.circular(30),
                             ),
@@ -127,7 +127,7 @@ class _ExploreState extends State<Explore> {
                               height: 24,
                               colorFilter: ColorFilter.mode(
                                 _searchType == 'article'
-                                    ? Colors.black
+                                    ? theme?  Colors.black : Colors.white
                                     : Colors.grey,
                                 BlendMode.srcIn,
                               ),
@@ -148,7 +148,7 @@ class _ExploreState extends State<Explore> {
                               color: _searchType == 'membre'
                                   ? theme
                                       ? Color.fromARGB(255, 249, 217, 144)
-                                      : Color(0xFFFB98B7)
+                                      : Colors.black
                                   : Colors.transparent,
                               borderRadius: BorderRadius.circular(30),
                             ),
@@ -158,7 +158,7 @@ class _ExploreState extends State<Explore> {
                               height: 24,
                               colorFilter: ColorFilter.mode(
                                 _searchType == 'membre'
-                                    ? Colors.black
+                                    ?  theme?  Colors.black : Colors.white
                                     : Colors.grey,
                                 BlendMode.srcIn,
                               ),

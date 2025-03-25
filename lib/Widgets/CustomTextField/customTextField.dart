@@ -88,9 +88,9 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
               shape: RoundedRectangleBorder(
                 side: BorderSide(
                   width: 1,
-                  color: theme ? const Color.fromARGB(255, 249, 217, 144) : const Color(0xFF5C7CA4),
+                  color: theme ? const Color.fromARGB(255, 249, 217, 144) :  Colors.black,
                 ),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(2),
               ),
             ),
             child: TextFormField(
@@ -128,6 +128,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
                   fontWeight: FontWeight.w400,
                   height: 1.5,
                   letterSpacing: 0.5,
+                  color: Colors.black
                 ),
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.only(left: 10),

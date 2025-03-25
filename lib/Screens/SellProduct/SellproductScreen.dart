@@ -2,6 +2,7 @@
 
 import 'dart:io';
 import 'package:finesse_frontend/ApiServices/backend_url.dart';
+import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Provider/products.dart';
 import 'package:finesse_frontend/Provider/sellprovider.dart';
 import 'package:finesse_frontend/Provider/theme.dart';
@@ -313,8 +314,10 @@ class _SellProductScreenState extends State<SellProductScreen> {
     Color(0xFF4B5320), // Kaki
     Color(0xFF006400), // Vert foncé
   ];
+
   @override
   Widget build(BuildContext context) {
+    bool showIntro = Provider.of<AuthService>(context, listen: false).showIntro;
     final theme = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
     return WillPopScope(
       onWillPop: _onWillPop,
@@ -323,8 +326,196 @@ class _SellProductScreenState extends State<SellProductScreen> {
           padding: const EdgeInsets.all(16),
           child: Form(
             key: _formKey, // Ajout du FormKey
-            child: ListView(
-              children: [
+            child: ListView(children: [
+              if (showIntro) ...[
+                Container(
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Gagnez plus sur chaque vente",
+                              style: TextStyle(
+                                fontFamily: "Raleway",
+                                fontSize:
+                                    20, // Agrandissement de la taille du texte
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 8),
+
+                            /// Étape 1 : Création de l'annonce
+                            Row(
+                              children: [
+                                Icon(Icons.arrow_forward, size: 20),
+                                SizedBox(width: 8),
+                                Text(
+                                  "Créez votre annonce",
+                                  style: TextStyle(
+                                    fontFamily: "Raleway",
+                                    fontSize:
+                                        20, // Agrandissement de la taille du texte
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Text(
+                              "Ajoutez des photos et des détails de votre article.",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontFamily: "Raleway",
+                              ),
+                            ),
+                            SizedBox(height: 8),
+
+                            /// Étape 2 : Vente
+                            Row(
+                              children: [
+                                Icon(Icons.arrow_forward, size: 20),
+                                SizedBox(width: 8),
+                                Text(
+                                  "Vendez",
+                                  style: TextStyle(
+                                    fontFamily: "Raleway",
+                                    fontSize:
+                                        20, // Agrandissement de la taille du texte
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Text(
+                              "Négociez directement en commentaires avec les acheteurs pour vendre plus rapidement. "
+                              "Une fois votre article vendu, vous recevrez un code de livraison spécifique.",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontFamily: "Raleway",
+                              ),
+                            ),
+                            SizedBox(height: 8),
+
+                            /// Étape 3 : Livraison
+                            Row(
+                              children: [
+                                Icon(Icons.arrow_forward, size: 20),
+                                SizedBox(width: 8),
+                                Text(
+                                  "Livraison",
+                                  style: TextStyle(
+                                    fontFamily: "Raleway",
+                                    fontSize:
+                                        20, // Agrandissement de la taille du texte
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Text(
+                              "Le code devra être joint à votre commande, et un livreur viendra récupérer l’article sous 24 heures.",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontFamily: "Raleway",
+                              ),
+                            ),
+                            SizedBox(height: 8),
+
+                            /// Étape 4 : Paiement
+                            Row(
+                              children: [
+                                Icon(Icons.arrow_forward, size: 20),
+                                SizedBox(width: 8),
+                                Text(
+                                  "Paiement",
+                                  style: TextStyle(
+                                    fontFamily: "Raleway",
+                                    fontSize:
+                                        20, // Agrandissement de la taille du texte
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Text(
+                              "Le paiement de la somme vous sera effectué 48 heures après la livraison.",
+                              style: TextStyle(
+                                  fontSize: 20, fontFamily: 'Raleway'),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      SizedBox(
+                        height: 16,
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: theme
+                                ? const Color.fromARGB(255, 249, 217, 144)
+                                : const Color(0xFF5C7CA4),
+                          ),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Transparence avec l’acheteur",
+                              style: TextStyle(
+                                fontFamily: "Raleway",
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: theme
+                                    ? Color.fromARGB(255, 249, 217, 144)
+                                    : Colors.black,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              "Mentionner tout défaut garantit que l’acheteur est bien informé avant de prendre sa décision, ce qui évite les conflits et les retours non souhaités.\n"
+                              "1. Description détaillée du défaut : Indiquez clairement tout dommage, rayure, déformation, ou tout autre problème visible sur l’article.\n"
+                              "2. Photos des défauts : Si possible, prenez des photos qui montrent les défauts de manière précise.",
+                              style: TextStyle(
+                                fontFamily: "Raleway",
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: theme
+                                    ? Color.fromARGB(255, 249, 217, 144)
+                                    : Colors.black,
+                                height: 1.5, // Espacement entre les lignes
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+
+                      /// Bouton pour masquer l'intro et accéder à la vente
+                      CustomButton(
+                        onTap: () {
+                          setState(() {
+                            Provider.of<AuthService>(context, listen: false)
+                                .setShowIntro(false);
+                          });
+                        },
+                        label: ("J'ai compris"),
+                      ),
+                    ],
+                  ),
+                ),
+              ] else ...[
                 InkWell(
                   onTap: () {
                     print(widget.category);
@@ -391,7 +582,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                                 decoration: ShapeDecoration(
                                   color: const Color(0xFFE5E7EB),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
+                                    borderRadius: BorderRadius.circular(2),
                                   ),
                                 ),
                                 child: ClipRRect(
@@ -908,94 +1099,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                     height: 16,
                   )
                 ],
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: theme
-                          ? const Color.fromARGB(255, 249, 217, 144)
-                          : const Color(0xFF5C7CA4),
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Déroulement",
-                        style: TextStyle(
-                          fontFamily: "Raleway",
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: theme
-                              ? Color.fromARGB(255, 249, 217, 144)
-                              : Color(0xFFFB98B7),
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        "Procédure de vente et de livraison :\n"
-                        "1. Vente de l’article : Une fois votre article vendu, vous recevrez un code de livraison spécifique.\n"
-                        "2. Livraison : Ce code devra être joint à votre commande, et un livreur viendra récupérer l’article sous 24 heures.\n"
-                        "3. Virement : Le paiement de la somme vous sera effectué 48 heures après la livraison.",
-                        style: TextStyle(
-                          fontFamily: "Raleway",
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: theme
-                              ? Color.fromARGB(255, 249, 217, 144)
-                              : Color(0xFFFB98B7),
-                          height: 1.5, // Espacement entre les lignes
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 16,
-                ),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: theme
-                          ? const Color.fromARGB(255, 249, 217, 144)
-                          : const Color(0xFF5C7CA4),
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Transparence avec l’acheteur",
-                        style: TextStyle(
-                          fontFamily: "Raleway",
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: theme
-                              ? Color.fromARGB(255, 249, 217, 144)
-                              : Color(0xFFFB98B7),
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        "Mentionner tout défaut garantit que l’acheteur est bien informé avant de prendre sa décision, ce qui évite les conflits et les retours non souhaités.\n"
-                        "1. Description détaillée du défaut : Indiquez clairement tout dommage, rayure, déformation, ou tout autre problème visible sur l’article.\n"
-                        "2. Photos des défauts : Si possible, prenez des photos qui montrent les défauts de manière précise.",
-                        style: TextStyle(
-                          fontFamily: "Raleway",
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: theme
-                              ? Color.fromARGB(255, 249, 217, 144)
-                              : Color(0xFFFB98B7),
-                          height: 1.5, // Espacement entre les lignes
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+
                 const SizedBox(
                   height: 24,
                 ),
@@ -1006,7 +1110,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                 //   ),
                 CustomButton(
                   buttonColor:
-                      _Loading ? const Color(0xffE5E7EB) : Color(0xffFB98B7),
+                      _Loading ? const Color(0xffE5E7EB) : Colors.black,
                   textColor: _Loading ? Color(0xff111928) : Colors.white,
                   onTap: _Loading
                       ? () {}
@@ -1154,7 +1258,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                       : "Modifier l'article",
                 ),
               ],
-            ),
+            ]),
           ),
         ),
       ),

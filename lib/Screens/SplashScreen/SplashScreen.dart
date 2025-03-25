@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:animate_do/animate_do.dart';
+
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -95,78 +97,23 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/splash.png'),
-            fit: BoxFit.cover,
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              FadeIn(
+                duration: Duration(milliseconds: 3000),
+                child: Image.asset(
+                  "assets/images/logoArtzi.png",
+                  height: 500,
+                ),
+              )
+            ],
           ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              height: 52,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-              child: const Stack(
-                children: [
-                  // Possible élément à ajouter plus tard
-                ],
-              ),
-            ),
-            Image.asset(
-              "assets/images/logo.png",
-              width: 180.7,
-              height: 180.49,
-            ),
-            const SizedBox(height: 20),
-            
-            const SizedBox(height: 20),
-            const Text(
-              'Buy and sell your clothes easily and quickly.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Color(0xFF111928),
-                fontSize: 16,
-                fontFamily: 'Raleway',
-                fontWeight: FontWeight.w500,
-                height: 1.5,
-              ),
-            ),
-            const SizedBox(height: 33),
-            // Barre de progression animée
-            SizedBox(
-              width: 247,
-              height: 10,
-              child: Stack(
-                children: [
-                  Container(
-                    width: 247,
-                    height: 10,
-                    decoration: ShapeDecoration(
-                      color: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        side: const BorderSide(width: 1, color: Color(0xFFE5E7EB)),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 100),
-                    width: 247 * progress,
-                    height: 10,
-                    decoration: ShapeDecoration(
-                      color: const Color(0xFFFB98B7),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
         ),
       ),
     );

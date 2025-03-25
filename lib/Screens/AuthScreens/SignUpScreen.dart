@@ -120,7 +120,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         textColor:
                             _isLoading ? Color(0xFF111928) : Colors.white,
                         buttonColor:
-                            _isLoading ? Color(0xFFE5E7EB) : Color(0xFFFB98B7),
+                            _isLoading ? Color(0xFFE5E7EB) : Colors.black,
                         onTap: _isLoading
                             ? () {}
                             : () async {
@@ -360,26 +360,32 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                     InkWell(
-                      onTap: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SignInScreen()),
-                        );
-                      },
-                      child: Text(
-                        "Connectez-vous maintenant",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: theme
-                              ? Color.fromARGB(255, 249, 217, 144)
-                              : Color(0xFFC668AA),
-                          fontSize: 16,
-                          fontFamily: 'Raleway',
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
+                        onTap: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const SignInScreen()),
+                          );
+                        },
+                        child: Text(
+                          "Connectez-vous maintenant",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: theme
+                                ? Color.fromARGB(255, 249, 217, 144)
+                                : Colors.black,
+                            fontSize: 16,
+                            fontFamily: 'Raleway',
+                            fontWeight: FontWeight.w500,
+                            decoration: TextDecoration
+                                .underline, // Ajout de la sous-ligne
+                            decorationColor: theme
+                                ? Color.fromARGB(255, 249, 217,
+                                    144) // Couleur de la ligne selon le thème
+                                : Colors
+                                    .black, // Couleur de la ligne selon le thème
+                          ),
+                        )),
                   ],
                 ),
               ],
