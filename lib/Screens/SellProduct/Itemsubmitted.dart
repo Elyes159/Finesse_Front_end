@@ -80,7 +80,7 @@ class _ItemSubmittedState extends State<ItemSubmitted> {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => SellProductScreen(),
+                            builder: (context) => Navigation(onItemSelected: (int value) {  },currentIndex: 2,),
                           ),
                           (route) => false,
                         );

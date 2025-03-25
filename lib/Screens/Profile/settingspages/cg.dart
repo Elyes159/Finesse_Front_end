@@ -22,48 +22,49 @@ class TermsAndConditionsPage extends StatelessWidget {
             _buildSectionText(
                 "L’application Art Zi est accessible gratuitement, sous réserve de disposer d’une connexion Internet et d’un appareil compatible. L’application est disponible sur les systèmes Android et iOS. L’utilisation de l’application nécessite la création d’un compte utilisateur."),
             _buildSectionTitle("3. Services fournis"),
+            _buildSectionText("L’application Art Zi permet aux utilisateurs de :"),
             _buildBulletPoints([
-              "Vendre des articles : Les utilisateurs peuvent déposer leurs articles à vendre (art, artisanat, mode, vintage) en fournissant des informations détaillées sur chaque produit.",
+              "Vendre des articles : Les utilisateurs peuvent déposer leurs articles à vendre (art, artisanat, mode, vintage) en fournissant des informations détaillées sur chaque produit, telles que la description, le prix, et des photos.",
               "Acheter des articles : Les utilisateurs peuvent consulter les articles mis en vente, effectuer des achats et noter le vendeur.",
-              "Communiquer : Les utilisateurs peuvent échanger avec les vendeurs via les commentaires dans l’application."
+              "Communiquer : Les utilisateurs peuvent échanger avec les vendeurs via les commentaires dans l’application pour poser des questions sur les articles ou discuter des conditions de vente."
             ]),
             _buildSectionTitle("4. Inscription et création de compte"),
             _buildSectionText(
-                "Pour accéder aux services de l’application Art Zi, l’utilisateur doit créer un compte en fournissant des informations personnelles exactes et à jour."),
+                "Pour accéder aux services de l’application Art Zi, l’utilisateur doit créer un compte en fournissant des informations personnelles exactes et à jour (nom, adresse e-mail, numéro de téléphone, etc.). L’utilisateur est responsable de la confidentialité de ses identifiants de connexion et s’engage à ne pas les partager avec des tiers."),
             _buildSectionTitle("5. Conditions de vente"),
             _buildBulletPoints([
-              "Vendeur : En tant que vendeur, vous êtes responsable de la description de vos articles et de leur conformité avec la législation en vigueur en Tunisie.",
-              "Acheteur : L’acheteur est responsable du paiement des articles achetés et de la vérification de leur qualité."
+              "Vendeur : En tant que vendeur, vous êtes responsable de la description de vos articles, de leur prix et de leur conformité avec la législation en vigueur en Tunisie. Vous vous engagez à vendre des produits légaux et à ne pas proposer des articles contrefaits ou illégaux.",
+              "Acheteur : L’acheteur est responsable du paiement des articles achetés et de la vérification de la qualité des articles lors de la réception."
             ]),
             _buildSectionTitle("6. Prix et paiements"),
             _buildSectionText(
-                "Les prix des articles sont déterminés par les vendeurs. Art Zi prend une commission sur les transactions effectuées."),
+                "Les prix des articles sont déterminés par les vendeurs. Art Zi prend une commission sur les transactions effectuées, sauf indication contraire. Le paiement des articles achetés doit être effectué via les moyens de paiement sécurisés mis à disposition dans l’application."),
             _buildSectionTitle("7. Propriété intellectuelle"),
             _buildSectionText(
-                "Tous les contenus présents dans l’application Art Zi sont protégés par les droits de propriété intellectuelle."),
+                "Tous les contenus présents dans l’application Art Zi, tels que les textes, images, logos, graphismes, et autres éléments sont protégés par les droits de propriété intellectuelle. Toute reproduction, représentation ou exploitation de ces contenus est interdite sans autorisation préalable."),
             _buildSectionTitle("8. Responsabilité"),
             _buildBulletPoints([
-              "Responsabilité des utilisateurs : L’utilisateur s’engage à utiliser l’application de manière responsable.",
-              "Responsabilité de Art Zi : L’application Art Zi ne peut être tenue responsable en cas de dysfonctionnement technique."
+              "Responsabilité des utilisateurs : L’utilisateur s’engage à utiliser l’application de manière responsable et à respecter la législation en vigueur. Art Zi ne saurait être tenu responsable des transactions entre utilisateurs, des articles défectueux ou non conformes.",
+              "Responsabilité de Art Zi : L’application Art Zi s’efforce de garantir la disponibilité de ses services, mais ne peut être responsable en cas de dysfonctionnement technique, de perte de données ou d’autres événements échappant à son contrôle."
             ]),
             _buildSectionTitle("9. Données personnelles"),
             _buildSectionText(
-                "Art Zi collecte et traite les données personnelles des utilisateurs conformément à sa politique de confidentialité."),
+                "Art Zi collecte et traite les données personnelles des utilisateurs conformément à sa politique de confidentialité. Ces données sont utilisées pour gérer votre compte, traiter vos commandes et améliorer l’expérience utilisateur. Les informations personnelles ne sont pas partagées avec des tiers, sauf en cas de nécessité pour la bonne exécution des services ou en réponse à une obligation légale."),
             _buildSectionTitle("10. Modification des CGU"),
             _buildSectionText(
-                "Art Zi se réserve le droit de modifier ces Conditions Générales d’Utilisation à tout moment."),
+                "Art Zi se réserve le droit de modifier ces Conditions Générales d’Utilisation à tout moment. En cas de modification substantielle, les utilisateurs seront informés via l’application. L’utilisation continue de l’application après modification des CGU constitue une acceptation des nouvelles conditions."),
             _buildSectionTitle("11. Résiliation et suspension du compte"),
             _buildSectionText(
-                "Art Zi se réserve le droit de suspendre ou de résilier l’accès à l’application en cas de violation des CGU."),
+                "Art Zi se réserve le droit de suspendre ou de résilier l’accès à l’application pour toute violation des présentes CGU, ou pour toute activité illégale, frauduleuse ou abusive détectée."),
             _buildSectionTitle("12. Durée et résiliation"),
             _buildSectionText(
-                "Les présentes CGU sont en vigueur tant que l’utilisateur utilise l’application."),
+                "Les présentes CGU sont en vigueur tant que l’utilisateur utilise l’application. L’utilisateur peut résilier son compte à tout moment via les paramètres de l’application. Art Zi se réserve le droit de suspendre ou de supprimer tout compte en cas de violation des présentes conditions."),
             _buildSectionTitle("13. Loi applicable et litiges"),
             _buildSectionText(
-                "Les présentes Conditions Générales d’Utilisation sont régies par la législation en vigueur en Tunisie."),
+                "Les présentes Conditions Générales d’Utilisation sont régies par la législation en vigueur en Tunisie. En cas de litige, les parties conviennent de tenter une résolution amiable. Si aucune solution amiable n’est trouvée, le litige sera soumis aux juridictions compétentes de Tunisie."),
             _buildSectionTitle("14. Contact"),
             _buildSectionText(
-                "Pour toute question ou réclamation, vous pouvez nous contacter à l’adresse suivante :"),
+                "Pour toute question ou réclamation concernant ces Conditions Générales d’Utilisation, vous pouvez nous contacter à l’adresse suivante :"),
             _buildSectionText("Email : finessetn1@gmail.com", isBold: true),
           ],
         ),

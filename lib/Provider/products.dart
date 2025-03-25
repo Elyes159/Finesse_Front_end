@@ -158,16 +158,6 @@ class Products extends ChangeNotifier {
         }
       }
     }
-
-    print("Données envoyées : ");
-    print("Owner ID: $storedUserId");
-    print("Category ID: $subCatgory");
-    print("Title: $title");
-    print("Description: $description");
-    print("Price: $price");
-    print("Taille: $taille");
-    print("Pointure: $pointure");
-
     try {
       var response = await request.send();
       final responseString = await response.stream.bytesToString();
