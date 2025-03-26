@@ -516,34 +516,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 final sixDaysAgo =
                     now.subtract(Duration(days: 6)); // 6 derniers jours
 
-                print("📅 Date actuelle: $now");
-                print("📅 Date il y a 6 jours: $sixDaysAgo");
-
                 final thisWeekProducts = [
                   ...productsProvider.products.where((product) {
                     final productDate = parseDjangoDate(product['date']);
                     if (productDate == null) {
-                      print(
-                          "🔴 Date invalide pour le produit: ${product['title']}");
                       return false;
                     }
 
-                    print(
-                        "✅ Produit trouvé : ${product['title']} avec la date $productDate");
-
                     final productDateOnly = DateTime(
                         productDate.year, productDate.month, productDate.day);
-                    print(
-                        "🕒 Comparaison de la date du produit: $productDateOnly");
 
                     // Vérification si la date du produit est dans les 6 derniers jours
                     if (productDateOnly.isAfter(sixDaysAgo) &&
                         productDateOnly.isBefore(now)) {
-                      print("✅ Ce produit est dans les 6 derniers jours !");
                       return true;
                     } else {
-                      print(
-                          "❌ Ce produit n'est pas dans les 6 derniers jours.");
                       return false;
                     }
                   }).map((product) => {

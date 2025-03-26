@@ -25,10 +25,10 @@ class CategoryChip extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-          width: 100, // Carré
+          width: 100, 
           height: 150,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(2),
             image: iconPath != null
                 ? DecorationImage(
                     image: AssetImage(iconPath!),
