@@ -70,6 +70,11 @@ class _HomeScreenState extends State<HomeScreen> {
     Provider.of<Profileprovider>(context, listen: false).getArtistsIds(
         Provider.of<AuthService>(context, listen: false).currentUser!.id);
     Provider.of<Products>(context, listen: false).fetchMembers();
+
+    Provider.of<AuthService>(context, listen: false).fetchOrders(
+        Provider.of<AuthService>(context, listen: false).currentUser!.id);
+    Provider.of<AuthService>(context, listen: false).fetchSellingOrders(
+        Provider.of<AuthService>(context, listen: false).currentUser!.id);
   }
 
   Future<void> _pickImage() async {

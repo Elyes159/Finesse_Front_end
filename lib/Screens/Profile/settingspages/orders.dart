@@ -1,6 +1,7 @@
 import 'package:finesse_frontend/ApiServices/backend_url.dart';
 import 'package:finesse_frontend/Provider/AuthService.dart';
 import 'package:finesse_frontend/Provider/theme.dart';
+import 'package:finesse_frontend/Screens/SellProduct/suiviCommande.dart';
 import 'package:finesse_frontend/Widgets/cards/productCard.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -35,120 +36,125 @@ class _OrdersState extends State<Orders> {
         final order = orderData[index];
         final product = order['product']; // Accédez aux détails du produit
 
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-          child: Column(
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0), // Bords arrondis
-                    child: Image.network(
-                      product['images'].isNotEmpty
-                          ? "${AppConfig.baseUrl}${product['images'][0]}"
-                          : 'assets/images/placeholder.png', // Image par défaut
-                      width: 80, // Largeur réduite de l’image
-                      height: 80,
-                      fit: BoxFit.cover, // Ajustement de l’image
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>OrderTrackingPage(order: order,)));
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+            child: Column(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0), // Bords arrondis
+                      child: Image.network(
+                        product['images'].isNotEmpty
+                            ? "${AppConfig.baseUrl}${product['images'][0]}"
+                            : 'assets/images/placeholder.png', // Image par défaut
+                        width: 80, // Largeur réduite de l’image
+                        height: 80,
+                        fit: BoxFit.cover, // Ajustement de l’image
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                      width: 16), // Espacement entre l’image et le texte
-
-                  // Détails du produit
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "${product['title']} (Ref${order["order_id"]})",
-                          style: TextStyle(
-                            //color: Colors.black,
-                            fontSize: 13,
-                            fontFamily: 'Raleway',
-                            fontWeight: FontWeight.w500,
-                            height: 1.54,
+                    const SizedBox(
+                        width: 16), // Espacement entre l’image et le texte
+          
+                    // Détails du produit
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "${product['title']} (Ref${order["order_id"]})",
+                            style: TextStyle(
+                              //color: Colors.black,
+                              fontSize: 13,
+                              fontFamily: 'Raleway',
+                              fontWeight: FontWeight.w500,
+                              height: 1.54,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow
+                                .ellipsis, // Coupe le texte s'il est trop long
                           ),
-                          maxLines: 1,
-                          overflow: TextOverflow
-                              .ellipsis, // Coupe le texte s'il est trop long
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          _formatDate(order[
-                              'created_at']), // Utilisation de la fonction de formatage
-                          style: TextStyle(
-                            //color: Colors.black,
-                            fontSize: 13,
-                            fontFamily: 'Raleway',
-                            fontWeight: FontWeight.w500,
-                            height: 1.54,
+                          const SizedBox(height: 8),
+                          Text(
+                            _formatDate(order[
+                                'created_at']), // Utilisation de la fonction de formatage
+                            style: TextStyle(
+                              //color: Colors.black,
+                              fontSize: 13,
+                              fontFamily: 'Raleway',
+                              fontWeight: FontWeight.w500,
+                              height: 1.54,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow
+                                .ellipsis, // Coupe le texte s'il est trop long
                           ),
-                          maxLines: 1,
-                          overflow: TextOverflow
-                              .ellipsis, // Coupe le texte s'il est trop long
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          "${product['price']} TND", // Affichage du prix
-                          style: TextStyle(
-                            //color: Colors.black,
-                            fontSize: 12,
-                            fontFamily: 'Raleway',
-                            fontWeight: FontWeight.w400,
-                            height: 1.67,
+                          const SizedBox(height: 8),
+                          Text(
+                            "${product['price']} TND", // Affichage du prix
+                            style: TextStyle(
+                              //color: Colors.black,
+                              fontSize: 12,
+                              fontFamily: 'Raleway',
+                              fontWeight: FontWeight.w400,
+                              height: 1.67,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 12,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '${product["owner"]}',
-                    style: TextStyle(
-                      //color: Colors.black,
-                      fontSize: 13,
-                      fontFamily: 'Raleway',
-                      fontWeight: FontWeight.w500,
-                      height: 1.54,
+                  ],
+                ),
+                SizedBox(
+                  height: 12,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '${product["owner"]}',
+                      style: TextStyle(
+                        //color: Colors.black,
+                        fontSize: 13,
+                        fontFamily: 'Raleway',
+                        fontWeight: FontWeight.w500,
+                        height: 1.54,
+                      ),
                     ),
-                  ),
-                  Text(
-                    '${order["total_price"]}',
-                    style: TextStyle(
-                      //color: Colors.black,
-                      fontSize: 13,
-                      fontFamily: 'Raleway',
-                      fontWeight: FontWeight.w500,
-                      height: 1.54,
+                    Text(
+                      '${order["total_price"]}',
+                      style: TextStyle(
+                        //color: Colors.black,
+                        fontSize: 13,
+                        fontFamily: 'Raleway',
+                        fontWeight: FontWeight.w500,
+                        height: 1.54,
+                      ),
                     ),
-                  ),
-                  Text(
-                    order["status"] == "paye"
-                        ? 'payé'
-                        : order["status"] == "livraison"
-                            ? "paiement à la livraison"
-                            : "non défini",
-                    style: TextStyle(
-                      color: Color(0xFFC668AA),
-                      fontSize: 13,
-                      fontFamily: 'Raleway',
-                      fontWeight: FontWeight.w500,
-                      height: 1.54,
+                    Text(
+                      order["status"] == "paye"
+                          ? 'payé'
+                          : order["status"] == "livraison"
+                              ? "paiement à la livraison"
+                              : "non défini",
+                      style: TextStyle(
+                        color: Color(0xFFC668AA),
+                        fontSize: 13,
+                        fontFamily: 'Raleway',
+                        fontWeight: FontWeight.w500,
+                        height: 1.54,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              Divider(thickness: 1, color: Colors.grey),
-            ],
+                  ],
+                ),
+                Divider(thickness: 1, color: Colors.grey),
+              ],
+            ),
           ),
         );
       },
@@ -377,7 +383,7 @@ class _OrdersState extends State<Orders> {
               // Affichage du contenu basé sur l'état
               Expanded(
                 child: _selectedIndex == 0
-                    ? orderData!.isEmpty
+                    ? orderData == null || orderData!.isEmpty
                         ? const Center(
                             child: Text(
                             'Aucune commande trouvée.',
@@ -395,7 +401,7 @@ class _OrdersState extends State<Orders> {
                           final orderSellData = provider
                               .orderselldata; // Accédez à la liste des ventes
 
-                          return orderSellData!.isEmpty
+                          return orderSellData==null || orderSellData!.isEmpty
                               ? const Center(
                                   child: Text(
                                   'Aucune vente trouvée.',

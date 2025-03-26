@@ -1254,7 +1254,7 @@ class AuthService with ChangeNotifier {
 
   Future<bool> fetchOrders(int buyerId) async {
     final url =
-        '${AppConfig.baseUrl}/api/products/get_orders_with_products_and_images/$buyerId'; // Remplacez par votre URL
+        '${AppConfig.baseUrl}/api/products/get_orders_with_products_and_images/$buyerId/'; // Remplacez par votre URL
 
     try {
       final response = await http.get(Uri.parse(url));
