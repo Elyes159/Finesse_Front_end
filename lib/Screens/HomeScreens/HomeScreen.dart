@@ -678,52 +678,47 @@ class _HomeScreenState extends State<HomeScreen> {
                           [], // Ajout des commentaires ici
                     },
                   ),
-                  ...productsProvider.products
-                      .map(
-                        (product) => {
-                          'type': 'Pour vous',
-                          'category': product['category'] ?? 'Unknown',
-                          'subcategory': product['subcategory'] ?? 'Unknown',
-                          'imageUrl':
-                              "${AppConfig.baseUrl}${product['images'][0]}"
-                                      .isNotEmpty
-                                  ? "${AppConfig.baseUrl}${product['images'][0]}"
-                                  : 'assets/images/test1.png',
-                          'images': product['images'] ?? [],
-                          'productName': product['title'] ?? 'Unknown Product',
-                          'productPrice': "${product['price']}".toString(),
-                          'product_id': "${product['id']}",
-                          'description': product['description'] ?? '',
-                          'is_available': product['is_available'] ?? false,
-                          'taille': product['taille'],
-                          'etat': product["etat"],
-                          "created": product["created"],
-                          'is_favorite': product['is_favorite'],
-                          'pointure': product['pointure'],
-                          'selled': product["selled"],
-                          'brand': product['brand'],
-                          'owner_id': product["owner"]["id"],
-                          'type_pdp': product["type"],
-                          'color': product["color"],
-                          'owner_profile_pic':
-                              product["owner"]["profile_pic"] ?? "",
-                          'owner_username': product["owner"]["username"] ?? "",
-                          'owner_ratings': product["owner"]["ratings"] ?? "",
-                          'comments': product['comments']
-                                  ?.map((comment) => {
-                                        'username':
-                                            comment['username'] ?? 'Unknown',
-                                        'avatar': comment['avatar'] ?? '',
-                                        'content': comment['content'] ?? '',
-                                        'created_at':
-                                            comment['created_at'] ?? '',
-                                      })
-                                  .toList() ??
-                              [],
-                        },
-                      )
-                      .where((product) =>
-                          artistList.contains(product["owner_id"])),
+                  ...productsProvider.products.map(
+                    (product) => {
+                      'type': 'Pour vous',
+                      'category': product['category'] ?? 'Unknown',
+                      'subcategory': product['subcategory'] ?? 'Unknown',
+                      'imageUrl': "${AppConfig.baseUrl}${product['images'][0]}"
+                              .isNotEmpty
+                          ? "${AppConfig.baseUrl}${product['images'][0]}"
+                          : 'assets/images/test1.png',
+                      'images': product['images'] ?? [],
+                      'productName': product['title'] ?? 'Unknown Product',
+                      'productPrice': "${product['price']}".toString(),
+                      'product_id': "${product['id']}",
+                      'description': product['description'] ?? '',
+                      'is_available': product['is_available'] ?? false,
+                      'taille': product['taille'],
+                      'etat': product["etat"],
+                      "created": product["created"],
+                      'is_favorite': product['is_favorite'],
+                      'pointure': product['pointure'],
+                      'selled': product["selled"],
+                      'brand': product['brand'],
+                      'owner_id': product["owner"]["id"],
+                      'type_pdp': product["type"],
+                      'color': product["color"],
+                      'owner_profile_pic':
+                          product["owner"]["profile_pic"] ?? "",
+                      'owner_username': product["owner"]["username"] ?? "",
+                      'owner_ratings': product["owner"]["ratings"] ?? "",
+                      'comments': product['comments']
+                              ?.map((comment) => {
+                                    'username':
+                                        comment['username'] ?? 'Unknown',
+                                    'avatar': comment['avatar'] ?? '',
+                                    'content': comment['content'] ?? '',
+                                    'created_at': comment['created_at'] ?? '',
+                                  })
+                              .toList() ??
+                          [],
+                    },
+                  ),
                 ];
                 final filteredProducts = selectedCategory == "All"
                     ? allProducts
@@ -738,7 +733,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemCount:
                         filteredProducts.map((e) => e['type']).toSet().length,
                     itemBuilder: (context, categoryIndex) {
-                      if (categoryIndex == 2) {
+                      List uniqueCategories = filteredProducts
+                          .map((e) => e['type'])
+                          .toSet()
+                          .toList();
+                      String currentCategory = uniqueCategories[categoryIndex];
+
+                      if (currentCategory == "Coin artistique") {
                         // Choisir l'emplacement où ajouter un widget (ici après la première catégorie)
                         return Column(
                           mainAxisAlignment: MainAxisAlignment.start,

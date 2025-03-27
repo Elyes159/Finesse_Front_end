@@ -30,7 +30,6 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _startProgress();
     _initializeApp();
     Provider.of<Products>(context,listen:false).getProducts();
     Provider.of<Products>(context,listen:false).getProductsart();
@@ -71,20 +70,7 @@ class _SplashScreenState extends State<SplashScreen> {
     });
   }
 
-  void _startProgress() {
-    _progressTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
-      if (!mounted) {
-        timer.cancel();
-        return;
-      }
-      setState(() {
-        progress += 0.1 / durationInSeconds; // Mise à jour toutes les 100ms
-        if (progress >= 1.0) {
-          timer.cancel();
-        }
-      });
-    });
-  }
+ 
 
   @override
   void dispose() {
@@ -100,15 +86,15 @@ class _SplashScreenState extends State<SplashScreen> {
     return PopScope(
       canPop: false,
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Color(0XFF323232),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               FadeIn(
-                duration: Duration(milliseconds: 3000),
+                duration: Duration(milliseconds: 4000),
                 child: Image.asset(
-                  "assets/images/logoArtzi.png",
+                  "assets/images/logosplash.png",
                   height: 500,
                 ),
               )
