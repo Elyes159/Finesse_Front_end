@@ -46,15 +46,16 @@ class OrderStepTile extends StatelessWidget {
                 children: [
                   Text(step.title,
                       style: TextStyle(
+                        fontFamily: "Raleway",
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: step.isCompleted ? Colors.black : Colors.grey)),
                   if (step.date.isNotEmpty)
-                    Text(step.date, style: const TextStyle(color: Colors.grey)),
+                    Text(step.date, style: const TextStyle(fontFamily: "Raleway",color: Colors.grey)),
                   if (step.description != null) ...[
                     const SizedBox(height: 4),
                     Text(step.description!,
-                        style: const TextStyle(color: Colors.black54)),
+                        style: const TextStyle(fontFamily: "Raleway",color: Colors.black54)),
                   ],
                 ],
               ),

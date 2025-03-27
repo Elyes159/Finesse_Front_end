@@ -383,7 +383,7 @@ class _OrdersState extends State<Orders> {
               // Affichage du contenu basé sur l'état
               Expanded(
                 child: _selectedIndex == 0
-                    ? orderData == null || orderData!.isEmpty
+                    ? orderData == null || orderData.isEmpty
                         ? const Center(
                             child: Text(
                             'Aucune commande trouvée.',
@@ -401,7 +401,7 @@ class _OrdersState extends State<Orders> {
                           final orderSellData = provider
                               .orderselldata; // Accédez à la liste des ventes
 
-                          return orderSellData==null || orderSellData!.isEmpty
+                          return orderSellData==null || orderSellData.isEmpty
                               ? const Center(
                                   child: Text(
                                   'Aucune vente trouvée.',
