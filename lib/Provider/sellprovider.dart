@@ -6,11 +6,13 @@ class SellProductProvider extends ChangeNotifier {
   List<File?> _images = List.filled(5, null); // Liste de 5 images initialisées à null
   String? _title; 
   double? _price; 
+  String? _description;
 
   // Getters
   List<File?> get images => _images;
   String? get title => _title;
   double? get price => _price;
+  String? get description => _description;
 
   // Setters
   void setImage(int index, File image) {
@@ -25,6 +27,10 @@ class SellProductProvider extends ChangeNotifier {
 
   void setTitle(String? value) {
     _title = value;
+    notifyListeners();
+  }
+   void setDescription(String? value) {
+    _description = value;
     notifyListeners();
   }
 
@@ -43,7 +49,7 @@ class SellProductProvider extends ChangeNotifier {
 
   // Méthode pour vérifier si un des champs est rempli
   bool isAnyFieldFilled() {
-    return _images.any((image) => image != null) || _title?.isNotEmpty == true || _price != null;
+    return _images.any((image) => image != null) || _title?.isNotEmpty == true || _price != null || _description?.isNotEmpty == true;
   }
 
   // Méthode pour réinitialiser toutes les valeurs
@@ -51,6 +57,7 @@ class SellProductProvider extends ChangeNotifier {
     _images = List.filled(5, null);
     _title = null;
     _price = null;
+    _description = null;
     notifyListeners();
   }
 }

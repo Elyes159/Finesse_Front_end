@@ -10,6 +10,7 @@ class DescTextField extends StatefulWidget {
   final TextInputType keyboardType;
   final FormFieldValidator<String>? validator;
   final FormFieldSetter<String>? onSaved;
+  final ValueChanged<String>? onChanged; // Ajout de onChanged
 
   const DescTextField({
     super.key,
@@ -19,6 +20,7 @@ class DescTextField extends StatefulWidget {
     this.keyboardType = TextInputType.text,
     this.validator,
     this.onSaved,
+    this.onChanged, // Ajout de onChanged dans le constructeur
   });
 
   @override
@@ -34,7 +36,7 @@ class _DescTextFieldState extends State<DescTextField> {
   @override
   void initState() {
     super.initState();
-    
+
     _listener = () {
       if (mounted) {
         setState(() {
@@ -83,6 +85,7 @@ class _DescTextFieldState extends State<DescTextField> {
             child: TextFormField(
               maxLines: 5,
               onSaved: widget.onSaved,
+              onChanged: widget.onChanged, // Ajout de onChanged ici
               controller: widget.controller,
               obscureText: widget.isPassword ? _obscureText : false,
               keyboardType: widget.keyboardType,

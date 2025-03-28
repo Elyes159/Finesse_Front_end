@@ -15,6 +15,7 @@ import 'package:finesse_frontend/Widgets/CustomTextField/DescTextField.dart';
 import 'package:finesse_frontend/Widgets/CustomTextField/customTextField.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -220,7 +221,9 @@ class _SellProductScreenState extends State<SellProductScreen> {
     );
 
     _descriptionController = TextEditingController(
-      text: (widget.product != null ? widget.product["description"] : ""),
+      text: (widget.product?["description"] ??
+          sellProductProvider.description ??
+          ""),
     );
 
     _priceController = TextEditingController(
@@ -664,6 +667,10 @@ class _SellProductScreenState extends State<SellProductScreen> {
                 DescTextField(
                     controller: _descriptionController,
                     label: "Description",
+                    onChanged: (value) {
+                      Provider.of<SellProductProvider>(context, listen: false)
+                          .setDescription(value);
+                    },
                     isPassword: false,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -996,26 +1003,37 @@ class _SellProductScreenState extends State<SellProductScreen> {
                     category == "OV" ||
                     (category == "CRA" && subcategory != "HAUCO")) ...[
                   CustomTextFormField(
-                      controller: _longeurController,
-                      label: 'Longeur en cm',
-                      isPassword: false,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          _errorMessage = "Longeur obligatoire";
-                          return 'la Longeur est obligatoire';
-                        } else {
-                          setState(() {
-                            _errorMessage = null;
-                          });
-                          return null;
-                        }
-                      }),
+                    controller: _longeurController,
+                    label: 'Longeur en cm',
+                    isPassword: false,
+                    keyboardType:
+                        TextInputType.number, // ✅ Définit le clavier numérique
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly
+                    ], // ✅ N'accepte que les chiffres
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'La longueur est obligatoire';
+                      }
+                      return null;
+                    },
+                    onChanged: (value) {
+                      setState(() {
+                        _errorMessage = null;
+                      });
+                    },
+                  ),
                   const SizedBox(
                     height: 16,
                   ),
                   CustomTextFormField(
                       controller: _largeurController,
                       label: 'Largeur en cm',
+                      keyboardType:
+                        TextInputType.number, // ✅ Définit le clavier numérique
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
                       isPassword: false,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -1034,6 +1052,11 @@ class _SellProductScreenState extends State<SellProductScreen> {
                   CustomTextFormField(
                       controller: _hauteurController,
                       label: 'Hauteur en cm',
+                      keyboardType:
+                        TextInputType.number, // ✅ Définit le clavier numérique
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
                       isPassword: false,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -1066,38 +1089,6 @@ class _SellProductScreenState extends State<SellProductScreen> {
                           return null;
                         }
                       }),
-                ],
-                if (widget.categoryFromMv != null &&
-                    !widget.categoryFromMv!.startsWith("V")) ...[
-                  CustomDropdownFormField<String, String>(
-                    options: const [
-                      {'neuf_avec_etiquette': 'Neuf avec étiquette'},
-                      {'neuf_sans_etiquette': 'Neuf sans étiquette'},
-                      {'tres_bon_etat': 'Très bon état'},
-                      {'bon_etat': 'Bon état'},
-                      {'satisfaisant': 'Satisfaisant'},
-                    ],
-                    label: "État",
-                    selectedKey: null,
-                    onChanged: (value) {
-                      setState(() {
-                        _etatController.text = value ?? '';
-                        print(value);
-                      });
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'État est obligatoire';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      _etatController.text = value ?? '';
-                    },
-                  ),
-                  SizedBox(
-                    height: 16,
-                  )
                 ],
 
                 const SizedBox(
