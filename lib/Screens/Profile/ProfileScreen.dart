@@ -525,6 +525,7 @@ class _ProfileMainState extends State<ProfileMain> {
                         'pointure': product['pointure'],
                         'brand': product['brand'],
                         "longeur": product["longeur"],
+                        'id_wish' : product["id_wish"],
                         "hauteur": product["hauteur"],
                         'etat': product["etat"],
                         "largeur": product["largeur"],

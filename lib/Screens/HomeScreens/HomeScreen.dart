@@ -55,6 +55,10 @@ class _HomeScreenState extends State<HomeScreen> {
     Provider.of<Stories>(context, listen: false).fetchFollowersAndStories(
         userId:
             Provider.of<AuthService>(context, listen: false).currentUser!.id);
+
+    Provider.of<Stories>(context, listen: false).fetchUserStories(
+        userId:
+            Provider.of<AuthService>(context, listen: false).currentUser!.id);
     Provider.of<Products>(context, listen: false).getProductsByUser();
     Provider.of<AuthService>(context, listen: false).fetchSellingOrders(
         Provider.of<AuthService>(context, listen: false).currentUser!.id);
@@ -200,31 +204,57 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               Stack(
                                 children: [
-                                  Container(
-                                    height: 56,
-                                    width: 56,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
+                                  GestureDetector(
+                                    child: Container(
+                                      height: 56,
+                                      width: 56,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
                                           color: theme
                                               ? Color.fromARGB(
                                                   255, 249, 217, 144)
                                               : Colors.blue,
-                                          width: 2),
+                                          width: 2,
+                                        ),
+                                      ),
+                                      child: CircleAvatar(
+                                        radius: 50.0,
+                                        backgroundImage: (user.avatar != "" &&
+                                                user.avatar != null)
+                                            ? NetworkImage(widget.parameter ==
+                                                        "normal" ||
+                                                    widget.parameter == "apple"
+                                                ? "${AppConfig.baseUrl}${user.avatar}"
+                                                : user.avatar!)
+                                            : AssetImage(
+                                                    'assets/images/user.png')
+                                                as ImageProvider,
+                                        backgroundColor: Colors.transparent,
+                                      ),
                                     ),
-                                    child: CircleAvatar(
-                                      radius: 50.0,
-                                      backgroundImage: (user.avatar != "" &&
-                                              user.avatar != null)
-                                          ? NetworkImage(widget.parameter ==
-                                                      "normal" ||
-                                                  widget.parameter == "apple"
-                                              ? "${AppConfig.baseUrl}${user.avatar}"
-                                              : user.avatar!)
-                                          : AssetImage('assets/images/user.png')
-                                              as ImageProvider,
-                                      backgroundColor: Colors.transparent,
-                                    ),
+                                    onTap: () {
+                                      final mystories = storiesProvider.myStories;
+                                      Map<String, List<Map<String, dynamic>>>
+                                          groupedMyStories = {};
+                                      for (var mystory in mystories) {
+                                        String username = mystory['user'];
+                                        if (!groupedMyStories
+                                            .containsKey(username)) {
+                                          groupedMyStories[username] = [];
+                                        }
+                                        groupedMyStories[username]!.add(mystory);
+                                      }
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => StoryViewScreen(
+                                            stories:
+                                               mystories
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   ),
                                   Positioned(
                                     top: 0,
@@ -241,7 +271,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   key: 'user_id'),
                                               storyImage: _image,
                                             );
-                                            print("Story créée avec succès !");
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                    "Story créée avec succès !"),
+                                                backgroundColor: Colors.green,
+                                              ),
+                                            );
                                           } catch (e) {
                                             print(
                                                 "Erreur lors de la création de la story : $e");
@@ -302,7 +339,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               width:
                                   10), // Espace entre le profil et les stories
 
-                          // Affichage des autres stories importées
                           Row(
                             children: groupedStories.entries.map((entry) {
                               String username = entry.key;
@@ -319,7 +355,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => StoryViewScreen(
-                                            stories: userStories),
+                                          stories: userStories,
+                                        ),
                                       ),
                                     );
                                   },
@@ -610,6 +647,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       "longeur": product["longeur"],
                       "hauteur": product["hauteur"],
                       'etat': product["etat"],
+                      'id_wish': product["id_wish"],
                       'color': product["color"],
                       "largeur": product["largeur"],
                       'selled': product["selled"],
@@ -657,6 +695,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       "longeur": product["longeur"],
                       "hauteur": product["hauteur"],
                       "largeur": product["largeur"],
+                      'id_wish': product["id_wish"],
                       'selled': product["selled"],
                       'etat': product["etat"],
                       'type_pdp': product["type"],
@@ -695,6 +734,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       'is_available': product['is_available'] ?? false,
                       'taille': product['taille'],
                       'etat': product["etat"],
+                      'id_wish': product["id_wish"],
                       "created": product["created"],
                       'is_favorite': product['is_favorite'],
                       'pointure': product['pointure'],

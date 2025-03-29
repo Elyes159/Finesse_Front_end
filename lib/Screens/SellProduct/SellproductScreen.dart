@@ -349,7 +349,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                               style: TextStyle(
                                 fontFamily: "Raleway",
                                 fontSize:
-                                    20, // Agrandissement de la taille du texte
+                                    18, // Agrandissement de la taille du texte
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -365,7 +365,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                                   style: TextStyle(
                                     fontFamily: "Raleway",
                                     fontSize:
-                                        20, // Agrandissement de la taille du texte
+                                        14, // Agrandissement de la taille du texte
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -374,7 +374,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                             Text(
                               "Ajoutez des photos et des détails de votre article.",
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 16,
                                 fontFamily: "Raleway",
                               ),
                             ),
@@ -390,7 +390,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                                   style: TextStyle(
                                     fontFamily: "Raleway",
                                     fontSize:
-                                        20, // Agrandissement de la taille du texte
+                                        16, // Agrandissement de la taille du texte
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -400,7 +400,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                               "Négociez directement en commentaires avec les acheteurs pour vendre plus rapidement. "
                               "Une fois votre article vendu, vous recevrez un code de livraison spécifique.",
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 16,
                                 fontFamily: "Raleway",
                               ),
                             ),
@@ -416,7 +416,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                                   style: TextStyle(
                                     fontFamily: "Raleway",
                                     fontSize:
-                                        20, // Agrandissement de la taille du texte
+                                        16, // Agrandissement de la taille du texte
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -425,7 +425,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                             Text(
                               "Le code devra être joint à votre commande, et un livreur viendra récupérer l’article sous 24 heures.",
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 16,
                                 fontFamily: "Raleway",
                               ),
                             ),
@@ -441,7 +441,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                                   style: TextStyle(
                                     fontFamily: "Raleway",
                                     fontSize:
-                                        20, // Agrandissement de la taille du texte
+                                        16, // Agrandissement de la taille du texte
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -450,7 +450,7 @@ class _SellProductScreenState extends State<SellProductScreen> {
                             Text(
                               "Le paiement de la somme vous sera effectué 48 heures après la livraison.",
                               style: TextStyle(
-                                  fontSize: 20, fontFamily: 'Raleway'),
+                                  fontSize: 16, fontFamily: 'Raleway'),
                             ),
                           ],
                         ),

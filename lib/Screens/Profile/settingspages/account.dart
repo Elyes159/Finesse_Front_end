@@ -22,6 +22,7 @@ class _AccountState extends State<Account> {
   String? parametre = "facebook";
   String? errorMessage;
   File? _selectedImage; // Variable pour stocker l'image sélectionnée
+  bool isLoading = false; // État de chargement
 
   // Ajout du pickeur d'image
   Future<void> _pickImage() async {
@@ -73,7 +74,6 @@ class _AccountState extends State<Account> {
                 child: Text(
                   'Compte',
                   style: TextStyle(
-                    //color: Color(0xFF111928),
                     fontSize: 16,
                     fontFamily: 'Raleway',
                     fontWeight: FontWeight.w400,
@@ -191,59 +191,74 @@ class _AccountState extends State<Account> {
                         controller: descriptionController,
                         label: "Biographie",
                         isPassword: false),
-                   
                     SizedBox(
                       height: 40,
                     ),
                     CustomButton(
+                      textColor: Colors.white,
                       buttonColor: Color(0xFFC668AA),
-                      label: "Enregistrer les modifications",
-                      onTap: () async {
-                        String bio = descriptionController.text.trim();
-                        if (bio.isNotEmpty &&
-                            (bio.length < 50 || bio.length > 150)) {
-                          setState(() {
-                            errorMessage =
-                                "La biographie doit contenir entre 50 et 150 caractères.";
-                          });
-                          return;
-                        } else {
-                          setState(() {
-                            errorMessage =
-                                null; // Réinitialiser l'erreur si tout est correct
-                          });
-                        }
-                        // Appel de la fonction updateProfile
-                        int statusCode = await authService.updateProfile(
-                          user.id,
-                          fullnameController.text,
-                          usernameController.text,
-                          phoneController.text,
-                          addressController.text,
-                          descriptionController.text,
-                          _selectedImage,
-                          // Passer le fichier d'image sélectionné
-                        );
+                      label: isLoading
+                          ? "En train de modifier ..."
+                          : ("Enregistrer les modifications"),
+                      onTap: isLoading
+                          ? (){}
+                          : () async {
+                              setState(() {
+                                isLoading = true; // Démarrer le chargement
+                              });
 
-                        if (statusCode == 200) {
-                          Provider.of<AuthService>(context, listen: false)
-                              .loadUserData();
-                          setState(() {
-                            errorMessage =
-                                null; // Réinitialiser le message d'erreur
-                          });
-                        } else {
-                          setState(() {
-                            if (statusCode == 444) {
-                              errorMessage =
-                                  "Nom d'utilisateur invalide"; // Message d'erreur spécifique
-                            } else {
-                              errorMessage =
-                                  'erreur inconnue '; // Message d'erreur générique
-                            }
-                          });
-                        }
-                      },
+                              String bio = descriptionController.text.trim();
+                              if (bio.isNotEmpty &&
+                                  (bio.length < 10 || bio.length > 150)) {
+                                setState(() {
+                                  errorMessage =
+                                      "La biographie doit contenir entre 50 et 150 caractères.";
+                                  isLoading = false; // Arrêter le chargement
+                                });
+                                return;
+                              } else {
+                                setState(() {
+                                  errorMessage =
+                                      null; // Réinitialiser l'erreur si tout est correct
+                                });
+                              }
+
+                              // Appel de la fonction updateProfile
+                              int statusCode = await authService.updateProfile(
+                                user.id,
+                                fullnameController.text,
+                                usernameController.text,
+                                phoneController.text,
+                                addressController.text,
+                                descriptionController.text,
+                                _selectedImage,
+                                // Passer le fichier d'image sélectionné
+                              );
+
+                              setState(() {
+                                isLoading = false; // Arrêter le chargement
+                              });
+
+                              if (statusCode == 200) {
+                                Provider.of<AuthService>(context, listen: false)
+                                    .loadUserData();
+                                setState(() {
+                                  errorMessage =
+                                      null;
+                                Navigator.pop(context); // Réinitialiser le message d'erreur
+                                });
+                              } else {
+                                setState(() {
+                                  if (statusCode == 444) {
+                                    errorMessage =
+                                        "Nom d'utilisateur invalide"; // Message d'erreur spécifique
+                                  } else {
+                                    errorMessage =
+                                        'erreur inconnue '; // Message d'erreur générique
+                                  }
+                                });
+                              }
+                            },
                     ),
                   ],
                 ),

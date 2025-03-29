@@ -66,111 +66,124 @@ class _StoryViewScreenState extends State<StoryViewScreen> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final story = widget.stories[currentIndex];
-
+ @override
+Widget build(BuildContext context) {
+  // Vérifie si la liste des stories est vide
+  if (widget.stories.isEmpty) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: GestureDetector(
-        onTapUp: (details) {
-          double screenWidth = MediaQuery.of(context).size.width;
-          if (details.globalPosition.dx < screenWidth / 2) {
-            if (currentIndex > 0) {
-              if (!mounted) return;
-              setState(() {
-                currentIndex--;
-                startTimer();
-              });
-            }
-          } else {
-            nextStory();
-          }
-        },
-        child: Stack(
-          children: [
-            // Image de la story
-            Positioned.fill(
-              child: Container(
-                constraints: BoxConstraints(
-                    maxHeight: MediaQuery.of(context).size.height *
-                        0.8), // Limite la hauteur de l'image
-                child: Image.network(
-                  "${AppConfig.baseUrl}/${story['story_image']}",
-                  fit: BoxFit
-                      .contain, // Utilise BoxFit.contain pour réduire la taille
-                  errorBuilder: (context, error, stackTrace) => const Center(
-                    child:
-                        Icon(Icons.broken_image, color: Colors.white, size: 50),
-                  ),
-                ),
-              ),
-            ),
-
-            // Barre de progression
-            Positioned(
-              top: 120,
-              left: 10,
-              right: 10,
-              child: Row(
-                children: List.generate(widget.stories.length, (index) {
-                  return Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 2),
-                      child: LinearProgressIndicator(
-                        value: index == currentIndex
-                            ? progress
-                            : (index < currentIndex ? 1 : 0),
-                        backgroundColor: Colors.white30,
-                        valueColor:
-                            const AlwaysStoppedAnimation<Color>(Colors.white),
-                      ),
-                    ),
-                  );
-                }),
-              ),
-            ),
-
-            // Header avec avatar et username
-            Positioned(
-              top: 50,
-              left: 16,
-              right: 16,
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 22,
-                    backgroundImage: (story['avatar'] != null)
-                        ? (story["avatar_type"] == "normal"
-                            ? NetworkImage(
-                                "${AppConfig.baseUrl}/${story['avatar']}")
-                            : NetworkImage(story['avatar']))
-                        : const AssetImage('assets/images/user.png')
-                            as ImageProvider,
-                    backgroundColor: Colors.transparent,
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      story['user'],
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white),
-                    onPressed: closeScreen,
-                  ),
-                ],
-              ),
-            ),
-          ],
+      appBar: AppBar(),
+      body: Center(
+        child: Text(
+          "Aucune story disponible.",
+          style: TextStyle( fontSize: 20),
         ),
       ),
     );
   }
+
+  // Vérifie si currentIndex est dans la plage valide
+  if (currentIndex >= widget.stories.length) {
+    currentIndex = widget.stories.length - 1;
+  }
+
+  final story = widget.stories[currentIndex];
+
+  return Scaffold(
+    backgroundColor: Colors.black,
+    body: GestureDetector(
+      onTapUp: (details) {
+        double screenWidth = MediaQuery.of(context).size.width;
+        if (details.globalPosition.dx < screenWidth / 2) {
+          if (currentIndex > 0) {
+            setState(() {
+              currentIndex--;
+              startTimer();
+            });
+          }
+        } else {
+          nextStory();
+        }
+      },
+      child: Stack(
+        children: [
+          // Image de la story
+          Positioned.fill(
+            child: Container(
+              constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.8),
+              child: Image.network(
+                "${AppConfig.baseUrl}/${story['story_image']}",
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) => const Center(
+                  child: Icon(Icons.broken_image, color: Colors.white, size: 50),
+                ),
+              ),
+            ),
+          ),
+
+          // Barre de progression
+          Positioned(
+            top: 120,
+            left: 10,
+            right: 10,
+            child: Row(
+              children: List.generate(widget.stories.length, (index) {
+                return Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2),
+                    child: LinearProgressIndicator(
+                      value: index == currentIndex
+                          ? progress
+                          : (index < currentIndex ? 1 : 0),
+                      backgroundColor: Colors.white30,
+                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  ),
+                );
+              }),
+            ),
+          ),
+
+          // Header avec avatar et username
+          Positioned(
+            top: 50,
+            left: 16,
+            right: 16,
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 22,
+                  backgroundImage: (story['avatar'] != null)
+                      ? (story["avatar_type"] == "normal"
+                          ? NetworkImage("${AppConfig.baseUrl}/${story['avatar']}")
+                          : NetworkImage(story['avatar']))
+                      : const AssetImage('assets/images/user.png')
+                          as ImageProvider,
+                  backgroundColor: Colors.transparent,
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    story['user'],
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close, color: Colors.white),
+                  onPressed: closeScreen,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
 }

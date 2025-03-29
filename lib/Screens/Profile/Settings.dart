@@ -245,7 +245,7 @@ class _ParametresState extends State<Parametres> {
                 style: TextStyle(
                   fontFamily: "Raleway",
                   decoration: TextDecoration.underline,
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: FontWeight.bold,
                 ),
               ),

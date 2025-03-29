@@ -418,42 +418,39 @@ class Products extends ChangeNotifier {
     }
   }
 
-  Future<void> getProducts() async {
-    try {
-      String? storedUserId = await storage.read(key: 'user_id');
-      final url = Uri.parse('${AppConfig.baseUrl}/api/products/getProducts/');
-      final headers = {
-        'Content-Type': 'application/json',
-      };
-      final response = await http.get(url, headers: headers);
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        if (data['products'] != null) {
-          products = data['products'];
-          filteredProducts = List.from(products); // Ajout de cette ligne
+ Future<void> getProducts() async {
+  try {
+    String? storedUserId = await storage.read(key: 'user_id');
 
-          for (var product in products) {
-            print("category : ${product["category"]}");
-            print("subcategory : ${product["subcategory"]}");
-            print('Produit : ${product['title']}');
-            print('Description : ${product['description']}');
-            print('Prix : ${product['price']}');
-            print('Images : ${product['images']}');
-          }
-          notifyListeners();
-          print("hoooouuuni");
-          print(products);
-        } else {
-          print('Aucun produit trouvé pour cet utilisateur.');
-        }
+    final url = Uri.parse('${AppConfig.baseUrl}/api/products/getProducts/');
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+
+    final body = json.encode({
+      'user_id': storedUserId, // ✅ Envoi de user_id dans le body
+    });
+
+    final response = await http.post(url, headers: headers, body: body);
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if (data['products'] != null) {
+        products = data['products'];
+        filteredProducts = List.from(products);
+        notifyListeners();
       } else {
-        print(
-            'Erreur lors de la récupération des produits: ${response.statusCode}');
+        print('Aucun produit trouvé pour cet utilisateur.');
       }
-    } catch (e) {
-      print('Erreur rencontrée : $e');
+    } else {
+      print(
+          'Erreur lors de la récupération des produits: ${response.body}');
     }
+  } catch (e) {
+    print('Erreur rencontrée : $e');
   }
+}
+
 
   void filterProductsByCategory(String category) {
     print("Catégorie sélectionnée: $category");
@@ -478,43 +475,41 @@ class Products extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getProductsart() async {
-    try {
-      String? storedUserId = await storage.read(key: 'user_id');
-      final url =
-          Uri.parse('${AppConfig.baseUrl}/api/products/getProductsart/');
-      final headers = {
-        'Content-Type': 'application/json',
-      };
-      final response = await http.get(url, headers: headers);
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        if (data['products'] != null) {
-          productsArt = data['products'];
-          filteredProducts = List.from(products); // Ajout de cette ligne
+Future<void> getProductsart() async {
+  try {
+    String? storedUserId = await storage.read(key: 'user_id');
 
-          for (var product in products) {
-            print("category : ${product["category"]}");
-            print("subcategory : ${product["subcategory"]}");
-            print('Produit : ${product['title']}');
-            print('Description : ${product['description']}');
-            print('Prix : ${product['price']}');
-            print('Images : ${product['images']}');
-          }
-          notifyListeners();
-          print("hoooouuuni");
-          print(products);
-        } else {
-          print('Aucun produit trouvé pour cet utilisateur.');
-        }
+    final url = Uri.parse('${AppConfig.baseUrl}/api/products/getProductsart/');
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+
+    final body = json.encode({
+      'user_id': storedUserId, // ✅ Envoi du user_id dans le body
+    });
+
+    final response = await http.post(url, headers: headers, body: body);
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if (data['products'] != null) {
+        productsArt = data['products'];
+        filteredProducts = List.from(productsArt); // ✅ Correction ici
+
+        notifyListeners();
+        print("hoooouuuni");
       } else {
-        print(
-            'Erreur lors de la récupération des produits: ${response.statusCode}');
+        print('Aucun produit trouvé pour cet utilisateur.');
       }
-    } catch (e) {
-      print('Erreur rencontrée : $e');
+    } else {
+      print(
+          'Erreur lors de la récupération des produits: ${response.body}');
     }
+  } catch (e) {
+    print('Erreur rencontrée : $e');
   }
+}
+
 
   void filterProducts(String query, String searchType) {
     if (query.isEmpty) {

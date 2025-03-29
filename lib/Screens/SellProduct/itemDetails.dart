@@ -34,7 +34,6 @@ class _ItemDetailsState extends State<ItemDetails> {
   }
 
   String? errorMsg;
-
   @override
   void initState() {
     // TODO: implement initState
@@ -61,6 +60,24 @@ class _ItemDetailsState extends State<ItemDetails> {
         .getFollowingVisited(widget.product["owner_id"]);
     isFavorite = widget.product["is_favorite"] ?? false;
   }
+
+  void toggleFavorite() {
+  setState(() {
+    isFavorite = !isFavorite!;
+  });
+
+  final productsProvider = Provider.of<Products>(context, listen: false);
+  final userId = Provider.of<AuthService>(context, listen: false).currentUser!.id;
+
+  if (isFavorite == true) {
+    productsProvider.createWish(productId: widget.product["product_id"]);
+    productsProvider.getWish(userId);
+  } else {
+    productsProvider.deleteWish(widget.product["id_wish"]);
+    productsProvider.getWish(userId);
+  }
+}
+
 
   bool containsPhoneOrEmail(String text) {
     // Expression régulière pour détecter une adresse email
@@ -324,21 +341,21 @@ class _ItemDetailsState extends State<ItemDetails> {
                               ),
                             ],
                             if (widget.product["longeur"] != "XX" &&
-                                widget.product["longeur"] != "('',)") ...[
+                                widget.product["longeur"] != "('',)"&& widget.product["longeur"]!=null) ...[
                               DetailsContainer(
                                 title: "Longueur",
                                 content: widget.product["longeur"] + " cm",
                               ),
                             ],
                             if (widget.product["largeur"] != "XX" &&
-                                widget.product["largeur"] != "('',)") ...[
+                                widget.product["largeur"] != "('',)" && widget.product["largeur"]!=null) ...[
                               DetailsContainer(
                                 title: "Largeur",
                                 content: widget.product["largeur"] + " cm",
                               ),
                             ],
                             if (widget.product["hauteur"] != "XX" &&
-                                widget.product["hauteur"] != "('',)") ...[
+                                widget.product["hauteur"] != "('',)"&& widget.product["hauteur"]!=null) ...[
                               DetailsContainer(
                                 title: "Hauteur",
                                 content: widget.product["hauteur"] + " cm",
@@ -490,22 +507,13 @@ class _ItemDetailsState extends State<ItemDetails> {
 
                       // Trouver le produit dans wishProducts
 
-                      InkWell(
-                        onTap: () {
-                          Provider.of<Products>(context, listen: false)
-                              .createWish(
-                                  productId: widget.product["product_id"]);
-                          Provider.of<Products>(context, listen: false).getWish(
-                              Provider.of<AuthService>(context, listen: false)
-                                  .currentUser!
-                                  .id);
-                        },
-                        child: SvgPicture.asset(
-                          "assets/Icons/heart-add.svg",
-                          color:
-                              theme ? Color.fromARGB(255, 249, 217, 144) : null,
-                        ),
-                      ),
+                     InkWell(
+      onTap: toggleFavorite,
+      child: Icon(
+        Icons.favorite,
+        color: isFavorite == true ? Colors.red : Colors.grey,
+      ),
+    ),
 
                       SizedBox(width: 20),
                     ],
